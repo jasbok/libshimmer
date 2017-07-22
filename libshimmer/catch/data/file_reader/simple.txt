@@ -1,0 +1,7 @@
+Simple.txt File
+
+A test file used to test the file_reader class.
+The file is copied from the source to the binary
+directory using the CMake configure_file command.
+
+End of file, followed by an empty line:

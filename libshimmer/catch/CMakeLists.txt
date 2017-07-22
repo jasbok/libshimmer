@@ -1,0 +1,48 @@
+###############################################################################
+#   Find GLUT.
+###############################################################################
+find_package( GLUT )
+
+
+###############################################################################
+#   Configure include directories.
+###############################################################################
+set( CATCH_ROOT ${LIB_SHIMMER_ROOT}/catch )
+
+set( CATCH_INCLUDES
+        ${CATCH_ROOT}
+        ${GLUT_INCLUDE_DIRS}
+        ${INCLUDES} )
+
+include_directories( ${CATCH_INCLUDES} )
+
+
+###############################################################################
+#   Collect all test files.
+###############################################################################
+file( GLOB_RECURSE CATCH_TESTS ${CATCH_ROOT}/tests/*.cpp )
+
+
+###############################################################################
+#   List sources
+###############################################################################
+set( CATCH_SOURCES
+        ${SOURCES}
+        ${CATCH_TESTS}
+        catch.cpp )
+
+
+###############################################################################
+#   Build shared library
+###############################################################################
+add_executable( catch ${CATCH_SOURCES} ${HEADERS} )
+target_link_libraries( catch ${TARGET_LINK_LIBRARIES} ${GLUT_LIBRARY} )
+
+
+###############################################################################
+#   Copy data files.
+###############################################################################
+configure_file(data/file_reader/simple.txt data/file_reader/simple.txt COPYONLY)
+configure_file(data/glsl/garbage data/glsl/garbage COPYONLY)
+configure_file(data/glsl/simple.fs data/glsl/simple.fs COPYONLY)
+configure_file(data/glsl/simple.vs data/glsl/simple.vs COPYONLY)
