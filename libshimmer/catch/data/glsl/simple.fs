@@ -2,6 +2,7 @@
 
 varying vec2 fs_texcoord;
 uniform sampler2D sampler;
+uniform float[15] floats;
 
 void main()
 {

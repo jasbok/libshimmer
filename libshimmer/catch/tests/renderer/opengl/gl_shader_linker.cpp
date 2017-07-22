@@ -7,7 +7,8 @@
 using namespace std;
 using namespace shimmer;
 
-TEST_CASE ( "Link valid compiled shaders of a program." )
+TEST_CASE ( "Link valid compiled shaders of a program.",
+            "[gl_shader_linker]" )
 {
     string simple_fs_source = file_reader::read ( "data/glsl/simple.fs" );
     string simple_vs_source = file_reader::read ( "data/glsl/simple.vs" );
@@ -23,10 +24,10 @@ TEST_CASE ( "Link valid compiled shaders of a program." )
                          simple_vs_source,
                          GL_VERTEX_SHADER );
 
-    REQUIRE ( simple_fs !=  0);
-    REQUIRE ( simple_vs !=  0);
+    REQUIRE ( simple_fs !=  0 );
+    REQUIRE ( simple_vs !=  0 );
 
-    auto program = gl_shader_linker::link(simple_vs, simple_fs);
+    auto program = gl_shader_linker::link ( simple_vs, simple_fs );
 
-    CHECK(program !=  0);
+    CHECK ( program !=  0 );
 }

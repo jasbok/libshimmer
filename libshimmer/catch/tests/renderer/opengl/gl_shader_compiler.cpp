@@ -6,7 +6,8 @@
 using namespace std;
 using namespace shimmer;
 
-TEST_CASE ( "Compile a few test shaders." )
+TEST_CASE ( "Compile a few test shaders.",
+            "[gl_shader_compiler]" )
 {
     string simple_fs_source = file_reader::read ( "data/glsl/simple.fs" );
     string simple_vs_source = file_reader::read ( "data/glsl/simple.vs" );

@@ -16,7 +16,7 @@ int main ( int argc, char* argv[] )
         fprintf ( stderr, "OpenGL tests will probably fail.\n");
     }
 
-    spdlog::set_level ( spdlog::level::err );
+    spdlog::set_level ( spdlog::level::warn );
 
     int result = Catch::Session().run ( argc, argv );
     return ( result < 0xff ? result : 0xff );

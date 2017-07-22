@@ -4,7 +4,8 @@
 using namespace std;
 using namespace shimmer;
 
-TEST_CASE ( "Load complete file contents into a string." )
+TEST_CASE ( "Load complete file contents into a string.",
+            "[file_reader]" )
 {
     string file_path = "data/file_reader/simple.txt";
 
@@ -21,9 +22,10 @@ TEST_CASE ( "Load complete file contents into a string." )
     CHECK ( expected_contents ==  actual_contents );
 }
 
-TEST_CASE ( "Load file contents line for line into a vector." )
+TEST_CASE ( "Load file contents line for line into a vector.",
+            "[file_reader]" )
 {
-   string file_path = "data/file_reader/simple.txt";
+    string file_path = "data/file_reader/simple.txt";
 
     vector<string> expected_contents = {
         "Simple.txt File",

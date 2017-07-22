@@ -6,7 +6,8 @@
 using namespace std;
 using namespace shimmer;
 
-TEST_CASE ( "Check if simple cache is able to store integers." )
+TEST_CASE ( "Check if simple cache is able to store integers.",
+            "[simple_cache]" )
 {
     typedef shared_ptr<cache<string, int>> icache_t;
     typedef simple_cache<string, int> simple_cache_t;
@@ -46,7 +47,8 @@ TEST_CASE ( "Check if simple cache is able to store integers." )
     CHECK ( icache->get ( "e" ) == 0 );
 }
 
-TEST_CASE ( "Check if simple cache is able to store strings." )
+TEST_CASE ( "Check if simple cache is able to store strings.",
+            "[simple_cache]" )
 {
     typedef shared_ptr<cache<string, string>> scache_t;
     typedef simple_cache<string, string> simple_cache_t;
@@ -86,12 +88,13 @@ TEST_CASE ( "Check if simple cache is able to store strings." )
     CHECK ( scache->get ( "e" ) == "" );
 }
 
-TEST_CASE ( "Check if simple cache is able to store shared_ptr strings." )
+TEST_CASE ( "Check if simple cache is able to store shared_ptr strings.",
+            "[simple_cache]" )
 {
     typedef shared_ptr<cache<string, shared_ptr<string>>> scache_t;
     typedef simple_cache<string, shared_ptr<string>> simple_cache_t;
 
-    scache_t scache = make_shared<simple_cache_t> ("catch_shared_strings");
+    scache_t scache = make_shared<simple_cache_t> ( "catch_shared_strings" );
 
     scache->set ( "a",  make_shared<string> ( "string a" ) );
     scache->set ( "b",  make_shared<string> ( "string b" ) );
@@ -126,7 +129,8 @@ TEST_CASE ( "Check if simple cache is able to store shared_ptr strings." )
     CHECK ( scache->get ( "e" ) == nullptr );
 }
 
-TEST_CASE ( "Check if simple cache with specified default." )
+TEST_CASE ( "Check if simple cache with specified default.",
+            "[simple_cache]" )
 {
     typedef shared_ptr<cache<string, string>> scache_t;
     typedef simple_cache<string, string> simple_cache_t;

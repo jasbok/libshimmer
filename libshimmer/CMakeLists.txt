@@ -39,6 +39,7 @@ set( INCLUDES
         ${INCLUDE_DIR}
         ${INCLUDE_DIR}/api
         ${INCLUDE_DIR}/keyboard
+        ${INCLUDE_DIR}/macros
         ${INCLUDE_DIR}/mouse
         ${INCLUDE_DIR}/renderer
         ${INCLUDE_DIR}/renderer/opengl
@@ -63,9 +64,12 @@ set( SOURCES
         ${SOURCES_DIR}/mouse/mouse.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_variable_extractor.cpp
+        ${SOURCES_DIR}/renderer/opengl/glsl_variable.cpp
         ${SOURCES_DIR}/renderer/renderer.cpp
         ${SOURCES_DIR}/shimmer.cpp
         ${SOURCES_DIR}/utilities/file_reader.cpp
+        ${SOURCES_DIR}/utilities/regex_helper.cpp
         ${SOURCES_DIR}/window/window.cpp )
 
 
