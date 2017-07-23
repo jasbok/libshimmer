@@ -7,50 +7,35 @@
 using namespace std;
 using namespace shimmer;
 
-gl_shader_manager::gl_shader_manager()
-    :  _cache ( make_shared<simple_cache<string, shared_ptr<gl_shader>>>
-                ( "gl_shader_manager" ) )
-{}
-
-void gl_shader_manager::clear()
+shared_ptr<gl_shader> gl_shader_manager::create (
+    const string& source,
+    GLuint type )
 {
-    _cache->clear();
-}
+    shared_ptr<gl_shader> shader = nullptr;
+    auto compiled = gl_shader_compiler::compile ( source, type );
 
-shared_ptr<gl_shader> gl_shader_manager::evict ( const string& id )
-{
-    return _cache->evict(id);
-}
+    if ( compiled ) {
+        shader = make_shared<gl_shader> (
+                     compiled,
+                     glsl_variable_extractor::extract ( source ) );
+    }
 
-bool gl_shader_manager::exists ( const string& id )
-{
-    return _cache->exists ( id );
-}
-
-shared_ptr<gl_shader> gl_shader_manager::get ( const string& id )
-{
-    return _cache->get ( id );
+    return shader;
 }
 
 shared_ptr<gl_shader> gl_shader_manager::load (
     const string& path,
     GLuint type )
 {
+    shared_ptr<gl_shader> shader = nullptr;
     auto source = file_reader::read ( path );
-    auto shader = make_shared<gl_shader> (
-                      gl_shader_compiler::compile ( source, type ) );
+    auto compiled = gl_shader_compiler::compile ( source, type );
 
-    shader->id ( path )
-    .path ( path )
-    .variables ( glsl_variable_extractor::extract ( source ) );
+    if ( compiled ) {
+        shader = make_shared<gl_shader> (
+                     gl_shader_compiler::compile ( source, type ),
+                     glsl_variable_extractor::extract ( source ) );
+    }
 
     return shader;
 }
-
-void gl_shader_manager::set (
-    const string& id,
-    const shared_ptr<gl_shader>& shader )
-{
-    _cache->set ( id, shader );
-}
-

@@ -29,7 +29,6 @@ vector<vector<string>> regex_helper::find_all (
             }
         }
 
-
         target = match.suffix();
         results.push_back ( group_matches );
     }

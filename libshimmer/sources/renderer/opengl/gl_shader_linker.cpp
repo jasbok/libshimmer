@@ -8,20 +8,27 @@ using namespace shimmer;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_shader_linker" );
 
-GLuint gl_shader_linker::link ( GLuint vertex, GLuint fragment )
+GLuint gl_shader_linker::link ( const std::vector<GLuint>& shaders )
 {
-    if ( !fragment ) {
-        LOGGER->error ( "Invalid fragment shader provided to linker." );
-        return 0;
-    }
-    if ( !vertex ) {
-        LOGGER->error ( "Invalid vertex shader provided to linker." );
+    if ( shaders.size() < 2 ) {
+        LOGGER->error (
+            "Invalid shader list, less than two shaders provided." );
         return 0;
     }
 
+    for ( auto shader : shaders ) {
+        if ( !shader ) {
+            LOGGER->error ( "Found an invalid shader in the list." );
+            return 0;
+        }
+    }
+
     GLuint program = glCreateProgram();
-    glAttachShader ( program, fragment );
-    glAttachShader ( program, vertex );
+
+    for ( auto shader : shaders ) {
+        glAttachShader ( program, shader );
+    }
+
     glLinkProgram ( program );
 
     GLint success;

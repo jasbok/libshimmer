@@ -5,16 +5,9 @@
 #include <string>
 #include <vector>
 
-namespace shimmer
+namespace shimmer::gl_shader_compiler
 {
-class gl_shader_compiler
-{
-public:
-    virtual ~gl_shader_compiler() {}
-
-    static GLuint compile ( const std::string& source, GLuint type );
-
-};
+GLuint compile ( const std::string& source, GLuint type );
 }
 
 #endif

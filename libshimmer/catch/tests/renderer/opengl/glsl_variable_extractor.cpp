@@ -21,45 +21,38 @@ TEST_CASE ( "Extract GLSL variables from source files.",
     REQUIRE ( fragment_variables.size() == 3 );
     REQUIRE ( vertex_variables.size() == 4 );
 
-    CHECK ( fragment_variables[0].qualifier() == glsl_qualifier::VARYING );
-    CHECK ( fragment_variables[0].type() == glsl_type::VEC2 );
+    CHECK ( fragment_variables[0].qualifier() == glsl::qualifier::VARYING );
+    CHECK ( fragment_variables[0].type() == glsl::type::VEC2 );
     CHECK ( fragment_variables[0].name() == "fs_texcoord" );
     CHECK ( fragment_variables[0].size() == 1 );
-    CHECK ( fragment_variables[0].location() == -1 );
 
-    CHECK ( fragment_variables[1].qualifier() == glsl_qualifier::UNIFORM );
-    CHECK ( fragment_variables[1].type() == glsl_type::SAMPLER2D );
+    CHECK ( fragment_variables[1].qualifier() == glsl::qualifier::UNIFORM );
+    CHECK ( fragment_variables[1].type() == glsl::type::SAMPLER2D );
     CHECK ( fragment_variables[1].name() == "sampler" );
     CHECK ( fragment_variables[1].size() == 1 );
-    CHECK ( fragment_variables[1].location() == -1 );
 
-    CHECK ( fragment_variables[2].qualifier() == glsl_qualifier::UNIFORM );
-    CHECK ( fragment_variables[2].type() == glsl_type::FLOAT );
+    CHECK ( fragment_variables[2].qualifier() == glsl::qualifier::UNIFORM );
+    CHECK ( fragment_variables[2].type() == glsl::type::FLOAT );
     CHECK ( fragment_variables[2].name() == "floats" );
     CHECK ( fragment_variables[2].size() == 15 );
-    CHECK ( fragment_variables[2].location() == -1 );
 
-    CHECK ( vertex_variables[0].qualifier() == glsl_qualifier::ATTRIBUTE );
-    CHECK ( vertex_variables[0].type() == glsl_type::VEC3 );
+    CHECK ( vertex_variables[0].qualifier() == glsl::qualifier::ATTRIBUTE );
+    CHECK ( vertex_variables[0].type() == glsl::type::VEC3 );
     CHECK ( vertex_variables[0].name() == "position" );
     CHECK ( vertex_variables[0].size() == 1 );
-    CHECK ( vertex_variables[0].location() == -1 );
 
-    CHECK ( vertex_variables[1].qualifier() == glsl_qualifier::ATTRIBUTE );
-    CHECK ( vertex_variables[1].type() == glsl_type::VEC2 );
+    CHECK ( vertex_variables[1].qualifier() == glsl::qualifier::ATTRIBUTE );
+    CHECK ( vertex_variables[1].type() == glsl::type::VEC2 );
     CHECK ( vertex_variables[1].name() == "texcoord" );
     CHECK ( vertex_variables[1].size() == 1 );
-    CHECK ( vertex_variables[1].location() == -1 );
 
-    CHECK ( vertex_variables[2].qualifier() == glsl_qualifier::VARYING );
-    CHECK ( vertex_variables[2].type() == glsl_type::VEC2 );
+    CHECK ( vertex_variables[2].qualifier() == glsl::qualifier::VARYING );
+    CHECK ( vertex_variables[2].type() == glsl::type::VEC2 );
     CHECK ( vertex_variables[2].name() == "fs_texcoord" );
     CHECK ( vertex_variables[2].size() == 1 );
-    CHECK ( vertex_variables[2].location() == -1 );
 
-    CHECK ( vertex_variables[3].qualifier() == glsl_qualifier::VARYING );
-    CHECK ( vertex_variables[3].type() == glsl_type::FLOAT );
+    CHECK ( vertex_variables[3].qualifier() == glsl::qualifier::VARYING );
+    CHECK ( vertex_variables[3].type() == glsl::type::FLOAT );
     CHECK ( vertex_variables[3].name() == "scale" );
     CHECK ( vertex_variables[3].size() == 1 );
-    CHECK ( vertex_variables[3].location() == -1 );
 }

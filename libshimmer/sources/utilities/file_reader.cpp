@@ -42,3 +42,4 @@ vector<string> file_reader::read_lines ( const string& path )
 
     return content;
 }
+

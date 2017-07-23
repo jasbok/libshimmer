@@ -1,8 +1,12 @@
 #include "glsl_variable_extractor.h"
 #include "regex_helper.h"
+#include "spdlog.h"
 
 using namespace std;
 using namespace shimmer;
+
+static std::shared_ptr<spdlog::logger> LOGGER
+    = spdlog::stdout_color_mt ( "glsl_variable_extractor" );
 
 // 0:qualifier 1:type 2:size 3:name
 static const regex VARIABLE_REGEX (
@@ -18,8 +22,8 @@ vector<glsl_variable> glsl_variable_extractor::extract ( const string& source )
     for ( auto var : regex_helper::find_all (
                 src, VARIABLE_REGEX, {1, 2, 4, 5} ) ) {
         auto variable = glsl_variable (
-                            glsl_variable::qualifier_from ( var[0] ),
-                            glsl_variable::type_from ( var[1] ),
+                            glsl::qualifier_from ( var[0] ),
+                            glsl::type_from ( var[1] ),
                             var[2].empty() ? 1 : std::stoi ( var[2] ),
                             var[3] );
 

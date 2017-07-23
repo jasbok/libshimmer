@@ -41,6 +41,7 @@ set( INCLUDES
         ${INCLUDE_DIR}/macros
         ${INCLUDE_DIR}/mouse
         ${INCLUDE_DIR}/renderer
+        ${INCLUDE_DIR}/renderer/glsl
         ${INCLUDE_DIR}/renderer/opengl
         ${INCLUDE_DIR}/spdlog
         ${INCLUDE_DIR}/utilities
@@ -62,12 +63,17 @@ file( GLOB_RECURSE HEADERS ${INCLUDE_DIR}/*.h* )
 set( SOURCES
         ${SOURCES_DIR}/keyboard/keyboard.cpp
         ${SOURCES_DIR}/mouse/mouse.cpp
-        ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_program.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_program_manager.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_program_variable.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_manager.cpp
-        ${SOURCES_DIR}/renderer/opengl/glsl_variable.cpp
-        ${SOURCES_DIR}/renderer/opengl/glsl_variable_extractor.cpp
+        ${SOURCES_DIR}/renderer/glsl/glsl_qualifier.cpp
+        ${SOURCES_DIR}/renderer/glsl/glsl_type.cpp
+        ${SOURCES_DIR}/renderer/glsl/glsl_variable.cpp
+        ${SOURCES_DIR}/renderer/glsl/glsl_variable_extractor.cpp
         ${SOURCES_DIR}/renderer/renderer.cpp
         ${SOURCES_DIR}/shimmer.cpp
         ${SOURCES_DIR}/utilities/file_reader.cpp

@@ -2,16 +2,11 @@
 #define LIBSHIMMER_RENDERER_OPENGL_GL_SHADER_LINKER_H
 
 #include <GL/glew.h>
+#include <vector>
 
-namespace shimmer
+namespace shimmer::gl_shader_linker
 {
-class gl_shader_linker
-{
-public:
-    virtual ~gl_shader_linker() {}
-
-    static GLuint link(GLuint vertex, GLuint fragment);
-};
+GLuint link ( const std::vector<GLuint>& shaders );
 }
 
 #endif

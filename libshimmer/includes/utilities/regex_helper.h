@@ -5,16 +5,13 @@
 #include <string>
 #include <vector>
 
-namespace shimmer
+namespace shimmer::regex_helper
 {
-class regex_helper
-{
-public:
-    static std::vector<std::vector<std::string>> find_all (
-                const std::string& src,
-                const std::regex& regex,
-                const std::vector<unsigned int>& groups = {} );
-};
+using namespace std;
+vector<vector<string>> find_all (
+                        const string& src,
+                        const regex& regex,
+                        const vector<unsigned int>& groups = {} );
 }
 
 #endif

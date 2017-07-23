@@ -4,13 +4,10 @@
 #include <string>
 #include <vector>
 
-namespace shimmer
+namespace shimmer::file_reader
 {
-class file_reader {
-public:
-    static std::string read(const std::string& path);
-    static std::vector<std::string> read_lines(const std::string& path);
-};
+std::string read ( const std::string& path );
+std::vector<std::string> read_lines ( const std::string& path );
 }
 
 #endif
