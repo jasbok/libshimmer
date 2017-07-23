@@ -9,8 +9,14 @@ class cache
 public:
     virtual ~cache() {}
 
+    virtual void clear() = 0;
+
+    virtual V evict(const K& key) = 0;
+
     virtual bool exists(const K& key) = 0;
+
     virtual V get(const K& key) = 0;
+
     virtual void set(const K& key, const V& value) = 0;
 };
 }

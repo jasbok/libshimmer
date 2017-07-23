@@ -18,4 +18,14 @@
     private:                                    \
     TYPE _##NAME
 
+#define GETTER(CLASS, TYPE, NAME)               \
+    public:                                     \
+    virtual const TYPE NAME() const {           \
+        return _##NAME;                         \
+    }                                           \
+    virtual TYPE NAME() {                       \
+        return _##NAME;                         \
+    }                                           \
+    private:                                    \
+    TYPE _##NAME
 #endif

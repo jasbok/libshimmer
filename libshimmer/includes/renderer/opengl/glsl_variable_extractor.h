@@ -6,10 +6,10 @@
 
 namespace shimmer
 {
-class gl_variable_extractor
+class glsl_variable_extractor
 {
 public:
-    virtual ~gl_variable_extractor() {}
+    virtual ~glsl_variable_extractor() {}
 
     static std::vector<glsl_variable> extract ( const std::string& source );
 };

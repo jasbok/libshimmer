@@ -45,6 +45,16 @@ TEST_CASE ( "Check if simple cache is able to store integers.",
     CHECK ( icache->get ( "d" ) == 44 );
     CHECK ( icache->get ( "c" ) == 0 );
     CHECK ( icache->get ( "e" ) == 0 );
+
+    CHECK ( icache->evict ( "b" ) == 22 );
+    CHECK ( icache->exists ( "b" ) == false );
+
+    icache->clear();
+    CHECK ( icache->exists ( "a" ) == false );
+    CHECK ( icache->exists ( "b" ) == false );
+    CHECK ( icache->exists ( "d" ) == false );
+    CHECK ( icache->exists ( "c" ) == false );
+    CHECK ( icache->exists ( "e" ) == false );
 }
 
 TEST_CASE ( "Check if simple cache is able to store strings.",
@@ -86,6 +96,16 @@ TEST_CASE ( "Check if simple cache is able to store strings.",
     CHECK ( scache->get ( "d" ) == "STRING DD" );
     CHECK ( scache->get ( "c" ) == "" );
     CHECK ( scache->get ( "e" ) == "" );
+
+    CHECK ( scache->evict ( "b" ) == "STRING BB" );
+    CHECK ( scache->exists ( "b" ) == false );
+
+    scache->clear();
+    CHECK ( scache->exists ( "a" ) == false );
+    CHECK ( scache->exists ( "b" ) == false );
+    CHECK ( scache->exists ( "d" ) == false );
+    CHECK ( scache->exists ( "c" ) == false );
+    CHECK ( scache->exists ( "e" ) == false );
 }
 
 TEST_CASE ( "Check if simple cache is able to store shared_ptr strings.",
@@ -127,6 +147,16 @@ TEST_CASE ( "Check if simple cache is able to store shared_ptr strings.",
     CHECK ( *scache->get ( "d" ) == "STRING DD" );
     CHECK ( scache->get ( "c" ) == nullptr );
     CHECK ( scache->get ( "e" ) == nullptr );
+
+    CHECK ( *scache->evict ( "b" ) == "STRING BB" );
+    CHECK ( scache->exists ( "b" ) == false );
+
+    scache->clear();
+    CHECK ( scache->exists ( "a" ) == false );
+    CHECK ( scache->exists ( "b" ) == false );
+    CHECK ( scache->exists ( "d" ) == false );
+    CHECK ( scache->exists ( "c" ) == false );
+    CHECK ( scache->exists ( "e" ) == false );
 }
 
 TEST_CASE ( "Check if simple cache with specified default.",
@@ -170,4 +200,14 @@ TEST_CASE ( "Check if simple cache with specified default.",
     CHECK ( scache->get ( "d" ) == "STRING DD" );
     CHECK ( scache->get ( "c" ) == "empty" );
     CHECK ( scache->get ( "e" ) == "empty" );
+
+    CHECK ( scache->evict ( "b" ) == "STRING BB" );
+    CHECK ( scache->exists ( "b" ) == false );
+
+    scache->clear();
+    CHECK ( scache->exists ( "a" ) == false );
+    CHECK ( scache->exists ( "b" ) == false );
+    CHECK ( scache->exists ( "d" ) == false );
+    CHECK ( scache->exists ( "c" ) == false );
+    CHECK ( scache->exists ( "e" ) == false );
 }

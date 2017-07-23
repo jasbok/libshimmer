@@ -1,18 +1,18 @@
 ###############################################################################
 #   Find and store OpenGL, GLEW and GLM paths.
 ###############################################################################
-find_package(OpenGL)
 find_package(GLEW)
 find_package(glm)
+find_package(OpenGL)
 
 set( OPENGL_INCLUDES
-        ${OPENGL_INCLUDE_DIR}
         ${GLEW_INCLUDE_DIRS}
-        ${GLM_INCLUDE_DIRS} )
+        ${GLM_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR} )
 
 set( OPENGL_LIBRARIES
-        ${OPENGL_LIBRARIES}
-        ${GLEW_LIBRARIES} )
+        ${GLEW_LIBRARIES}
+        ${OPENGL_LIBRARIES} )
 
 
 ###############################################################################
@@ -34,7 +34,6 @@ set( INCLUDE_DIR ${LIB_SHIMMER_ROOT}/includes )
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( INCLUDES
-        ${OPENGL_INCLUDES}
         ${FREETYPE_INCLUDE_DIRS}
         ${INCLUDE_DIR}
         ${INCLUDE_DIR}/api
@@ -45,7 +44,8 @@ set( INCLUDES
         ${INCLUDE_DIR}/renderer/opengl
         ${INCLUDE_DIR}/spdlog
         ${INCLUDE_DIR}/utilities
-        ${INCLUDE_DIR}/window )
+        ${INCLUDE_DIR}/window
+        ${OPENGL_INCLUDES} )
 
 include_directories(${INCLUDES})
 
@@ -63,9 +63,11 @@ set( SOURCES
         ${SOURCES_DIR}/keyboard/keyboard.cpp
         ${SOURCES_DIR}/mouse/mouse.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_shader.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp
-        ${SOURCES_DIR}/renderer/opengl/gl_variable_extractor.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_shader_manager.cpp
         ${SOURCES_DIR}/renderer/opengl/glsl_variable.cpp
+        ${SOURCES_DIR}/renderer/opengl/glsl_variable_extractor.cpp
         ${SOURCES_DIR}/renderer/renderer.cpp
         ${SOURCES_DIR}/shimmer.cpp
         ${SOURCES_DIR}/utilities/file_reader.cpp
@@ -81,13 +83,13 @@ set( TARGET_LINK_LIBRARIES
         ${FREETYPE_LIBRARIES}
         ${OPENGL_LIBRARIES} )
 
-message("TARGET_LINK_LIBRARIES: " ${TARGET_LINK_LIBRARIES})
+message( "TARGET_LINK_LIBRARIES: " ${TARGET_LINK_LIBRARIES} )
 
 
 ###############################################################################
 #   Build shared library
 ###############################################################################
-add_library( shimmer SHARED ${SOURCES} ${HEADERS} )
+add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
 target_link_libraries( shimmer ${TARGET_LINK_LIBRARIES} )
 
 

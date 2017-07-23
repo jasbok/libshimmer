@@ -1,22 +1,22 @@
 #include "catch.hpp"
 #include "file_reader.h"
-#include "gl_variable_extractor.h"
+#include "glsl_variable_extractor.h"
 #include "spdlog.h"
 
 using namespace std;
 using namespace shimmer;
 
 TEST_CASE ( "Extract GLSL variables from source files.",
-            "[gl_variable_extractor]" )
+            "[glsl_variable_extractor]" )
 {
     string simple_fs_source = file_reader::read ( "data/glsl/simple.fs" );
     string simple_vs_source = file_reader::read ( "data/glsl/simple.vs" );
 
     auto fragment_variables =
-        gl_variable_extractor::extract ( simple_fs_source );
+        glsl_variable_extractor::extract ( simple_fs_source );
 
     auto vertex_variables =
-        gl_variable_extractor::extract ( simple_vs_source );
+        glsl_variable_extractor::extract ( simple_vs_source );
 
     REQUIRE ( fragment_variables.size() == 3 );
     REQUIRE ( vertex_variables.size() == 4 );

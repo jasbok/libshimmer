@@ -19,6 +19,18 @@ public:
 
     virtual ~simple_cache() {}
 
+    void clear () override
+    {
+        _cache.clear();
+    }
+
+    V evict ( const K& key ) override
+    {
+        V value = get ( key );
+        _cache.erase ( key );
+        return value;
+    }
+
     bool exists ( const K& key ) override
     {
         return _cache.find ( key ) != _cache.end();
@@ -41,7 +53,9 @@ public:
 
 private:
     std::unordered_map<K, V> _cache;
+
     V _default_value;
+
     std::shared_ptr<spdlog::logger> _logger;
 };
 }
