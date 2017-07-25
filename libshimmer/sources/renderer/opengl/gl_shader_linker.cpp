@@ -10,10 +10,12 @@ static std::shared_ptr<spdlog::logger> LOGGER
 
 GLuint gl_shader_linker::link ( const std::vector<GLuint>& shaders )
 {
-    if ( shaders.size() < 2 ) {
-        LOGGER->error (
-            "Invalid shader list, less than two shaders provided." );
+    if ( shaders.empty() ) {
+        LOGGER->error ( "An empty shader list was passed to the linker." );
         return 0;
+    }
+    else if ( shaders.size() == 1 ) {
+        LOGGER->warn ( "Only one shader was passed to the linker." );
     }
 
     for ( auto shader : shaders ) {
@@ -30,6 +32,10 @@ GLuint gl_shader_linker::link ( const std::vector<GLuint>& shaders )
     }
 
     glLinkProgram ( program );
+
+    for ( auto shader : shaders ) {
+        glDetachShader ( program, shader );
+    }
 
     GLint success;
     glGetProgramiv ( program, GL_LINK_STATUS, &success );

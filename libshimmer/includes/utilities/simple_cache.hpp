@@ -14,8 +14,13 @@ class simple_cache: public cache<K, V>
 public:
     simple_cache ( const std::string name, const V& default_value = V() )
         :  _default_value ( default_value ),
-           _logger ( spdlog::stdout_color_mt ( "simple_cache::" + name ) )
-    {}
+           _logger (  )
+    {
+        _logger = spdlog::get ( "simple_cache::" + name );
+        if (_logger == nullptr) {
+            _logger = spdlog::stdout_color_mt ( "simple_cache::" + name );
+        }
+    }
 
     virtual ~simple_cache() {}
 

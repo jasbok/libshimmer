@@ -51,5 +51,13 @@ TEST_CASE ( "Compile shader programs using the program manager.",
         vs_shader
     } );
     CHECK ( invalid_program_b == nullptr );
+
+    auto fs_partial_program = gl_program_manager::load ( { fs_shader } );
+    CHECK ( fs_partial_program != nullptr );
+    CHECK ( fs_partial_program->handle() != 0 );
+
+    auto vs_partial_program = gl_program_manager::load ( { vs_shader } );
+    CHECK ( vs_partial_program != nullptr );
+    CHECK ( vs_partial_program->handle() != 0 );
     spdlog::set_level ( spdlog::level::warn );
 }
