@@ -24,9 +24,10 @@ set( CMAKE_MODULE_PATH
 
 
 ###############################################################################
-#   Store libshimmer root directory.
+#   Set libshimmer and shims root directories.
 ###############################################################################
-set(LIB_SHIMMER_ROOT ${shimmer_SOURCE_DIR}/libshimmer)
+set(LIB_SHIMMER_ROOT ${CMAKE_SOURCE_DIR}/libshimmer)
+set(SHIMS_ROOT ${CMAKE_SOURCE_DIR}/shims)
 
 
 ###############################################################################
