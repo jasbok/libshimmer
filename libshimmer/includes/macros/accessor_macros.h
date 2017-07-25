@@ -20,7 +20,7 @@
 
 #define GETTER(CLASS, TYPE, NAME)               \
     public:                                     \
-    virtual const TYPE NAME() const {           \
+    virtual const TYPE& NAME() const {          \
         return _##NAME;                         \
     }                                           \
     virtual TYPE NAME() {                       \
