@@ -41,6 +41,7 @@ set( INCLUDES
         ${INCLUDE_DIR}/macros
         ${INCLUDE_DIR}/mouse
         ${INCLUDE_DIR}/renderer
+        ${INCLUDE_DIR}/renderer/common
         ${INCLUDE_DIR}/renderer/glsl
         ${INCLUDE_DIR}/renderer/opengl
         ${INCLUDE_DIR}/spdlog
@@ -63,6 +64,7 @@ file( GLOB_RECURSE HEADERS ${INCLUDE_DIR}/*.h* )
 set( SOURCES
         ${SOURCES_DIR}/keyboard/keyboard.cpp
         ${SOURCES_DIR}/mouse/mouse.cpp
+        ${SOURCES_DIR}/renderer/common/texture.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_manager.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_variable.cpp
@@ -70,6 +72,7 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_manager.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_texture.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_qualifier.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_type.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_variable.cpp
