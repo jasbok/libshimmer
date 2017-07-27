@@ -14,9 +14,27 @@ public:
         unsigned int height,
         GLenum target = GL_TEXTURE_2D,
         GLint level = 0,
-        GLint internalFormat = GL_RGB );
+        GLint internal_format = GL_RGB );
 
     virtual ~gl_texture();
+
+    void bind();
+
+    void upload ( GLenum format,
+                  GLenum type,
+                  const GLvoid* data );
+
+    void upload ( GLenum format,
+                  GLenum type,
+                  const GLvoid* data,
+                  GLint x_offset,
+                  GLint y_offset,
+                  GLsizei width,
+                  GLsizei height );
+
+    void download ( GLenum format,
+                    GLenum type,
+                    GLvoid* data );
 
 private:
     GETTER ( gl_texture, GLuint, handle );
