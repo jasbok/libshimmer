@@ -2,8 +2,8 @@
 
 #include "catch/catch.hpp"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Perform a simple digit regex match.",
             "[regex_helper]" )

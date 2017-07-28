@@ -2,8 +2,8 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 glsl_variable::glsl_variable(
     glsl::qualifier qualifier,

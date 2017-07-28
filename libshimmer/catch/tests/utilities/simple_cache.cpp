@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Check if simple cache is able to store integers.",
             "[simple_cache]" )

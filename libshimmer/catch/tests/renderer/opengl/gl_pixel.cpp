@@ -3,8 +3,8 @@
 #include "catch/catch.hpp"
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 /* *INDENT-OFF* */
 TEST_CASE ( "Check if bytes per pixel is correctly calculated from the "

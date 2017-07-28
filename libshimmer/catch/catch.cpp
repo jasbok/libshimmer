@@ -9,7 +9,7 @@
 int main ( int argc, char* argv[] )
 {
     glutInit ( &argc, argv );
-    glutCreateWindow ( "libshimmer catch window" );
+    glutCreateWindow ( "Libshimmer: Catch Unit Test" );
 
     auto err = glewInit();
 

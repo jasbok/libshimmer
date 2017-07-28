@@ -5,8 +5,8 @@
 #include "glsl_variable_extractor.h"
 #include "simple_cache.hpp"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 shared_ptr<gl_shader> gl_shader_manager::create ( const string& source,
                                                   GLuint        type )

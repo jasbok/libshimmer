@@ -35,7 +35,8 @@ gl_program_variable& gl_program_variable::operator=(
     return *this;
 }
 
-gl_program_variable& gl_program_variable::operator=( gl_program_variable&& move )
+gl_program_variable& gl_program_variable::operator=(
+    gl_program_variable&& move )
 {
     glsl_variable::operator=( std::move ( move ) );
     _location = move._location;

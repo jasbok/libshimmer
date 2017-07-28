@@ -4,8 +4,8 @@
 #include "catch/catch.hpp"
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Compile a few test shaders.",
             "[gl_shader_compiler]" )
@@ -47,11 +47,13 @@ TEST_CASE ( "Compile a few test shaders.",
     auto empty_vs = gl_shader_compiler::compile ( empty_source,
                                                   GL_VERTEX_SHADER );
 
-    auto uninitialised_fs = gl_shader_compiler::compile ( uninitialised_source,
-                                                          GL_FRAGMENT_SHADER );
+    auto uninitialised_fs = gl_shader_compiler::compile (
+        uninitialised_source,
+        GL_FRAGMENT_SHADER );
 
-    auto uninitialised_vs = gl_shader_compiler::compile ( uninitialised_source,
-                                                          GL_VERTEX_SHADER );
+    auto uninitialised_vs = gl_shader_compiler::compile (
+        uninitialised_source,
+        GL_VERTEX_SHADER );
 
     spdlog::set_level ( spdlog::level::err );
 

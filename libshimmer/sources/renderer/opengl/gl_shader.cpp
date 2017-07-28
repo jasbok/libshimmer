@@ -1,7 +1,7 @@
 #include "gl_shader.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 gl_shader::gl_shader(
     GLuint                       handle,

@@ -5,8 +5,8 @@
 #include "catch/catch.hpp"
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Link valid compiled shaders of a program.",
             "[gl_shader_linker]" )

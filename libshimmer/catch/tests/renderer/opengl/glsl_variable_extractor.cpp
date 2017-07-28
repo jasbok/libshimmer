@@ -4,8 +4,8 @@
 #include "catch/catch.hpp"
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Extract GLSL variables from source files.",
             "[glsl_variable_extractor]" )

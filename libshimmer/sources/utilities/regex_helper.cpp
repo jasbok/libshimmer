@@ -1,7 +1,7 @@
 #include "regex_helper.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 vector<vector<string>> regex_helper::find_all (
     const string&               src,

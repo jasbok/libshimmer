@@ -2,8 +2,8 @@
 
 #include "catch/catch.hpp"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Load complete file contents into a string.",
             "[file_reader]" )

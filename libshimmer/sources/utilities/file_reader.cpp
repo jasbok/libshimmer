@@ -5,8 +5,8 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "file_reader" );

@@ -1,11 +1,11 @@
-#include "gl_shader_manager.h"
 #include "gl_program_manager.h"
+#include "gl_shader_manager.h"
 
 #include "catch/catch.hpp"
 #include "spdlog/spdlog.h"
 
-using namespace std;
 using namespace shimmer;
+using namespace std;
 
 TEST_CASE ( "Compile shader programs using the program manager.",
             "[gl_program_manager]" )

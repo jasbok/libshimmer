@@ -6,20 +6,20 @@ COMPILER_CC=/usr/bin/gcc
 COMPILER_CXX=/usr/bin/g++
 
 BUILD_SYSTEM=ninja
-THREADS=16
+THREADS=8
 
 IGNORE_ERRORS=false
 
-RUN_UNCRUSTIFY=true
-RUN_CPPCHECK=true
-RUN_CLEAN=true
-RUN_BUILD=true
-RUN_CATCH=true
-RUN_VALGRIND=true
+RUN_BUILD=false
+RUN_CATCH=false
+RUN_CLEAN=false
+RUN_CPPCHECK=false
+RUN_UNCRUSTIFY=false
+RUN_VALGRIND=false
 
-RED='\033[0;31m'
 BLUE='\033[1;34m'
 GREEN='\033[0;32m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 function err {
@@ -50,44 +50,63 @@ case $i in
     info "==> Using $BUILD_SYSTEM build system."
     shift
     ;;
+
     -j|--threads)
     THREADS="$2"
     info "==> Using $THREADS threads."
     shift
     ;;
+
     --ignore-errors)
     info "==> Ignoring errors."
     IGNORE_ERRORS=true
     shift
     ;;
-    --no-cppcheck)
-    info "==> Disabled cppcheck run."
-    RUN_CPPCHECK=false
+
+    --all)
+    info "==> Running all facilities."
+    RUN_BUILD=true
+    RUN_CATCH=true
+    RUN_CLEAN=true
+    RUN_CPPCHECK=true
+    RUN_UNCRUSTIFY=true
+    RUN_VALGRIND=true
     shift
     ;;
-    --no-uncrustify)
-    info "==> Disabled uncrustify run."
-    RUN_UNCRUSTIFY=false
+
+    --cppcheck)
+    info "==> Enabled cppcheck run."
+    RUN_CPPCHECK=true
     shift
     ;;
-    --no-clean)
-    info "==> Disabled clean run."
-    RUN_CLEAN=false
+
+    --uncrustify)
+    info "==> Enabled uncrustify run."
+    RUN_UNCRUSTIFY=true
     shift
     ;;
-    --no-build)
-    info "==> Disabled build run."
-    RUN_BUILD=false
+
+    --clean)
+    info "==> Enabled clean run."
+    RUN_CLEAN=true
     shift
     ;;
-    --no-catch)
-    info "==> Disabled catch run."
-    RUN_CATCH=false
+
+    --build)
+    info "==> Enabled build run."
+    RUN_BUILD=true
     shift
     ;;
-    --no-valgrind)
-    info "==> Disabled valgrind run."
-    RUN_VALGRIND=false
+
+    --catch)
+    info "==> Enabled catch run."
+    RUN_CATCH=true
+    shift
+    ;;
+
+    --valgrind)
+    info "==> Enabled valgrind run."
+    RUN_VALGRIND=true
     shift
     ;;
 esac
@@ -112,10 +131,14 @@ then
     for src in "${LIBSHIMMER_SOURCE[@]}" "${SHIMS_SOURCE[@]}"
     do
         info "Running uncrustify on: $src"
-        uncrustify  -q --config "uncrustify.cfg"                            \
-                    --no-backup                                             \
-                     "$src"                                                 \
-                || err "Uncrustify failed to format the source file: $src."
+
+        uncrustify  -q --check                                              \
+                    --config "uncrustify.cfg"                               \
+                    "$src"                                                  \
+            ||  uncrustify  -q --config "uncrustify.cfg"                    \
+                            --no-backup                                     \
+                            "$src"                                          \
+            ||  err "Uncrustify failed to format the source file: $src."
     done
 fi
 
@@ -200,11 +223,10 @@ then
     header "Run all catch unit tests."
     cd $DIR
 
-    TESTS=($(   find libshimmer/catch/tests/ -name *.cpp \
+    TESTS=($(find libshimmer/catch/tests/ -name *.cpp \
                 | sed -e 's|.*/\(.*\).cpp|\1|g'))
 
     cd $DIR/build/libshimmer/catch
-
     for test in "${TESTS[@]}"
     do
         info "Running catch test: $test"
@@ -220,9 +242,12 @@ fi
 if [[ $RUN_VALGRIND == true ]]
 then
     header "Run valgrind on all unit tests."
+    cd $DIR
+
+    TESTS=($(   find libshimmer/catch/tests/ -name *.cpp \
+                | sed -e 's|.*/\(.*\).cpp|\1|g'))
 
     SUPPRESSIONS=$DIR/suppressions
-
     cd $DIR/build/libshimmer/catch
     for test in "${TESTS[@]}"
     do
