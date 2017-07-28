@@ -1,6 +1,8 @@
 #include "glsl_variable_extractor.h"
+
 #include "regex_helper.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 using namespace std;
 using namespace shimmer;

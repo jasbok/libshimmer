@@ -3,7 +3,9 @@
 
 #include "accessor_macros.h"
 #include "gl_program_variable.h"
+
 #include <GL/glew.h>
+
 #include <string>
 #include <unordered_map>
 #include <vector>

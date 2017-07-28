@@ -1,8 +1,10 @@
 #include "gl_program_manager.h"
+
 #include "gl_shader.h"
 #include "gl_shader_linker.h"
 #include "glsl_variable.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;

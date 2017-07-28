@@ -1,4 +1,5 @@
 #include "gl_enum.h"
+
 #include <unordered_map>
 
 using namespace shimmer;

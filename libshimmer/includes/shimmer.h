@@ -6,6 +6,7 @@
 #include "api/mouse_api.h"
 #include "api/renderer_api.h"
 #include "api/window_api.h"
+#include "macros/shim_macros.h"
 
 #include <memory>
 

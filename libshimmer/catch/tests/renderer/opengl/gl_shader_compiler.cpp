@@ -1,7 +1,8 @@
-#include "catch.hpp"
 #include "file_reader.h"
 #include "gl_shader_compiler.h"
-#include "spdlog.h"
+
+#include "catch/catch.hpp"
+#include "spdlog/spdlog.h"
 
 using namespace std;
 using namespace shimmer;

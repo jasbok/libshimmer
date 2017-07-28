@@ -2,6 +2,7 @@
 #define LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_LOADER_H
 
 #include "gl_texture.h"
+
 #include <memory>
 
 namespace shimmer

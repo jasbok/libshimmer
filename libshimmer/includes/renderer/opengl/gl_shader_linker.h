@@ -2,6 +2,7 @@
 #define LIBSHIMMER_RENDERER_OPENGL_GL_SHADER_LINKER_H
 
 #include <GL/glew.h>
+
 #include <vector>
 
 namespace shimmer::gl_shader_linker

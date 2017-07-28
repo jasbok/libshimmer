@@ -1,4 +1,5 @@
 #include "gl_shader_manager.h"
+
 #include "file_reader.h"
 #include "gl_shader_compiler.h"
 #include "glsl_variable_extractor.h"

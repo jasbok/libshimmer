@@ -1,7 +1,7 @@
 #ifndef LIBSHIMMER_MOUSE_MOUSE_H
 #define LIBSHIMMER_MOUSE_MOUSE_H
 
-#include "api/mouse_api.h"
+#include "mouse_api.h"
 
 namespace shimmer
 {

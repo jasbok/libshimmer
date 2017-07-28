@@ -1,7 +1,7 @@
 #ifndef LIBSHIMMER_WINDOW_WINDOW_H
 #define LIBSHIMMER_WINDOW_WINDOW_H
 
-#include "api/window_api.h"
+#include "window_api.h"
 
 namespace shimmer
 {

@@ -1,5 +1,6 @@
-#include "catch.hpp"
 #include "file_reader.h"
+
+#include "catch/catch.hpp"
 
 using namespace std;
 using namespace shimmer;

@@ -1,7 +1,7 @@
 #ifndef LIBSHIMMER_RENDERER_RENDERER_H
 #define LIBSHIMMER_RENDERER_RENDERER_H
 
-#include "api/renderer_api.h"
+#include "renderer_api.h"
 
 namespace shimmer
 {

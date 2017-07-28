@@ -1,5 +1,7 @@
 #include "glsl_qualifier.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
+
 #include <memory>
 
 using namespace shimmer;

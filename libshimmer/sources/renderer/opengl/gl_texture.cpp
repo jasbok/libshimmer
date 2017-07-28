@@ -1,5 +1,6 @@
 #include "gl_texture.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 

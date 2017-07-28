@@ -1,5 +1,6 @@
 #include "glsl_variable.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 using namespace std;
 using namespace shimmer;

@@ -2,6 +2,7 @@
 #define LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H
 
 #include "texture.h"
+
 #include <GL/glew.h>
 
 namespace shimmer

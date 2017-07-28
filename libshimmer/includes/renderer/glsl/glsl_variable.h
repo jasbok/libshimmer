@@ -4,6 +4,7 @@
 #include "accessor_macros.h"
 #include "glsl_qualifier.h"
 #include "glsl_type.h"
+
 #include <ostream>
 #include <string>
 

@@ -1,5 +1,6 @@
 #include "gl_shader_compiler.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 #define GL_LOG_SIZE 2048
 

@@ -7,12 +7,10 @@ find_package( GLUT )
 ###############################################################################
 #   Configure include directories.
 ###############################################################################
-set( CATCH_ROOT ${LIB_SHIMMER_ROOT}/catch )
-
 set( CATCH_INCLUDES
-        ${CATCH_ROOT}
         ${GLUT_INCLUDE_DIRS}
-        ${INCLUDES} )
+        ${INCLUDES}
+        ${EXTERNAL_INCLUDES} )
 
 include_directories( ${CATCH_INCLUDES} )
 
@@ -20,7 +18,7 @@ include_directories( ${CATCH_INCLUDES} )
 ###############################################################################
 #   Collect all test files.
 ###############################################################################
-file( GLOB_RECURSE CATCH_TESTS ${CATCH_ROOT}/tests/*.cpp )
+file( GLOB_RECURSE CATCH_TESTS ${LIB_SHIMMER_ROOT}/catch/tests/*.cpp )
 
 
 ###############################################################################

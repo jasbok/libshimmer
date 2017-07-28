@@ -1,7 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 
-#include "catch.hpp"
-#include "spdlog.h"
+#include "catch/catch.hpp"
+#include "spdlog/spdlog.h"
+
 #include <GL/glew.h>
 #include <GL/glut.h>
 

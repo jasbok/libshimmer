@@ -1,7 +1,7 @@
 #ifndef LIBSHIMMER_KEYBOARD_KEYBOARD_H
 #define LIBSHIMMER_KEYBOARD_KEYBOARD_H
 
-#include "api/keyboard_api.h"
+#include "keyboard_api.h"
 
 namespace shimmer
 {

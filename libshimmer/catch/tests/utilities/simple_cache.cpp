@@ -1,5 +1,7 @@
-#include "catch.hpp"
 #include "simple_cache.hpp"
+
+#include "catch/catch.hpp"
+
 #include <memory>
 #include <string>
 

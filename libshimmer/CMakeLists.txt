@@ -1,9 +1,9 @@
 ###############################################################################
 #   Find and store OpenGL, GLEW and GLM paths.
 ###############################################################################
-find_package(GLEW)
-find_package(glm)
-find_package(OpenGL)
+find_package( GLEW )
+find_package( glm )
+find_package( OpenGL )
 
 set( OPENGL_INCLUDES
         ${GLEW_INCLUDE_DIRS}
@@ -18,23 +18,23 @@ set( OPENGL_LIBRARIES
 ###############################################################################
 #   Find Freetype.
 ###############################################################################
-find_package(Freetype)
+find_package( Freetype )
 
 
 ###############################################################################
 #   Find Threads (pthread needed by spdlog).
 ###############################################################################
-find_package (Threads)
+find_package ( Threads )
 
 
 ###############################################################################
 #   Configure include directories.
 ###############################################################################
 set( INCLUDE_DIR ${LIB_SHIMMER_ROOT}/includes )
+set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( INCLUDES
-        ${FREETYPE_INCLUDE_DIRS}
         ${INCLUDE_DIR}
         ${INCLUDE_DIR}/api
         ${INCLUDE_DIR}/keyboard
@@ -44,12 +44,16 @@ set( INCLUDES
         ${INCLUDE_DIR}/renderer/common
         ${INCLUDE_DIR}/renderer/glsl
         ${INCLUDE_DIR}/renderer/opengl
-        ${INCLUDE_DIR}/spdlog
         ${INCLUDE_DIR}/utilities
-        ${INCLUDE_DIR}/window
+        ${INCLUDE_DIR}/window )
+
+set ( EXTERNAL_INCLUDES
+        ${EXTERNAL_INCLUDE_DIR}
+        ${EXTERNAL_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
         ${OPENGL_INCLUDES} )
 
-include_directories(${INCLUDES})
+include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
 
 
 ###############################################################################

@@ -1,2 +1,2 @@
-#include "mouse/mouse.h"
+#include "mouse.h"
 

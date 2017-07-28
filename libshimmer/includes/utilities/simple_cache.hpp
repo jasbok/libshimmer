@@ -2,7 +2,9 @@
 #define LIBSHIMMER_UTILITIES_SIMPLE_CACHE_HPP
 
 #include "cache.hpp"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
+
 #include <string>
 #include <unordered_map>
 

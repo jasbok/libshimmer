@@ -2,6 +2,7 @@
 #define LIBSHIMMER_RENDERER_OPENGL_GL_ENUM_H
 
 #include <GL/glew.h>
+
 #include <string>
 
 namespace shimmer::opengl

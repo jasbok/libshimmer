@@ -3,7 +3,9 @@
 
 #include "gl_shader.h"
 #include "simple_cache.hpp"
+
 #include <GL/glew.h>
+
 #include <memory>
 #include <string>
 

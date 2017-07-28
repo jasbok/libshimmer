@@ -1,6 +1,9 @@
 #include "gl_pixel.h"
+
 #include "gl_enum.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
+
 #include <unordered_map>
 
 using namespace shimmer;

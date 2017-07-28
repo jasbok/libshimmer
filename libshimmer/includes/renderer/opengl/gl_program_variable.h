@@ -3,6 +3,7 @@
 
 #include "accessor_macros.h"
 #include "glsl_variable.h"
+
 #include <GL/glew.h>
 
 namespace shimmer

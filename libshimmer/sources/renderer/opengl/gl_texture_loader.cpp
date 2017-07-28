@@ -1,6 +1,8 @@
 #include "gl_texture_loader.h"
+
 #include "gl_pixel.h"
-#include "spdlog.h"
+
+#include "spdlog/spdlog.h"
 
 using namespace std;
 using namespace shimmer;
