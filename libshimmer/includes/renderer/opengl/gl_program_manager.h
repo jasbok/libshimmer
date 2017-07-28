@@ -14,4 +14,4 @@ shared_ptr<gl_program> load (
     const vector<shared_ptr<const gl_shader>>& shaders );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_PROGRAM_MANAGER_H

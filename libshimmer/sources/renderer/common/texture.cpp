@@ -2,9 +2,9 @@
 
 using namespace shimmer;
 
-texture::texture (
+texture::texture(
     unsigned int width,
-    unsigned int height)
+    unsigned int height )
     : _width ( width ),
       _height ( height )
 {}

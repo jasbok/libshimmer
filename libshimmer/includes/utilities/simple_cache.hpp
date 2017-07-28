@@ -11,22 +11,23 @@
 namespace shimmer
 {
 template<typename K,  typename V>
-class simple_cache: public cache<K, V>
+class simple_cache : public cache<K, V>
 {
 public:
-    simple_cache ( const std::string& name, const V& default_value = V() )
-        :  _default_value ( default_value ),
-           _logger (  )
+    simple_cache( const std::string& name, const V& default_value = V() )
+        : _default_value ( default_value ),
+          _logger()
     {
         _logger = spdlog::get ( "simple_cache::" + name );
-        if (_logger == nullptr) {
+
+        if ( _logger == nullptr ) {
             _logger = spdlog::stdout_color_mt ( "simple_cache::" + name );
         }
     }
 
     virtual ~simple_cache() {}
 
-    void clear () override
+    void clear() override
     {
         _cache.clear();
     }
@@ -34,7 +35,9 @@ public:
     V evict ( const K& key ) override
     {
         V value = get ( key );
+
         _cache.erase ( key );
+
         return value;
     }
 
@@ -47,6 +50,7 @@ public:
     {
         if ( !exists ( key ) ) {
             _logger->warn ( "Unable to find {} in cache.", key );
+
             return _default_value;
         }
 
@@ -67,5 +71,4 @@ private:
 };
 }
 
-#endif
-
+#endif // ifndef LIBSHIMMER_UTILITIES_SIMPLE_CACHE_HPP

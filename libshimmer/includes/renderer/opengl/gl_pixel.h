@@ -5,7 +5,8 @@
 
 namespace shimmer::opengl
 {
-unsigned int bytes_per_pixel(GLenum format, GLenum type);
+unsigned int bytes_per_pixel ( GLenum format,
+                               GLenum type );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_PIXEL_H

@@ -12,7 +12,7 @@ enum class qualifier
 
 std::string str_from ( qualifier qualifier );
 
-qualifier qualifier_from ( const std::string& str );
+qualifier   qualifier_from ( const std::string& str );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDER_GLSL_GLSL_QUALIFIER

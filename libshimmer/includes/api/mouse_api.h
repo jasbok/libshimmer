@@ -6,9 +6,10 @@ namespace shimmer
 class mouse_api
 {
 public:
-    virtual ~mouse_api () {}
+    virtual ~mouse_api() {}
 
-    virtual void cursor ( int* x, int* y ) = 0;
+    virtual void cursor ( int* x,
+                          int* y ) = 0;
 
     virtual void grab ( bool* do_grab ) = 0;
 
@@ -22,4 +23,4 @@ public:
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_API_MOUSE_API_H

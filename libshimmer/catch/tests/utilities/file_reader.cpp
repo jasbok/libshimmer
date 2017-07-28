@@ -20,6 +20,7 @@ TEST_CASE ( "Load complete file contents into a string.",
         "End of file, followed by an empty line:\n";
 
     auto actual_contents = file_reader::read ( file_path );
+
     CHECK ( expected_contents ==  actual_contents );
 }
 

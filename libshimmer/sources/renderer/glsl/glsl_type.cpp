@@ -10,6 +10,7 @@ using namespace std;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "glsl_type" );
 
+/* *INDENT-OFF* */
 const unordered_map<string, enum glsl::type>
 type_str_map = {
     {"bool", glsl::type::BOOL},
@@ -64,13 +65,16 @@ type_str_map = {
     {"mat4x3", glsl::type::MAT4X3}
 };
 
+/* *INDENT-ON* */
+
 glsl::type glsl::type_from ( const string& str )
 {
     if ( type_str_map.find ( str ) != type_str_map.end() ) {
         return type_str_map.at ( str );
     }
 
-    LOGGER->warn("Unknown glsl::type: {}", str);
+    LOGGER->warn ( "Unknown glsl::type: {}", str );
+
     return type::UNKNOWN;
 }
 

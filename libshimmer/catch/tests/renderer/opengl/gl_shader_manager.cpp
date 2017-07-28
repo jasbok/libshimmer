@@ -7,15 +7,19 @@
 using namespace std;
 using namespace shimmer;
 
-TEST_CASE ( "Load, store and retrieve shaders using the shader manager and cache.",
-            "[gl_shader_manager]" )
+TEST_CASE (
+    "Load, store and retrieve shaders using the shader manager and cache.",
+    "[gl_shader_manager]" )
 {
     gl_shader_manager::default_cache cache ( "catch_shader_cache" );
     string fs_shader_path = "data/glsl/simple.fs";
     string vs_shader_path = "data/glsl/simple.vs";
 
-    auto fs_shader = gl_shader_manager::load ( fs_shader_path, GL_FRAGMENT_SHADER );
-    auto vs_shader = gl_shader_manager::load ( vs_shader_path, GL_VERTEX_SHADER );
+    auto fs_shader = gl_shader_manager::load ( fs_shader_path,
+                                               GL_FRAGMENT_SHADER );
+
+    auto vs_shader = gl_shader_manager::load ( vs_shader_path,
+                                               GL_VERTEX_SHADER );
 
     CHECK ( fs_shader->handle() != 0 );
     CHECK ( fs_shader->variables().size() == 3 );
@@ -66,8 +70,10 @@ TEST_CASE ( "Check that the shader manager returns a nullptr for an invalid "
 
     spdlog::set_level ( spdlog::level::off );
 
-    auto fs_shader = gl_shader_manager::load ( garbage_path, GL_FRAGMENT_SHADER );
-    auto vs_shader = gl_shader_manager::load ( garbage_path, GL_VERTEX_SHADER );
+    auto fs_shader =
+        gl_shader_manager::load ( garbage_path, GL_FRAGMENT_SHADER );
+    auto vs_shader =
+        gl_shader_manager::load ( garbage_path, GL_VERTEX_SHADER );
 
     spdlog::set_level ( spdlog::level::err );
 

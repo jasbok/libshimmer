@@ -8,9 +8,9 @@ namespace shimmer
 class keyboard : public keyboard_api
 {
 public:
-    keyboard ();
+    keyboard();
 
-    virtual ~keyboard () {}
+    virtual ~keyboard() {}
 
     void grab ( bool* do_grab ) override;
 
@@ -20,4 +20,4 @@ public:
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_KEYBOARD_KEYBOARD_H

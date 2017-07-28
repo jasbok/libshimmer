@@ -3,6 +3,6 @@
 
 #include "shim.h"
 
-SHIM ( int,  SDL_PollEvent,  SDL_Event* event );
+SHIM ( int, SDL_PollEvent, SDL_Event * event );
 
-#endif
+#endif // ifndef SHIMS_SDL2_EVENT_H

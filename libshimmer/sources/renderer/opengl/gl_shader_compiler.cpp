@@ -12,15 +12,17 @@ static std::shared_ptr<spdlog::logger> LOGGER
 
 GLuint gl_shader_compiler::compile (
     const string& source,
-    GLuint type )
+    GLuint        type )
 {
     if ( source.empty() ) {
         LOGGER->error ( "An empty source string was provided to compiler." );
+
         return 0;
     }
 
-    if ( type != GL_FRAGMENT_SHADER && type != GL_VERTEX_SHADER ) {
+    if ( (type != GL_FRAGMENT_SHADER) && (type != GL_VERTEX_SHADER) ) {
         LOGGER->error ( "Incorrect GL type provided to compiler: {}", type );
+
         return 0;
     }
 
@@ -36,7 +38,7 @@ GLuint gl_shader_compiler::compile (
     if ( !success ) {
         GLchar log[GL_LOG_SIZE];
         glGetShaderInfoLog ( shader, GL_LOG_SIZE, nullptr, log );
-        LOGGER->error ( "Shader Compilation Failed: {}",  log );
+        LOGGER->error ( "Shader Compilation Failed: {}", log );
 
         glDeleteShader ( shader );
         shader = 0;
@@ -44,4 +46,3 @@ GLuint gl_shader_compiler::compile (
 
     return shader;
 }
-

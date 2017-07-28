@@ -21,13 +21,12 @@ public:
 
     std::shared_ptr<keyboard_api> keyboard();
 
-    std::shared_ptr<mouse_api> mouse();
+    std::shared_ptr<mouse_api>    mouse();
 
     std::shared_ptr<renderer_api> renderer();
 
-    std::shared_ptr<window_api> window();
-
+    std::shared_ptr<window_api>   window();
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_SHIMMER_H

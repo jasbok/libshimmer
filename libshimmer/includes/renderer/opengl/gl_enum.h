@@ -7,7 +7,7 @@
 
 namespace shimmer::opengl
 {
-    std::string enum_to_string(GLenum gl_enum);
+std::string enum_to_string ( GLenum gl_enum );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_ENUM_H

@@ -5,14 +5,15 @@
 
 namespace shimmer
 {
-class mouse :  public mouse_api {
-
+class mouse :  public mouse_api
+{
 public:
-    mouse ();
+    mouse();
 
-    virtual ~mouse () {}
+    virtual ~mouse() {}
 
-    void cursor ( int* x, int* y ) override;
+    void cursor ( int* x,
+                  int* y ) override;
 
     void grab ( bool* do_grab ) override;
 
@@ -26,4 +27,4 @@ public:
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_MOUSE_MOUSE_H

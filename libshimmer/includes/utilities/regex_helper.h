@@ -8,10 +8,9 @@
 namespace shimmer::regex_helper
 {
 using namespace std;
-vector<vector<string>> find_all (
-                        const string& src,
-                        const regex& regex,
-                        const vector<unsigned int>& groups = {} );
+vector<vector<string>> find_all ( const string&               src,
+                                  const regex&                regex,
+                                  const vector<unsigned int>& groups = {} );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_UTITLITIES_REGEX_HELPER_H

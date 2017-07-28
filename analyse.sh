@@ -2,13 +2,16 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+COMPILER_CC=/usr/bin/gcc
+COMPILER_CXX=/usr/bin/g++
+
 BUILD_SYSTEM=ninja
 THREADS=16
 
 IGNORE_ERRORS=false
 
-RUN_CPPCHECK=true
 RUN_UNCRUSTIFY=true
+RUN_CPPCHECK=true
 RUN_CLEAN=true
 RUN_BUILD=true
 RUN_CATCH=true
@@ -91,11 +94,37 @@ esac
 done
 
 ###############################################################################
+#               ***** Format the source code with uncrustify. *****           #
+###############################################################################
+if [[ $RUN_UNCRUSTIFY == true ]]
+then
+    header "Running uncrustify on source files."
+    cd $DIR
+
+    LIBSHIMMER_SOURCE=($(find libshimmer \( -name *.h                   \
+                                            -o -name *.hpp              \
+                                            -o -name *.cpp \)))
+
+    SHIMS_SOURCE=($(find shims \(   -name *.h                           \
+                                    -o -name *.hpp                      \
+                                    -o -name *.cpp \)))
+
+    for src in "${LIBSHIMMER_SOURCE[@]}" "${SHIMS_SOURCE[@]}"
+    do
+        info "Running uncrustify on: $src"
+        uncrustify  -q --config "uncrustify.cfg"                            \
+                    --no-backup                                             \
+                     "$src"                                                 \
+                || err "Uncrustify failed to format the source file: $src."
+    done
+fi
+
+###############################################################################
 #                    ***** Perform cppcheck analysis. *****                   #
 ###############################################################################
 if [[ $RUN_CPPCHECK == true ]]
 then
-    header "Running cppcheck analysis"
+    header "Running cppcheck analysis."
     cd $DIR
 
     cppcheck    -j $THREADS                                 \
@@ -141,6 +170,10 @@ then
         cd build
         info "Configuring and building project using $BUILD_SYSTEM."
         info "Using $THREADS threads to build project."
+
+        export CC=$COMPILER_CC
+        export CXX=$COMPILER_CXX
+
         if [[ $BUILD_SYSTEM == "ninja" ]]
         then
             cmake -GNinja .. || err "Failed to configure project."

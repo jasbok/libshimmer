@@ -6,12 +6,13 @@ namespace shimmer
 class renderer_api
 {
 public:
-    virtual ~renderer_api () {}
+    virtual ~renderer_api() {}
 
-    virtual void refresh () = 0;
+    virtual void refresh() = 0;
 
-    virtual void resize ( int* width,  int* height ) = 0;
+    virtual void resize ( int* width,
+                          int* height ) = 0;
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_API_RENDERER_API_H

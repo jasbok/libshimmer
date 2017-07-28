@@ -12,13 +12,15 @@ int main ( int argc, char* argv[] )
     glutCreateWindow ( "libshimmer catch window" );
 
     auto err = glewInit();
+
     if ( GLEW_OK != err ) {
         fprintf ( stderr, "GLEW Error: %s\n", glewGetErrorString ( err ) );
-        fprintf ( stderr, "OpenGL tests will probably fail.\n");
+        fprintf ( stderr, "OpenGL tests will probably fail.\n" );
     }
 
     spdlog::set_level ( spdlog::level::warn );
 
     int result = Catch::Session().run ( argc, argv );
-    return ( result < 0xff ? result : 0xff );
+
+    return result < 0xff ? result : 0xff;
 }

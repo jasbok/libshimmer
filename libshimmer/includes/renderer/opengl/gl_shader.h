@@ -14,21 +14,21 @@ namespace shimmer
 class gl_shader
 {
 public:
-    gl_shader (
-        GLuint handle,
+    gl_shader(
+        GLuint                            handle,
         const std::vector<glsl_variable>& variables );
 
-    explicit gl_shader (
-        GLuint handle,
+    explicit gl_shader(
+        GLuint                       handle,
         std::vector<glsl_variable>&& variables );
 
     virtual ~gl_shader();
 
 private:
-    GETTER ( gl_shader, GLuint, handle );
+    GETTER ( gl_shader, GLuint,                     handle );
 
     GETTER ( gl_shader, std::vector<glsl_variable>, variables );
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDER_OPENGL_GL_SHADER_H

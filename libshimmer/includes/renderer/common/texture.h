@@ -8,9 +8,9 @@ namespace shimmer
 class texture
 {
 public:
-    texture (
+    texture(
         unsigned int width,
-        unsigned int height);
+        unsigned int height );
 
     virtual ~texture() {}
 
@@ -21,4 +21,4 @@ private:
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_COMMON_TEXTURE_H

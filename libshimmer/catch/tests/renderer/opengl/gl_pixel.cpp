@@ -6,6 +6,7 @@
 using namespace std;
 using namespace shimmer;
 
+/* *INDENT-OFF* */
 TEST_CASE ( "Check if bytes per pixel is correctly calculated from the "
             "pixel format and type GLenums.",
             "[gl_pixel]" )
@@ -371,3 +372,5 @@ TEST_CASE ( "Check if the bytes per pixel function returns 0 for invalid "
 
     spdlog::set_level(spdlog::level::warn);
 }
+
+/* *INDENT-ON* */

@@ -8,7 +8,8 @@
 
 namespace shimmer::gl_shader_compiler
 {
-GLuint compile ( const std::string& source, GLuint type );
+GLuint compile ( const std::string& source,
+                 GLuint             type );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_SHADER_COMPILER_H

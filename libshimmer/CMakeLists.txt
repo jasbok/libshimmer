@@ -49,7 +49,6 @@ set( INCLUDES
 
 set ( EXTERNAL_INCLUDES
         ${EXTERNAL_INCLUDE_DIR}
-        ${EXTERNAL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${OPENGL_INCLUDES} )
 
@@ -59,7 +58,7 @@ include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
 ###############################################################################
 #   List all headers
 ###############################################################################
-file( GLOB_RECURSE HEADERS ${INCLUDE_DIR}/*.h* )
+file( GLOB_RECURSE HEADERS ${INCLUDE_DIR}/*.h* ${EXTERNAL_INCLUDE_DIR}/*.h* )
 
 
 ###############################################################################

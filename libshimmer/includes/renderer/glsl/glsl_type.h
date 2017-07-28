@@ -23,9 +23,9 @@ enum class type
     MAT3X4, MAT4X3
 };
 
-type type_from ( const std::string& str );
+type        type_from ( const std::string& str );
 
-std::string str_from (glsl::type type);
+std::string str_from ( glsl::type type );
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDER_GLSL_GLSL_TYPE

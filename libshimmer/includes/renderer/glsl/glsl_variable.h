@@ -13,24 +13,24 @@ namespace shimmer
 class glsl_variable
 {
 public:
-    glsl_variable (
-        glsl::qualifier qualifier,
-        glsl::type type,
-        unsigned int size,
+    glsl_variable(
+        glsl::qualifier    qualifier,
+        glsl::type         type,
+        unsigned int       size,
         const std::string& name );
 
-    glsl_variable ( const glsl_variable& copy );
+    glsl_variable( const glsl_variable& copy );
 
-    glsl_variable ( glsl_variable&& move );
+    glsl_variable( glsl_variable&& move );
 
     virtual ~glsl_variable() {}
 
-    glsl_variable& operator = ( const glsl_variable& copy );
+    glsl_variable&        operator=( const glsl_variable& copy );
 
-    glsl_variable& operator = ( glsl_variable&& move );
+    glsl_variable&        operator=( glsl_variable&& move );
 
-    friend std::ostream& operator<< (
-        std::ostream& os,
+    friend std ::ostream& operator<<(
+        std::ostream&        os,
         const glsl_variable& var )
     {
         os << "{ qualifier: \"" << glsl::str_from ( var._qualifier )
@@ -45,12 +45,12 @@ public:
 private:
     GETTER ( glsl_variable, glsl::qualifier, qualifier );
 
-    GETTER ( glsl_variable, glsl::type, type );
+    GETTER ( glsl_variable, glsl::type,      type );
 
-    GETTER ( glsl_variable, unsigned int, size );
+    GETTER ( glsl_variable, unsigned int,    size );
 
-    GETTER ( glsl_variable, std::string, name );
+    GETTER ( glsl_variable, std::string,     name );
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_GLSL_GLSL_VARIABLE_H

@@ -4,6 +4,7 @@
 
 using namespace shimmer;
 
+/* *INDENT-OFF* */
 const std::unordered_map<GLenum, std::string> enum_string_map = {
 //
 // GL Pixel Format
@@ -48,6 +49,8 @@ const std::unordered_map<GLenum, std::string> enum_string_map = {
     { GL_UNSIGNED_INT_2_10_10_10_REV, "GL_UNSIGNED_INT_2_10_10_10_REV"  },
 
 };
+
+/* *INDENT-ON* */
 
 std::string opengl::enum_to_string ( GLenum gl_enum )
 {

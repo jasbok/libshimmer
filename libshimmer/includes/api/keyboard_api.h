@@ -6,7 +6,7 @@ namespace shimmer
 class keyboard_api
 {
 public:
-    virtual ~keyboard_api () {}
+    virtual ~keyboard_api() {}
 
     virtual void grab ( bool* do_grab ) = 0;
 
@@ -16,4 +16,4 @@ public:
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_API_KEYBOARD_API_H

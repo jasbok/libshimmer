@@ -7,11 +7,10 @@
 
 #include <memory>
 
-extern std::shared_ptr<class::shimmer::shimmer> libshimmer;
+extern std::shared_ptr<class ::shimmer::shimmer> libshimmer;
 
-SHIM ( int, SDL_Init, Uint32 flags );
+SHIM ( int,  SDL_Init, Uint32 flags );
 SHIM ( void, SDL_Quit, void );
 
 
-
-#endif
+#endif // ifndef SHIMS_SDL2_SHIM_H

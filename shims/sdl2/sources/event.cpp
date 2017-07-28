@@ -37,7 +37,6 @@ int SDL_PollEvent ( SDL_Event* event )
                      event->motion.xrel,
                      event->motion.yrel );
             break;
-
         }
     }
 

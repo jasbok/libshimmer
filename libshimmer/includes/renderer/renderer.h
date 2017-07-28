@@ -10,12 +10,13 @@ class renderer :  public renderer_api
 public:
     renderer();
 
-    virtual ~renderer () {}
+    virtual ~renderer() {}
 
-    void refresh () override;
+    void refresh() override;
 
-    void resize ( int* width,  int* height ) override;
+    void resize ( int* width,
+                  int* height ) override;
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_RENDERER_H

@@ -5,6 +5,4 @@
 
 SHIM ( void, SDL_RenderPresent, SDL_Renderer* );
 
-#endif
-
-
+#endif // ifndef SHIMS_SDL2_VIDEO_H

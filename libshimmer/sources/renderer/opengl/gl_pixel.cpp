@@ -11,6 +11,7 @@ using namespace shimmer;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_pixel" );
 
+/* *INDENT-OFF* */
 const std::unordered_map<GLenum, unsigned int> pixel_format_component = {
     { GL_RED,             1 },
     { GL_RG,              2 },
@@ -51,17 +52,24 @@ const std::unordered_map<GLenum, unsigned int> pixel_type_bytes = {
     { GL_UNSIGNED_INT_2_10_10_10_REV, 4 }
 };
 
+/* *INDENT-ON* */
+
 unsigned int opengl::bytes_per_pixel ( GLenum format, GLenum type )
 {
     auto format_components = pixel_format_component.find ( format );
+
     if ( format_components ==  pixel_format_component.end() ) {
-        LOGGER->error ( "Unknown pixel format: {}", enum_to_string(format) );
+        LOGGER->error ( "Unknown pixel format: {}",
+                        enum_to_string ( format ) );
+
         return 0;
     }
 
     auto type_bytes = pixel_type_bytes.find ( type );
+
     if ( type_bytes ==  pixel_format_component.end() ) {
-        LOGGER->error ( "Unknown pixel type: {}", enum_to_string(type) );
+        LOGGER->error ( "Unknown pixel type: {}", enum_to_string ( type ) );
+
         return 0;
     }
 

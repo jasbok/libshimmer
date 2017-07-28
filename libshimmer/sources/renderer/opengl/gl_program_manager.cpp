@@ -27,10 +27,10 @@ shared_ptr<gl_program> gl_program_manager::load (
                 shader_variables.end(),
                 shader->variables().begin(),
                 shader->variables().end() );
-
         } else {
             LOGGER->error ( "An invalid shader was passed to the "
                             "program manager load function." );
+
             return nullptr;
         }
     }
@@ -38,9 +38,8 @@ shared_ptr<gl_program> gl_program_manager::load (
     auto linked = gl_shader_linker::link ( shader_handles );
 
     if ( linked ) {
-        program = make_shared<gl_program> ( linked, shader_variables );
+        program = make_shared<gl_program>( linked, shader_variables );
     }
 
     return program;
 }
-

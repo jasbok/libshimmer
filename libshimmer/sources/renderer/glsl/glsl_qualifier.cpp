@@ -14,12 +14,19 @@ string glsl::str_from ( glsl::qualifier qualifier )
 {
     switch ( qualifier ) {
     case glsl::qualifier::ATTRIBUTE:
+
         return "attribute";
+
     case glsl::qualifier::UNIFORM:
+
         return "uniform";
+
     case glsl::qualifier::VARYING:
+
         return "varying";
+
     default:
+
         return "unknown";
     }
 }
@@ -35,5 +42,6 @@ glsl::qualifier glsl::qualifier_from ( const string& str )
     }
 
     LOGGER->warn ( "Unknown glsl_qualifier: {}", str );
+
     return glsl::qualifier::UNKNOWN;
 }

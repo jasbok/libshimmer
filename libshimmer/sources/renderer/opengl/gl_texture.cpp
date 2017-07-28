@@ -7,12 +7,12 @@ using namespace shimmer;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_texture" );
 
-gl_texture::gl_texture (
+gl_texture::gl_texture(
     unsigned int width,
     unsigned int height,
-    GLenum target,
-    GLint level,
-    GLint internal_format )
+    GLenum       target,
+    GLint        level,
+    GLint        internal_format )
     : texture ( width,  height ),
       _handle ( 0 ),
       _target ( target ),
@@ -22,6 +22,7 @@ gl_texture::gl_texture (
 
     if ( _handle ) {
         glBindTexture ( target, _handle );
+
         glTexImage2D ( target,
                        level,
                        internal_format,
@@ -43,20 +44,20 @@ void gl_texture::bind()
     glBindTexture ( _target, _handle );
 }
 
-void gl_texture::upload ( GLenum format,
-                          GLenum type,
+void gl_texture::upload ( GLenum        format,
+                          GLenum        type,
                           const GLvoid* data )
 {
     upload ( format, type, data, 0, 0, width(), height() );
 }
 
-void gl_texture::upload ( GLenum format,
-                          GLenum type,
+void gl_texture::upload ( GLenum        format,
+                          GLenum        type,
                           const GLvoid* data,
-                          GLint x_offset,
-                          GLint y_offset,
-                          GLsizei width,
-                          GLsizei height )
+                          GLint         x_offset,
+                          GLint         y_offset,
+                          GLsizei       width,
+                          GLsizei       height )
 {
     bind();
 
@@ -71,8 +72,8 @@ void gl_texture::upload ( GLenum format,
                       data );
 }
 
-void gl_texture::download ( GLenum format,
-                            GLenum type,
+void gl_texture::download ( GLenum  format,
+                            GLenum  type,
                             GLvoid* data )
 {
     bind();
@@ -83,8 +84,3 @@ void gl_texture::download ( GLenum format,
                     type,
                     data );
 }
-
-
-
-
-

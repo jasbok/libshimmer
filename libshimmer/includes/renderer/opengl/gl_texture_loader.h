@@ -10,29 +10,29 @@ namespace shimmer
 class gl_texture_loader
 {
 public:
-    gl_texture_loader ( unsigned int write_buffer_count = 2,
-                        unsigned int read_buffer_count = 1 );
+    gl_texture_loader( unsigned int write_buffer_count = 2,
+                       unsigned int read_buffer_count = 1 );
 
     virtual ~gl_texture_loader();
 
     void upload ( const std::shared_ptr<gl_texture>& texture,
-                  GLenum format,
-                  GLenum type,
-                  const GLvoid* data );
+                  GLenum                             format,
+                  GLenum                             type,
+                  const GLvoid*                      data );
 
     void upload ( const std::shared_ptr<gl_texture>& texture,
-                  GLenum format,
-                  GLenum type,
-                  const GLvoid* data,
-                  GLint x_offset,
-                  GLint y_offset,
-                  GLsizei width,
-                  GLsizei height );
+                  GLenum                             format,
+                  GLenum                             type,
+                  const GLvoid*                      data,
+                  GLint                              x_offset,
+                  GLint                              y_offset,
+                  GLsizei                            width,
+                  GLsizei                            height );
 
     void download ( const std::shared_ptr<gl_texture>& texture,
-                    GLenum format,
-                    GLenum type,
-                    GLvoid* data );
+                    GLenum                             format,
+                    GLenum                             type,
+                    GLvoid*                            data );
 
 private:
     //
@@ -53,12 +53,12 @@ private:
 
     GLuint _next_ro_pbo();
 
-    void* _map_buffer ( GLuint pbo,
-                        GLenum target,
-                        GLsizeiptr size,
-                        GLenum access,
-                        GLenum usage );
+    void*  _map_buffer ( GLuint     pbo,
+                         GLenum     target,
+                         GLsizeiptr size,
+                         GLenum     access,
+                         GLenum     usage );
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_LOADER_H

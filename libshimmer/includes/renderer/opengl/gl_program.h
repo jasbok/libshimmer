@@ -15,8 +15,8 @@ namespace shimmer
 class gl_program
 {
 public:
-    gl_program (
-        GLuint handle,
+    gl_program(
+        GLuint                            handle,
         const std::vector<glsl_variable>& variables );
 
     virtual ~gl_program();
@@ -24,11 +24,11 @@ public:
     void use();
 
 private:
-    GETTER ( gl_program, GLuint, handle );
+    GETTER ( gl_program, GLuint,       handle );
 
     typedef std::unordered_map<std::string, gl_program_variable> variable_map;
     GETTER ( gl_program, variable_map, uniforms );
 };
 }
 
-#endif
+#endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_PROGRAM_H

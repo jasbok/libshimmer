@@ -13,6 +13,7 @@ GLuint gl_shader_linker::link ( const std::vector<GLuint>& shaders )
 {
     if ( shaders.empty() ) {
         LOGGER->error ( "An empty shader list was passed to the linker." );
+
         return 0;
     }
     else if ( shaders.size() == 1 ) {
@@ -22,6 +23,7 @@ GLuint gl_shader_linker::link ( const std::vector<GLuint>& shaders )
     for ( auto shader : shaders ) {
         if ( !shader ) {
             LOGGER->error ( "Found an invalid shader in the list." );
+
             return 0;
         }
     }
