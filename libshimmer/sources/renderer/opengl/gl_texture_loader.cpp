@@ -34,7 +34,20 @@ void gl_texture_loader::upload ( const std::shared_ptr<gl_texture>& texture,
                                  GLenum                             type,
                                  const GLvoid*                      data )
 {
-    texture->upload ( format, type, data );
+    auto size = texture->width()
+                * texture->height()
+                * opengl::bytes_per_pixel ( format, type );
+
+    auto buffer = _map_buffer ( _next_wo_pbo(),
+                                GL_PIXEL_UNPACK_BUFFER,
+                                size,
+                                GL_WRITE_ONLY,
+                                GL_STATIC_DRAW );
+
+    std::memcpy ( buffer, data, size );
+    glUnmapBuffer ( GL_PIXEL_UNPACK_BUFFER );
+
+    texture->upload ( format, type, nullptr );
 }
 
 void gl_texture_loader::upload ( const std::shared_ptr<gl_texture>& texture,
@@ -46,18 +59,21 @@ void gl_texture_loader::upload ( const std::shared_ptr<gl_texture>& texture,
                                  GLsizei                            width,
                                  GLsizei                            height )
 {
-    GLsizeiptr size = width * height *
-                      opengl::bytes_per_pixel ( format, type );
+    auto size = width * height * opengl::bytes_per_pixel ( format, type );
 
-    //     void* buffer = _map_buffer ( _next_wo_pbo(),
-    //                                  GL_PIXEL_UNPACK_BUFFER,
-    //                                  size,
-    //                                  GL_WRITE_ONLY,
-    //                                  GL_STATIC_DRAW );
+    // TODO:    Check whether we need to allocate a PBO with the same size as
+    //          the target texture in order to write data to a sub-region.
+    auto buffer = _map_buffer ( _next_wo_pbo(),
+                                GL_PIXEL_UNPACK_BUFFER,
+                                size,
+                                GL_WRITE_ONLY,
+                                GL_STATIC_DRAW );
 
-    glMapBuffer ( GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY );
+    std::memcpy ( buffer, data, size );
+    glUnmapBuffer ( GL_PIXEL_UNPACK_BUFFER );
 
-    texture->upload ( format, type, data, x_offset, y_offset, width, height );
+    texture->upload ( format, type, nullptr, x_offset, y_offset, width,
+                      height );
 }
 
 void gl_texture_loader::download ( const std::shared_ptr<gl_texture>& texture,
@@ -65,19 +81,19 @@ void gl_texture_loader::download ( const std::shared_ptr<gl_texture>& texture,
                                    GLenum                             type,
                                    GLvoid*                            data )
 {
-    GLsizeiptr size = texture->width()
-                      * texture->height()
-                      * opengl::bytes_per_pixel ( format, type );
+    auto size = texture->width() * texture->height() *
+                opengl::bytes_per_pixel ( format, type );
 
-    //     void* buffer = _map_buffer ( _next_ro_pbo(),
-    //                                  GL_PIXEL_UNPACK_BUFFER,
-    //                                  size,
-    //                                  GL_READ_ONLY,
-    //                                  GL_STATIC_READ );
+    const auto buffer = _map_buffer ( _next_ro_pbo(),
+                                      GL_PIXEL_PACK_BUFFER,
+                                      size,
+                                      GL_READ_ONLY,
+                                      GL_STATIC_READ );
 
-    glMapBuffer ( GL_PIXEL_UNPACK_BUFFER, GL_READ_ONLY );
+    std::memcpy ( data, buffer, size );
+    glUnmapBuffer ( GL_PIXEL_PACK_BUFFER );
 
-    texture->download ( format, type, data );
+    texture->download ( format, type, nullptr );
 }
 
 GLuint gl_texture_loader::_next_wo_pbo()
