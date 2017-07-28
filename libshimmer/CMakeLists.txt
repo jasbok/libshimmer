@@ -99,8 +99,6 @@ set( TARGET_LINK_LIBRARIES
         ${FREETYPE_LIBRARIES}
         ${OPENGL_LIBRARIES} )
 
-message( "TARGET_LINK_LIBRARIES: " ${TARGET_LINK_LIBRARIES} )
-
 
 ###############################################################################
 #   Build shared library

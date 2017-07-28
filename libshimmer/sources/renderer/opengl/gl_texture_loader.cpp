@@ -48,11 +48,11 @@ void gl_texture_loader::upload ( const std::shared_ptr<gl_texture>& texture,
 {
     GLsizeiptr size = width * height * opengl::bytes_per_pixel ( format, type );
 
-    void* buffer = _map_buffer ( _next_wo_pbo(),
-                                 GL_PIXEL_UNPACK_BUFFER,
-                                 size,
-                                 GL_WRITE_ONLY,
-                                 GL_STATIC_DRAW );
+//     void* buffer = _map_buffer ( _next_wo_pbo(),
+//                                  GL_PIXEL_UNPACK_BUFFER,
+//                                  size,
+//                                  GL_WRITE_ONLY,
+//                                  GL_STATIC_DRAW );
 
     glMapBuffer ( GL_PIXEL_UNPACK_BUFFER,  GL_WRITE_ONLY );
 
@@ -68,11 +68,11 @@ void gl_texture_loader::download ( const std::shared_ptr<gl_texture>& texture,
                       * texture->height()
                       * opengl::bytes_per_pixel ( format, type );
 
-    void* buffer = _map_buffer ( _next_ro_pbo(),
-                                 GL_PIXEL_UNPACK_BUFFER,
-                                 size,
-                                 GL_READ_ONLY,
-                                 GL_STATIC_READ );
+//     void* buffer = _map_buffer ( _next_ro_pbo(),
+//                                  GL_PIXEL_UNPACK_BUFFER,
+//                                  size,
+//                                  GL_READ_ONLY,
+//                                  GL_STATIC_READ );
 
     glMapBuffer ( GL_PIXEL_UNPACK_BUFFER,  GL_READ_ONLY );
 

@@ -14,7 +14,7 @@ template<typename K,  typename V>
 class simple_cache: public cache<K, V>
 {
 public:
-    simple_cache ( const std::string name, const V& default_value = V() )
+    simple_cache ( const std::string& name, const V& default_value = V() )
         :  _default_value ( default_value ),
            _logger (  )
     {

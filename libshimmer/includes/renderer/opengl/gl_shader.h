@@ -18,7 +18,7 @@ public:
         GLuint handle,
         const std::vector<glsl_variable>& variables );
 
-    gl_shader (
+    explicit gl_shader (
         GLuint handle,
         std::vector<glsl_variable>&& variables );
 

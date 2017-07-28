@@ -1,0 +1,31 @@
+{
+    i965_dri.so
+    Memcheck:Value4
+    ...
+    obj:*/i965_dri.so*
+}
+
+{
+   ignore_unversioned_i965_dri
+   Memcheck:Addr4
+   ...
+   obj:*/lib*/i965_dri.so
+}
+{
+   ignore_versioned_i965_dri
+   Memcheck:Addr4
+   ...
+   obj:*/lib*/i965_dri.so.*
+}
+{
+   ignore_unversioned_i965_dri
+   Memcheck:Addr8
+   ...
+   obj:*/lib*/i965_dri.so
+}
+{
+   ignore_versioned_i965_dri
+   Memcheck:Addr8
+   ...
+   obj:*/lib*/i965_dri.so.*
+}
