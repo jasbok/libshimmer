@@ -18,7 +18,7 @@ public:                                        \
 private:                                       \
     TYPE _ ## NAME
 
-#define GETTER( CLASS, TYPE, NAME )    \
+#define GETTER( TYPE, NAME )           \
 public:                                \
     virtual const TYPE &NAME() const { \
         return _ ## NAME;              \
@@ -28,4 +28,5 @@ public:                                \
     }                                  \
 private:                               \
     TYPE _ ## NAME
+
 #endif // ifndef LIBSHIMMER_MACROS_ACCESSOR_MACROS_H

@@ -15,9 +15,9 @@ public:
     virtual ~texture() {}
 
 private:
-    GETTER ( texture, unsigned int, width );
+    GETTER ( unsigned int, width );
 
-    GETTER ( texture, unsigned int, height );
+    GETTER ( unsigned int, height );
 };
 }
 

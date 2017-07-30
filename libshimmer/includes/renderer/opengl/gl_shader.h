@@ -25,9 +25,9 @@ public:
     virtual ~gl_shader();
 
 private:
-    GETTER ( gl_shader, GLuint,                     handle );
+    GETTER ( GLuint,                     handle );
 
-    GETTER ( gl_shader, std::vector<glsl_variable>, variables );
+    GETTER ( std::vector<glsl_variable>, variables );
 };
 }
 

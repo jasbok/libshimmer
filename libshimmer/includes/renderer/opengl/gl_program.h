@@ -24,10 +24,10 @@ public:
     void use();
 
 private:
-    GETTER ( gl_program, GLuint,       handle );
+    GETTER ( GLuint,       handle );
 
     typedef std::unordered_map<std::string, gl_program_variable> variable_map;
-    GETTER ( gl_program, variable_map, uniforms );
+    GETTER ( variable_map, uniforms );
 };
 }
 

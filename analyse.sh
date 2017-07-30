@@ -17,6 +17,8 @@ RUN_CPPCHECK=false
 RUN_UNCRUSTIFY=false
 RUN_VALGRIND=false
 
+TAGS=
+
 BLUE='\033[1;34m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -101,6 +103,12 @@ case $i in
     --catch)
     info "==> Enabled catch run."
     RUN_CATCH=true
+    shift
+    ;;
+
+    --tags)
+    TAGS="$2"
+    info "==> Using the following test tags: $TAGS"
     shift
     ;;
 
@@ -223,8 +231,13 @@ then
     header "Run all catch unit tests."
     cd $DIR
 
-    TESTS=($(find libshimmer/catch/tests/ -name *.cpp \
-                | sed -e 's|.*/\(.*\).cpp|\1|g'))
+    if [[ -n $TAGS ]]
+    then
+        TESTS=($TAGS)
+    else
+        TESTS=($(find libshimmer/catch/tests/ -name *.cpp \
+                    | sed -e 's|.*/\(.*\).cpp|\1|g'))
+    fi
 
     cd $DIR/build/libshimmer/catch
     for test in "${TESTS[@]}"
@@ -244,8 +257,13 @@ then
     header "Run valgrind on all unit tests."
     cd $DIR
 
-    TESTS=($(   find libshimmer/catch/tests/ -name *.cpp \
-                | sed -e 's|.*/\(.*\).cpp|\1|g'))
+    if [[ -n $TAGS ]]
+    then
+        TESTS=($TAGS)
+    else
+        TESTS=($(find libshimmer/catch/tests/ -name *.cpp \
+                    | sed -e 's|.*/\(.*\).cpp|\1|g'))
+    fi
 
     SUPPRESSIONS=$DIR/suppressions
     cd $DIR/build/libshimmer/catch
@@ -254,7 +272,9 @@ then
         PASS=0
         info "Running valgrind test: $test"
         valgrind    --tool=memcheck                 \
+                    --leak-check=full               \
                     --suppressions=$SUPPRESSIONS    \
+                    --gen-suppressions=all          \
                     --quiet                         \
                     --error-exitcode=1              \
                     ./catch "[$test]" || err "A valgrind test run failed."

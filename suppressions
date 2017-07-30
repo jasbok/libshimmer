@@ -1,5 +1,11 @@
 {
     i965_dri.so
+    Memcheck:Leak
+    ...
+    obj:*/i965_dri.so*
+}
+{
+    i965_dri.so
     Memcheck:Value4
     ...
     obj:*/i965_dri.so*

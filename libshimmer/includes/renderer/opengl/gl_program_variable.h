@@ -28,7 +28,7 @@ public:
     gl_program_variable& operator=( gl_program_variable&& move );
 
 private:
-    GETTER ( gl_program_variable, GLint, location );
+    GETTER ( GLint, location );
 };
 }
 

@@ -43,13 +43,13 @@ public:
     }
 
 private:
-    GETTER ( glsl_variable, glsl::qualifier, qualifier );
+    GETTER ( glsl::qualifier, qualifier );
 
-    GETTER ( glsl_variable, glsl::type,      type );
+    GETTER ( glsl::type,      type );
 
-    GETTER ( glsl_variable, unsigned int,    size );
+    GETTER ( unsigned int,    size );
 
-    GETTER ( glsl_variable, std::string,     name );
+    GETTER ( std::string,     name );
 };
 }
 

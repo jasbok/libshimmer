@@ -37,11 +37,11 @@ public:
                     GLvoid* data );
 
 private:
-    GETTER ( gl_texture, GLuint, handle );
+    GETTER ( GLuint, handle );
 
-    GETTER ( gl_texture, GLenum, target );
+    GETTER ( GLenum, target );
 
-    GETTER ( gl_texture, GLint,  level );
+    GETTER ( GLint,  level );
 };
 }
 
