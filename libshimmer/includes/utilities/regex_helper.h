@@ -5,12 +5,15 @@
 #include <string>
 #include <vector>
 
-namespace shimmer::regex_helper
+namespace shimmer
+{
+namespace regex_helper
 {
 using namespace std;
 vector<vector<string>> find_all ( const string&               src,
                                   const regex&                regex,
                                   const vector<unsigned int>& groups = {} );
+}
 }
 
 #endif // ifndef LIBSHIMMER_UTITLITIES_REGEX_HELPER_H

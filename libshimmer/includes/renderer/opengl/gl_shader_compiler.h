@@ -6,10 +6,13 @@
 #include <string>
 #include <vector>
 
-namespace shimmer::gl_shader_compiler
+namespace shimmer
+{
+namespace gl_shader_compiler
 {
 GLuint compile ( const std::string& source,
                  GLuint             type );
+}
 }
 
 #endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_SHADER_COMPILER_H

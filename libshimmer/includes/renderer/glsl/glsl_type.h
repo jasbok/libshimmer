@@ -3,7 +3,9 @@
 
 #include <string>
 
-namespace shimmer::glsl
+namespace shimmer
+{
+namespace glsl
 {
 enum class type
 {
@@ -26,6 +28,7 @@ enum class type
 type        type_from ( const std::string& str );
 
 std::string str_from ( glsl::type type );
+}
 }
 
 #endif // ifndef LIBSHIMMER_RENDER_GLSL_GLSL_TYPE

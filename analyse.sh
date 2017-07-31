@@ -2,8 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-COMPILER_CC=/usr/bin/gcc
-COMPILER_CXX=/usr/bin/g++
+COMPILER_CC=/usr/bin/clang
+COMPILER_CXX=/usr/bin/clang++
 
 BUILD_SYSTEM=ninja
 THREADS=8

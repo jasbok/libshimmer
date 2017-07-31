@@ -5,7 +5,7 @@
 
 namespace shimmer
 {
-class window :  public window_api
+class window : public window_api
 {
 public:
     window();

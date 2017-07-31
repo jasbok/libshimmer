@@ -86,8 +86,6 @@ std::shared_ptr<image> png_reader::read ( const std::string& path,
             nullptr );
 
         png_read_image ( png_ptr, png->rows().data() );
-
-        // png_read_end ( png_ptr, nullptr );
     }
     else {
         png_read_png ( png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL );

@@ -58,7 +58,7 @@ unsigned int opengl::bytes_per_pixel ( GLenum format, GLenum type )
 {
     auto format_components = pixel_format_component.find ( format );
 
-    if ( format_components ==  pixel_format_component.end() ) {
+    if ( format_components == pixel_format_component.end() ) {
         LOGGER->error ( "Unknown pixel format: {}",
                         enum_to_string ( format ) );
 
@@ -67,7 +67,7 @@ unsigned int opengl::bytes_per_pixel ( GLenum format, GLenum type )
 
     auto type_bytes = pixel_type_bytes.find ( type );
 
-    if ( type_bytes ==  pixel_format_component.end() ) {
+    if ( type_bytes == pixel_type_bytes.end() ) {
         LOGGER->error ( "Unknown pixel type: {}", enum_to_string ( type ) );
 
         return 0;
