@@ -48,7 +48,8 @@ configure_file(data/images/8x9x8_rgb.png data/images/8x9x8_rgb.png COPYONLY)
 configure_file(data/images/8x9x8_rgb.png data/images/8x9x8_rgba.png COPYONLY)
 configure_file(data/images/8x9x8_rgb_adam7.png data/images/8x9x8_rgb_adam7.png COPYONLY)
 configure_file(data/images/8x9x8_rgb_adam7.png data/images/8x9x8_rgba_adam7.png COPYONLY)
-
+configure_file(data/images/8x9x8_rgb.jpeg data/images/8x9x8_rgb.jpeg COPYONLY)
+configure_file(data/images/8x9x8_rgb.jpeg data/images/8x9x8_rgba.jpeg COPYONLY)
 
 ###############################################################################
 #   Add the CTest unit tests to the project.

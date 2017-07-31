@@ -1,7 +1,6 @@
 #include "gl_pixel.h"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;
@@ -316,8 +315,6 @@ TEST_CASE ( "Check if the bytes per pixel function returns 0 for invalid "
             "parameters.",
             "[gl_pixel]" )
 {
-    spdlog::set_level(spdlog::level::off);
-
     CHECK(opengl::bytes_per_pixel( GL_RED             , GL_RED             ) == 0);
     CHECK(opengl::bytes_per_pixel( GL_RG              , GL_RG              ) == 0);
     CHECK(opengl::bytes_per_pixel( GL_RGB             , GL_RGB             ) == 0);
@@ -369,8 +366,6 @@ TEST_CASE ( "Check if the bytes per pixel function returns 0 for invalid "
     CHECK(opengl::bytes_per_pixel( GL_UNSIGNED_SHORT_4_4_4_4_REV , GL_STENCIL_INDEX    ) == 0);
     CHECK(opengl::bytes_per_pixel( GL_UNSIGNED_SHORT_5_5_5_1     , GL_DEPTH_COMPONENT  ) == 0);
     CHECK(opengl::bytes_per_pixel( GL_UNSIGNED_SHORT_1_5_5_5_REV , GL_DEPTH_STENCIL    ) == 0);
-
-    spdlog::set_level(spdlog::level::warn);
 }
 
 /* *INDENT-ON* */

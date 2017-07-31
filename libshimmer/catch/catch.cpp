@@ -13,12 +13,18 @@ int main ( int argc, char* argv[] )
 
     auto err = glewInit();
 
-    if ( GLEW_OK != err ) {
+    if ( err != GLEW_OK ) {
         fprintf ( stderr, "GLEW Error: %s\n", glewGetErrorString ( err ) );
         fprintf ( stderr, "OpenGL tests will probably fail.\n" );
     }
 
-    spdlog::set_level ( spdlog::level::warn );
+    spdlog::set_level ( spdlog::level::off );
+
+    for ( int a = 0; a < argc; a++ ) {
+        if ( std::string ( argv[a] ).compare ( "--enable-logging" ) == 0 ) {
+            spdlog::set_level ( spdlog::level::warn );
+        }
+    }
 
     int result = Catch::Session().run ( argc, argv );
 

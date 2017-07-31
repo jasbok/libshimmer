@@ -3,7 +3,6 @@
 #include "gl_shader_linker.h"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;
@@ -41,8 +40,6 @@ TEST_CASE ( "Link invalid shaders of a program and check that an invalid "
     REQUIRE ( simple_fs_source.empty() == false );
     REQUIRE ( simple_vs_source.empty() == false );
 
-    spdlog::set_level ( spdlog::level::off );
-
     auto simple_fs = gl_shader_compiler::compile ( simple_fs_source,
                                                    GL_FRAGMENT_SHADER );
 
@@ -53,8 +50,6 @@ TEST_CASE ( "Link invalid shaders of a program and check that an invalid "
     CHECK ( simple_vs !=  0 );
 
     auto program = gl_shader_linker::link ( { simple_vs, simple_fs } );
-
-    spdlog::set_level ( spdlog::level::err );
 
     CHECK ( program ==  0 );
 }

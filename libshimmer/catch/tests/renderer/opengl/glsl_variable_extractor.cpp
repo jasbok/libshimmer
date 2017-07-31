@@ -2,7 +2,6 @@
 #include "glsl_variable_extractor.h"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;

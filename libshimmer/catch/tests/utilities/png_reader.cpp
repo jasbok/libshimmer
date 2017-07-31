@@ -151,3 +151,63 @@ TEST_CASE (
 
     CHECK_8x9x8_RGB ( png );
 }
+
+TEST_CASE (
+    "Read an invalid PNG (text file), normal method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/file_reader/simple.txt", false );
+
+    CHECK ( png == nullptr );
+}
+
+TEST_CASE (
+    "Read an invalid PNG (text file), fast method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/file_reader/simple.txt", true );
+
+    CHECK ( png == nullptr );
+}
+
+TEST_CASE (
+    "Read an invalid PNG (jpeg file, rgb), normal method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/images/8x9x8_rgb.jpeg", false );
+
+    CHECK ( png == nullptr );
+}
+
+TEST_CASE (
+    "Read an invalid PNG (jpeg file,  rgb), fast method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/images/8x9x8_rgb.jpeg", true );
+
+    CHECK ( png == nullptr );
+}
+
+TEST_CASE (
+    "Read an invalid PNG (jpeg file, rgba), normal method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/images/8x9x8_rgba.jpeg", false );
+
+    CHECK ( png == nullptr );
+}
+
+TEST_CASE (
+    "Read an invalid PNG (jpeg file,  rgba), fast method.",
+    "[png_reader]" )
+{
+    png_reader reader;
+    auto png = reader.read ( "data/images/8x9x8_rgba.jpeg", true );
+
+    CHECK ( png == nullptr );
+}

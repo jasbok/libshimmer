@@ -2,7 +2,6 @@
 #include "simple_cache.hpp"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;
@@ -68,14 +67,10 @@ TEST_CASE ( "Check that the shader manager returns a nullptr for an invalid "
     gl_shader_manager::default_cache cache ( "catch_shader_cache_garbage" );
     string garbage_path = "data/glsl/garbage";
 
-    spdlog::set_level ( spdlog::level::off );
-
     auto fs_shader =
         gl_shader_manager::load ( garbage_path, GL_FRAGMENT_SHADER );
     auto vs_shader =
         gl_shader_manager::load ( garbage_path, GL_VERTEX_SHADER );
-
-    spdlog::set_level ( spdlog::level::err );
 
     CHECK ( fs_shader == nullptr );
     CHECK ( vs_shader == nullptr );

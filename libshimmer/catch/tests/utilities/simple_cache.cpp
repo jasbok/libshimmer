@@ -1,7 +1,6 @@
 #include "simple_cache.hpp"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 #include <memory>
 #include <string>
@@ -31,10 +30,8 @@ TEST_CASE ( "Check if simple cache is able to store integers.",
     CHECK ( icache->get ( "b" ) == 2 );
     CHECK ( icache->get ( "d" ) == 4 );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( icache->get ( "c" ) == 0 );
     CHECK ( icache->get ( "e" ) == 0 );
-    spdlog::set_level ( spdlog::level::warn );
 
     icache->set ( "a", 11 );
     icache->set ( "b", 22 );
@@ -50,10 +47,8 @@ TEST_CASE ( "Check if simple cache is able to store integers.",
     CHECK ( icache->get ( "b" ) == 22 );
     CHECK ( icache->get ( "d" ) == 44 );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( icache->get ( "c" ) == 0 );
     CHECK ( icache->get ( "e" ) == 0 );
-    spdlog::set_level ( spdlog::level::warn );
 
     CHECK ( icache->evict ( "b" ) == 22 );
     CHECK ( icache->exists ( "b" ) == false );
@@ -88,10 +83,8 @@ TEST_CASE ( "Check if simple cache is able to store strings.",
     CHECK ( scache->get ( "b" ) == "string b" );
     CHECK ( scache->get ( "d" ) == "string d" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == "" );
     CHECK ( scache->get ( "e" ) == "" );
-    spdlog::set_level ( spdlog::level::warn );
 
     scache->set ( "a", "STRING AA" );
     scache->set ( "b", "STRING BB" );
@@ -107,10 +100,8 @@ TEST_CASE ( "Check if simple cache is able to store strings.",
     CHECK ( scache->get ( "b" ) == "STRING BB" );
     CHECK ( scache->get ( "d" ) == "STRING DD" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == "" );
     CHECK ( scache->get ( "e" ) == "" );
-    spdlog::set_level ( spdlog::level::warn );
 
     CHECK ( scache->evict ( "b" ) == "STRING BB" );
     CHECK ( scache->exists ( "b" ) == false );
@@ -145,10 +136,8 @@ TEST_CASE ( "Check if simple cache is able to store shared_ptr strings.",
     CHECK ( *scache->get ( "b" ) == "string b" );
     CHECK ( *scache->get ( "d" ) == "string d" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == nullptr );
     CHECK ( scache->get ( "e" ) == nullptr );
-    spdlog::set_level ( spdlog::level::warn );
 
     scache->set ( "a", make_shared<string>( "STRING AA" ) );
     scache->set ( "b", make_shared<string>( "STRING BB" ) );
@@ -164,10 +153,8 @@ TEST_CASE ( "Check if simple cache is able to store shared_ptr strings.",
     CHECK ( *scache->get ( "b" ) == "STRING BB" );
     CHECK ( *scache->get ( "d" ) == "STRING DD" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == nullptr );
     CHECK ( scache->get ( "e" ) == nullptr );
-    spdlog::set_level ( spdlog::level::warn );
 
     CHECK ( *scache->evict ( "b" ) == "STRING BB" );
     CHECK ( scache->exists ( "b" ) == false );
@@ -204,10 +191,8 @@ TEST_CASE ( "Check if simple cache with specified default.",
     CHECK ( scache->get ( "b" ) == "string b" );
     CHECK ( scache->get ( "d" ) == "string d" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == "empty" );
     CHECK ( scache->get ( "e" ) == "empty" );
-    spdlog::set_level ( spdlog::level::warn );
 
     scache->set ( "a", "STRING AA" );
     scache->set ( "b", "STRING BB" );
@@ -223,10 +208,8 @@ TEST_CASE ( "Check if simple cache with specified default.",
     CHECK ( scache->get ( "b" ) == "STRING BB" );
     CHECK ( scache->get ( "d" ) == "STRING DD" );
 
-    spdlog::set_level ( spdlog::level::off );
     CHECK ( scache->get ( "c" ) == "empty" );
     CHECK ( scache->get ( "e" ) == "empty" );
-    spdlog::set_level ( spdlog::level::warn );
 
     CHECK ( scache->evict ( "b" ) == "STRING BB" );
     CHECK ( scache->exists ( "b" ) == false );
@@ -237,6 +220,4 @@ TEST_CASE ( "Check if simple cache with specified default.",
     CHECK ( scache->exists ( "d" ) == false );
     CHECK ( scache->exists ( "c" ) == false );
     CHECK ( scache->exists ( "e" ) == false );
-
-    spdlog::set_level ( spdlog::level::off );
 }

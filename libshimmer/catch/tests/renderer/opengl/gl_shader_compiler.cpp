@@ -2,7 +2,6 @@
 #include "gl_shader_compiler.h"
 
 #include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
 using namespace shimmer;
 using namespace std;
@@ -26,8 +25,6 @@ TEST_CASE ( "Compile a few test shaders.",
 
     auto simple_vs = gl_shader_compiler::compile ( simple_vs_source,
                                                    GL_VERTEX_SHADER );
-
-    spdlog::set_level ( spdlog::level::off );
 
     auto swapped_fs = gl_shader_compiler::compile ( simple_vs_source,
                                                     GL_FRAGMENT_SHADER );
@@ -54,8 +51,6 @@ TEST_CASE ( "Compile a few test shaders.",
     auto uninitialised_vs = gl_shader_compiler::compile (
         uninitialised_source,
         GL_VERTEX_SHADER );
-
-    spdlog::set_level ( spdlog::level::err );
 
     CHECK ( simple_fs != 0 );
     CHECK ( simple_vs != 0 );

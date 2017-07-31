@@ -14,12 +14,15 @@ RUN_BUILD=false
 RUN_CATCH=false
 RUN_CLEAN=false
 RUN_CPPCHECK=false
+RUN_SCAN_BUILD=false
 RUN_UNCRUSTIFY=false
 RUN_VALGRIND=false
 
 TAGS=
+ENABLE_LOGGING=
 
 BLUE='\033[1;34m'
+YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
@@ -27,6 +30,10 @@ NC='\033[0m'
 function err {
     printf "$RED----- $1 -----\n$NC"
     [[ $IGNORE_ERRORS == true ]] || exit 1
+}
+
+function warn {
+    printf "$YELLOW##### $1 #####\n$NC"
 }
 
 function info {
@@ -71,6 +78,7 @@ case $i in
     RUN_CATCH=true
     RUN_CLEAN=true
     RUN_CPPCHECK=true
+    RUN_SCAN_BUILD=true
     RUN_UNCRUSTIFY=true
     RUN_VALGRIND=true
     shift
@@ -79,6 +87,14 @@ case $i in
     --cppcheck)
     info "==> Enabled cppcheck run."
     RUN_CPPCHECK=true
+    shift
+    ;;
+
+    --scan-build)
+    info "==> Enabled scan-build run."
+    RUN_SCAN_BUILD=true
+    RUN_CLEAN=true
+    RUN_BUILD=true
     shift
     ;;
 
@@ -103,6 +119,12 @@ case $i in
     --catch)
     info "==> Enabled catch run."
     RUN_CATCH=true
+    shift
+    ;;
+
+    --enable-logging)
+    info "==> Enabling application logging during various test runs."
+    ENABLE_LOGGING=--enable-logging
     shift
     ;;
 
@@ -174,9 +196,8 @@ then
                 -I libshimmer/includes/utilities            \
                 -I libshimmer/includes/window               \
                 libshimmer/ shims/                          \
-                && CPPCHECK_SUCCESS=1
+                || err "Errors were reported by cppcheck."
 
-    [ $CPPCHECK_SUCCESS ] || err "Errors were reported by cppcheck."
     success "No errors were reported by cppcheck."
 fi
 
@@ -205,21 +226,33 @@ then
         export CC=$COMPILER_CC
         export CXX=$COMPILER_CXX
 
+        CMAKE_COMMAND=
+        BUILD_COMMAND=
+
         if [[ $BUILD_SYSTEM == "ninja" ]]
         then
-            cmake -GNinja .. || err "Failed to configure project."
-            ninja -j$THREADS || err "Failed to build project."
+            CMAKE_COMMAND="cmake -GNinja .."
+            BUILD_COMMAND="ninja -j$THREADS"
 
         elif [[ $BUILD_SYSTEM == "make" ]]
         then
-            cmake .. || err "Failed to configure project."
-            make -j$THREADS || err "Failed to build project."
-
+            CMAKE_COMMAND="cmake .."
+            BUILD_COMMAND="make -j$THREADS"
         else
             err "Uknown build system: $BUILD_SYSTEM"
         fi
 
-        success "Project configured and built successfully."
+        $CMAKE_COMMAND || err "Failed to configure project."
+        if [[ $RUN_SCAN_BUILD == false ]]
+        then
+            $BUILD_COMMAND || err "Failed to build project."
+            success "Project configured and built successfully."
+        else
+            scan-build --status-bugs $BUILD_COMMAND \
+                    || err "The scan-build run failed with errors."
+            success "Scan-build showed no errors during build."
+        fi
+
     fi
 fi
 
@@ -243,7 +276,8 @@ then
     for test in "${TESTS[@]}"
     do
         info "Running catch test: $test"
-        ./catch --abort "[$test]" || err "A catch test run failed."
+        ./catch --abort "[$test]" -- $ENABLE_LOGGING   \
+            || err "A catch test run failed."
     done
 
     success "All catch test runs passed successfully."
@@ -271,13 +305,14 @@ then
     do
         PASS=0
         info "Running valgrind test: $test"
-        valgrind    --tool=memcheck                 \
-                    --leak-check=full               \
-                    --suppressions=$SUPPRESSIONS    \
-                    --gen-suppressions=all          \
-                    --quiet                         \
-                    --error-exitcode=1              \
-                    ./catch "[$test]" || err "A valgrind test run failed."
+        valgrind    --tool=memcheck                         \
+                    --leak-check=full                       \
+                    --suppressions=$SUPPRESSIONS            \
+                    --gen-suppressions=all                  \
+                    --quiet                                 \
+                    --error-exitcode=1                      \
+                    ./catch "[$test]" -- $ENABLE_LOGGING    \
+                        || err "A valgrind test run failed."
     done
 
     success "All valgrind test runs passed."

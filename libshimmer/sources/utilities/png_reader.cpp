@@ -32,6 +32,7 @@ std::shared_ptr<image> png_reader::read ( const std::string& path,
     if ( !is_png )
     {
         LOGGER->error ( "File is not a valid png: {}", path );
+        fclose ( fp );
 
         return nullptr;
     }
@@ -43,6 +44,7 @@ std::shared_ptr<image> png_reader::read ( const std::string& path,
 
     if ( !png_ptr ) {
         LOGGER->error ( "Unable to create png struct: {}", path );
+        fclose ( fp );
 
         return nullptr;
     }
@@ -52,6 +54,7 @@ std::shared_ptr<image> png_reader::read ( const std::string& path,
     if ( !info_ptr )
     {
         LOGGER->error ( "Unable to create info struct: {}", path );
+        fclose ( fp );
 
         png_destroy_read_struct ( &png_ptr,
                                   nullptr,
@@ -83,7 +86,8 @@ std::shared_ptr<image> png_reader::read ( const std::string& path,
             nullptr );
 
         png_read_image ( png_ptr, png->rows().data() );
-        //png_read_end ( png_ptr, nullptr );
+
+        // png_read_end ( png_ptr, nullptr );
     }
     else {
         png_read_png ( png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL );
