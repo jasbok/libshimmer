@@ -5,6 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COMPILER_CC=/usr/bin/clang
 COMPILER_CXX=/usr/bin/clang++
 
+BUILD_TYPE=Release
 BUILD_SYSTEM=ninja
 THREADS=8
 
@@ -51,9 +52,16 @@ function success {
 ###############################################################################
 #                       ***** Parse script arguemnts. *****                   #
 ###############################################################################
-for i in "$@"
+while [[ $# -gt 1 ]]
 do
+i="$1"
 case $i in
+    -e|--build-type)
+    BUILD_TYPE="$2"
+    info "==> Using $BUILD_TYPE build type / environment."
+    shift
+    ;;
+
     -m|--build-system)
     BUILD_SYSTEM="$2"
     info "==> Using $BUILD_SYSTEM build system."
@@ -69,7 +77,6 @@ case $i in
     --ignore-errors)
     info "==> Ignoring errors."
     IGNORE_ERRORS=true
-    shift
     ;;
 
     --all)
@@ -81,13 +88,11 @@ case $i in
     RUN_SCAN_BUILD=true
     RUN_UNCRUSTIFY=true
     RUN_VALGRIND=true
-    shift
     ;;
 
     --cppcheck)
     info "==> Enabled cppcheck run."
     RUN_CPPCHECK=true
-    shift
     ;;
 
     --scan-build)
@@ -95,37 +100,31 @@ case $i in
     RUN_SCAN_BUILD=true
     RUN_CLEAN=true
     RUN_BUILD=true
-    shift
     ;;
 
     --uncrustify)
     info "==> Enabled uncrustify run."
     RUN_UNCRUSTIFY=true
-    shift
     ;;
 
     --clean)
     info "==> Enabled clean run."
     RUN_CLEAN=true
-    shift
     ;;
 
     --build)
     info "==> Enabled build run."
     RUN_BUILD=true
-    shift
     ;;
 
     --catch)
     info "==> Enabled catch run."
     RUN_CATCH=true
-    shift
     ;;
 
     --enable-logging)
     info "==> Enabling application logging during various test runs."
     ENABLE_LOGGING=--enable-logging
-    shift
     ;;
 
     --tags)
@@ -137,9 +136,9 @@ case $i in
     --valgrind)
     info "==> Enabled valgrind run."
     RUN_VALGRIND=true
-    shift
     ;;
 esac
+shift
 done
 
 ###############################################################################
@@ -226,20 +225,20 @@ then
         export CC=$COMPILER_CC
         export CXX=$COMPILER_CXX
 
-        CMAKE_COMMAND=
+        CMAKE_COMMAND="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
         BUILD_COMMAND=
 
         if [[ $BUILD_SYSTEM == "ninja" ]]
         then
-            CMAKE_COMMAND="cmake -GNinja .."
+            CMAKE_COMMAND="$CMAKE_COMMAND -GNinja .."
             BUILD_COMMAND="ninja -j$THREADS"
 
         elif [[ $BUILD_SYSTEM == "make" ]]
         then
-            CMAKE_COMMAND="cmake .."
+            CMAKE_COMMAND="$CMAKE_COMMAND .."
             BUILD_COMMAND="make -j$THREADS"
         else
-            err "Uknown build system: $BUILD_SYSTEM"
+            err "Unknown build system: $BUILD_SYSTEM"
         fi
 
         $CMAKE_COMMAND || err "Failed to configure project."
