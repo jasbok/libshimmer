@@ -87,6 +87,7 @@ set( HEADERS
         ${INCLUDE_DIR}/keyboard/keyboard.h
         ${INCLUDE_DIR}/mouse/mouse.h
         ${INCLUDE_DIR}/renderer/common/image.h
+        ${INCLUDE_DIR}/renderer/common/image_header.h
         ${INCLUDE_DIR}/renderer/common/texture.h
         ${INCLUDE_DIR}/renderer/opengl/gl_enum.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel.h
@@ -122,6 +123,7 @@ set( SOURCES
         ${SOURCES_DIR}/keyboard/keyboard.cpp
         ${SOURCES_DIR}/mouse/mouse.cpp
         ${SOURCES_DIR}/renderer/common/image.cpp
+        ${SOURCES_DIR}/renderer/common/image_header.cpp
         ${SOURCES_DIR}/renderer/common/texture.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_enum.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel.cpp

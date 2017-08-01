@@ -8,7 +8,7 @@
 using namespace shimmer;
 using namespace std;
 
-void CHECK_8x9x8_RGB ( const shared_ptr<image>& png ) {
+void CHECK_8x9x8_RGB ( image* png ) {
     unsigned int expected_width     = 8;
     unsigned int expected_height    = 9;
     unsigned int expected_channels  = 3;
@@ -41,7 +41,7 @@ void CHECK_8x9x8_RGB ( const shared_ptr<image>& png ) {
     }
 }
 
-void CHECK_8x9x8_RGBA ( const shared_ptr<image>& png ) {
+void CHECK_8x9x8_RGBA ( image* png ) {
     unsigned int expected_width     = 8;
     unsigned int expected_height    = 9;
     unsigned int expected_channels  = 4;
@@ -77,137 +77,74 @@ void CHECK_8x9x8_RGBA ( const shared_ptr<image>& png ) {
     }
 }
 
-TEST_CASE ( "Read a 8x9x8 RGB png image, normal method.",
+TEST_CASE ( "Read a 8x9x8 RGB png image",
             "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb.png", false );
-
-    CHECK_8x9x8_RGB ( png );
+    CHECK_8x9x8_RGB ( png_reader::read ( "data/images/8x9x8_rgb.png" ).get() );
 }
 
-TEST_CASE ( "Read a 8x9x8 RGB png image, fast method.",
+TEST_CASE ( "Read a 8x9x8 RGBA png image",
             "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb.png", true );
-
-    CHECK_8x9x8_RGB ( png );
-}
-
-TEST_CASE ( "Read a 8x9x8 RGBA png image, normal method.",
-            "[png_reader]" )
-{
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba.png", false );
-
-    CHECK_8x9x8_RGB ( png );
-}
-
-TEST_CASE ( "Read a 8x9x8 RGBA png image, fast method.",
-            "[png_reader]" )
-{
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba.png", true );
-
-    CHECK_8x9x8_RGB ( png );
+    CHECK_8x9x8_RGBA ( png_reader::read ( "data/images/8x9x8_rgba.png" ).get() );
 }
 
 TEST_CASE (
-    "Read a 8x9x8 RGB png image with adam7 interlacing, normal method.",
+    "Read a 8x9x8 RGB png image with adam7 interlacing.",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb_adam7.png", false );
-
-    CHECK_8x9x8_RGB ( png );
-}
-
-TEST_CASE ( "Read a 8x9x8 RGB png image with adam7 interlacing, fast method.",
-            "[png_reader]" )
-{
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb_adam7.png", true );
-
-    CHECK_8x9x8_RGB ( png );
+    CHECK_8x9x8_RGB ( png_reader::read (
+                          "data/images/8x9x8_rgb_adam7.png" ).get() );
 }
 
 TEST_CASE (
-    "Read a 8x9x8 RGBA png image with adam7 interlacing, normal method.",
+    "Read a 8x9x8 RGBA png image with adam7 interlacing.",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba_adam7.png", false );
-
-    CHECK_8x9x8_RGB ( png );
+    CHECK_8x9x8_RGBA ( png_reader::read (
+                           "data/images/8x9x8_rgba_adam7.png" ).get() );
 }
 
 TEST_CASE (
-    "Read a 8x9x8 RGBA png image with adam7 interlacing, fast method.",
+    "Read an invalid PNG (text file).",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba_adam7.png", true );
-
-    CHECK_8x9x8_RGB ( png );
+    CHECK ( png_reader::read ( "data/file_reader/simple.txt" ) == nullptr );
 }
 
 TEST_CASE (
-    "Read an invalid PNG (text file), normal method.",
+    "Read an invalid PNG (jpeg file, rgb).",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/file_reader/simple.txt", false );
-
-    CHECK ( png == nullptr );
+    CHECK ( png_reader::read ( "data/images/8x9x8_rgb.jpeg" ) == nullptr );
 }
 
 TEST_CASE (
-    "Read an invalid PNG (text file), fast method.",
+    "Read an invalid PNG (jpeg file, rgba).",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/file_reader/simple.txt", true );
-
-    CHECK ( png == nullptr );
+    CHECK ( png_reader::read ( "data/images/8x9x8_rgba.jpeg" ) == nullptr );
 }
 
 TEST_CASE (
-    "Read an invalid PNG (jpeg file, rgb), normal method.",
+    "Read a png using the low level calls.",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb.jpeg", false );
+    png_reader reader ( "data/images/8x9x8_rgb.png" );
+    image img_a ( *reader.header(), nullptr );
 
-    CHECK ( png == nullptr );
+    reader.read_data ( &img_a );
+    CHECK_8x9x8_RGB ( &img_a );
 }
 
 TEST_CASE (
-    "Read an invalid PNG (jpeg file,  rgb), fast method.",
+    "Read the same png data multiple times into different data locations.",
     "[png_reader]" )
 {
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgb.jpeg", true );
+    png_reader reader ( "data/images/8x9x8_rgb.png" );
+    image img_a ( *reader.header(), nullptr );
+    image img_b ( *reader.header(), nullptr );
 
-    CHECK ( png == nullptr );
-}
-
-TEST_CASE (
-    "Read an invalid PNG (jpeg file, rgba), normal method.",
-    "[png_reader]" )
-{
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba.jpeg", false );
-
-    CHECK ( png == nullptr );
-}
-
-TEST_CASE (
-    "Read an invalid PNG (jpeg file,  rgba), fast method.",
-    "[png_reader]" )
-{
-    png_reader reader;
-    auto png = reader.read ( "data/images/8x9x8_rgba.jpeg", true );
-
-    CHECK ( png == nullptr );
+    CHECK ( reader.read_data ( &img_a ) == true );
+    CHECK ( reader.read_data ( &img_b ) == false );
 }

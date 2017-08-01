@@ -52,7 +52,7 @@ function success {
 ###############################################################################
 #                       ***** Parse script arguemnts. *****                   #
 ###############################################################################
-while [[ $# -gt 1 ]]
+while [[ $# -gt 0 ]]
 do
 i="$1"
 case $i in
@@ -82,7 +82,6 @@ case $i in
     --all)
     info "==> Running all facilities."
     RUN_BUILD=true
-    RUN_CATCH=true
     RUN_CLEAN=true
     RUN_CPPCHECK=true
     RUN_SCAN_BUILD=true
@@ -213,7 +212,7 @@ then
     then
         info "Removing old build directory."
         rm -r build && mkdir -p build
-        RUN_BUILD=true
+        #RUN_BUILD=true
     fi
 
     if [[ $RUN_BUILD == true ]]

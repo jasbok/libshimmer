@@ -2,6 +2,7 @@
 #define LIBSHIMMER_RENDERER_COMMON_IMAGE_H
 
 #include "accessor_macros.h"
+#include "image_header.h"
 
 #include <memory>
 #include <vector>
@@ -10,7 +11,7 @@
 
 namespace shimmer
 {
-class image
+class image : public image_header
 {
 public:
     image( unsigned int                    width,
@@ -19,15 +20,12 @@ public:
            unsigned int                    bit_depth,
            const std::shared_ptr<uint8_t>& data );
 
+    image( const image_header&             header,
+           const std::shared_ptr<uint8_t>& data );
+
     virtual ~image() {}
 
 private:
-    GETTER ( unsigned int,             width );
-    GETTER ( unsigned int,             height );
-    GETTER ( unsigned int,             channels );
-    GETTER ( unsigned int,             bit_depth );
-    GETTER ( unsigned int,             step );
-    GETTER ( unsigned int,             size );
     GETTER ( std::shared_ptr<uint8_t>, data );
     GETTER ( std::vector<uint8_t*>,    rows );
 };

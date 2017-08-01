@@ -2,111 +2,153 @@
 
 #include "spdlog/spdlog.h"
 
-#include <png.h>
+#include <tuple>
 
 using namespace shimmer;
 using namespace std;
 
 #define HEADER_SIZE 8
 
-static std::shared_ptr<spdlog::logger> LOGGER
+static shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "png_reader" );
 
-std::shared_ptr<image> png_reader::read ( const std::string& path,
-                                          bool               fast ) {
-    std::shared_ptr<image> png = nullptr;
+png_reader::png_reader( const string& path )
+    : _path ( path ),
+      _is_valid ( false ),
+      _eof ( false )
+{
+    _open();
+    _setup_data_structures();
+    _set_jmp_and_io();
+    _read_header();
+}
 
-    FILE* fp = fopen ( path.c_str(), "rb" );
-    unsigned char header[HEADER_SIZE];
+png_reader::~png_reader() {
+    if ( _file ) {
+        fclose ( _file );
+    }
 
-    if ( !fp )
+    png_destroy_read_struct ( &_png_ptr, &_info_ptr, nullptr );
+}
+
+void png_reader::_open() {
+    _file = fopen ( _path.c_str(), "rb" );
+
+    if ( _file )
     {
-        LOGGER->error ( "Unable to open png file: {}", path );
+        unsigned char header[HEADER_SIZE];
+        fread ( header, 1, HEADER_SIZE, _file );
+        _is_valid = !png_sig_cmp ( header, 0, HEADER_SIZE );
 
-        return nullptr;
-    }
-
-    fread ( header, 1, HEADER_SIZE, fp );
-    auto is_png = !png_sig_cmp ( header, 0, HEADER_SIZE );
-
-    if ( !is_png )
-    {
-        LOGGER->error ( "File is not a valid png: {}", path );
-        fclose ( fp );
-
-        return nullptr;
-    }
-
-    auto png_ptr = png_create_read_struct ( PNG_LIBPNG_VER_STRING,
-                                            nullptr,
-                                            nullptr,
-                                            nullptr );
-
-    if ( !png_ptr ) {
-        LOGGER->error ( "Unable to create png struct: {}", path );
-        fclose ( fp );
-
-        return nullptr;
-    }
-
-    auto info_ptr = png_create_info_struct ( png_ptr );
-
-    if ( !info_ptr )
-    {
-        LOGGER->error ( "Unable to create info struct: {}", path );
-        fclose ( fp );
-
-        png_destroy_read_struct ( &png_ptr,
-                                  nullptr,
-                                  nullptr );
-
-        return nullptr;
-    }
-
-    if ( setjmp ( png_jmpbuf ( png_ptr ) ) )
-    {
-        LOGGER->error ( "An error occurred while loading png: {}", path );
-        png_destroy_read_struct ( &png_ptr, &info_ptr, nullptr );
-        fclose ( fp );
-
-        return nullptr;
-    }
-
-    png_set_sig_bytes ( png_ptr, HEADER_SIZE );
-    png_init_io ( png_ptr, fp );
-
-    if ( fast ) {
-        png_read_info ( png_ptr, info_ptr );
-
-        png = std::make_shared<image>(
-            png_get_image_width ( png_ptr, info_ptr ),
-            png_get_image_height ( png_ptr, info_ptr ),
-            png_get_channels ( png_ptr, info_ptr ),
-            png_get_bit_depth ( png_ptr, info_ptr ),
-            nullptr );
-
-        png_read_image ( png_ptr, png->rows().data() );
-    }
-    else {
-        png_read_png ( png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL );
-        auto src_rows = png_get_rows ( png_ptr, info_ptr );
-
-        png = std::make_shared<image>(
-            png_get_image_width ( png_ptr, info_ptr ),
-            png_get_image_height ( png_ptr, info_ptr ),
-            png_get_channels ( png_ptr, info_ptr ),
-            png_get_bit_depth ( png_ptr, info_ptr ),
-            nullptr );
-
-        const auto dest_rows = png->rows();
-
-        for ( unsigned int row = 0; row < png->height(); row++ ) {
-            std::memcpy ( dest_rows[row], src_rows[row], png->step() );
+        if ( !_is_valid )
+        {
+            LOGGER->error ( "File is not a valid png: {}", _path );
         }
     }
+    else {
+        LOGGER->error ( "Unable to open png file: {}", _path );
+    }
+}
 
-    png_destroy_read_struct ( &png_ptr, &info_ptr, nullptr );
-    fclose ( fp );
+void png_reader::_setup_data_structures() {
+    _png_ptr = png_create_read_struct (
+        PNG_LIBPNG_VER_STRING,
+        nullptr,
+        nullptr,
+        nullptr );
 
-    return png;
+    if ( _png_ptr ) {
+        _info_ptr = png_create_info_struct ( _png_ptr );
+
+        if ( !_info_ptr ) {
+            LOGGER->error ( "Unable to create info struct." );
+        }
+    }
+    else {
+        LOGGER->error ( "Unable to create png struct." );
+    }
+}
+
+void png_reader::_set_jmp_and_io() {
+    if ( setjmp ( png_jmpbuf ( _png_ptr ) ) )
+    {
+        LOGGER->error ( "An error occurred while loading png: {}", _path );
+        _is_valid = false;
+    }
+    else {
+        png_init_io ( _png_ptr, _file );
+        png_set_sig_bytes ( _png_ptr, HEADER_SIZE );
+    }
+}
+
+void png_reader::_read_header() {
+    if ( _is_valid ) {
+        png_read_info ( _png_ptr, _info_ptr );
+
+        _header = make_shared<image_header>(
+            png_get_image_width ( _png_ptr, _info_ptr ),
+            png_get_image_height ( _png_ptr, _info_ptr ),
+            png_get_channels ( _png_ptr, _info_ptr ),
+            png_get_bit_depth ( _png_ptr, _info_ptr ) );
+    }
+}
+
+bool png_reader::read_data ( image* img ) {
+    bool success = false;
+
+    if ( _is_valid ) {
+        if ( !_eof ) {
+            png_read_image ( _png_ptr, img->rows().data() );
+            _eof    = true;
+            success = true;
+        }
+        else {
+            LOGGER->error ( "The PNG data has already been read: {}", _path );
+        }
+    }
+    else {
+        LOGGER->error ( "The PNG is invalid and cannot be read: {}", _path );
+    }
+
+    return success;
+}
+
+bool png_reader::read_data ( uint8_t* data ) {
+    bool success = false;
+
+    if ( _is_valid ) {
+        if ( !_eof ) {
+            vector<uint8_t*> rows;
+
+            for ( unsigned int r = 0; r < _header->height(); r++ ) {
+                rows.push_back ( data + r * _header->step() );
+            }
+
+            png_read_image ( _png_ptr, rows.data() );
+            _eof    = true;
+            success = true;
+        }
+        else {
+            LOGGER->error ( "The PNG data has already been read: {}", _path );
+        }
+    }
+    else {
+        LOGGER->error ( "The PNG is invalid and cannot be read: {}", _path );
+    }
+
+    return success;
+}
+
+shared_ptr<image> png_reader::read ( const string& path )
+{
+    shared_ptr<image> img = nullptr;
+    png_reader reader ( path );
+
+    if ( reader.is_valid() ) {
+        auto header = reader.header();
+        img = make_shared<image>( *header, nullptr );
+        reader.read_data ( img.get() );
+    }
+
+    return img;
 }
