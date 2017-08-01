@@ -10,8 +10,7 @@ namespace shimmer
 class gl_texture_loader
 {
 public:
-    gl_texture_loader( unsigned int write_buffer_count = 2,
-                       unsigned int read_buffer_count = 1 );
+    explicit gl_texture_loader( unsigned int buffer_count = 2 );
 
     virtual ~gl_texture_loader();
 
@@ -29,29 +28,12 @@ public:
                   GLsizei                            width,
                   GLsizei                            height );
 
-    void download ( const std::shared_ptr<gl_texture>& texture,
-                    GLenum                             format,
-                    GLenum                             type,
-                    GLvoid*                            data );
-
 private:
-    //
-    // In / Upload
-    //
-    GLuint* _wo_pbo_array;
-    unsigned int _wo_pbo_count;
-    unsigned int _wo_pbo_index;
+    GLuint* _pbo_array;
+    unsigned int _pbo_count;
+    unsigned int _pbo_index;
 
-    GLuint _next_wo_pbo();
-
-    //
-    // Out / Download
-    //
-    GLuint* _ro_pbo_array;
-    unsigned int _ro_pbo_count;
-    unsigned int _ro_pbo_index;
-
-    GLuint _next_ro_pbo();
+    GLuint _next_pbo();
 
     void*  _map_buffer ( GLuint     pbo,
                          GLenum     target,

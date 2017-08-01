@@ -1,9 +1,12 @@
 #ifndef LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H
 #define LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H
 
+#include "gl_pixel_buffer.h"
 #include "texture.h"
 
 #include <GL/glew.h>
+
+#include <memory>
 
 namespace shimmer
 {
@@ -24,6 +27,8 @@ public:
                   GLenum        type,
                   const GLvoid* data );
 
+    void upload ( std::shared_ptr<gl_pixel_buffer> buffer );
+
     void upload ( GLenum        format,
                   GLenum        type,
                   const GLvoid* data,
@@ -31,6 +36,12 @@ public:
                   GLint         y_offset,
                   GLsizei       width,
                   GLsizei       height );
+
+    void upload ( std::shared_ptr<gl_pixel_buffer> buffer,
+                  GLint                            x_offset,
+                  GLint                            y_offset,
+                  GLsizei                          width,
+                  GLsizei                          height );
 
     void download ( GLenum  format,
                     GLenum  type,

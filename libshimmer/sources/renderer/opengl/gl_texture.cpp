@@ -51,6 +51,12 @@ void gl_texture::upload ( GLenum        format,
     upload ( format, type, data, 0, 0, width(), height() );
 }
 
+void gl_texture::upload ( std::shared_ptr<gl_pixel_buffer> buffer )
+{
+    buffer->unmap();
+    upload ( buffer->format(), buffer->type(), nullptr );
+}
+
 void gl_texture::upload ( GLenum        format,
                           GLenum        type,
                           const GLvoid* data,
@@ -70,6 +76,23 @@ void gl_texture::upload ( GLenum        format,
                       format,
                       type,
                       data );
+}
+
+void gl_texture::upload ( std::shared_ptr<gl_pixel_buffer> buffer,
+                          GLint                            x_offset,
+                          GLint                            y_offset,
+                          GLsizei                          width,
+                          GLsizei                          height )
+{
+    buffer->unmap();
+
+    upload ( buffer->format(),
+             buffer->type(),
+             nullptr,
+             x_offset,
+             y_offset,
+             width,
+             height );
 }
 
 void gl_texture::download ( GLenum  format,

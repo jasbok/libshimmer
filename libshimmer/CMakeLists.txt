@@ -88,22 +88,25 @@ set( HEADERS
         ${INCLUDE_DIR}/mouse/mouse.h
         ${INCLUDE_DIR}/renderer/common/image.h
         ${INCLUDE_DIR}/renderer/common/image_header.h
+        ${INCLUDE_DIR}/renderer/common/memory_block.h
         ${INCLUDE_DIR}/renderer/common/texture.h
+        ${INCLUDE_DIR}/renderer/glsl/glsl_qualifier.h
+        ${INCLUDE_DIR}/renderer/glsl/glsl_type.h
+        ${INCLUDE_DIR}/renderer/glsl/glsl_variable_extractor.h
+        ${INCLUDE_DIR}/renderer/glsl/glsl_variable.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_enum.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_pixel_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program_manager.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program_variable.h
-        ${INCLUDE_DIR}/renderer/opengl/gl_shader.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_compiler.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_shader.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_linker.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_manager.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture_loader.h
-        ${INCLUDE_DIR}/renderer/glsl/glsl_qualifier.h
-        ${INCLUDE_DIR}/renderer/glsl/glsl_type.h
-        ${INCLUDE_DIR}/renderer/glsl/glsl_variable.h
-        ${INCLUDE_DIR}/renderer/glsl/glsl_variable_extractor.h
         ${INCLUDE_DIR}/renderer/renderer.h
         ${INCLUDE_DIR}/shimmer.h
         ${INCLUDE_DIR}/utilities/cache.hpp
@@ -125,8 +128,10 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/common/image.cpp
         ${SOURCES_DIR}/renderer/common/image_header.cpp
         ${SOURCES_DIR}/renderer/common/texture.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_enum.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_pixel_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_manager.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_variable.cpp

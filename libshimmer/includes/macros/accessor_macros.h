@@ -29,4 +29,12 @@ public:                                \
 private:                               \
     TYPE _ ## NAME
 
+#define GETTER_OVERRIDE( TYPE, NAME ) \
+public:                               \
+    virtual TYPE NAME() override {    \
+        return _ ## NAME;             \
+    }                                 \
+private:                              \
+    TYPE _ ## NAME
+
 #endif // ifndef LIBSHIMMER_MACROS_ACCESSOR_MACROS_H
