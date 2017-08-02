@@ -4,11 +4,14 @@
 #include "spdlog/spdlog.h"
 
 #include <GL/glew.h>
-#include <GL/glut.h>
+
+// Include gl.h after glew.h
+#include <GL/freeglut.h>
 
 int main ( int argc, char* argv[] )
 {
     glutInit ( &argc, argv );
+    glutInitContextVersion ( 2, 1 );
     glutCreateWindow ( "Libshimmer: Catch Unit Test" );
 
     auto err = glewInit();

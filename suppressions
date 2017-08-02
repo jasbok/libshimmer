@@ -35,3 +35,15 @@
    ...
    obj:*/lib*/i965_dri.so.*
 }
+{
+   ignore_unversioned_i965_dri
+   Memcheck:Addr1
+   ...
+   obj:*/lib*/i965_dri.so
+}
+{
+   ignore_versioned_i965_dri
+   Memcheck:Addr1
+   ...
+   obj:*/lib*/i965_dri.so.*
+}

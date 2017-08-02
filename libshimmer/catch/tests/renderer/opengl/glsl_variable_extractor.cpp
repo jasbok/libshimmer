@@ -1,3 +1,4 @@
+#include "check_opengl.h"
 #include "file_reader.h"
 #include "glsl_variable_extractor.h"
 
@@ -9,14 +10,18 @@ using namespace std;
 TEST_CASE ( "Extract GLSL variables from source files.",
             "[glsl_variable_extractor]" )
 {
+    CHECK_GL_NO_ERROR();
+
     string simple_fs_source = file_reader::read ( "data/glsl/simple.fs" );
     string simple_vs_source = file_reader::read ( "data/glsl/simple.vs" );
 
     auto fragment_variables =
         glsl_variable_extractor::extract ( simple_fs_source );
+    CHECK_GL_NO_ERROR();
 
     auto vertex_variables =
         glsl_variable_extractor::extract ( simple_vs_source );
+    CHECK_GL_NO_ERROR();
 
     REQUIRE ( fragment_variables.size() == 3 );
     REQUIRE ( vertex_variables.size() == 4 );
@@ -55,4 +60,6 @@ TEST_CASE ( "Extract GLSL variables from source files.",
     CHECK ( vertex_variables[3].type() == glsl::type::FLOAT );
     CHECK ( vertex_variables[3].name() == "scale" );
     CHECK ( vertex_variables[3].size() == 1 );
+
+    CHECK_GL_NO_ERROR();
 }

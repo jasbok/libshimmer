@@ -8,6 +8,7 @@ find_package( GLUT )
 #   Configure include directories.
 ###############################################################################
 set( CATCH_INCLUDES
+        ${LIB_SHIMMER_ROOT}/catch/includes
         ${GLUT_INCLUDE_DIRS}
         ${INCLUDES}
         ${EXTERNAL_INCLUDES} )

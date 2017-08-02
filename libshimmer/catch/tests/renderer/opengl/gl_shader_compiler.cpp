@@ -1,3 +1,4 @@
+#include "check_opengl.h"
 #include "file_reader.h"
 #include "gl_shader_compiler.h"
 
@@ -9,6 +10,8 @@ using namespace std;
 TEST_CASE ( "Compile a few test shaders.",
             "[gl_shader_compiler]" )
 {
+    CHECK_GL_NO_ERROR();
+
     string simple_fs_source = file_reader::read ( "data/glsl/simple.fs" );
     string simple_vs_source = file_reader::read ( "data/glsl/simple.vs" );
     string garbage_source   = file_reader::read ( "data/glsl/garbage" );
@@ -22,35 +25,45 @@ TEST_CASE ( "Compile a few test shaders.",
 
     auto simple_fs = gl_shader_compiler::compile ( simple_fs_source,
                                                    GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto simple_vs = gl_shader_compiler::compile ( simple_vs_source,
                                                    GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto swapped_fs = gl_shader_compiler::compile ( simple_vs_source,
                                                     GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto swapped_vs = gl_shader_compiler::compile ( simple_fs_source,
                                                     GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto garbage_fs = gl_shader_compiler::compile ( garbage_source,
                                                     GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto garbage_vs = gl_shader_compiler::compile ( garbage_source,
                                                     GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto empty_fs = gl_shader_compiler::compile ( empty_source,
                                                   GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto empty_vs = gl_shader_compiler::compile ( empty_source,
                                                   GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto uninitialised_fs = gl_shader_compiler::compile (
         uninitialised_source,
         GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto uninitialised_vs = gl_shader_compiler::compile (
         uninitialised_source,
         GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     CHECK ( simple_fs != 0 );
     CHECK ( simple_vs != 0 );
@@ -66,4 +79,6 @@ TEST_CASE ( "Compile a few test shaders.",
 
     CHECK ( uninitialised_fs == 0 );
     CHECK ( uninitialised_vs == 0 );
+
+    CHECK_GL_NO_ERROR();
 }

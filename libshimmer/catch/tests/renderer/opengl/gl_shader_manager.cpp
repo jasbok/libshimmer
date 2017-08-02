@@ -1,3 +1,4 @@
+#include "check_opengl.h"
 #include "gl_shader_manager.h"
 #include "simple_cache.hpp"
 
@@ -10,15 +11,19 @@ TEST_CASE (
     "Load, store and retrieve shaders using the shader manager and cache.",
     "[gl_shader_manager]" )
 {
+    CHECK_GL_NO_ERROR();
+
     gl_shader_manager::default_cache cache ( "catch_shader_cache" );
     string fs_shader_path = "data/glsl/simple.fs";
     string vs_shader_path = "data/glsl/simple.vs";
 
     auto fs_shader = gl_shader_manager::load ( fs_shader_path,
                                                GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
 
     auto vs_shader = gl_shader_manager::load ( vs_shader_path,
                                                GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     CHECK ( fs_shader->handle() != 0 );
     CHECK ( fs_shader->variables().size() == 3 );
@@ -58,6 +63,8 @@ TEST_CASE (
     vs_shader_ref = nullptr;
     CHECK ( fs_shader.use_count() == 1 );
     CHECK ( vs_shader.use_count() == 1 );
+
+    CHECK_GL_NO_ERROR();
 }
 
 TEST_CASE ( "Check that the shader manager returns a nullptr for an invalid "
@@ -69,9 +76,14 @@ TEST_CASE ( "Check that the shader manager returns a nullptr for an invalid "
 
     auto fs_shader =
         gl_shader_manager::load ( garbage_path, GL_FRAGMENT_SHADER );
+    CHECK_GL_NO_ERROR();
+
     auto vs_shader =
         gl_shader_manager::load ( garbage_path, GL_VERTEX_SHADER );
+    CHECK_GL_NO_ERROR();
 
     CHECK ( fs_shader == nullptr );
     CHECK ( vs_shader == nullptr );
+
+    CHECK_GL_NO_ERROR();
 }

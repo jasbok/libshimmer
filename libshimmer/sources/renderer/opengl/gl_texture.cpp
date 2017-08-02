@@ -21,14 +21,17 @@ gl_texture::gl_texture(
     glGenTextures ( 1, &_handle );
 
     if ( _handle ) {
-        glBindTexture ( target, _handle );
+        glBindTexture ( _target, _handle );
 
-        glTexImage2D ( target,
+        glTexImage2D ( _target,
                        level,
                        internal_format,
                        width,
                        height,
-                       0, 0, 0, 0 );
+                       0,
+                       GL_RGB,
+                       GL_UNSIGNED_BYTE,
+                       0 );
     } else {
         LOGGER->error ( "Unable to allocate new texture." );
     }
@@ -65,7 +68,7 @@ void gl_texture::upload ( GLenum        format,
                           GLsizei       width,
                           GLsizei       height )
 {
-    bind();
+    glBindTexture ( _target, _handle );
 
     glTexSubImage2D ( _target,
                       _level,
@@ -99,7 +102,7 @@ void gl_texture::download ( GLenum  format,
                             GLenum  type,
                             GLvoid* data )
 {
-    bind();
+    glBindTexture ( _target, _handle );
 
     glGetTexImage ( _target,
                     _level,
