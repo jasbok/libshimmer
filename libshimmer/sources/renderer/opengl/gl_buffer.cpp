@@ -1,7 +1,12 @@
 #include "gl_buffer.h"
 
+#include "spdlog/spdlog.h"
+
 using namespace shimmer;
 using namespace std;
+
+static std::shared_ptr<spdlog::logger> LOGGER
+    = spdlog::stdout_color_mt ( "gl_buffer" );
 
 gl_buffer::gl_buffer( GLenum     target,
                       GLsizeiptr size,
@@ -32,6 +37,10 @@ void* shimmer::gl_buffer::map()
 {
     glBindBuffer ( _target, _handle );
     _data = glMapBuffer ( _target, _access );
+
+    if ( !_data ) {
+        LOGGER->error ( "Could not map buffer." );
+    }
 
     return _data;
 }

@@ -10,6 +10,8 @@ static std::shared_ptr<spdlog::logger> LOGGER
 gl_texture::gl_texture(
     unsigned int width,
     unsigned int height,
+    GLenum       format,
+    GLenum       type,
     GLenum       target,
     GLint        level,
     GLint        internal_format )
@@ -29,8 +31,8 @@ gl_texture::gl_texture(
                        width,
                        height,
                        0,
-                       GL_RGB,
-                       GL_UNSIGNED_BYTE,
+                       format,
+                       type,
                        0 );
     } else {
         LOGGER->error ( "Unable to allocate new texture." );

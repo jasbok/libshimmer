@@ -15,6 +15,8 @@ class gl_texture : public texture
 public:
     gl_texture( unsigned int width,
                 unsigned int height,
+                GLenum       format = GL_RGB,
+                GLenum       type = GL_UNSIGNED_BYTE,
                 GLenum       target = GL_TEXTURE_2D,
                 GLint        level = 0,
                 GLint        internal_format = GL_RGB );

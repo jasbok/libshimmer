@@ -118,10 +118,10 @@ bool png_reader::read_data ( uint8_t* data ) {
 
     if ( _is_valid ) {
         if ( !_eof ) {
-            vector<uint8_t*> rows;
+            vector<uint8_t*> rows ( _header->height() );
 
             for ( unsigned int r = 0; r < _header->height(); r++ ) {
-                rows.push_back ( data + r * _header->step() );
+                rows[r] = data + r * _header->step();
             }
 
             png_read_image ( _png_ptr, rows.data() );

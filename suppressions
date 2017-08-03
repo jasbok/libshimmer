@@ -47,3 +47,39 @@
    ...
    obj:*/lib*/i965_dri.so.*
 }
+{
+   ignore_unversioned_i965_dri
+   Memcheck:Addr2
+   ...
+   obj:*/lib*/i965_dri.so
+}
+{
+   ignore_versioned_i965_dri
+   Memcheck:Addr2
+   ...
+   obj:*/lib*/i965_dri.so.*
+}
+
+{
+   Suppress catch test error related to glMapBuffer() call. Assume Valgrind does not pickup driver memory allocation.
+   Memcheck:Addr8
+   ...
+   fun:_ZN7shimmer10png_reader9read_dataEPh
+   fun:_ZL29____C_A_T_C_H____T_E_S_T____4v
+}
+
+{
+   Suppress catch test error related to glMapBuffer() call. Assume Valgrind does not pickup driver memory allocation.
+   Memcheck:Addr1
+   ...
+   fun:_ZL11CHECK_EQUALPvS_i
+   fun:_ZL29____C_A_T_C_H____T_E_S_T____4v
+}
+
+{
+   Suppress catch test error related to glMapBuffer() call. Assume Valgrind does not pickup driver memory allocation.
+   Memcheck:Addr1
+   ...
+   fun:_ZL11CHECK_EQUALPvS_i
+   fun:_ZL29____C_A_T_C_H____T_E_S_T____6v
+}

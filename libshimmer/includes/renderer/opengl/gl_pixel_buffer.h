@@ -10,8 +10,8 @@ class gl_pixel_buffer : public gl_buffer
 public:
     gl_pixel_buffer( GLenum     target,
                      GLsizeiptr size,
-                     GLenum     access,
                      GLenum     usage,
+                     GLenum     access,
                      GLenum     format,
                      GLenum     type );
 

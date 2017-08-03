@@ -127,7 +127,7 @@ TEST_CASE (
 }
 
 TEST_CASE (
-    "Read a png using the low level calls.",
+    "Read a png using the low level calls (RGB).",
     "[png_reader]" )
 {
     png_reader reader ( "data/images/8x9x8_rgb.png" );
@@ -135,6 +135,17 @@ TEST_CASE (
 
     reader.read_data ( &img_a );
     CHECK_8x9x8_RGB ( &img_a );
+}
+
+TEST_CASE (
+    "Read a png using the low level calls (RGBA).",
+    "[png_reader]" )
+{
+    png_reader reader ( "data/images/8x9x8_rgba.png" );
+    image img_a ( *reader.header(), nullptr );
+
+    reader.read_data ( &img_a );
+    CHECK_8x9x8_RGBA ( &img_a );
 }
 
 TEST_CASE (

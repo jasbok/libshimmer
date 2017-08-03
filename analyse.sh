@@ -7,7 +7,7 @@ COMPILER_CXX=/usr/bin/clang++
 
 BUILD_TYPE=Release
 BUILD_SYSTEM=ninja
-THREADS=8
+THREADS=16
 
 IGNORE_ERRORS=false
 
@@ -303,13 +303,15 @@ then
     do
         PASS=0
         info "Running valgrind test: $test"
-        valgrind    --tool=memcheck                         \
-                    --leak-check=full                       \
-                    --suppressions=$SUPPRESSIONS            \
-                    --gen-suppressions=all                  \
-                    --quiet                                 \
-                    --error-exitcode=1                      \
-                    ./catch "[$test]" -- $ENABLE_LOGGING    \
+        valgrind    --tool=memcheck                                 \
+                    --leak-check=full                               \
+                    --suppressions=$SUPPRESSIONS                    \
+                    --gen-suppressions=all                          \
+                    --quiet                                         \
+                    --error-exitcode=1                              \
+                    --smc-check=all                                 \
+                    --trace-children=yes                            \
+                    ./catch --abort "[$test]" -- $ENABLE_LOGGING    \
                         || err "A valgrind test run failed."
     done
 
