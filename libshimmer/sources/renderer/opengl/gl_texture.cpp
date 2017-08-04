@@ -7,18 +7,19 @@ using namespace shimmer;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_texture" );
 
-gl_texture::gl_texture(
-    unsigned int width,
-    unsigned int height,
-    GLenum       format,
-    GLenum       type,
-    GLenum       target,
-    GLint        level,
-    GLint        internal_format )
+gl_texture::gl_texture( GLenum        target,
+                        GLint         level,
+                        GLint         internal_format,
+                        GLsizei       width,
+                        GLsizei       height,
+                        GLenum        format,
+                        GLenum        type,
+                        const GLvoid* data  )
     : texture ( width,  height ),
       _handle ( 0 ),
       _target ( target ),
-      _level ( level )
+      _level ( level ),
+      _internal_format ( internal_format )
 {
     glGenTextures ( 1, &_handle );
 
@@ -26,16 +27,17 @@ gl_texture::gl_texture(
         glBindTexture ( _target, _handle );
 
         glTexImage2D ( _target,
-                       level,
-                       internal_format,
+                       _level,
+                       _internal_format,
                        width,
                        height,
                        0,
                        format,
                        type,
-                       0 );
-    } else {
-        LOGGER->error ( "Unable to allocate new texture." );
+                       data );
+    }
+    else {
+        LOGGER->error ( "Unable to create new texture handle." );
     }
 }
 
@@ -54,12 +56,6 @@ void gl_texture::upload ( GLenum        format,
                           const GLvoid* data )
 {
     upload ( format, type, data, 0, 0, width(), height() );
-}
-
-void gl_texture::upload ( std::shared_ptr<gl_pixel_buffer> buffer )
-{
-    buffer->unmap();
-    upload ( buffer->format(), buffer->type(), nullptr );
 }
 
 void gl_texture::upload ( GLenum        format,
@@ -81,23 +77,6 @@ void gl_texture::upload ( GLenum        format,
                       format,
                       type,
                       data );
-}
-
-void gl_texture::upload ( std::shared_ptr<gl_pixel_buffer> buffer,
-                          GLint                            x_offset,
-                          GLint                            y_offset,
-                          GLsizei                          width,
-                          GLsizei                          height )
-{
-    buffer->unmap();
-
-    upload ( buffer->format(),
-             buffer->type(),
-             nullptr,
-             x_offset,
-             y_offset,
-             width,
-             height );
 }
 
 void gl_texture::download ( GLenum  format,

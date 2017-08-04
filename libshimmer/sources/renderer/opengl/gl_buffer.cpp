@@ -28,7 +28,7 @@ gl_buffer::~gl_buffer() {
     glDeleteBuffers ( 1, &_handle );
 }
 
-void shimmer::gl_buffer::bind()
+void shimmer::gl_buffer::bind() const
 {
     glBindBuffer ( _target, _handle );
 }

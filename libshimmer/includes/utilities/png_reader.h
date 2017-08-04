@@ -19,26 +19,26 @@ public:
 
     virtual ~png_reader();
 
-    bool                          read_data ( image* img );
+    image_header read_header();
 
-    bool                          read_data ( uint8_t* data );
+    bool         read_data ( image* img );
 
-    static std::shared_ptr<image> read ( const std::string& path );
+    bool         read_data ( uint8_t* data );
+
+    static image read ( const std::string& path );
 
 private:
-    void                          _open();
+    void         _open();
 
-    void                          _setup_data_structures();
+    void         _setup_data_structures();
 
-    void                          _set_jmp_and_io();
+    void         _set_jmp_and_io();
 
-    void                          _read_header();
+    GETTER ( std::string, path );
 
-    GETTER ( std::string,                   path );
+    GETTER ( bool,        is_valid );
 
-    GETTER ( bool,                          is_valid );
-
-    GETTER ( std::shared_ptr<image_header>, header );
+    std::unique_ptr<image_header> _header;
 
     FILE* _file;
 

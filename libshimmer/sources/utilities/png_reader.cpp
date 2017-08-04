@@ -20,7 +20,6 @@ png_reader::png_reader( const string& path )
     _open();
     _setup_data_structures();
     _set_jmp_and_io();
-    _read_header();
 }
 
 png_reader::~png_reader() {
@@ -81,16 +80,22 @@ void png_reader::_set_jmp_and_io() {
     }
 }
 
-void png_reader::_read_header() {
-    if ( _is_valid ) {
+image_header png_reader::read_header() {
+    if ( !_header ) {
+        if ( !_is_valid ) {
+            throw "Invalid png.";
+        }
+
         png_read_info ( _png_ptr, _info_ptr );
 
-        _header = make_shared<image_header>(
+        _header = std::make_unique<image_header>(
             png_get_image_width ( _png_ptr, _info_ptr ),
             png_get_image_height ( _png_ptr, _info_ptr ),
             png_get_channels ( _png_ptr, _info_ptr ),
             png_get_bit_depth ( _png_ptr, _info_ptr ) );
     }
+
+    return *_header;
 }
 
 bool png_reader::read_data ( image* img ) {
@@ -139,16 +144,12 @@ bool png_reader::read_data ( uint8_t* data ) {
     return success;
 }
 
-shared_ptr<image> png_reader::read ( const string& path )
+image png_reader::read ( const string& path )
 {
-    shared_ptr<image> img = nullptr;
     png_reader reader ( path );
+    image img ( reader.read_header(), nullptr );
 
-    if ( reader.is_valid() ) {
-        auto header = reader.header();
-        img = make_shared<image>( *header, nullptr );
-        reader.read_data ( img.get() );
-    }
+    reader.read_data ( &img );
 
     return img;
 }

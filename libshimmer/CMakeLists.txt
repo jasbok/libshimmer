@@ -106,6 +106,7 @@ set( HEADERS
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_linker.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_manager.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_texture_2d.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture_loader.h
         ${INCLUDE_DIR}/renderer/renderer.h
         ${INCLUDE_DIR}/shimmer.h
@@ -140,6 +141,7 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_manager.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_texture.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_texture_2d.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_texture_loader.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_qualifier.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_type.cpp

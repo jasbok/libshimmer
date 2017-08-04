@@ -1,7 +1,6 @@
 #ifndef LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H
 #define LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H
 
-#include "gl_pixel_buffer.h"
 #include "texture.h"
 
 #include <GL/glew.h>
@@ -13,13 +12,14 @@ namespace shimmer
 class gl_texture : public texture
 {
 public:
-    gl_texture( unsigned int width,
-                unsigned int height,
-                GLenum       format = GL_RGB,
-                GLenum       type = GL_UNSIGNED_BYTE,
-                GLenum       target = GL_TEXTURE_2D,
-                GLint        level = 0,
-                GLint        internal_format = GL_RGB );
+    gl_texture( GLenum        target,
+                GLint         level,
+                GLint         internal_format,
+                GLsizei       width,
+                GLsizei       height,
+                GLenum        format,
+                GLenum        type,
+                const GLvoid* data );
 
     virtual ~gl_texture();
 
@@ -29,8 +29,6 @@ public:
                   GLenum        type,
                   const GLvoid* data );
 
-    void upload ( std::shared_ptr<gl_pixel_buffer> buffer );
-
     void upload ( GLenum        format,
                   GLenum        type,
                   const GLvoid* data,
@@ -38,12 +36,6 @@ public:
                   GLint         y_offset,
                   GLsizei       width,
                   GLsizei       height );
-
-    void upload ( std::shared_ptr<gl_pixel_buffer> buffer,
-                  GLint                            x_offset,
-                  GLint                            y_offset,
-                  GLsizei                          width,
-                  GLsizei                          height );
 
     void download ( GLenum  format,
                     GLenum  type,
@@ -55,6 +47,8 @@ private:
     GETTER ( GLenum, target );
 
     GETTER ( GLint,  level );
+
+    GETTER ( GLint,  internal_format );
 };
 }
 

@@ -19,7 +19,7 @@ public:
 
     virtual ~gl_buffer();
 
-    void  bind();
+    void  bind() const;
 
     void* map();
 
