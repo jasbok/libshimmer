@@ -24,9 +24,16 @@ public:
     void use();
 
 private:
+    typedef std::unordered_map<std::string, gl_program_variable> variable_map;
+
+    void _add_input ( const glsl_variable& variable );
+
+    void _add_uniform ( const glsl_variable& variable );
+
     GETTER ( GLuint,       handle );
 
-    typedef std::unordered_map<std::string, gl_program_variable> variable_map;
+    GETTER ( variable_map, inputs );
+
     GETTER ( variable_map, uniforms );
 };
 }

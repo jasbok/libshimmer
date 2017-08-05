@@ -40,6 +40,19 @@ TEST_CASE ( "Compile shader programs using the program manager.",
     CHECK ( valid_program != nullptr );
     CHECK ( valid_program->handle() != 0 );
 
+    CHECK ( valid_program->inputs().find ( "position" )
+            != valid_program->inputs().end() );
+    CHECK ( valid_program->inputs().find ( "texcoord" )
+            != valid_program->inputs().end() );
+
+    CHECK ( valid_program->uniforms().find ( "sampler" )
+            != valid_program->uniforms().end() );
+
+    // The 'floats' uniform is never used, thus is factored out of the program
+    // during compile time.
+    CHECK ( valid_program->uniforms().find ( "floats" )
+            == valid_program->uniforms().end() );
+
     auto invalid_program_a = gl_program_manager::load ( { fs_shader,
                                                           garbage_shader } );
     CHECK_GL_NO_ERROR();

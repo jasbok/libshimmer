@@ -11,7 +11,6 @@ using namespace shimmer;
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_pixel" );
 
-/* *INDENT-OFF* */
 const std::unordered_map<GLenum, unsigned int> pixel_format_component = {
     { GL_RED,             1 },
     { GL_RG,              2 },
@@ -51,8 +50,6 @@ const std::unordered_map<GLenum, unsigned int> pixel_type_bytes = {
     { GL_UNSIGNED_INT_10_10_10_2,     4 },
     { GL_UNSIGNED_INT_2_10_10_10_REV, 4 }
 };
-
-/* *INDENT-ON* */
 
 unsigned int opengl::bytes_per_pixel ( GLenum format, GLenum type )
 {

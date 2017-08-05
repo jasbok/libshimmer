@@ -24,6 +24,23 @@ gl_buffer::gl_buffer( GLenum     target,
     glBufferData ( _target, _size, 0, usage );
 }
 
+gl_buffer::gl_buffer( GLenum     target,
+                      GLsizeiptr size,
+                      GLvoid*    data,
+                      GLenum     usage,
+                      GLenum     access )
+    : _target ( target ),
+      _size ( size ),
+      _usage ( usage ),
+      _access ( access ),
+      _data ( nullptr )
+{
+    glGenBuffers ( 1, &_handle );
+
+    glBindBuffer ( _target, _handle );
+    glBufferData ( _target, _size, data, usage );
+}
+
 gl_buffer::~gl_buffer() {
     glDeleteBuffers ( 1, &_handle );
 }
@@ -31,6 +48,11 @@ gl_buffer::~gl_buffer() {
 void shimmer::gl_buffer::bind() const
 {
     glBindBuffer ( _target, _handle );
+}
+
+void shimmer::gl_buffer::unbind() const
+{
+    glBindBuffer ( _target, 0 );
 }
 
 void* shimmer::gl_buffer::map()

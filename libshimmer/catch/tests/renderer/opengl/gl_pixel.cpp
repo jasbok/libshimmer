@@ -5,7 +5,6 @@
 using namespace shimmer;
 using namespace std;
 
-/* *INDENT-OFF* */
 TEST_CASE ( "Check if bytes per pixel is correctly calculated from the "
             "pixel format and type GLenums.",
             "[gl_pixel]" )

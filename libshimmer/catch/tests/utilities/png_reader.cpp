@@ -21,8 +21,8 @@ void CHECK_8x9x8_RGB ( const image& png ) {
     REQUIRE ( png.height() == expected_height );
     REQUIRE ( png.channels() == expected_channels );
     REQUIRE ( png.bit_depth() == expected_bit_depth );
-    REQUIRE ( png.step() ==  expected_step );
-    REQUIRE ( png.size() ==  expected_size );
+    REQUIRE ( png.step() == expected_step );
+    REQUIRE ( png.size() == expected_size );
 
     for ( unsigned int row = 0; row < png.height(); row++ ) {
         int r_expected = row % 3 == 0 ? 255 : 0;

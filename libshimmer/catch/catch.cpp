@@ -11,7 +11,7 @@
 int main ( int argc, char* argv[] )
 {
     glutInit ( &argc, argv );
-    glutInitContextVersion ( 2, 1 );
+    glutInitContextVersion ( 3, 3 );
     glutCreateWindow ( "Libshimmer: Catch Unit Test" );
 
     auto err = glewInit();

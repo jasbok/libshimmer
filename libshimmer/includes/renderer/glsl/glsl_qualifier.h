@@ -9,7 +9,7 @@ namespace glsl
 {
 enum class qualifier
 {
-    UNKNOWN = 0, ATTRIBUTE, UNIFORM, VARYING
+    UNKNOWN = 0, ATTRIBUTE, UNIFORM, VARYING, INPUT, OUTPUT
 };
 
 std::string str_from ( qualifier qualifier );

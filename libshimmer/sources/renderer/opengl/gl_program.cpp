@@ -10,15 +10,39 @@ gl_program::gl_program(
       _uniforms()
 {
     for ( auto& var : variables ) {
-        if ( var.qualifier() == glsl::qualifier::UNIFORM ) {
-            auto location = glGetUniformLocation (
-                _handle, var.name().c_str() );
+        switch ( var.qualifier() ) {
+        case glsl::qualifier::ATTRIBUTE:
+        case glsl::qualifier::INPUT:
+            _add_input ( var );
+            break;
 
-            if ( location >= 0 ) {
-                _uniforms.emplace ( var.name(),
-                                    gl_program_variable ( var, location ) );
-            }
+        case glsl::qualifier::UNIFORM:
+            _add_uniform ( var );
+            break;
+
+        default:
+            break;
         }
+    }
+}
+
+void gl_program::_add_input ( const glsl_variable& variable )
+{
+    auto location = glGetAttribLocation ( _handle, variable.name().c_str() );
+
+    if ( location >= 0 ) {
+        _inputs.emplace ( variable.name(),
+                          gl_program_variable ( variable, location ) );
+    }
+}
+
+void gl_program::_add_uniform ( const glsl_variable& variable )
+{
+    auto location = glGetUniformLocation ( _handle, variable.name().c_str() );
+
+    if ( location >= 0 ) {
+        _uniforms.emplace ( variable.name(),
+                            gl_program_variable ( variable, location ) );
     }
 }
 

@@ -7,41 +7,63 @@
 using namespace shimmer;
 using namespace std;
 
-static std::shared_ptr<spdlog::logger> LOGGER
+static shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "glsl_qualifier" );
+
+const std::unordered_map<std::string, glsl::qualifier>
+string_qualifier_map = {
+    { "attribute", glsl::qualifier::ATTRIBUTE  },
+    { "in",        glsl::qualifier::INPUT      },
+    { "out",       glsl::qualifier::OUTPUT     },
+    { "uniform",   glsl::qualifier::UNIFORM    },
+    { "unknown",   glsl::qualifier::UNKNOWN    },
+    { "varying",   glsl::qualifier::VARYING    }
+};
 
 string glsl::str_from ( glsl::qualifier qualifier )
 {
+    string str = "unknown";
+
     switch ( qualifier ) {
     case glsl::qualifier::ATTRIBUTE:
+        str = "attribute";
+        break;
 
-        return "attribute";
+    case glsl::qualifier::INPUT:
+        str = "in";
+        break;
+
+    case glsl::qualifier::OUTPUT:
+        str = "out";
+        break;
 
     case glsl::qualifier::UNIFORM:
+        str = "uniform";
+        break;
 
-        return "uniform";
+    case glsl::qualifier::UNKNOWN:
+        str = "unknown";
+        break;
 
     case glsl::qualifier::VARYING:
-
-        return "varying";
-
-    default:
-
-        return "unknown";
+        str = "varying";
+        break;
     }
+
+    return str;
 }
 
 glsl::qualifier glsl::qualifier_from ( const string& str )
 {
-    if ( str.compare ( "uniform" ) == 0 ) {
-        return glsl::qualifier::UNIFORM;
-    } else if ( str.compare ( "attribute" ) == 0 ) {
-        return glsl::qualifier::ATTRIBUTE;
-    } else if ( str.compare ( "varying" ) == 0 ) {
-        return glsl::qualifier::VARYING;
+    glsl::qualifier qualifier = glsl::qualifier::UNKNOWN;
+    auto entry                = string_qualifier_map.find ( str );
+
+    if ( entry != string_qualifier_map.end() ) {
+        qualifier = entry->second;
+    }
+    else {
+        LOGGER->warn ( "Unknown glsl_qualifier: {}", str );
     }
 
-    LOGGER->warn ( "Unknown glsl_qualifier: {}", str );
-
-    return glsl::qualifier::UNKNOWN;
+    return qualifier;
 }
