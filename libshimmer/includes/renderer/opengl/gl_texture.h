@@ -23,7 +23,7 @@ public:
 
     virtual ~gl_texture();
 
-    void bind();
+    void bind() const;
 
     void upload ( GLenum        format,
                   GLenum        type,
@@ -39,7 +39,7 @@ public:
 
     void download ( GLenum  format,
                     GLenum  type,
-                    GLvoid* data );
+                    GLvoid* data ) const;
 
 private:
     GETTER ( GLuint, handle );

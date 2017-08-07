@@ -21,20 +21,19 @@ public:
 
     virtual ~gl_program();
 
-    void use();
+    void  use() const;
+
+    GLint attribute_location ( const std::string& name ) const;
+
+    GLint uniform_location ( const std::string& name ) const;
+
+    void  set_sampler ( const std::string& name,
+                        int                value );
 
 private:
-    typedef std::unordered_map<std::string, gl_program_variable> variable_map;
+    GETTER ( GLuint,                     handle );
 
-    void _add_input ( const glsl_variable& variable );
-
-    void _add_uniform ( const glsl_variable& variable );
-
-    GETTER ( GLuint,       handle );
-
-    GETTER ( variable_map, inputs );
-
-    GETTER ( variable_map, uniforms );
+    GETTER ( std::vector<glsl_variable>, variables );
 };
 }
 

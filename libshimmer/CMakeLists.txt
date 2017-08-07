@@ -96,7 +96,9 @@ set( HEADERS
         ${INCLUDE_DIR}/renderer/glsl/glsl_variable.h
         ${INCLUDE_DIR}/renderer/opengl/gl_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_enum.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_material.h
         ${INCLUDE_DIR}/renderer/opengl/gl_mesh.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_model.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program.h
@@ -110,6 +112,7 @@ set( HEADERS
         ${INCLUDE_DIR}/renderer/opengl/gl_texture.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture_2d.h
         ${INCLUDE_DIR}/renderer/opengl/gl_texture_loader.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_vertex_array.h
         ${INCLUDE_DIR}/renderer/renderer.h
         ${INCLUDE_DIR}/shimmer.h
         ${INCLUDE_DIR}/utilities/cache.hpp
@@ -133,7 +136,9 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/common/texture.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_enum.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_material.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_mesh.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_model.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program.cpp
@@ -147,6 +152,7 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/opengl/gl_texture.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_texture_2d.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_texture_loader.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_vertex_array.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_qualifier.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_type.cpp
         ${SOURCES_DIR}/renderer/glsl/glsl_variable.cpp

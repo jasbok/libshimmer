@@ -10,7 +10,7 @@
 
 namespace shimmer
 {
-template<typename K,  typename V>
+template<typename K, typename V>
 class simple_cache : public cache<K, V>
 {
 public:

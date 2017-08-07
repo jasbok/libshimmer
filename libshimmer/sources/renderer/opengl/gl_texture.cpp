@@ -15,7 +15,7 @@ gl_texture::gl_texture( GLenum        target,
                         GLenum        format,
                         GLenum        type,
                         const GLvoid* data  )
-    : texture ( width,  height ),
+    : texture ( width, height ),
       _handle ( 0 ),
       _target ( target ),
       _level ( level ),
@@ -46,7 +46,7 @@ gl_texture::~gl_texture()
     glDeleteTextures ( 1, &_handle );
 }
 
-void gl_texture::bind()
+void gl_texture::bind() const
 {
     glBindTexture ( _target, _handle );
 }
@@ -81,7 +81,7 @@ void gl_texture::upload ( GLenum        format,
 
 void gl_texture::download ( GLenum  format,
                             GLenum  type,
-                            GLvoid* data )
+                            GLvoid* data ) const
 {
     glBindTexture ( _target, _handle );
 

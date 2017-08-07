@@ -7,7 +7,8 @@ namespace shimmer
 {
 namespace opengl
 {
-gl_mesh create_textured_quad ( float aspect_ratio, bool flip_y = false);
+gl_mesh create_textured_quad ( float aspect_ratio,
+                               bool  flip_y = false );
 }
 }
 

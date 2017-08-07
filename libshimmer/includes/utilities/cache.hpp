@@ -3,7 +3,7 @@
 
 namespace shimmer
 {
-template<typename K,  typename V>
+template<typename K, typename V>
 class cache
 {
 public:

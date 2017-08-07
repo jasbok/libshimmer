@@ -57,21 +57,21 @@ Uint32 SDL_GetGlobalMouseState ( int* x,
     return sym::SDL_GetGlobalMouseState ( x, y );
 }
 
-Uint32 SDL_GetMouseState ( int* x,  int* y )
+Uint32 SDL_GetMouseState ( int* x, int* y )
 {
     SHIM_LOG ( 1000 );
 
     return sym::SDL_GetMouseState ( x, y );
 }
 
-Uint32 SDL_GetRelativeMouseState ( int* x,  int* y )
+Uint32 SDL_GetRelativeMouseState ( int* x, int* y )
 {
     SHIM_LOG ( 1000 );
 
     return sym::SDL_GetRelativeMouseState ( x, y );
 }
 
-int SDL_WarpMouseGlobal ( int x,  int y )
+int SDL_WarpMouseGlobal ( int x, int y )
 {
     SHIM_LOG ( 1000 );
 
