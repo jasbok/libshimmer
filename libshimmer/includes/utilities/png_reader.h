@@ -28,11 +28,11 @@ public:
     static image read ( const std::string& path );
 
 private:
-    void         _open();
+    void _open();
 
-    void         _setup_data_structures();
+    void _setup_data_structures();
 
-    void         _set_jmp_and_io();
+    void _set_jmp_and_io();
 
     GETTER ( std::string, path );
 

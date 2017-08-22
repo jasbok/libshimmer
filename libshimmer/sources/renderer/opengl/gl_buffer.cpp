@@ -55,6 +55,12 @@ void shimmer::gl_buffer::unbind() const
     glBindBuffer ( _target, 0 );
 }
 
+void shimmer::gl_buffer::data ( void* data )
+{
+    glBindBuffer ( _target, _handle );
+    glBufferData ( _target, _size, data, _usage );
+}
+
 void* shimmer::gl_buffer::map()
 {
     glBindBuffer ( _target, _handle );

@@ -14,8 +14,10 @@ namespace shimmer
 namespace gl_shader_manager
 {
 typedef simple_cache<std::string, std::shared_ptr<gl_shader>> default_cache;
+
 std::shared_ptr<gl_shader> create ( const std::string& source,
                                     GLuint             type );
+
 std::shared_ptr<gl_shader> load ( const std::string& path,
                                   GLuint             type );
 }

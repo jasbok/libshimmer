@@ -15,13 +15,14 @@ namespace shimmer
 class gl_program
 {
 public:
-    gl_program(
-        GLuint                            handle,
-        const std::vector<glsl_variable>& variables );
+    gl_program( GLuint                            handle,
+                const std::vector<glsl_variable>& variables );
 
     virtual ~gl_program();
 
-    void  use() const;
+    void  bind() const;
+
+    void  unbind() const;
 
     GLint attribute_location ( const std::string& name ) const;
 
@@ -29,6 +30,15 @@ public:
 
     void  set_sampler ( const std::string& name,
                         int                value );
+
+    void bind_samplers();
+
+
+    std::vector<gl_program_variable> variables (
+        const std::vector<glsl::qualifier>& qualifiers );
+
+    std::vector<gl_program_variable> variables (
+        const std::vector<glsl::type>& types );
 
 private:
     GETTER ( GLuint,                     handle );

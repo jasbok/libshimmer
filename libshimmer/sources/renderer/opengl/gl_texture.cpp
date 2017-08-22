@@ -3,6 +3,7 @@
 #include "spdlog/spdlog.h"
 
 using namespace shimmer;
+using namespace std;
 
 static std::shared_ptr<spdlog::logger> LOGGER
     = spdlog::stdout_color_mt ( "gl_texture" );
@@ -90,4 +91,14 @@ void gl_texture::download ( GLenum  format,
                     format,
                     type,
                     data );
+}
+
+void opengl::bind_texture_units (
+    const vector<shared_ptr<gl_texture>>& textures ) {
+    auto texture_unit = GL_TEXTURE0;
+
+    for ( const auto& texture : textures ) {
+        glActiveTexture ( texture_unit++ );
+        texture->bind();
+    }
 }

@@ -9,11 +9,10 @@ namespace shimmer
 {
 namespace gl_program_manager
 {
-using namespace std;
-typedef simple_cache<string, shared_ptr<gl_program>> default_cache;
+typedef simple_cache<std::string, std::shared_ptr<gl_program>> default_cache;
 
-shared_ptr<gl_program> load (
-    const vector<shared_ptr<const gl_shader>>& shaders );
+std::shared_ptr<gl_program> load (
+    const std::vector<std::shared_ptr<const gl_shader>>& shaders );
 }
 }
 

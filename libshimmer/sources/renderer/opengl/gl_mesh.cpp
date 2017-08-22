@@ -3,16 +3,24 @@
 using namespace shimmer;
 using namespace std;
 
-gl_mesh::gl_mesh( vector<GLfloat>    vertices,
-                  vector<GLsizeiptr> elements,
-                  unsigned int       vertices_stride,
-                  unsigned int       elements_stride )
-    : _vertices ( GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size() ),
+gl_mesh::gl_mesh( const vector<GLfloat>&    vertices,
+                  const vector<GLsizeiptr>& elements,
+                  unsigned int              vertices_stride,
+                  unsigned int              elements_stride )
+    : _vertices ( GL_ARRAY_BUFFER,
+          sizeof(GLfloat) * vertices.size(),
+          ( GLvoid* )vertices.data() ),
+
       _vertices_stride ( vertices_stride ),
+
       _vertices_count ( vertices.size() / vertices_stride ),
+
       _elements ( GL_ELEMENT_ARRAY_BUFFER,
-          sizeof(GLsizeiptr) * elements.size() ),
+          sizeof(GLsizeiptr) * elements.size(),
+          ( GLvoid* )elements.data() ),
+
       _elements_stride ( elements_stride ),
+
       _elements_count ( elements.size() / elements_stride )
 {}
 

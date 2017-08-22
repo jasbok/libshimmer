@@ -12,8 +12,8 @@ shared_ptr<gl_shader> gl_shader_manager::create ( const string& source,
                                                   GLuint        type )
 {
     shared_ptr<gl_shader> shader = nullptr;
-    auto compiled                =
-        gl_shader_compiler::compile ( source, type );
+
+    auto compiled = gl_shader_compiler::compile ( source, type );
 
     if ( compiled ) {
         shader = make_shared<gl_shader>(
@@ -28,9 +28,9 @@ shared_ptr<gl_shader> gl_shader_manager::load ( const string& path,
                                                 GLuint        type )
 {
     shared_ptr<gl_shader> shader = nullptr;
-    auto source                  = file_reader::read ( path );
-    auto compiled                =
-        gl_shader_compiler::compile ( source, type );
+
+    auto source   = file_reader::read ( path );
+    auto compiled = gl_shader_compiler::compile ( source, type );
 
     if ( compiled ) {
         shader = make_shared<gl_shader>(

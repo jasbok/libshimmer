@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 #include <memory>
+#include <vector>
 
 namespace shimmer
 {
@@ -50,6 +51,12 @@ private:
 
     GETTER ( GLint,  internal_format );
 };
+
+namespace opengl
+{
+void bind_texture_units (
+    const std::vector<std::shared_ptr<gl_texture>>& textures );
+}
 }
 
 #endif // ifndef LIBSHIMMER_RENDERER_OPENGL_GL_TEXTURE_H

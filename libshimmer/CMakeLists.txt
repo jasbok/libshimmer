@@ -96,15 +96,14 @@ set( HEADERS
         ${INCLUDE_DIR}/renderer/glsl/glsl_variable.h
         ${INCLUDE_DIR}/renderer/opengl/gl_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_enum.h
-        ${INCLUDE_DIR}/renderer/opengl/gl_material.h
         ${INCLUDE_DIR}/renderer/opengl/gl_mesh.h
-        ${INCLUDE_DIR}/renderer/opengl/gl_model.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel.h
         ${INCLUDE_DIR}/renderer/opengl/gl_pixel_buffer.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program_manager.h
         ${INCLUDE_DIR}/renderer/opengl/gl_program_variable.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_compiler.h
+        ${INCLUDE_DIR}/renderer/opengl/gl_quad.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_linker.h
         ${INCLUDE_DIR}/renderer/opengl/gl_shader_manager.h
@@ -136,14 +135,13 @@ set( SOURCES
         ${SOURCES_DIR}/renderer/common/texture.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_enum.cpp
-        ${SOURCES_DIR}/renderer/opengl/gl_material.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_mesh.cpp
-        ${SOURCES_DIR}/renderer/opengl/gl_model.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_pixel_buffer.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_manager.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_program_variable.cpp
+        ${SOURCES_DIR}/renderer/opengl/gl_quad.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_compiler.cpp
         ${SOURCES_DIR}/renderer/opengl/gl_shader_linker.cpp

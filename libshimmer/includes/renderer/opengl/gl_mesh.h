@@ -11,10 +11,10 @@ namespace shimmer
 class gl_mesh
 {
 public:
-    gl_mesh( std::vector<GLfloat>    vertices,
-             std::vector<GLsizeiptr> elements,
-             unsigned int            vertices_stride = 7,
-             unsigned int            elements_stride = 3 );
+    gl_mesh( const std::vector<GLfloat>&    vertices,
+             const std::vector<GLsizeiptr>& elements,
+             unsigned int                   vertices_stride,
+             unsigned int                   elements_stride );
 
     virtual ~gl_mesh();
 

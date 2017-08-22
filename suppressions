@@ -72,7 +72,7 @@
    Suppress catch test error related to glMapBuffer() call. Assume Valgrind does not pickup driver memory allocation.
    Memcheck:Addr1
    ...
-   fun:_ZL11CHECK_EQUALPvS_i
+   fun:_ZL11CHECK_EQUALPvS_j
    fun:_ZL29____C_A_T_C_H____T_E_S_T____4v
 }
 
@@ -80,6 +80,6 @@
    Suppress catch test error related to glMapBuffer() call. Assume Valgrind does not pickup driver memory allocation.
    Memcheck:Addr1
    ...
-   fun:_ZL11CHECK_EQUALPvS_i
+   fun:_ZL11CHECK_EQUALPvS_j
    fun:_ZL29____C_A_T_C_H____T_E_S_T____6v
 }

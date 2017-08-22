@@ -29,6 +29,8 @@ public:
 
     void  unbind() const;
 
+    void  data ( void* data );
+
     void* map();
 
     void  unmap();
