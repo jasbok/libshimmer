@@ -42,3 +42,9 @@ set( SOURCES
 ###############################################################################
 add_library(shimmer_sdl2 SHARED ${SOURCES} ${HEADERS})
 target_link_libraries(shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES})
+
+
+###############################################################################
+#   Build example programs.
+###############################################################################
+add_subdirectory( examples )
