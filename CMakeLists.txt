@@ -24,11 +24,18 @@ set( CMAKE_MODULE_PATH
 
 
 ###############################################################################
-#   Set libshimmer and shims root directories.
+#   Set root directories.
 ###############################################################################
 set( EXTERNAL_ROOT ${CMAKE_SOURCE_DIR}/external )
+set( GLPP_ROOT ${CMAKE_SOURCE_DIR}/glpp )
 set( LIB_SHIMMER_ROOT ${CMAKE_SOURCE_DIR}/libshimmer )
 set( SHIMS_ROOT ${CMAKE_SOURCE_DIR}/shims )
+
+
+###############################################################################
+#   Build glpp
+###############################################################################
+add_subdirectory( glpp )
 
 
 ###############################################################################

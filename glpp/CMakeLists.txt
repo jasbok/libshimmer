@@ -1,0 +1,73 @@
+###############################################################################
+#   Find and store OpenGL, GLEW and GLM paths.
+###############################################################################
+find_package( GLEW )
+find_package( glm )
+find_package( OpenGL )
+
+set( OPENGL_INCLUDES
+        ${GLEW_INCLUDE_DIRS}
+        ${GLM_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR} )
+
+set( OPENGL_LIBRARIES
+        ${GLEW_LIBRARIES}
+        ${OPENGL_LIBRARIES} )
+
+
+###############################################################################
+#   Configure external include directories.
+###############################################################################
+set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
+
+set ( EXTERNAL_INCLUDES
+        ${EXTERNAL_INCLUDE_DIR}
+        ${OPENGL_INCLUDES} )
+
+
+###############################################################################
+#   List external target link libraries
+###############################################################################
+set( TARGET_LINK_LIBRARIES
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${OPENGL_LIBRARIES} )
+
+
+###############################################################################
+#   Configure GLPP include directories.
+###############################################################################
+set( INCLUDE_DIR ${GLPP_ROOT}/includes )
+
+set( INCLUDES
+        ${INCLUDE_DIR} )
+
+
+###############################################################################
+#   List all headers, required by some IDEs.
+###############################################################################
+set( HEADERS
+        ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
+        ${INCLUDE_DIR}/attribute.h
+        ${INCLUDE_DIR}/program.h
+        ${INCLUDE_DIR}/shader.h
+        ${INCLUDE_DIR}/uniform.h )
+
+
+###############################################################################
+#   List GLPP sources.
+###############################################################################
+set( SOURCES_DIR ${GLPP_ROOT}/sources )
+
+set( SOURCES
+        ${SOURCES_DIR}/attribute.cpp
+        ${SOURCES_DIR}/program.cpp
+        ${SOURCES_DIR}/shader.cpp
+        ${SOURCES_DIR}/uniform.cpp )
+
+
+###############################################################################
+#   Build GLPP shared library.
+###############################################################################
+include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
+add_library( glpp SHARED ${HEADERS} ${SOURCES} )
+target_link_libraries( glpp ${TARGET_LINK_LIBRARIES} )
