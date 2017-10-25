@@ -1,10 +1,4 @@
 ###############################################################################
-#   Find and store SDL2 paths.
-###############################################################################
-find_package(SDL2)
-
-
-###############################################################################
 #   Copy data files to binary directory.
 ###############################################################################
 set(DATA_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data)
@@ -15,9 +9,20 @@ configure_file(${DATA_SRC}/ck4.png ${DATA_DEST}/ck4.png COPYONLY)
 
 
 ###############################################################################
-#   SDL2 example program.
+#   Set include directories.
 ###############################################################################
 include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
-add_executable( sdl2_example sdl2_example.cpp )
-target_link_libraries( sdl2_example ${SDL2_LIBRARIES} )
 
+
+###############################################################################
+#   SDL2 simple example program.
+###############################################################################
+add_executable( sdl2_simple sdl2_simple.cpp )
+target_link_libraries( sdl2_simple ${SDL2_LIBRARIES} )
+
+
+###############################################################################
+#   SDL2 OpenGL example program.
+###############################################################################
+add_executable( sdl2_opengl sdl2_opengl.cpp )
+target_link_libraries( sdl2_opengl shimmer ${SDL2_LIBRARIES} )

@@ -1,4 +1,3 @@
-
 #include <SDL2/SDL.h>
 
 #include <iostream>
@@ -32,7 +31,7 @@ void poll_events() {
 }
 
 int sdl_error ( const std::string& err, bool do_quit = true ) {
-    std::cout << err << SDL_GetError() << std::endl;
+    std::cerr << err << SDL_GetError() << std::endl;
     cleanup();
 
     if ( do_quit ) SDL_Quit();
