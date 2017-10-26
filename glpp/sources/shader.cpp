@@ -5,23 +5,9 @@
 using namespace glpp;
 using namespace std;
 
-GLenum glEnumFrom ( shader_type type ) {
-    switch ( type ) {
-    case shader_type::fragment:
-
-        return GL_FRAGMENT_SHADER;
-
-    case shader_type::vertex:
-
-        return GL_VERTEX_SHADER;
-    }
-
-    return 0;
-}
-
-shader::shader( shader_type   type,
+shader::shader( enum type   type,
                 const string& source )
-    : _handle ( glCreateShader ( glEnumFrom ( type ) ) ),
+    : _handle ( glCreateShader ( static_cast<GLenum>(type) ) ),
       _type ( type ),
       _source ( source )
 {}
@@ -52,7 +38,7 @@ GLuint shader::handle() const {
     return _handle;
 }
 
-shader_type shader::type() const {
+enum shader::type shader::type() const {
     return _type;
 }
 

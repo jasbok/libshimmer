@@ -48,8 +48,12 @@ set( INCLUDES
 set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/attribute.h
+        ${INCLUDE_DIR}/buffer.h
+        ${INCLUDE_DIR}/mbuffer.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/shader.h
+        ${INCLUDE_DIR}/texture.h
+        ${INCLUDE_DIR}/texture_2d.h
         ${INCLUDE_DIR}/uniform.h )
 
 
@@ -60,8 +64,12 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
+        ${SOURCES_DIR}/buffer.cpp
+        ${SOURCES_DIR}/mbuffer.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/shader.cpp
+        ${SOURCES_DIR}/texture.cpp
+        ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp )
 
 

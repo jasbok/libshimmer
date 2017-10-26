@@ -8,16 +8,15 @@
 
 namespace glpp
 {
-enum class shader_type {
-    fragment, vertex
-};
-
-GLenum glEnumFrom ( shader_type type );
-
 class shader
 {
 public:
-    shader( shader_type        type,
+    enum class type : GLenum {
+        gl_fragment_shader = GL_FRAGMENT_SHADER,
+        gl_vertex_shader   = GL_VERTEX_SHADER
+    };
+
+    shader( enum type          type,
             const std::string& source );
 
     shader( shader&& move );
@@ -32,7 +31,7 @@ public:
 
     GLuint      handle() const;
 
-    shader_type type() const;
+    enum type   type() const;
 
     std::string source() const;
 
@@ -45,7 +44,7 @@ public:
 private:
     GLuint _handle;
 
-    shader_type _type;
+    enum type _type;
 
     std::string _source;
 };
