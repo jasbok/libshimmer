@@ -129,27 +129,45 @@ int main ( int argc, char** argv ) {
 
     prog.detach ( fragment ).detach ( vertex );
 
-    float vertices[] = {
-        -0.5f,  -0.5f, 0.0f,
-        0.5f,   -0.5f, 0.0f,
-        0.0f,    0.5f, 0.0f
+    GLfloat vertices[] = {
+        0.5f,   0.5f, 0.0f,
+        0.5f,  -0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
     };
 
     glpp::buffer vbo ( glpp::buffer::target::gl_array_buffer );
     vbo.bind().data ( { vertices, sizeof(vertices) },
                       glpp::buffer::usage::gl_static_draw );
 
+    GLuint indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    glpp::buffer ebo ( glpp::buffer::target::gl_element_array_buffer );
+    ebo.bind().data ( { indices, sizeof(indices) },
+                      glpp::buffer::usage::gl_static_draw );
+
     glpp::vertex_array vao;
     vao.bind();
 
-    glpp::vertex_attrib attrib(glpp::vertex_attrib::type::gl_float, 3);
+    glpp::vertex_attrib attrib ( glpp::vertex_attrib::type::gl_float, 3 );
     attrib.define_pointer().enable_array();
+
+    ebo.bind();
+    vao.unbind();
+
+    vbo.unbind();
+    ebo.unbind();
 
     while ( RUNNING ) {
         glClear ( GL_COLOR_BUFFER_BIT );
         prog.use();
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
 
         SDL_GL_SwapWindow ( WINDOW );
 
