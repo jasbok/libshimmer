@@ -20,8 +20,8 @@ file(GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h)
 #   Set include directories.
 ###############################################################################
 set( INCLUDES
-        ${SDL2_INCLUDE_DIRS}
         ${LIB_SHIMMER_ROOT}/includes
+        ${SDL2_INCLUDE_DIRS}
         ${SDL2_SHIM_INCLUDE_DIR} )
 
 include_directories(${INCLUDES})

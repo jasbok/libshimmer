@@ -22,15 +22,6 @@ public:
         gl_texture_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
     };
 
-    enum class internal_format : GLint {
-        gl_depth_component = GL_DEPTH_COMPONENT,
-        gl_depth_stencil   = GL_DEPTH_STENCIL,
-        gl_red             = GL_RED,
-        gl_rg              = GL_RG,
-        gl_rgb             = GL_RGB,
-        gl_rgba            = GL_RGBA
-    };
-
     texture( enum target target );
 
     texture( texture&& move );

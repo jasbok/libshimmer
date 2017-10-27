@@ -11,7 +11,10 @@ configure_file(${DATA_SRC}/ck4.png ${DATA_DEST}/ck4.png COPYONLY)
 ###############################################################################
 #   Set include directories.
 ###############################################################################
-include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
+include_directories(
+    ${GLPP_ROOT}/includes
+    ${INCLUDES}
+    ${EXTERNAL_INCLUDES} )
 
 
 ###############################################################################
@@ -25,4 +28,4 @@ target_link_libraries( sdl2_simple ${SDL2_LIBRARIES} )
 #   SDL2 OpenGL example program.
 ###############################################################################
 add_executable( sdl2_opengl sdl2_opengl.cpp )
-target_link_libraries( sdl2_opengl shimmer ${SDL2_LIBRARIES} )
+target_link_libraries( sdl2_opengl shimmer glpp ${SDL2_LIBRARIES} )

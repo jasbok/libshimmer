@@ -46,11 +46,13 @@ string shader::source() const {
     return _source;
 }
 
-void shader::compile() {
+shader& shader::compile() {
     const GLchar* shader_source_gl = _source.c_str();
 
     glShaderSource ( _handle, 1, &shader_source_gl, nullptr );
     glCompileShader ( _handle );
+
+    return *this;
 }
 
 bool shader::compile_status() const {

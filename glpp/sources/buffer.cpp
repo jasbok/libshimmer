@@ -45,20 +45,24 @@ size_t buffer::size() const {
     return _size;
 }
 
-void buffer::bind() const {
+buffer& buffer::bind() {
     glBindBuffer ( static_cast<GLenum>(_target), _handle );
+
+    return *this;
 }
 
-void buffer::unbind() const {
+void buffer::unbind() {
     glBindBuffer ( static_cast<GLenum>(_target), 0 );
 }
 
-void buffer::data ( const buffer_data& data,
-                    enum usage              usage ) {
+buffer& buffer::data ( const buffer_data& data,
+                       enum usage         usage ) {
     glBufferData ( static_cast<GLenum>(_target),
                    data.size,
                    data.ptr,
                    static_cast<GLenum>(usage) );
 
     _size = data.size;
+
+    return *this;
 }

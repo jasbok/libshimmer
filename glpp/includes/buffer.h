@@ -49,31 +49,28 @@ public:
 
     buffer( target target );
 
-    buffer( target target,
-            size_t        size );
-
     buffer( buffer&& move );
 
     buffer( const buffer& copy ) = delete;
 
     virtual ~buffer();
 
-    buffer&       operator=( buffer&& move );
+    buffer&     operator=( buffer&& move );
 
-    buffer&       operator=( const buffer& copy ) = delete;
+    buffer&     operator=( const buffer& copy ) = delete;
 
-    GLuint        handle() const;
+    GLuint      handle() const;
 
-    enum target  target() const;
+    enum target target() const;
 
-    size_t        size() const;
+    size_t      size() const;
 
-    void          bind() const;
+    buffer&     bind();
 
-    void          unbind() const;
+    void        unbind();
 
-    void          data ( const buffer_data& data,
-                         enum usage              usage );
+    buffer&     data ( const buffer_data& data,
+                       enum usage         usage );
 
 private:
     GLuint _handle;

@@ -49,12 +49,16 @@ set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/attribute.h
         ${INCLUDE_DIR}/buffer.h
+        ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/mbuffer.h
+        ${INCLUDE_DIR}/pixel.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/shader.h
         ${INCLUDE_DIR}/texture.h
         ${INCLUDE_DIR}/texture_2d.h
-        ${INCLUDE_DIR}/uniform.h )
+        ${INCLUDE_DIR}/uniform.h
+        ${INCLUDE_DIR}/vertex_array.h
+        ${INCLUDE_DIR}/vertex_attrib.h )
 
 
 ###############################################################################
@@ -70,7 +74,9 @@ set( SOURCES
         ${SOURCES_DIR}/shader.cpp
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp
-        ${SOURCES_DIR}/uniform.cpp )
+        ${SOURCES_DIR}/uniform.cpp
+        ${SOURCES_DIR}/vertex_array.cpp
+        ${SOURCES_DIR}/vertex_attrib.cpp )
 
 
 ###############################################################################

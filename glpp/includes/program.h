@@ -1,12 +1,14 @@
 #ifndef GLPP_PROGRAM_H
 #define GLPP_PROGRAM_H
 
-#include "shader.h"
-
 #include <GL/glew.h>
+
+#include <string>
 
 namespace glpp
 {
+class shader;
+
 class program
 {
 public:
@@ -22,11 +24,11 @@ public:
 
     program&    operator=( const program& copy ) = delete;
 
-    void        attach ( const glpp::shader& shader );
+    program&    attach ( const glpp::shader& shader );
 
-    void        detach ( const glpp::shader& shader );
+    program&    detach ( const glpp::shader& shader );
 
-    void        link();
+    program&    link();
 
     bool        link_status() const;
 

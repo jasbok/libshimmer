@@ -35,7 +35,7 @@ public:
 
     std::string source() const;
 
-    void        compile();
+    shader&        compile();
 
     bool        compile_status() const;
 

@@ -1,4 +1,5 @@
 #include "program.h"
+#include "shader.h"
 
 #include <vector>
 
@@ -26,16 +27,22 @@ program& program::operator=( program&& move ) {
     return *this;
 }
 
-void program::attach ( const glpp::shader& shader ) {
+program& program::attach ( const glpp::shader& shader ) {
     glAttachShader ( _handle, shader.handle() );
+
+    return *this;
 }
 
-void program::detach ( const glpp::shader& shader ) {
+program& program::detach ( const glpp::shader& shader ) {
     glDetachShader ( _handle, shader.handle() );
+
+    return *this;
 }
 
-void program::link() {
+program& program::link() {
     glLinkProgram ( _handle );
+
+    return *this;
 }
 
 bool program::link_status() const {
