@@ -47,7 +47,8 @@ public:
         gl_dynamic_copy = GL_DYNAMIC_COPY
     };
 
-    buffer( target target );
+    buffer( enum target target,
+            enum usage  usage = usage::gl_static_draw );
 
     buffer( buffer&& move );
 
@@ -55,27 +56,49 @@ public:
 
     virtual ~buffer();
 
-    buffer&     operator=( buffer&& move );
+    buffer& operator=( buffer&& move );
 
-    buffer&     operator=( const buffer& copy ) = delete;
+    buffer& operator=( const buffer& copy ) = delete;
+
 
     GLuint      handle() const;
 
     enum target target() const;
 
-    size_t      size() const;
+    enum usage usage() const;
 
-    buffer&     bind();
+    size_t     size() const;
 
-    void        unbind();
 
-    buffer&     data ( const buffer_data& data,
-                       enum usage         usage );
+    buffer& bind();
+
+    void    unbind();
+
+
+    buffer& data (  const void* data,
+                    size_t      size );
+
+    buffer& data (  const void* data,
+                    size_t      size,
+                    enum usage  usage );
+
+    template<typename T, size_t S = sizeof(T)>
+    buffer& data ( const std::vector<T>& vec ) {
+        return data ( &vec[0], S * vec.size() );
+    }
+
+    template<typename T, size_t S = sizeof(T)>
+    buffer& data ( const std::vector<T>& vec,
+                   enum usage            usage ) {
+        return data ( &vec[0], S * vec.size(), usage );
+    }
 
 private:
     GLuint _handle;
 
     enum target _target;
+
+    enum usage _usage;
 
     size_t _size;
 };

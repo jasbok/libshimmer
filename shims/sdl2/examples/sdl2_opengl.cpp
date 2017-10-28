@@ -24,6 +24,11 @@ void poll_events() {
         if ( event.type == SDL_QUIT ) {
             RUNNING = false;
         }
+        else if ( event.type == SDL_KEYDOWN ) {
+            if ( event.key.keysym.sym == SDLK_q ) {
+                RUNNING = false;
+            }
+        }
     }
 }
 
@@ -80,8 +85,6 @@ int main ( int argc, char** argv ) {
         return 1;
     }
 
-    glClearColor ( 0.0f, 0.75f, 0.0f, 1.0f );
-
     glpp::shader fragment ( glpp::shader::type::gl_fragment_shader,
         R"(
         #version 330 core
@@ -91,7 +94,7 @@ int main ( int argc, char** argv ) {
         {
             FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
         }
-    )" );
+        )" );
 
     if ( !fragment.compile().compile_status() ) {
         std::cerr << "Unable to compile fragment shader:\n"
@@ -108,7 +111,7 @@ int main ( int argc, char** argv ) {
         {
             gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
         }
-    )" );
+        )" );
 
     if ( !vertex.compile().compile_status() ) {
         std::cerr << "Unable to compile vertex shader:\n"
@@ -129,25 +132,25 @@ int main ( int argc, char** argv ) {
 
     prog.detach ( fragment ).detach ( vertex );
 
-    GLfloat vertices[] = {
-        0.5f,   0.5f, 0.0f,
-        0.5f,  -0.5f, 0.0f,
+    glpp::buffer vbo (
+        glpp::buffer::target::gl_array_buffer,
+        glpp::buffer::usage::gl_static_draw );
+
+    vbo.bind().data<GLfloat>( {
+        0.5f, 0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f
-    };
+        -0.5f, 0.5f, 0.0f
+    } );
 
-    glpp::buffer vbo ( glpp::buffer::target::gl_array_buffer );
-    vbo.bind().data ( { vertices, sizeof(vertices) },
-                      glpp::buffer::usage::gl_static_draw );
+    glpp::buffer ebo (
+        glpp::buffer::target::gl_element_array_buffer,
+        glpp::buffer::usage::gl_static_draw );
 
-    GLuint indices[] = {
+    ebo.bind().data<GLuint>( {
         0, 1, 3,
         1, 2, 3
-    };
-
-    glpp::buffer ebo ( glpp::buffer::target::gl_element_array_buffer );
-    ebo.bind().data ( { indices, sizeof(indices) },
-                      glpp::buffer::usage::gl_static_draw );
+    } );
 
     glpp::vertex_array vao;
     vao.bind();
@@ -166,7 +169,6 @@ int main ( int argc, char** argv ) {
         prog.use();
         vao.bind();
 
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
 
         SDL_GL_SwapWindow ( WINDOW );
