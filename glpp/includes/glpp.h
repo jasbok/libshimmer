@@ -3,6 +3,7 @@
 
 #include "attribute.h"
 #include "buffer.h"
+#include "debug.h"
 #include "mbuffer.h"
 #include "pixel.h"
 #include "program.h"
