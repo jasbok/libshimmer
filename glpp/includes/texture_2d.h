@@ -1,43 +1,39 @@
 #ifndef GLPP_TEXTURE_2D_H
 #define GLPP_TEXTURE_2D_H
 
-#include "pixel.h"
+#include "specs.h"
 #include "texture.h"
+
+#include <vector>
 
 namespace glpp
 {
+class pixels;
+
 class texture_2d : public texture
 {
 public:
-    enum class target : GLenum {
-        gl_texture_2d                  = GL_TEXTURE_2D,
-        gl_proxy_texture_2d            = GL_PROXY_TEXTURE_2D,
-        gl_texture_1d_array            = GL_TEXTURE_1D_ARRAY,
-        gl_proxy_texture_1d_array      = GL_PROXY_TEXTURE_1D_ARRAY,
-        gl_texture_rectangle           = GL_TEXTURE_RECTANGLE,
-        gl_proxy_texture_rectangle     = GL_PROXY_TEXTURE_RECTANGLE,
-        gl_texture_cube_map_positive_x = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        gl_texture_cube_map_negative_x = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        gl_texture_cube_map_positive_y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        gl_texture_cube_map_negative_y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        gl_texture_cube_map_positive_z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        gl_texture_cube_map_negative_z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-        gl_proxy_texture_cube_map      = GL_PROXY_TEXTURE_CUBE_MAP
+    enum class min_filter : GLenum {
+        gl_nearest                = GL_NEAREST,
+        gl_linear                 = GL_LINEAR,
+        gl_nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST,
+        gl_linear_mipmap_nearest  = GL_LINEAR_MIPMAP_NEAREST,
+        gl_nearest_mipmap_linear  = GL_NEAREST_MIPMAP_LINEAR,
+        gl_linear_mipmap_linear   = GL_LINEAR_MIPMAP_LINEAR,
     };
 
-    enum class internal_format : GLint {
-        gl_depth_component = GL_DEPTH_COMPONENT,
-        gl_depth_stencil   = GL_DEPTH_STENCIL,
-        gl_red             = GL_RED,
-        gl_rg              = GL_RG,
-        gl_rgb             = GL_RGB,
-        gl_rgba            = GL_RGBA
+    enum class mag_filter : GLenum {
+        gl_nearest = GL_NEAREST,
+        gl_linear  = GL_LINEAR
     };
 
-    texture_2d( enum target          target,
-                GLsizei              width,
-                GLsizei              height,
-                enum internal_format internal_format );
+    enum class texture_wrap : GLenum {
+        gl_clamp_to_edge   = GL_CLAMP_TO_EDGE,
+        gl_mirrored_repeat = GL_MIRRORED_REPEAT,
+        gl_repeat          = GL_REPEAT
+    };
+
+    texture_2d( enum internal_format internal_format );
 
     texture_2d( texture_2d&& move );
 
@@ -50,31 +46,31 @@ public:
     texture_2d& operator=( const texture_2d& copy ) = delete;
 
 
-    GLsizei              width() const;
-
-    GLsizei              height() const;
-
-    enum internal_format internal_format() const;
+    dims_2u dims() const;
 
 
-    void tex_image ( GLint              level,
-                     enum pixel::format format,
-                     enum pixel::type   type,
-                     const GLvoid*      data );
+    texture_2d& image ( const pixels& pixels,
+                        GLint         level = 0 );
 
-    void tex_sub_image ( GLint              level,
-                         GLint              xoffset,
-                         GLint              yoffset,
-                         GLsizei            width,
-                         GLsizei            height,
-                         enum pixel::format format,
-                         enum pixel::type   type,
-                         const GLvoid*      pixels );
+    texture_2d& sub_image ( const coords_2i& offset,
+                            const pixels&    pixels,
+                            GLint            level = 0 );
+
+    texture_2d& generate_mipmap();
+
+    texture_2d& bind_texture_unit(unsigned int unit);
+
+
+    texture_2d& min_filter ( enum min_filter filter );
+
+    texture_2d& mag_filter ( enum mag_filter filter );
+
+    texture_2d& wrap_s ( enum texture_wrap wrap );
+
+    texture_2d& wrap_t ( enum texture_wrap wrap );
 
 private:
-    GLsizei _width, _height;
-
-    enum internal_format _internal_format;
+    dims_2u _dims;
 };
 }
 

@@ -1,79 +1,109 @@
 #include "texture_2d.h"
 
+#include "pixels.h"
+
 #include <algorithm>
 
 using namespace glpp;
+using namespace std;
 
-texture_2d::texture_2d( enum target          target,
-                        GLsizei              width,
-                        GLsizei              height,
-                        enum internal_format internal_format )
-    : texture ( static_cast<enum texture::target>(target) ),
-      _width ( width ),
-      _height ( height ),
-      _internal_format ( internal_format )
+texture_2d::texture_2d( enum internal_format internal_format )
+    : texture ( texture::target::gl_texture_2d, internal_format ),
+      _dims()
 {}
 
 texture_2d::texture_2d( texture_2d&& move )
     : texture ( std::move ( move ) ),
-      _width ( move._width ),
-      _height ( move._height ),
-      _internal_format ( move._internal_format )
+      _dims ( std::move ( move._dims ) )
 {}
 
 texture_2d::~texture_2d() {}
 
 texture_2d& texture_2d::operator=( texture_2d&& move ) {
     texture::operator=( std::move ( move ) );
-    _width           = move._width;
-    _height          = move._height;
-    _internal_format = move._internal_format;
+    _dims = std::move ( move._dims );
 
     return *this;
 }
 
-GLsizei texture_2d::width() const {
-    return _width;
+dims_2u texture_2d::dims() const {
+    return _dims;
 }
 
-GLsizei texture_2d::height() const {
-    return _height;
-}
+texture_2d& texture_2d::image ( const pixels& pixels,
+                                GLint         level ) {
+    _dims = pixels.dims();
 
-enum texture_2d::internal_format texture_2d::internal_format() const {
-    return _internal_format;
-}
-
-void texture_2d::tex_image ( GLint              level,
-                             enum pixel::format format,
-                             enum pixel::type   type,
-                             const GLvoid*      data ) {
     glTexImage2D ( static_cast<GLenum>(target()),
                    level,
-                   static_cast<GLenum>(_internal_format),
-                   _width,
-                   _height,
+                   static_cast<GLenum>(internal_format()),
+                   _dims.width,
+                   _dims.height,
                    0,
-                   static_cast<GLenum>(format),
-                   static_cast<GLenum>(type),
-                   data );
+                   static_cast<GLenum>(pixels.format()),
+                   static_cast<GLenum>(pixels.type()),
+                   pixels.data() );
+
+    return *this;
 }
 
-void texture_2d::tex_sub_image ( GLint              level,
-                                 GLint              xoffset,
-                                 GLint              yoffset,
-                                 GLsizei            width,
-                                 GLsizei            height,
-                                 enum pixel::format format,
-                                 enum pixel::type   type,
-                                 const GLvoid*      pixels ) {
+texture_2d& texture_2d::sub_image ( const coords_2i& offset,
+                                    const pixels&    pixels,
+                                    GLint            level ) {
     glTexSubImage2D ( static_cast<GLenum>(target()),
                       level,
-                      xoffset,
-                      yoffset,
-                      width,
-                      height,
-                      static_cast<GLenum>(format),
-                      static_cast<GLenum>(type),
-                      pixels );
+                      offset.x,
+                      offset.y,
+                      pixels.dims().width,
+                      pixels.dims().height,
+                      static_cast<GLenum>(pixels.format()),
+                      static_cast<GLenum>(pixels.type()),
+                      pixels.data() );
+
+    return *this;
+}
+
+texture_2d& texture_2d::generate_mipmap() {
+    glGenerateMipmap ( static_cast<GLenum>(target()) );
+
+    return *this;
+}
+
+texture_2d& texture_2d::bind_texture_unit ( unsigned int unit ) {
+    glActiveTexture ( GL_TEXTURE0 + unit );
+    bind();
+
+    return *this;
+}
+
+texture_2d& texture_2d::min_filter ( enum min_filter filter ) {
+    glTexParameteri ( static_cast<GLenum>(target()),
+                      GL_TEXTURE_MIN_FILTER,
+                      static_cast<GLenum>(filter) );
+
+    return *this;
+}
+
+texture_2d& texture_2d::mag_filter ( enum mag_filter filter ) {
+    glTexParameteri ( static_cast<GLenum>(target()),
+                      GL_TEXTURE_MAG_FILTER,
+                      static_cast<GLenum>(filter) );
+
+    return *this;
+}
+
+texture_2d& texture_2d::wrap_s ( enum texture_wrap wrap ) {
+    glTexParameteri ( static_cast<GLenum>(target()),
+                      GL_TEXTURE_WRAP_S,
+                      static_cast<GLenum>(wrap) );
+
+    return *this;
+}
+
+texture_2d& texture_2d::wrap_t ( enum texture_wrap wrap ) {
+    glTexParameteri ( static_cast<GLenum>(target()),
+                      GL_TEXTURE_WRAP_T,
+                      static_cast<GLenum>(wrap) );
+
+    return *this;
 }

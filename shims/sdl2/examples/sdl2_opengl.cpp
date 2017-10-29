@@ -1,6 +1,7 @@
 #include "glpp.h"
 
-// #include <GL/glew.h>
+#include "stb/stb_image.h"
+
 #include <SDL2/SDL.h>
 
 #include <iostream>
@@ -41,11 +42,7 @@ int sdl_error ( const std::string& err, bool do_quit = true ) {
     return 1;
 }
 
-int setup_opengl() {
-    return 0;
-}
-
-int main ( int argc, char** argv ) {
+int init_opengl() {
     if ( SDL_Init ( SDL_INIT_VIDEO ) != 0 ) {
         return sdl_error ( "Error) Unable to initialise SDL2: ", false );
     }
@@ -85,14 +82,58 @@ int main ( int argc, char** argv ) {
         return 1;
     }
 
+    return 0;
+}
+
+glpp::texture_2d load_texture ( const std::string& path ) {
+    int width, height, channels;
+    uint8_t* data =
+        stbi_load ( path.c_str(), &width, &height, &channels, 0 );
+
+    if ( !data ) {
+        std::cerr << "Could not load image..." << std::endl;
+
+        return glpp::texture_2d (
+            glpp::texture_2d::internal_format::gl_rgb );
+    }
+
+    auto format = channels == 3
+                  ? glpp::pixels::format::gl_rgb
+                  : glpp::pixels::format::gl_rgba;
+
+    glpp::texture_2d texture ( glpp::texture_2d::internal_format::gl_rgb );
+
+    texture.bind();
+
+    texture.image ( glpp::pixels ( std::unique_ptr<uint8_t>( data ),
+                                   { static_cast<GLuint>(width),
+                                     static_cast<GLuint>(height) },
+                                   format,
+                                   glpp::pixels::type::gl_unsigned_byte ) );
+    texture.generate_mipmap();
+
+    return texture;
+}
+
+int main ( int argc, char** argv ) {
+    init_opengl();
+
     glpp::shader fragment ( glpp::shader::type::gl_fragment_shader,
         R"(
         #version 330 core
+
         out vec4 FragColor;
+
+        in vec3 f_colour;
+        in vec2 f_texcoord;
+
+        uniform sampler2D tex_a;
+        uniform sampler2D tex_b;
+        uniform float factor;
 
         void main()
         {
-            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+            FragColor = mix(texture(tex_a, f_texcoord), texture(tex_b, f_texcoord), factor) + vec4(f_colour, 1.0f);
         }
         )" );
 
@@ -105,11 +146,18 @@ int main ( int argc, char** argv ) {
     glpp::shader vertex ( glpp::shader::type::gl_vertex_shader,
         R"(
         #version 330 core
-        layout (location = 0) in vec3 aPos;
+        layout (location = 8) in vec3 position;
+        layout (location = 4) in vec3 colour;
+        layout (location = 13) in vec2 texcoord;
+
+        out vec3 f_colour;
+        out vec2 f_texcoord;
 
         void main()
         {
-            gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+            gl_Position = vec4(position, 1.0);
+            f_colour = colour;
+            f_texcoord = texcoord;
         }
         )" );
 
@@ -120,27 +168,81 @@ int main ( int argc, char** argv ) {
     }
 
     glpp::program prog;
+    prog.attach ( fragment ).attach ( vertex ).link()
+        .detach ( fragment ).detach ( vertex );
 
-    if ( !prog.attach ( fragment )
-         .attach ( vertex )
-         .link()
-         .link_status() ) {
+    if ( !prog.link_status() ) {
         std::cerr << "Unable to link shaders into program:\n"
                   << prog.info_log()
                   << std::endl;
     }
 
-    prog.detach ( fragment ).detach ( vertex );
+    prog.use()
+        .uniform ( "tex_a", 1 )
+        .uniform ( "tex_b", 2 );
+
+    glpp::texture_2d texture_a      = load_texture ( "data/ck4.png" );
+    glpp::texture_2d texture_b      = load_texture ( "data/wolf.png" );
+    glpp::texture_2d texture_c      = load_texture ( "data/doom.gif" );
+    glpp::texture_2d texture_cursor = load_texture ( "data/cursor.png" );
+
+    int texture_a_unit = 1;
+    int texture_b_unit = 2;
+    int texture_c_unit = 0;
+
+    texture_a.bind_texture_unit ( texture_a_unit )
+        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+
+    texture_b.bind_texture_unit ( texture_b_unit )
+        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+
+    texture_c.bind_texture_unit ( texture_c_unit )
+        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+
+    auto position_location = prog.attribute_location ( "position" );
+    auto colour_location   = prog.attribute_location ( "colour" );
+    auto texcoord_location = prog.attribute_location ( "texcoord" );
 
     glpp::buffer vbo (
         glpp::buffer::target::gl_array_buffer,
         glpp::buffer::usage::gl_static_draw );
 
     vbo.bind().data<GLfloat>( {
-        0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f
+        // Top Right
+        1.0f, 1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f,
+
+        // Bottom Right
+        1.0f, -1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        // Bottom Left
+        -1.0f, -1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f,
+
+        // TOP Left
+        -1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f
+    } );
+
+    glpp::vertex_array vao;
+    vao.bind()
+        .attribute_pointers ( glpp::gl_type::gl_float, {
+        { position_location, 3 },
+        { colour_location, 3 },
+        { texcoord_location, 2 }
+    } )
+        .enable_attribute_arrays ( {
+        position_location,
+        colour_location,
+        texcoord_location
     } );
 
     glpp::buffer ebo (
@@ -152,21 +254,31 @@ int main ( int argc, char** argv ) {
         1, 2, 3
     } );
 
-    glpp::vertex_array vao;
-    vao.bind();
-
-    glpp::vertex_attrib attrib ( glpp::vertex_attrib::type::gl_float, 3 );
-    attrib.define_pointer().enable_array();
-
-    ebo.bind();
     vao.unbind();
 
     vbo.unbind();
     ebo.unbind();
 
+    float factor = 0.0f;
+    float update = 0.001f;
+
     while ( RUNNING ) {
-        glClear ( GL_COLOR_BUFFER_BIT );
-        prog.use();
+        GLPP_CHECK_ERROR ( "GL Error" );
+
+        factor += update;
+        factor  = factor > 1.0f ? 0.0f : factor;
+
+        if ( factor == 0.0f ) {
+            texture_a_unit = --texture_a_unit < 0 ? 2 : texture_a_unit;
+            texture_b_unit = --texture_b_unit < 0 ? 2 : texture_b_unit;
+            texture_c_unit = --texture_c_unit < 0 ? 2 : texture_c_unit;
+
+            texture_a.bind_texture_unit ( texture_a_unit );
+            texture_b.bind_texture_unit ( texture_b_unit );
+            texture_c.bind_texture_unit ( texture_c_unit );
+        }
+
+        prog.uniform ( "factor", factor );
         vao.bind();
 
         glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );

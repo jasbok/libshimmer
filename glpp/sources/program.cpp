@@ -1,7 +1,7 @@
 #include "program.h"
 #include "shader.h"
 
-#include <vector>
+#include "gsl/gsl"
 
 using namespace glpp;
 using namespace std;
@@ -60,14 +60,283 @@ string program::info_log ( size_t size ) const {
     return string ( &buffer[0] );
 }
 
-void program::use() const {
+
+program& program::use() {
     glUseProgram ( _handle );
+
+    return *this;
 }
 
-GLint program::attribute_location ( const std::string& name ) const {
+program& program::unbind() {
+    glUseProgram ( 0 );
+
+    return *this;
+}
+
+
+GLint program::attribute_location ( const string& name ) const {
     return glGetAttribLocation ( _handle, name.c_str() );
 }
 
-GLint program::uniform_location ( const std::string& name ) const {
+GLint program::uniform_location ( const string& name ) const {
     return glGetUniformLocation ( _handle, name.c_str() );
+}
+
+program& program::uniform ( const string& name, GLfloat v0 ) {
+    glUniform1f ( uniform_location ( name ), v0 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLfloat v0,
+                            GLfloat v1 ) {
+    glUniform2f ( uniform_location ( name ), v0, v1 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLfloat v0,
+                            GLfloat v1,
+                            GLfloat v2 ) {
+    glUniform3f ( uniform_location ( name ), v0, v1, v2 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLfloat v0,
+                            GLfloat v1,
+                            GLfloat v2,
+                            GLfloat v3 ) {
+    glUniform4f ( uniform_location ( name ), v0, v1, v2, v3 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLint v0 ) {
+    glUniform1i ( uniform_location ( name ), v0 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLint v0,
+                            GLint v1 ) {
+    glUniform2i ( uniform_location ( name ), v0, v1 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLint v0,
+                            GLint v1,
+                            GLint v2 ) {
+    glUniform3i ( uniform_location ( name ), v0, v1, v2 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLint v0,
+                            GLint v1,
+                            GLint v2,
+                            GLint v3 ) {
+    glUniform4i ( uniform_location ( name ), v0, v1, v2, v3 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLuint v0 ) {
+    glUniform1ui ( uniform_location ( name ), v0 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLuint v0,
+                            GLuint v1 ) {
+    glUniform2ui ( uniform_location ( name ), v0, v1 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLuint v0,
+                            GLuint v1,
+                            GLuint v2 ) {
+    glUniform3ui ( uniform_location ( name ), v0, v1, v2 );
+
+    return *this;
+}
+
+program& program::uniform ( const string& name, GLuint v0,
+                            GLuint v1,
+                            GLuint v2,
+                            GLuint v3 ) {
+    glUniform4ui ( uniform_location ( name ), v0, v1, v2, v3 );
+
+    return *this;
+}
+
+program& program::uniform ( const string&          name,
+                            const vector<GLfloat>& value ) {
+    Expects ( 1 <= value.size() && value.size() <= 4 );
+
+    switch ( value.size() ) {
+    case 1:
+        glUniform1fv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 2:
+        glUniform2fv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 3:
+        glUniform3fv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 4:
+        glUniform4fv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+    }
+
+    return *this;
+}
+
+program& program::uniform ( const string&        name,
+                            const vector<GLint>& value )  {
+    Expects ( 1 <= value.size() && value.size() <= 4 );
+
+    switch ( value.size() ) {
+    case 1:
+        glUniform1iv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 2:
+        glUniform2iv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 3:
+        glUniform3iv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 4:
+        glUniform4iv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+    }
+
+    return *this;
+}
+
+program& program::uniform ( const string&         name,
+                            const vector<GLuint>& value ) {
+    Expects ( 1 <= value.size() && value.size() <= 4 );
+
+    switch ( value.size() ) {
+    case 1:
+        glUniform1uiv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 2:
+        glUniform2uiv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 3:
+        glUniform3uiv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+
+    case 4:
+        glUniform4uiv ( uniform_location ( name ), value.size(), &value[0] );
+        break;
+    }
+
+    return *this;
+}
+
+program& program::uniform ( const string&          name,
+                            const vector<GLfloat>& value,
+                            unsigned int                cols,
+                            bool                        transpose
+                            ) {
+    Expects ( 2 <= cols && cols <= 4 );
+    Expects ( 2 <= value.size() / cols && value.size() / cols <= 4 );
+    Expects ( value.size() % cols == 0 );
+
+    unsigned int rows = value.size() / cols;
+
+    switch ( cols ) {
+    case 2:
+
+        switch ( rows ) {
+        case 2:
+            glUniformMatrix2fv ( uniform_location ( name ),
+                                 value.size(),
+                                 transpose,
+                                 &value[0] );
+            break;
+
+        case 3:
+            glUniformMatrix2x3fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+
+        case 4:
+            glUniformMatrix2x4fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+        }
+        break;
+
+    case 3:
+
+        switch ( rows ) {
+        case 2:
+            glUniformMatrix3x2fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+
+        case 3:
+            glUniformMatrix3fv ( uniform_location ( name ),
+                                 value.size(),
+                                 transpose,
+                                 &value[0] );
+            break;
+
+        case 4:
+            glUniformMatrix3x4fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+        }
+        break;
+
+    case 4:
+
+        switch ( rows ) {
+        case 2:
+            glUniformMatrix4x2fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+
+        case 3:
+            glUniformMatrix4x3fv ( uniform_location ( name ),
+                                   value.size(),
+                                   transpose,
+                                   &value[0] );
+            break;
+
+        case 4:
+            glUniformMatrix4fv ( uniform_location ( name ),
+                                 value.size(),
+                                 transpose,
+                                 &value[0] );
+            break;
+        }
+        break;
+    }
+
+    return *this;
 }

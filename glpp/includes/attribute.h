@@ -24,6 +24,7 @@ public:
 
     attribute& operator=(const attribute& copy) = delete;
 
+
     GLint location() const;
 
     std::string name() const;

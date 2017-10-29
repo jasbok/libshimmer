@@ -20,9 +20,10 @@ public:
 
     virtual ~uniform();
 
-    uniform&    operator=( uniform&& move );
+    uniform& operator=( uniform&& move );
 
-    uniform&    operator=( const uniform& copy ) = delete;
+    uniform& operator=( const uniform& copy ) = delete;
+
 
     GLint       location() const;
 
@@ -71,11 +72,13 @@ public:
                GLuint v2,
                GLuint v3 );
 
+
     void set ( const std::vector<GLfloat>& value );
 
     void set ( const std::vector<GLint>& value );
 
     void set ( const std::vector<GLuint>& value );
+
 
     void set ( const std::vector<GLfloat>& value,
                unsigned int                cols,

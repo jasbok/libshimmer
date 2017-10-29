@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 #include <string>
+#include <vector>
 
 namespace glpp
 {
@@ -20,9 +21,10 @@ public:
 
     virtual ~program();
 
-    program&    operator=( program&& move );
+    program& operator=( program&& move );
 
-    program&    operator=( const program& copy ) = delete;
+    program& operator=( const program& copy ) = delete;
+
 
     program&    attach ( const glpp::shader& shader );
 
@@ -34,11 +36,86 @@ public:
 
     std::string info_log ( size_t size = 1024 ) const;
 
-    void        use() const;
 
-    GLint       attribute_location ( const std::string& name ) const;
+    program& use();
 
-    GLint       uniform_location ( const std::string& name ) const;
+    program& unbind();
+
+
+    GLint attribute_location ( const std::string& name ) const;
+
+    GLint uniform_location ( const std::string& name ) const;
+
+
+    program& uniform ( const std::string& name,
+                       GLfloat            v0 );
+
+    program& uniform ( const std::string& name,
+                       GLfloat            v0,
+                       GLfloat            v1 );
+
+    program& uniform ( const std::string& name,
+                       GLfloat            v0,
+                       GLfloat            v1,
+                       GLfloat            v2 );
+
+    program& uniform ( const std::string& name,
+                       GLfloat            v0,
+                       GLfloat            v1,
+                       GLfloat            v2,
+                       GLfloat            v3 );
+
+    program& uniform ( const std::string& name,
+                       GLint              v0 );
+
+    program& uniform ( const std::string& name,
+                       GLint              v0,
+                       GLint              v1 );
+
+    program& uniform ( const std::string& name,
+                       GLint              v0,
+                       GLint              v1,
+                       GLint              v2 );
+
+    program& uniform ( const std::string& name,
+                       GLint              v0,
+                       GLint              v1,
+                       GLint              v2,
+                       GLint              v3 );
+
+    program& uniform ( const std::string& name,
+                       GLuint             v0 );
+
+    program& uniform ( const std::string& name,
+                       GLuint             v0,
+                       GLuint             v1 );
+
+    program& uniform ( const std::string& name,
+                       GLuint             v0,
+                       GLuint             v1,
+                       GLuint             v2 );
+
+    program& uniform ( const std::string& name,
+                       GLuint             v0,
+                       GLuint             v1,
+                       GLuint             v2,
+                       GLuint             v3 );
+
+
+    program& uniform ( const std::string&          name,
+                       const std::vector<GLfloat>& value );
+
+    program& uniform ( const std::string&        name,
+                       const std::vector<GLint>& value );
+
+    program& uniform ( const std::string&         name,
+                       const std::vector<GLuint>& value );
+
+
+    program& uniform ( const std::string&          name,
+                       const std::vector<GLfloat>& value,
+                       unsigned int                cols,
+                       bool                        transpose = false );
 
 private:
     GLuint _handle;

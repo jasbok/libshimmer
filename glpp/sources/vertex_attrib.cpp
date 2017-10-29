@@ -1,45 +1,22 @@
 #include "vertex_attrib.h"
 
+#include <iostream>
+
 using namespace glpp;
 
-vertex_attrib::vertex_attrib( enum type type,
+vertex_attrib::vertex_attrib( enum gl_type type,
                               GLuint    size )
     : _type ( type ),
       _size ( size ),
-      _type_size ( 0 ),
+      _type_size ( glpp::size_of(type) ),
       _location ( 0 ),
       _normalised ( false ),
       _stride ( 0 ),
-      _offset ( 0 )
-{
-    switch ( type ) {
-    case type::gl_byte:
-        _type_size = sizeof(GLbyte);
-        break;
+      _offset ( 0 ),
+      _name ("no_name")
+{}
 
-    case type::gl_fixed:
-        _type_size = sizeof(GLfixed);
-        break;
-
-    case type::gl_float:
-        _type_size = sizeof(GLfloat);
-        break;
-
-    case type::gl_short:
-        _type_size = sizeof(GLshort);
-        break;
-
-    case type::gl_unsigned_byte:
-        _type_size = sizeof(GLubyte);
-        break;
-
-    case type::gl_unsigned_short:
-        _type_size = sizeof(GLushort);
-        break;
-    }
-}
-
-vertex_attrib::vertex_attrib( enum type type,
+vertex_attrib::vertex_attrib( enum gl_type type,
                               GLuint    size,
                               size_t    type_size )
     : _type ( type ),
@@ -48,7 +25,8 @@ vertex_attrib::vertex_attrib( enum type type,
       _location ( 0 ),
       _normalised ( false ),
       _stride ( 0 ),
-      _offset ( 0 )
+      _offset ( 0 ),
+      _name ("no_name")
 {}
 
 
@@ -76,7 +54,19 @@ vertex_attrib& vertex_attrib::offset ( GLuint offset ) {
     return *this;
 }
 
+vertex_attrib& vertex_attrib::name ( const std::string& name ){
+    _name = name;
+
+    return *this;
+}
+
+
 vertex_attrib& vertex_attrib::define_pointer() {
+    if(_location == -1){
+        std::cerr << _name << ": Attribute location not set." << std::endl;
+        return *this;
+    }
+
     glVertexAttribPointer ( _location,
                             _size,
                             static_cast<GLenum>(_type),

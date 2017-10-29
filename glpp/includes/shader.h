@@ -16,6 +16,7 @@ public:
         gl_vertex_shader   = GL_VERTEX_SHADER
     };
 
+
     shader( enum type          type,
             const std::string& source );
 
@@ -25,9 +26,10 @@ public:
 
     virtual ~shader();
 
-    shader&     operator=( shader&& move );
+    shader& operator=( shader&& move );
 
-    shader&     operator=( const shader& copy ) = delete;
+    shader& operator=( const shader& copy ) = delete;
+
 
     GLuint      handle() const;
 
@@ -35,7 +37,8 @@ public:
 
     std::string source() const;
 
-    shader&        compile();
+
+    shader&     compile();
 
     bool        compile_status() const;
 

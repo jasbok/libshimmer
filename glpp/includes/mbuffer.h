@@ -21,6 +21,7 @@ public:
         gl_read_write_buffer = GL_READ_WRITE
     };
 
+
     mbuffer( enum target target );
 
     mbuffer( mbuffer&& move );
@@ -29,9 +30,10 @@ public:
 
     virtual ~mbuffer();
 
-    mbuffer&    operator=( mbuffer&& move );
+    mbuffer& operator=( mbuffer&& move );
 
-    mbuffer&    operator=( const mbuffer& copy ) = delete;
+    mbuffer& operator=( const mbuffer& copy ) = delete;
+
 
     buffer_data map ( enum access access );
 

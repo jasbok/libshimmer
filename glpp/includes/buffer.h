@@ -47,6 +47,7 @@ public:
         gl_dynamic_copy = GL_DYNAMIC_COPY
     };
 
+
     buffer( enum target target,
             enum usage  usage = usage::gl_static_draw );
 
