@@ -13,14 +13,6 @@ namespace glpp
 class vertex_array
 {
 public:
-    struct vertex_attribute {
-        int    location;
-        size_t dimensions;
-    };
-
-    typedef std::vector<vertex_attribute> vertex_attributes;
-
-
     vertex_array();
 
     vertex_array( vertex_array&& move );
@@ -41,11 +33,6 @@ public:
 
     void          unbind();
 
-
-    vertex_array&
-    attribute_pointers ( gl_type                  type,
-                         const vertex_attributes& attribs,
-                         bool                     normalised = false );
 
     vertex_array& enable_attribute_arrays ( const std::vector<int>& locations );
 

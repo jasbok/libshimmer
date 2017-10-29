@@ -14,23 +14,23 @@ class texture_2d : public texture
 {
 public:
     enum class min_filter : GLenum {
-        gl_nearest                = GL_NEAREST,
-        gl_linear                 = GL_LINEAR,
-        gl_nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST,
-        gl_linear_mipmap_nearest  = GL_LINEAR_MIPMAP_NEAREST,
-        gl_nearest_mipmap_linear  = GL_NEAREST_MIPMAP_LINEAR,
-        gl_linear_mipmap_linear   = GL_LINEAR_MIPMAP_LINEAR,
+        nearest                = GL_NEAREST,
+        linear                 = GL_LINEAR,
+        nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST,
+        linear_mipmap_nearest  = GL_LINEAR_MIPMAP_NEAREST,
+        nearest_mipmap_linear  = GL_NEAREST_MIPMAP_LINEAR,
+        linear_mipmap_linear   = GL_LINEAR_MIPMAP_LINEAR,
     };
 
     enum class mag_filter : GLenum {
-        gl_nearest = GL_NEAREST,
-        gl_linear  = GL_LINEAR
+        nearest = GL_NEAREST,
+        linear  = GL_LINEAR
     };
 
     enum class texture_wrap : GLenum {
-        gl_clamp_to_edge   = GL_CLAMP_TO_EDGE,
-        gl_mirrored_repeat = GL_MIRRORED_REPEAT,
-        gl_repeat          = GL_REPEAT
+        clamp_to_edge   = GL_CLAMP_TO_EDGE,
+        mirrored_repeat = GL_MIRRORED_REPEAT,
+        repeat          = GL_REPEAT
     };
 
     texture_2d( enum internal_format internal_format );

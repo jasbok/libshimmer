@@ -3,6 +3,8 @@
 
 #include "gsl/gsl"
 
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace glpp;
 using namespace std;
 
@@ -60,7 +62,6 @@ string program::info_log ( size_t size ) const {
     return string ( &buffer[0] );
 }
 
-
 program& program::use() {
     glUseProgram ( _handle );
 
@@ -72,7 +73,6 @@ program& program::unbind() {
 
     return *this;
 }
-
 
 GLint program::attribute_location ( const string& name ) const {
     return glGetAttribLocation ( _handle, name.c_str() );
@@ -249,8 +249,8 @@ program& program::uniform ( const string&         name,
 
 program& program::uniform ( const string&          name,
                             const vector<GLfloat>& value,
-                            unsigned int                cols,
-                            bool                        transpose
+                            unsigned int           cols,
+                            bool                   transpose
                             ) {
     Expects ( 2 <= cols && cols <= 4 );
     Expects ( 2 <= value.size() / cols && value.size() / cols <= 4 );
@@ -340,3 +340,38 @@ program& program::uniform ( const string&          name,
 
     return *this;
 }
+
+
+program& program::uniform ( const std::string& name,
+                            const glm::mat2&   value,
+                            bool               transpose ) {
+    glUniformMatrix2fv ( uniform_location ( name ),
+                         1,
+                         transpose,
+                         glm::value_ptr(value) );
+
+    return *this;
+}
+
+program& program::uniform ( const std::string& name,
+                            const glm::mat3&   value,
+                            bool               transpose ) {
+    glUniformMatrix3fv ( uniform_location ( name ),
+                         1,
+                         transpose,
+                         glm::value_ptr(value) );
+
+    return *this;
+}
+
+program& program::uniform ( const std::string& name,
+                            const glm::mat4&   value,
+                            bool               transpose ) {
+    glUniformMatrix4fv ( uniform_location ( name ),
+                         1,
+                         transpose,
+                         glm::value_ptr(value) );
+
+    return *this;
+}
+

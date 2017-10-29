@@ -1,6 +1,8 @@
 #ifndef GLPP_BUFFER_H
 #define GLPP_BUFFER_H
 
+#include "enums.h"
+
 #include <GL/glew.h>
 
 #include <cstdint>
@@ -15,81 +17,117 @@ struct buffer_data
     size_t size;
 };
 
-class buffer
+template<GLenum TARGET, typename THIS>
+class _buffer
 {
+    static_assert (
+        TARGET == GL_ARRAY_BUFFER
+        || TARGET == GL_ATOMIC_COUNTER_BUFFER
+        || TARGET == GL_COPY_READ_BUFFER
+        || TARGET == GL_COPY_WRITE_BUFFER
+        || TARGET == GL_DISPATCH_INDIRECT_BUFFER
+        || TARGET == GL_DRAW_INDIRECT_BUFFER
+        || TARGET == GL_ELEMENT_ARRAY_BUFFER
+        || TARGET == GL_PIXEL_PACK_BUFFER
+        || TARGET == GL_PIXEL_UNPACK_BUFFER
+        || TARGET == GL_QUERY_BUFFER
+        || TARGET == GL_SHADER_STORAGE_BUFFER
+        || TARGET == GL_TEXTURE_BUFFER
+        || TARGET == GL_TRANSFORM_FEEDBACK_BUFFER
+        || TARGET == GL_UNIFORM_BUFFER,
+        "Unsupported TARGET for buffer.");
+
 public:
-    enum class target : GLenum {
-        gl_array_buffer              = GL_ARRAY_BUFFER,
-        gl_atomic_counter_buffer     = GL_ATOMIC_COUNTER_BUFFER,
-        gl_copy_read_buffer          = GL_COPY_READ_BUFFER,
-        gl_copy_write_buffer         = GL_COPY_WRITE_BUFFER,
-        gl_dispatch_indirect_buffer  = GL_DISPATCH_INDIRECT_BUFFER,
-        gl_draw_indirect_buffer      = GL_DRAW_INDIRECT_BUFFER,
-        gl_element_array_buffer      = GL_ELEMENT_ARRAY_BUFFER,
-        gl_pixel_pack_buffer         = GL_PIXEL_PACK_BUFFER,
-        gl_pixel_unpack_buffer       = GL_PIXEL_UNPACK_BUFFER,
-        gl_query_buffer              = GL_QUERY_BUFFER,
-        gl_shader_storage_buffer     = GL_SHADER_STORAGE_BUFFER,
-        gl_texture_buffer            = GL_TEXTURE_BUFFER,
-        gl_transform_feedback_buffer = GL_TRANSFORM_FEEDBACK_BUFFER,
-        gl_uniform_buffer            = GL_UNIFORM_BUFFER
-    };
+    _buffer( enum usage usage = usage::static_draw )
+        : _handle ( 0 ),
+          _usage ( usage ),
+          _size ( 0 )
+    {
+        glGenBuffers ( 1, &_handle );
+    }
 
-    enum class usage : GLenum {
-        gl_stream_draw  = GL_STREAM_DRAW,
-        gl_stream_read  = GL_STREAM_READ,
-        gl_stream_copy  = GL_STREAM_COPY,
-        gl_static_draw  = GL_STATIC_DRAW,
-        gl_static_read  = GL_STATIC_READ,
-        gl_static_copy  = GL_STATIC_COPY,
-        gl_dynamic_draw = GL_DYNAMIC_DRAW,
-        gl_dynamic_read = GL_DYNAMIC_READ,
-        gl_dynamic_copy = GL_DYNAMIC_COPY
-    };
+    _buffer( _buffer&& move )
+        : _handle ( move._handle ),
+          _usage ( move._usage ),
+          _size ( move._size )
+    {
+        move._handle = 0;
+    }
 
+    _buffer( const _buffer& copy ) = delete;
 
-    buffer( enum target target,
-            enum usage  usage = usage::gl_static_draw );
+    virtual ~_buffer() {
+        glDeleteBuffers ( 1, &_handle );
+    }
 
-    buffer( buffer&& move );
+    _buffer& operator=( _buffer&& move ) {
+        _handle = move._handle;
+        _usage  = move._usage;
+        _size   = move._size;
 
-    buffer( const buffer& copy ) = delete;
+        move._handle = 0;
 
-    virtual ~buffer();
+        return static_cast<THIS&>(*this);
+    }
 
-    buffer& operator=( buffer&& move );
-
-    buffer& operator=( const buffer& copy ) = delete;
+    _buffer& operator=( const _buffer& copy ) = delete;
 
 
-    GLuint      handle() const;
+    GLuint handle() const {
+        return _handle;
+    }
 
-    enum target target() const;
+    enum usage usage() const {
+        return _usage;
+    }
 
-    enum usage usage() const;
+    size_t size() const {
+        return _size;
+    }
 
-    size_t     size() const;
+    THIS& bind() {
+        glBindBuffer ( static_cast<GLenum>(TARGET), _handle );
 
+        return static_cast<THIS&>(*this);
+    }
 
-    buffer& bind();
+    void unbind() {
+        glBindBuffer ( static_cast<GLenum>(TARGET), 0 );
+    }
 
-    void    unbind();
+    THIS& data ( const void* data,
+                   size_t      size ) {
+        _size = size;
 
+        glBufferData ( static_cast<GLenum>(TARGET),
+                       _size,
+                       data,
+                       static_cast<GLenum>(_usage) );
 
-    buffer& data (  const void* data,
-                    size_t      size );
+        return static_cast<THIS&>(*this);
+    }
 
-    buffer& data (  const void* data,
-                    size_t      size,
-                    enum usage  usage );
+    THIS& data ( const void* data,
+                   size_t      size,
+                   enum usage  usage ) {
+        _size  = size;
+        _usage = usage;
+
+        glBufferData ( static_cast<GLenum>(TARGET),
+                       _size,
+                       data,
+                       static_cast<GLenum>(_usage) );
+
+        return static_cast<THIS&>(*this);
+    }
 
     template<typename T, size_t S = sizeof(T)>
-    buffer& data ( const std::vector<T>& vec ) {
+    THIS& data ( const std::vector<T>& vec ) {
         return data ( &vec[0], S * vec.size() );
     }
 
     template<typename T, size_t S = sizeof(T)>
-    buffer& data ( const std::vector<T>& vec,
+    THIS& data ( const std::vector<T>& vec,
                    enum usage            usage ) {
         return data ( &vec[0], S * vec.size(), usage );
     }
@@ -97,12 +135,14 @@ public:
 private:
     GLuint _handle;
 
-    enum target _target;
-
     enum usage _usage;
 
     size_t _size;
 };
+
+template<GLenum TARGET>
+class buffer : public _buffer<TARGET, buffer<TARGET>>{};
+
 }
 
 #endif // ifndef GLPP_BUFFER_H

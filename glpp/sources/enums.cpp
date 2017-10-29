@@ -33,3 +33,33 @@ size_t glpp::size_of ( enum gl_type type ) {
 
     return 0;
 }
+
+size_t glpp::size_of ( GLenum type ) {
+    switch ( type ) {
+    case GL_BYTE:
+
+        return sizeof(GLbyte);
+
+    case GL_FIXED:
+
+        return sizeof(GLfixed);
+
+    case GL_FLOAT:
+
+        return sizeof(GLfloat);
+
+    case GL_SHORT:
+
+        return sizeof(GLshort);
+
+    case GL_UNSIGNED_BYTE:
+
+        return sizeof(GLubyte);
+
+    case GL_UNSIGNED_SHORT:
+
+        return sizeof(GLushort);
+    }
+
+    return 0;
+}

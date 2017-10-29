@@ -9,26 +9,26 @@ class texture
 {
 public:
     enum class target : GLenum {
-        gl_texture_1d                   = GL_TEXTURE_1D,
-        gl_texture_2d                   = GL_TEXTURE_2D,
-        gl_texture_3d                   = GL_TEXTURE_3D,
-        gl_texture_1d_array             = GL_TEXTURE_1D_ARRAY,
-        gl_texture_2d_array             = GL_TEXTURE_2D_ARRAY,
-        gl_texture_rectangle            = GL_TEXTURE_RECTANGLE,
-        gl_texture_cube_map             = GL_TEXTURE_CUBE_MAP,
-        gl_texture_cube_map_array       = GL_TEXTURE_CUBE_MAP_ARRAY,
-        gl_texture_buffer               = GL_TEXTURE_BUFFER,
-        gl_texture_2d_multisample       = GL_TEXTURE_2D_MULTISAMPLE,
-        gl_texture_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
+        tex_1d                   = GL_TEXTURE_1D,
+        tex_2d                   = GL_TEXTURE_2D,
+        tex_3d                   = GL_TEXTURE_3D,
+        tex_1d_array             = GL_TEXTURE_1D_ARRAY,
+        tex_2d_array             = GL_TEXTURE_2D_ARRAY,
+        tex_rectangle            = GL_TEXTURE_RECTANGLE,
+        tex_cube_map             = GL_TEXTURE_CUBE_MAP,
+        tex_cube_map_array       = GL_TEXTURE_CUBE_MAP_ARRAY,
+        tex_buffer               = GL_TEXTURE_BUFFER,
+        tex_2d_multisample       = GL_TEXTURE_2D_MULTISAMPLE,
+        tex_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
     };
 
     enum class internal_format : GLenum {
-        gl_depth_component = GL_DEPTH_COMPONENT,
-        gl_depth_stencil   = GL_DEPTH_STENCIL,
-        gl_red             = GL_RED,
-        gl_rg              = GL_RG,
-        gl_rgb             = GL_RGB,
-        gl_rgba            = GL_RGBA
+        depth_component = GL_DEPTH_COMPONENT,
+        depth_stencil   = GL_DEPTH_STENCIL,
+        red             = GL_RED,
+        rg              = GL_RG,
+        rgb             = GL_RGB,
+        rgba            = GL_RGBA
     };
 
     texture( enum target          target,

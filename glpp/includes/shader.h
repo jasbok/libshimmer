@@ -12,10 +12,13 @@ class shader
 {
 public:
     enum class type : GLenum {
-        gl_fragment_shader = GL_FRAGMENT_SHADER,
-        gl_vertex_shader   = GL_VERTEX_SHADER
+        compute         = GL_COMPUTE_SHADER,
+        vertex          = GL_VERTEX_SHADER,
+        tess_control    = GL_TESS_CONTROL_SHADER,
+        tess_evaluation = GL_TESS_EVALUATION_SHADER,
+        geometry        = GL_GEOMETRY_SHADER,
+        fragment        = GL_FRAGMENT_SHADER
     };
-
 
     shader( enum type          type,
             const std::string& source );

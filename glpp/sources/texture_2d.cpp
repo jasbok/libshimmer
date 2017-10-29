@@ -8,7 +8,7 @@ using namespace glpp;
 using namespace std;
 
 texture_2d::texture_2d( enum internal_format internal_format )
-    : texture ( texture::target::gl_texture_2d, internal_format ),
+    : texture ( texture::target::tex_2d, internal_format ),
       _dims()
 {}
 

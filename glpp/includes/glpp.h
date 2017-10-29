@@ -14,5 +14,6 @@
 #include "uniform.h"
 #include "vertex_array.h"
 #include "vertex_attrib.h"
+#include "vertex_buffer.h"
 
 #endif

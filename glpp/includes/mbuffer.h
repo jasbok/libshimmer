@@ -1,44 +1,48 @@
-#ifndef GLPP_MBUFFER_H
-#define GLPP_MBUFFER_H
-
-#include "buffer.h"
-
-namespace glpp
-{
-class mbuffer : public buffer
-{
-public:
-    enum class target : GLenum {
-        gl_array_buffer         = GL_ARRAY_BUFFER,
-        gl_element_array_buffer = GL_ELEMENT_ARRAY_BUFFER,
-        gl_pixel_pack_buffer    = GL_PIXEL_PACK_BUFFER,
-        gl_pixel_unpack_buffer  = GL_PIXEL_UNPACK_BUFFER
-    };
-
-    enum class access : GLenum {
-        gl_read_only_buffer  = GL_READ_ONLY,
-        gl_write_only_buffer = GL_WRITE_ONLY,
-        gl_read_write_buffer = GL_READ_WRITE
-    };
-
-
-    mbuffer( enum target target );
-
-    mbuffer( mbuffer&& move );
-
-    mbuffer( const mbuffer& copy ) = delete;
-
-    virtual ~mbuffer();
-
-    mbuffer& operator=( mbuffer&& move );
-
-    mbuffer& operator=( const mbuffer& copy ) = delete;
-
-
-    buffer_data map ( enum access access );
-
-    bool        unmap();
-};
-}
-
-#endif // ifndef GLPP_MBUFFER_H
+// #ifndef GLPP_MBUFFER_H
+// #define GLPP_MBUFFER_H
+//
+// #include "buffer.h"
+//
+// namespace glpp
+// {
+// template<GLenum TARGET>
+// class mbuffer : public buffer<TARGET, mbuffer>
+// {
+//     static_assert (
+//         TARGET == GL_ARRAY_BUFFER
+//         || TARGET == GL_ELEMENT_ARRAY_BUFFER
+//         || TARGET == GL_PIXEL_PACK_BUFFER
+//         || TARGET == GL_PIXEL_UNPACK_BUFFER,
+//         "Unsupported TARGET for mbuffer.");
+//
+// public:
+//     mbuffer() : buffer<TARGET>() {}
+//
+//     mbuffer( mbuffer&& move )
+//         : buffer<TARGET>( std::move ( move ) )
+//     {}
+//
+//     ~mbuffer() {}
+//
+//     mbuffer& operator=( mbuffer&& move ) {
+//         buffer<TARGET>::operator=( std::move (
+//                                        move ) );
+//
+//         return *this;
+//     }
+//
+//     buffer_data map ( enum access access ) {
+//         auto ptr = glMapBuffer ( static_cast<GLenum>(TARGET),
+//                                  static_cast<GLenum>(access) );
+//
+//         return buffer_data{ptr,
+//                            buffer<TARGET>::size() };
+//     }
+//
+//     bool unmap() {
+//         return glUnmapBuffer ( static_cast<GLenum>(TARGET) );
+//     }
+// };
+// }
+//
+// #endif // ifndef GLPP_MBUFFER_H

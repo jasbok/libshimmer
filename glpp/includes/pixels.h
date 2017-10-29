@@ -14,21 +14,21 @@ class pixels
 {
 public:
     enum class format : GLenum {
-        gl_red             = GL_RED,
-        gl_rg              = GL_RG,
-        gl_rgb             = GL_RGB,
-        gl_bgr             = GL_BGR,
-        gl_rgba            = GL_RGBA,
-        gl_bgra            = GL_BGRA,
-        gl_red_integer     = GL_RED_INTEGER,
-        gl_rg_integer      = GL_RG_INTEGER,
-        gl_rgb_integer     = GL_RGB_INTEGER,
-        gl_bgr_integer     = GL_BGR_INTEGER,
-        gl_rgba_integer    = GL_RGBA_INTEGER,
-        gl_bgra_integer    = GL_BGRA_INTEGER,
-        gl_stencil_index   = GL_STENCIL_INDEX,
-        gl_depth_component = GL_DEPTH_COMPONENT,
-        gl_depth_stencil   = GL_DEPTH_STENCIL
+        red             = GL_RED,
+        rg              = GL_RG,
+        rgb             = GL_RGB,
+        bgr             = GL_BGR,
+        rgba            = GL_RGBA,
+        bgra            = GL_BGRA,
+        red_integer     = GL_RED_INTEGER,
+        rg_integer      = GL_RG_INTEGER,
+        rgb_integer     = GL_RGB_INTEGER,
+        bgr_integer     = GL_BGR_INTEGER,
+        rgba_integer    = GL_RGBA_INTEGER,
+        bgra_integer    = GL_BGRA_INTEGER,
+        stencil_index   = GL_STENCIL_INDEX,
+        depth_component = GL_DEPTH_COMPONENT,
+        depth_stencil   = GL_DEPTH_STENCIL
     };
 
     enum class type : GLenum {

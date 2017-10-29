@@ -2,6 +2,7 @@
 #define GLPP_PROGRAM_H
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include <string>
 #include <vector>
@@ -115,6 +116,19 @@ public:
     program& uniform ( const std::string&          name,
                        const std::vector<GLfloat>& value,
                        unsigned int                cols,
+                       bool                        transpose = false );
+
+
+    program& uniform ( const std::string&          name,
+                       const glm::mat2& value,
+                       bool                        transpose = false );
+
+    program& uniform ( const std::string&          name,
+                       const glm::mat3& value,
+                       bool                        transpose = false );
+
+    program& uniform ( const std::string&          name,
+                       const glm::mat4& value,
                        bool                        transpose = false );
 
 private:

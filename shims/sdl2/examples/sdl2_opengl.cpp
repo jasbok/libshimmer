@@ -2,6 +2,8 @@
 
 #include "stb/stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <SDL2/SDL.h>
 
 #include <iostream>
@@ -50,8 +52,8 @@ int init_opengl() {
     if ( (WINDOW = SDL_CreateWindow ( "SDL2 Example",
                                       100,
                                       100,
-                                      320,
-                                      240,
+                                      1600,
+                                      900,
                                       SDL_WINDOW_OPENGL |
                                       SDL_WINDOW_SHOWN )) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 window: " );
@@ -94,14 +96,14 @@ glpp::texture_2d load_texture ( const std::string& path ) {
         std::cerr << "Could not load image..." << std::endl;
 
         return glpp::texture_2d (
-            glpp::texture_2d::internal_format::gl_rgb );
+            glpp::texture_2d::internal_format::rgb );
     }
 
     auto format = channels == 3
-                  ? glpp::pixels::format::gl_rgb
-                  : glpp::pixels::format::gl_rgba;
+                  ? glpp::pixels::format::rgb
+                  : glpp::pixels::format::rgba;
 
-    glpp::texture_2d texture ( glpp::texture_2d::internal_format::gl_rgb );
+    glpp::texture_2d texture ( glpp::texture_2d::internal_format::rgb );
 
     texture.bind();
 
@@ -118,7 +120,7 @@ glpp::texture_2d load_texture ( const std::string& path ) {
 int main ( int argc, char** argv ) {
     init_opengl();
 
-    glpp::shader fragment ( glpp::shader::type::gl_fragment_shader,
+    glpp::shader fragment ( glpp::shader::type::fragment,
         R"(
         #version 330 core
 
@@ -143,7 +145,7 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
-    glpp::shader vertex ( glpp::shader::type::gl_vertex_shader,
+    glpp::shader vertex ( glpp::shader::type::vertex,
         R"(
         #version 330 core
         layout (location = 8) in vec3 position;
@@ -153,9 +155,13 @@ int main ( int argc, char** argv ) {
         out vec3 f_colour;
         out vec2 f_texcoord;
 
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
         void main()
         {
-            gl_Position = vec4(position, 1.0);
+            gl_Position = projection * view * model * vec4(position, 1.0);
             f_colour = colour;
             f_texcoord = texcoord;
         }
@@ -191,24 +197,27 @@ int main ( int argc, char** argv ) {
     int texture_c_unit = 0;
 
     texture_a.bind_texture_unit ( texture_a_unit )
-        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_b.bind_texture_unit ( texture_b_unit )
-        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_c.bind_texture_unit ( texture_c_unit )
-        .min_filter ( glpp::texture_2d::min_filter::gl_nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::gl_nearest );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     auto position_location = prog.attribute_location ( "position" );
     auto colour_location   = prog.attribute_location ( "colour" );
     auto texcoord_location = prog.attribute_location ( "texcoord" );
 
-    glpp::buffer vbo (
-        glpp::buffer::target::gl_array_buffer,
-        glpp::buffer::usage::gl_static_draw );
+    glpp::vertex_buffer<GL_FLOAT> vbo;
+
+    glpp::buffer<GL_ELEMENT_ARRAY_BUFFER> ebo;
+
+    glpp::vertex_array vao;
+    vao.bind();
 
     vbo.bind().data<GLfloat>( {
         // Top Right
@@ -230,24 +239,18 @@ int main ( int argc, char** argv ) {
         -1.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f,
         0.0f, 0.0f
-    } );
-
-    glpp::vertex_array vao;
-    vao.bind()
-        .attribute_pointers ( glpp::gl_type::gl_float, {
+    } )
+        .attribute_pointers ( {
         { position_location, 3 },
         { colour_location, 3 },
         { texcoord_location, 2 }
-    } )
-        .enable_attribute_arrays ( {
+    } );
+
+    vao.enable_attribute_arrays ( {
         position_location,
         colour_location,
         texcoord_location
     } );
-
-    glpp::buffer ebo (
-        glpp::buffer::target::gl_element_array_buffer,
-        glpp::buffer::usage::gl_static_draw );
 
     ebo.bind().data<GLuint>( {
         0, 1, 3,
@@ -255,15 +258,30 @@ int main ( int argc, char** argv ) {
     } );
 
     vao.unbind();
-
-    vbo.unbind();
     ebo.unbind();
+    vbo.unbind();
 
     float factor = 0.0f;
     float update = 0.001f;
 
+    glm::mat4 model = glm::rotate ( glm::mat4 ( 1.0f ),
+                                    glm::radians ( -0.0f ),
+                                    glm::  vec3 ( 0.0f, 1.0f, 0.0f ) );
+
+    glm::mat4 view = glm::translate ( glm::mat4 ( 1.0f ),
+                                      glm::vec3 ( 0.0f, 0.0f, -5.0f ) );
+
+    glm::mat4 projection = glm::perspective ( glm::radians ( 60.0f ),
+                                              1600.0f / 900.0f,
+                                              0.1f,
+                                              100.0f );
+
+    glEnable ( GL_DEPTH_TEST );
+
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
+
+        glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         factor += update;
         factor  = factor > 1.0f ? 0.0f : factor;
@@ -278,7 +296,10 @@ int main ( int argc, char** argv ) {
             texture_c.bind_texture_unit ( texture_c_unit );
         }
 
-        prog.uniform ( "factor", factor );
+        prog.uniform ( "factor",     factor );
+        prog.uniform ( "model",      model );
+        prog.uniform ( "view",       view );
+        prog.uniform ( "projection", projection );
         vao.bind();
 
         glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
