@@ -49,6 +49,7 @@ set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/attribute.h
         ${INCLUDE_DIR}/buffer.h
+        ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/enums.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/mbuffer.h
@@ -72,7 +73,7 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
         ${SOURCES_DIR}/buffer.cpp
-        ${SOURCES_DIR}/enums.cpp
+        ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/mbuffer.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
@@ -81,8 +82,7 @@ set( SOURCES
         ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp
         ${SOURCES_DIR}/vertex_array.cpp
-        ${SOURCES_DIR}/vertex_attrib.cpp
-        ${SOURCES_DIR}/vertex_buffer.cpp)
+        ${SOURCES_DIR}/vertex_attrib.cpp)
 
 
 ###############################################################################

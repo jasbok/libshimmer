@@ -11,12 +11,6 @@
 
 namespace glpp
 {
-struct buffer_data
-{
-    void*  ptr;
-    size_t size;
-};
-
 template<GLenum TARGET, typename THIS>
 class _buffer
 {
@@ -35,7 +29,7 @@ class _buffer
         || TARGET == GL_TEXTURE_BUFFER
         || TARGET == GL_TRANSFORM_FEEDBACK_BUFFER
         || TARGET == GL_UNIFORM_BUFFER,
-        "Unsupported TARGET for buffer.");
+        "Unsupported TARGET for buffer." );
 
 public:
     _buffer( enum usage usage = usage::static_draw )
@@ -95,41 +89,30 @@ public:
         glBindBuffer ( static_cast<GLenum>(TARGET), 0 );
     }
 
-    THIS& data ( const void* data,
-                   size_t      size ) {
-        _size = size;
+    template<typename T, size_t T_SIZE = sizeof(T)>
+    THIS& data ( const std::vector<T>& vec ) {
+        _size = T_SIZE * vec.size();
 
         glBufferData ( static_cast<GLenum>(TARGET),
                        _size,
-                       data,
+                       &vec[0],
                        static_cast<GLenum>(_usage) );
 
         return static_cast<THIS&>(*this);
     }
 
-    THIS& data ( const void* data,
-                   size_t      size,
-                   enum usage  usage ) {
-        _size  = size;
+    template<typename T, size_t T_SIZE = sizeof(T)>
+    THIS& data ( const std::vector<T>& vec,
+                 enum usage            usage ) {
+        _size  = T_SIZE * vec.size();
         _usage = usage;
 
         glBufferData ( static_cast<GLenum>(TARGET),
                        _size,
-                       data,
+                       &vec[0],
                        static_cast<GLenum>(_usage) );
 
         return static_cast<THIS&>(*this);
-    }
-
-    template<typename T, size_t S = sizeof(T)>
-    THIS& data ( const std::vector<T>& vec ) {
-        return data ( &vec[0], S * vec.size() );
-    }
-
-    template<typename T, size_t S = sizeof(T)>
-    THIS& data ( const std::vector<T>& vec,
-                   enum usage            usage ) {
-        return data ( &vec[0], S * vec.size(), usage );
     }
 
 private:
@@ -141,8 +124,8 @@ private:
 };
 
 template<GLenum TARGET>
-class buffer : public _buffer<TARGET, buffer<TARGET>>{};
-
+class buffer : public _buffer<TARGET, buffer<TARGET>>
+{};
 }
 
 #endif // ifndef GLPP_BUFFER_H

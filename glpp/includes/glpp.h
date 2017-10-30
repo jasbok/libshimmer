@@ -4,6 +4,8 @@
 #include "attribute.h"
 #include "buffer.h"
 #include "debug.h"
+#include "element_array_buffer.h"
+#include "enums.h"
 #include "mbuffer.h"
 #include "pixels.h"
 #include "program.h"

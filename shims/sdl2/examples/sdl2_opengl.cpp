@@ -212,14 +212,14 @@ int main ( int argc, char** argv ) {
     auto colour_location   = prog.attribute_location ( "colour" );
     auto texcoord_location = prog.attribute_location ( "texcoord" );
 
-    glpp::vertex_buffer<GL_FLOAT> vbo;
+    glpp::vertex_buffer<GLfloat> vbo;
 
-    glpp::buffer<GL_ELEMENT_ARRAY_BUFFER> ebo;
+    glpp::element_array_buffer ebo;
 
     glpp::vertex_array vao;
     vao.bind();
 
-    vbo.bind().data<GLfloat>( {
+    vbo.bind().data( {
         // Top Right
         1.0f, 1.0f, 0.0f,
         1.0f, 0.0f, 0.0f,
@@ -252,7 +252,7 @@ int main ( int argc, char** argv ) {
         texcoord_location
     } );
 
-    ebo.bind().data<GLuint>( {
+    ebo.bind().data( {
         0, 1, 3,
         1, 2, 3
     } );

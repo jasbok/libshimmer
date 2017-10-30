@@ -2,6 +2,7 @@
 #define GLPP_ENUMS_H
 
 #include <GL/glew.h>
+#include <iostream>
 
 namespace glpp
 {
@@ -13,10 +14,6 @@ enum class gl_type : GLenum {
     gl_fixed          = GL_FIXED,
     gl_float          = GL_FLOAT
 };
-
-size_t size_of ( enum gl_type type );
-
-size_t size_of ( GLenum type );
 
 enum class usage : GLenum {
     stream_draw  = GL_STREAM_DRAW,
@@ -35,6 +32,139 @@ enum class access : GLenum {
     write_only = GL_WRITE_ONLY,
     read_write = GL_READ_WRITE
 };
+
+
+constexpr size_t size_of ( enum gl_type type ) {
+    switch ( type ) {
+    case gl_type::gl_byte:
+
+        return sizeof(GLbyte);
+
+    case gl_type::gl_fixed:
+
+        return sizeof(GLfixed);
+
+    case gl_type::gl_float:
+
+        return sizeof(GLfloat);
+
+    case gl_type::gl_short:
+
+        return sizeof(GLshort);
+
+    case gl_type::gl_unsigned_byte:
+
+        return sizeof(GLubyte);
+
+    case gl_type::gl_unsigned_short:
+
+        return sizeof(GLushort);
+    }
+
+    return 0;
+}
+
+constexpr size_t size_of ( GLenum type ) {
+    switch ( type ) {
+    case GL_BYTE:
+
+        return sizeof(GLbyte);
+
+    case GL_FIXED:
+
+        return sizeof(GLfixed);
+
+    case GL_FLOAT:
+
+        return sizeof(GLfloat);
+
+    case GL_SHORT:
+
+        return sizeof(GLshort);
+
+    case GL_UNSIGNED_BYTE:
+
+        return sizeof(GLubyte);
+
+    case GL_UNSIGNED_SHORT:
+
+        return sizeof(GLushort);
+    }
+
+    return 0;
+}
+
+template<typename T>
+constexpr bool is_gltype(){
+    return false;
+}
+
+template<>
+constexpr bool is_gltype<GLbyte>(){
+    return true;
+}
+
+template<>
+constexpr bool is_gltype<GLfixed>(){
+    return true;
+}
+
+template<>
+constexpr bool is_gltype<GLfloat>(){
+    return true;
+}
+
+template<>
+constexpr bool is_gltype<GLshort>(){
+    return true;
+}
+
+template<>
+constexpr bool is_gltype<GLubyte>(){
+    return true;
+}
+
+template<>
+constexpr bool is_gltype<GLushort>(){
+    return true;
+}
+
+template<typename T>
+constexpr GLenum to_glenum(){
+    static_assert(is_gltype<T>(), "T is not a valid OpenGL type.");
+    return 0;
+}
+
+template<>
+constexpr GLenum to_glenum<GLbyte>(){
+    return GL_BYTE;
+}
+
+template<>
+constexpr GLenum to_glenum<GLfixed>(){
+    return GL_FIXED;
+}
+
+template<>
+constexpr GLenum to_glenum<GLfloat>(){
+    return GL_FLOAT;
+}
+
+template<>
+constexpr GLenum to_glenum<GLshort>(){
+    return GL_SHORT;
+}
+
+template<>
+constexpr GLenum to_glenum<GLubyte>(){
+    return GL_UNSIGNED_BYTE;
+}
+
+template<>
+constexpr GLenum to_glenum<GLushort>(){
+    return GL_UNSIGNED_SHORT;
+}
+
 }
 
 #endif // ifndef GLPP_ENUMS_H
