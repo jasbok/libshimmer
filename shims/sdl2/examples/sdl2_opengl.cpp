@@ -121,23 +121,7 @@ int main ( int argc, char** argv ) {
     init_opengl();
 
     glpp::shader fragment ( glpp::shader::type::fragment,
-        R"(
-        #version 330 core
-
-        out vec4 FragColor;
-
-        in vec3 f_colour;
-        in vec2 f_texcoord;
-
-        uniform sampler2D tex_a;
-        uniform sampler2D tex_b;
-        uniform float factor;
-
-        void main()
-        {
-            FragColor = mix(texture(tex_a, f_texcoord), texture(tex_b, f_texcoord), factor) + vec4(f_colour, 1.0f);
-        }
-        )" );
+        glpp::utils::read_all ( "data/glsl/example.frag" ) );
 
     if ( !fragment.compile().compile_status() ) {
         std::cerr << "Unable to compile fragment shader:\n"
@@ -145,27 +129,10 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
+    std::cout << "VERTEX: " << glpp::utils::read_all ( "data/glsl/example.vert" ) << std::endl;
+
     glpp::shader vertex ( glpp::shader::type::vertex,
-        R"(
-        #version 330 core
-        layout (location = 8) in vec3 position;
-        layout (location = 4) in vec3 colour;
-        layout (location = 13) in vec2 texcoord;
-
-        out vec3 f_colour;
-        out vec2 f_texcoord;
-
-        uniform mat4 model;
-        uniform mat4 view;
-        uniform mat4 projection;
-
-        void main()
-        {
-            gl_Position = projection * view * model * vec4(position, 1.0);
-            f_colour = colour;
-            f_texcoord = texcoord;
-        }
-        )" );
+        glpp::utils::read_all ( "data/glsl/example.vert" ) );
 
     if ( !vertex.compile().compile_status() ) {
         std::cerr << "Unable to compile vertex shader:\n"
@@ -187,10 +154,10 @@ int main ( int argc, char** argv ) {
         .uniform ( "tex_a", 1 )
         .uniform ( "tex_b", 2 );
 
-    glpp::texture_2d texture_a      = load_texture ( "data/ck4.png" );
-    glpp::texture_2d texture_b      = load_texture ( "data/wolf.png" );
-    glpp::texture_2d texture_c      = load_texture ( "data/doom.gif" );
-    glpp::texture_2d texture_cursor = load_texture ( "data/cursor.png" );
+    glpp::texture_2d texture_a      = load_texture ( "data/img/ck4.png" );
+    glpp::texture_2d texture_b      = load_texture ( "data/img/wolf.png" );
+    glpp::texture_2d texture_c      = load_texture ( "data/img/doom.gif" );
+    glpp::texture_2d texture_cursor = load_texture ( "data/img/cursor.png" );
 
     int texture_a_unit = 1;
     int texture_b_unit = 2;
@@ -219,7 +186,7 @@ int main ( int argc, char** argv ) {
     glpp::vertex_array vao;
     vao.bind();
 
-    vbo.bind().data( {
+    vbo.bind().data ( {
         // Top Right
         1.0f, 1.0f, 0.0f,
         1.0f, 0.0f, 0.0f,
@@ -252,7 +219,7 @@ int main ( int argc, char** argv ) {
         texcoord_location
     } );
 
-    ebo.bind().data( {
+    ebo.bind().data ( {
         0, 1, 3,
         1, 2, 3
     } );

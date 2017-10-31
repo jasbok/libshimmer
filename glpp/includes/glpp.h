@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "texture_2d.h"
 #include "uniform.h"
+#include "utils.h"
 #include "vertex_array.h"
 #include "vertex_attrib.h"
 #include "vertex_buffer.h"

@@ -60,6 +60,7 @@ set( HEADERS
         ${INCLUDE_DIR}/texture.h
         ${INCLUDE_DIR}/texture_2d.h
         ${INCLUDE_DIR}/uniform.h
+        ${INCLUDE_DIR}/utils.h
         ${INCLUDE_DIR}/vertex_array.h
         ${INCLUDE_DIR}/vertex_attrib.h
         ${INCLUDE_DIR}/vertex_buffer.h)
@@ -81,6 +82,7 @@ set( SOURCES
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp
+        ${SOURCES_DIR}/utils.cpp
         ${SOURCES_DIR}/vertex_array.cpp
         ${SOURCES_DIR}/vertex_attrib.cpp)
 
