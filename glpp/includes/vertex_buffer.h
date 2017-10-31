@@ -1,18 +1,19 @@
 #ifndef GLPP_VERTEX_BUFFER_H
 #define GLPP_VERTEX_BUFFER_H
 
-#include "buffer.h"
+#include "mbuffer.h"
 
 #include "gsl/gsl"
 
 namespace glpp
 {
-template<typename T, size_t T_SIZE = sizeof ( T ), GLenum T_ENUM = to_glenum<T>()>
-class vertex_buffer : public _buffer<GL_ARRAY_BUFFER, vertex_buffer<T>>
+template<typename T, size_t T_SIZE = sizeof(T), GLenum T_ENUM = to_glenum<T>()>
+class vertex_buffer : public _mbuffer<GL_ARRAY_BUFFER,
+                                      vertex_buffer<T, T_SIZE, T_ENUM>>
 {
-    static_assert (is_gltype<T>(), "Unsupported TYPE for vertex buffer." );
+    static_assert ( is_gltype<T>(), "Unsupported TYPE for vertex buffer." );
 
-    typedef _buffer<GL_ARRAY_BUFFER, vertex_buffer<T>> super;
+    typedef _mbuffer<GL_ARRAY_BUFFER, vertex_buffer<T>> parent;
 
 public:
     struct vertex_attribute {
@@ -22,14 +23,37 @@ public:
 
     typedef std::vector<vertex_attribute> vertex_attributes;
 
+    vertex_buffer() : parent() {}
+
+    vertex_buffer( vertex_buffer&& move )
+        : parent ( std::move ( move ) )
+    {}
+
+    vertex_buffer( const vertex_buffer& copy ) = delete;
+
+    ~vertex_buffer() {}
+
+    vertex_buffer& operator=( vertex_buffer&& move )
+    {
+        parent::operator=( std::move(move) );
+
+        return *this;
+    }
+
+    vertex_buffer& operator=( const vertex_buffer& copy ) = delete;
+
+    vertex_buffer& bind(){
+        return *this;
+    }
+
     vertex_buffer&
     attribute_pointers ( const vertex_attributes& attribs,
                          bool                     normalised = false ) {
         unsigned int   stride = get_stride ( attribs );
         unsigned char* offset = 0;
 
-        Expects ( super::size() != 0 );
-        Expects ( super::size() % stride == 0 );
+        Expects ( parent::size() != 0 );
+        Expects ( parent::size() % stride == 0 );
 
         for ( const auto& a : attribs ) {
             if ( a.location > -1 ) {
@@ -58,12 +82,16 @@ public:
     }
 
     vertex_buffer& data ( const std::vector<T>& vec ) {
-        return super::data( vec );
+        return parent::data ( vec );
     }
 
     vertex_buffer& data ( const std::vector<T>& vec,
                           enum usage            usage ) {
-        return super::data( vec, usage );
+        return parent::data ( vec, usage );
+    }
+
+    gsl::span<T> map ( enum access access ) {
+        return parent::template map<T>( access );
     }
 };
 }

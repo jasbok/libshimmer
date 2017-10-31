@@ -19,7 +19,7 @@ include_directories( ${CATCH_INCLUDES} )
 ###############################################################################
 #   Collect all test files.
 ###############################################################################
-file( GLOB_RECURSE CATCH_TESTS ${LIB_SHIMMER_ROOT}/catch/tests/*.cpp )
+#file( GLOB_RECURSE CATCH_TESTS ${LIB_SHIMMER_ROOT}/catch/tests/*.cpp )
 
 
 ###############################################################################

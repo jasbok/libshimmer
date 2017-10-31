@@ -7,15 +7,14 @@
 
 namespace glpp
 {
-
 struct buffer_data
 {
     void*  ptr;
     size_t size;
 };
 
-template<GLenum TARGET>
-class mbuffer : public _buffer<TARGET, mbuffer<TARGET>>
+template<GLenum TARGET, typename THIS>
+class _mbuffer : public _buffer<TARGET, THIS>
 {
     static_assert (
         TARGET == GL_ARRAY_BUFFER
@@ -24,31 +23,43 @@ class mbuffer : public _buffer<TARGET, mbuffer<TARGET>>
         || TARGET == GL_PIXEL_UNPACK_BUFFER,
         "Unsupported TARGET for mbuffer." );
 
-public:
-    mbuffer() : buffer<TARGET>() {}
+    typedef _buffer<TARGET, THIS> parent;
 
-    mbuffer( mbuffer&& move )
-        : buffer<TARGET>( std::move ( move ) )
+public:
+    _mbuffer() : parent() {}
+
+    _mbuffer( _mbuffer&& move )
+        :  parent ( std::move ( move ) )
     {}
 
-    ~mbuffer() {}
+    _mbuffer( const _mbuffer& copy ) = delete;
 
-    mbuffer& operator=( mbuffer&& move ) {
-        buffer<TARGET>::operator=( std::move ( move ) );
+    ~_mbuffer() {}
+
+    _mbuffer& operator=( _mbuffer&& move ) {
+        parent::operator=( std::move ( move ) );
 
         return *this;
     }
 
-    buffer_data map ( enum access access ) {
+    _mbuffer& operator=( const _mbuffer& copy ) = delete;
+
+    template<typename T, size_t T_SIZE = sizeof(T)>
+    gsl::span<T> map ( enum access access ) {
         auto ptr = glMapBuffer ( TARGET, static_cast<GLenum>(access) );
 
-        return buffer_data{ptr, buffer<TARGET>::size() };
+        return gsl::span<T>{ static_cast<T*>(ptr),
+                             static_cast<long>(parent::size() / T_SIZE) };
     }
 
     bool unmap() {
         return glUnmapBuffer ( TARGET );
     }
 };
+
+template<GLenum TARGET>
+class mbuffer : public _mbuffer<TARGET, mbuffer<TARGET>>
+{};
 }
 
 #endif // ifndef GLPP_MBUFFER_H

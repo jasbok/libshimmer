@@ -129,8 +129,6 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
-    std::cout << "VERTEX: " << glpp::utils::read_all ( "data/glsl/example.vert" ) << std::endl;
-
     glpp::shader vertex ( glpp::shader::type::vertex,
         glpp::utils::read_all ( "data/glsl/example.vert" ) );
 
@@ -142,7 +140,7 @@ int main ( int argc, char** argv ) {
 
     glpp::program prog;
     prog.attach ( fragment ).attach ( vertex ).link()
-        .detach ( fragment ).detach ( vertex );
+    .detach ( fragment ).detach ( vertex );
 
     if ( !prog.link_status() ) {
         std::cerr << "Unable to link shaders into program:\n"
@@ -151,8 +149,8 @@ int main ( int argc, char** argv ) {
     }
 
     prog.use()
-        .uniform ( "tex_a", 1 )
-        .uniform ( "tex_b", 2 );
+    .uniform ( "tex_a", 1 )
+    .uniform ( "tex_b", 2 );
 
     glpp::texture_2d texture_a      = load_texture ( "data/img/ck4.png" );
     glpp::texture_2d texture_b      = load_texture ( "data/img/wolf.png" );
@@ -164,16 +162,16 @@ int main ( int argc, char** argv ) {
     int texture_c_unit = 0;
 
     texture_a.bind_texture_unit ( texture_a_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+    .min_filter ( glpp::texture_2d::min_filter::nearest )
+    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_b.bind_texture_unit ( texture_b_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+    .min_filter ( glpp::texture_2d::min_filter::nearest )
+    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_c.bind_texture_unit ( texture_c_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+    .min_filter ( glpp::texture_2d::min_filter::nearest )
+    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     auto position_location = prog.attribute_location ( "position" );
     auto colour_location   = prog.attribute_location ( "colour" );
@@ -207,7 +205,7 @@ int main ( int argc, char** argv ) {
         0.0f, 0.0f, 0.0f,
         0.0f, 0.0f
     } )
-        .attribute_pointers ( {
+    .attribute_pointers ( {
         { position_location, 3 },
         { colour_location, 3 },
         { texcoord_location, 2 }
@@ -262,6 +260,14 @@ int main ( int argc, char** argv ) {
             texture_b.bind_texture_unit ( texture_b_unit );
             texture_c.bind_texture_unit ( texture_c_unit );
         }
+
+        //         auto mapped = vbo.bind().map ( glpp::access::read_write );
+        //
+        //         for ( auto& element : mapped ) {
+        //             element *= 0.9999f;
+        //         }
+        //         vbo.unmap();
+        //         vbo.unbind();
 
         prog.uniform ( "factor",     factor );
         prog.uniform ( "model",      model );
