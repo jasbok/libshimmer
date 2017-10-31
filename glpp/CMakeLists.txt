@@ -53,6 +53,7 @@ set( HEADERS
         ${INCLUDE_DIR}/enums.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/mbuffer.h
+        ${INCLUDE_DIR}/mesh.h
         ${INCLUDE_DIR}/pixels.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/shader.h
@@ -74,6 +75,7 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
+        ${SOURCES_DIR}/mesh.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/shader.cpp

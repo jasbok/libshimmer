@@ -138,19 +138,19 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
-    glpp::program prog;
-    prog.attach ( fragment ).attach ( vertex ).link()
-    .detach ( fragment ).detach ( vertex );
+    std::shared_ptr<glpp::program> prog = std::make_shared<glpp::program>();
+    prog->attach ( fragment ).attach ( vertex ).link()
+        .detach ( fragment ).detach ( vertex );
 
-    if ( !prog.link_status() ) {
+    if ( !prog->link_status() ) {
         std::cerr << "Unable to link shaders into program:\n"
-                  << prog.info_log()
+                  << prog->info_log()
                   << std::endl;
     }
 
-    prog.use()
-    .uniform ( "tex_a", 1 )
-    .uniform ( "tex_b", 2 );
+    prog->use()
+        .uniform ( "tex_a", 1 )
+        .uniform ( "tex_b", 2 );
 
     glpp::texture_2d texture_a      = load_texture ( "data/img/ck4.png" );
     glpp::texture_2d texture_b      = load_texture ( "data/img/wolf.png" );
@@ -162,28 +162,18 @@ int main ( int argc, char** argv ) {
     int texture_c_unit = 0;
 
     texture_a.bind_texture_unit ( texture_a_unit )
-    .min_filter ( glpp::texture_2d::min_filter::nearest )
-    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_b.bind_texture_unit ( texture_b_unit )
-    .min_filter ( glpp::texture_2d::min_filter::nearest )
-    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     texture_c.bind_texture_unit ( texture_c_unit )
-    .min_filter ( glpp::texture_2d::min_filter::nearest )
-    .mag_filter ( glpp::texture_2d::mag_filter::nearest );
-
-    auto position_location = prog.attribute_location ( "position" );
-    auto colour_location   = prog.attribute_location ( "colour" );
-    auto texcoord_location = prog.attribute_location ( "texcoord" );
+        .min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
     glpp::vertex_buffer<GLfloat> vbo;
-
-    glpp::element_array_buffer ebo;
-
-    glpp::vertex_array vao;
-    vao.bind();
-
     vbo.bind().data ( {
         // Top Right
         1.0f, 1.0f, 0.0f,
@@ -204,27 +194,20 @@ int main ( int argc, char** argv ) {
         -1.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f,
         0.0f, 0.0f
-    } )
-    .attribute_pointers ( {
-        { position_location, 3 },
-        { colour_location, 3 },
-        { texcoord_location, 2 }
-    } );
+    } ).unbind();
 
-    vao.enable_attribute_arrays ( {
-        position_location,
-        colour_location,
-        texcoord_location
-    } );
-
+    glpp::element_array_buffer ebo;
     ebo.bind().data ( {
         0, 1, 3,
         1, 2, 3
-    } );
+    } ).unbind();
 
-    vao.unbind();
-    ebo.unbind();
-    vbo.unbind();
+    GLPP_CHECK_ERROR ( "Initialising mesh..." );
+
+    glpp::mesh mesh;
+    mesh.vertices ( std::move ( vbo ), std::move ( ebo ) ).shader ( prog );
+
+    GLPP_CHECK_ERROR ( "Initialised mesh." );
 
     float factor = 0.0f;
     float update = 0.001f;
@@ -261,21 +244,22 @@ int main ( int argc, char** argv ) {
             texture_c.bind_texture_unit ( texture_c_unit );
         }
 
-        //         auto mapped = vbo.bind().map ( glpp::access::read_write );
-        //
-        //         for ( auto& element : mapped ) {
-        //             element *= 0.9999f;
-        //         }
-        //         vbo.unmap();
-        //         vbo.unbind();
+        mesh.bind();
 
-        prog.uniform ( "factor",     factor );
-        prog.uniform ( "model",      model );
-        prog.uniform ( "view",       view );
-        prog.uniform ( "projection", projection );
-        vao.bind();
+        prog->uniform ( "factor",     factor );
+        prog->uniform ( "model",      model );
+        prog->uniform ( "view",       view );
+        prog->uniform ( "projection", projection );
+        mesh.draw();
 
-        glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
+        prog->uniform ( "factor", 1.0f - factor );
+        prog->uniform ( "model",
+                        glm::translate ( model,
+                                         glm::vec3 ( 1.0f, 1.0f,
+                                                     1.0f ) ) );
+        prog->uniform ( "view",       view );
+        prog->uniform ( "projection", projection );
+        mesh.draw();
 
         SDL_GL_SwapWindow ( WINDOW );
 

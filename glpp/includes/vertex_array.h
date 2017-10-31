@@ -34,9 +34,11 @@ public:
     void          unbind();
 
 
-    vertex_array& enable_attribute_arrays ( const std::vector<int>& locations );
+    vertex_array& enable_attribute_arrays (
+        const std::vector<GLint>& locations );
 
-    vertex_array& disable_attribute_arrays ( const std::vector<int>& locations );
+    vertex_array& disable_attribute_arrays (
+        const std::vector<GLint>& locations );
 
 private:
     GLuint _handle;

@@ -25,8 +25,10 @@ texture::~texture() {
 }
 
 texture& texture::operator=( texture&& move ) {
-    _handle = move._handle;
-    _target = move._target;
+    glDeleteTextures ( 1, &_handle );
+
+    _handle          = move._handle;
+    _target          = move._target;
     _internal_format = move._internal_format;
 
     move._handle = 0;

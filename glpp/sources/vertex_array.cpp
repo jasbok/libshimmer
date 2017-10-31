@@ -22,6 +22,8 @@ vertex_array::~vertex_array() {
 }
 
 vertex_array& vertex_array::operator=( vertex_array&& move ) {
+    glDeleteVertexArrays ( 1, &_handle );
+
     _handle = move._handle;
 
     move._handle = 0;
@@ -43,10 +45,9 @@ void vertex_array::unbind() {
     glBindVertexArray ( 0 );
 }
 
-
 vertex_array&
-vertex_array::enable_attribute_arrays ( const vector<int>& locations ){
-    for(const auto& location : locations){
+vertex_array::enable_attribute_arrays ( const vector<GLint>& locations ) {
+    for ( const auto& location : locations ) {
         glEnableVertexAttribArray ( location );
     }
 
@@ -54,8 +55,8 @@ vertex_array::enable_attribute_arrays ( const vector<int>& locations ){
 }
 
 vertex_array&
-vertex_array::disable_attribute_arrays ( const vector<int>& locations ){
-    for(const auto& location : locations){
+vertex_array::disable_attribute_arrays ( const vector<GLint>& locations ) {
+    for ( const auto& location : locations ) {
         glDisableVertexAttribArray ( location );
     }
 

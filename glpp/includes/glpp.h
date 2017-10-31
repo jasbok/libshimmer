@@ -7,6 +7,7 @@
 #include "element_array_buffer.h"
 #include "enums.h"
 #include "mbuffer.h"
+#include "mesh.h"
 #include "pixels.h"
 #include "program.h"
 #include "shader.h"
@@ -19,4 +20,4 @@
 #include "vertex_attrib.h"
 #include "vertex_buffer.h"
 
-#endif
+#endif // ifndef GLPP_GLPP_H

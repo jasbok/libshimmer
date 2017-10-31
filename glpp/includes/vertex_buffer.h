@@ -35,16 +35,12 @@ public:
 
     vertex_buffer& operator=( vertex_buffer&& move )
     {
-        parent::operator=( std::move(move) );
+        parent::operator=( std::move ( move ) );
 
         return *this;
     }
 
     vertex_buffer& operator=( const vertex_buffer& copy ) = delete;
-
-    vertex_buffer& bind(){
-        return *this;
-    }
 
     vertex_buffer&
     attribute_pointers ( const vertex_attributes& attribs,

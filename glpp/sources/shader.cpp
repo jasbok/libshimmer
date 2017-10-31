@@ -5,7 +5,7 @@
 using namespace glpp;
 using namespace std;
 
-shader::shader( enum type   type,
+shader::shader( enum type     type,
                 const string& source )
     : _handle ( glCreateShader ( static_cast<GLenum>(type) ) ),
       _type ( type ),
@@ -25,6 +25,8 @@ shader::~shader() {
 }
 
 shader& shader::operator=( shader&& move ) {
+    glDeleteShader ( _handle );
+
     _handle = move._handle;
     _type   = move._type;
     _source = std::move ( move._source );

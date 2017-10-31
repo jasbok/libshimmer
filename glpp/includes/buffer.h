@@ -35,6 +35,7 @@ public:
     _buffer( enum usage usage = usage::static_draw )
         : _handle ( 0 ),
           _usage ( usage ),
+          _elements ( 0 ),
           _size ( 0 )
     {
         glGenBuffers ( 1, &_handle );
@@ -43,6 +44,7 @@ public:
     _buffer( _buffer&& move )
         : _handle ( move._handle ),
           _usage ( move._usage ),
+          _elements ( move._elements ),
           _size ( move._size )
     {
         move._handle = 0;
@@ -55,9 +57,12 @@ public:
     }
 
     _buffer& operator=( _buffer&& move ) {
-        _handle = move._handle;
-        _usage  = move._usage;
-        _size   = move._size;
+        glDeleteBuffers ( 1, &_handle );
+
+        _handle   = move._handle;
+        _usage    = move._usage;
+        _elements = move._elements;
+        _size     = move._size;
 
         move._handle = 0;
 
@@ -73,6 +78,10 @@ public:
 
     enum usage usage() const {
         return _usage;
+    }
+
+    size_t elements() const {
+        return _elements;
     }
 
     size_t size() const {
@@ -91,7 +100,8 @@ public:
 
     template<typename T, size_t T_SIZE = sizeof(T)>
     THIS& data ( const std::vector<T>& vec ) {
-        _size = T_SIZE * vec.size();
+        _elements = vec.size();
+        _size     = T_SIZE * _elements;
 
         glBufferData ( static_cast<GLenum>(TARGET),
                        _size,
@@ -104,8 +114,9 @@ public:
     template<typename T, size_t T_SIZE = sizeof(T)>
     THIS& data ( const std::vector<T>& vec,
                  enum usage            usage ) {
-        _size  = T_SIZE * vec.size();
-        _usage = usage;
+        _elements = vec.size();
+        _size     = T_SIZE * _elements;
+        _usage    = usage;
 
         glBufferData ( static_cast<GLenum>(TARGET),
                        _size,
@@ -119,6 +130,8 @@ private:
     GLuint _handle;
 
     enum usage _usage;
+
+    size_t _elements;
 
     size_t _size;
 };
