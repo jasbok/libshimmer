@@ -26,7 +26,9 @@ class _mbuffer : public _buffer<TARGET, THIS>
     typedef _buffer<TARGET, THIS> parent;
 
 public:
-    _mbuffer() : parent() {}
+    _mbuffer( enum usage usage = usage::static_draw )
+        : parent ( usage )
+    {}
 
     _mbuffer( _mbuffer&& move )
         :  parent ( std::move ( move ) )
@@ -48,8 +50,8 @@ public:
     gsl::span<T> map ( enum access access ) {
         auto ptr = glMapBuffer ( TARGET, static_cast<GLenum>(access) );
 
-        return gsl::span<T>{ static_cast<T*>(ptr),
-                             static_cast<long>(parent::size() / T_SIZE) };
+        return gsl::span<T>( static_cast<T*>(ptr),
+                             static_cast<long>(parent::size() / T_SIZE) );
     }
 
     bool unmap() {

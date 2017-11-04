@@ -56,6 +56,7 @@ set( HEADERS
         ${INCLUDE_DIR}/mesh.h
         ${INCLUDE_DIR}/pixels.h
         ${INCLUDE_DIR}/program.h
+        ${INCLUDE_DIR}/quad.h
         ${INCLUDE_DIR}/shader.h
         ${INCLUDE_DIR}/specs.h
         ${INCLUDE_DIR}/texture.h
@@ -75,7 +76,6 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
-        ${SOURCES_DIR}/mesh.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/shader.cpp
@@ -83,8 +83,7 @@ set( SOURCES
         ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp
         ${SOURCES_DIR}/utils.cpp
-        ${SOURCES_DIR}/vertex_array.cpp
-        ${SOURCES_DIR}/vertex_attrib.cpp)
+        ${SOURCES_DIR}/vertex_array.cpp)
 
 
 ###############################################################################

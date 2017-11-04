@@ -10,6 +10,7 @@
 #include "mesh.h"
 #include "pixels.h"
 #include "program.h"
+#include "quad.h"
 #include "shader.h"
 #include "specs.h"
 #include "texture.h"

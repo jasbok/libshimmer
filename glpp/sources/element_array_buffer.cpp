@@ -3,6 +3,10 @@
 using namespace glpp;
 using namespace std;
 
+element_array_buffer::element_array_buffer( enum usage usage )
+    : parent ( usage )
+{}
+
 element_array_buffer& element_array_buffer::data ( const vector<GLuint>& vec )
 {
     return _buffer::data<GLuint>( vec );

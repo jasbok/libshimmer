@@ -4,6 +4,7 @@
 #include "element_array_buffer.h"
 #include "program.h"
 #include "vertex_array.h"
+#include "vertex_attrib.h"
 #include "vertex_buffer.h"
 
 #include <memory>
@@ -11,6 +12,7 @@
 
 namespace glpp
 {
+template<typename T>
 class mesh
 {
 public:
@@ -27,25 +29,70 @@ public:
     mesh& operator=( const mesh& copy ) = delete;
 
 
-    mesh& vertices ( vertex_buffer<GLfloat>&& vbo,
-                     element_array_buffer&&   ebo );
+    mesh& bind() {
+        _vao.bind();
+        _vbo.bind();
+        _ebo.bind();
 
-    mesh& shader ( const std::shared_ptr<program>& program );
+        return *this;
+    }
 
-    mesh& bind();
+    mesh& unbind() {
+        _vao.unbind();
+        _vbo.unbind();
+        _ebo.unbind();
 
-    mesh& unbind();
+        return *this;
+    }
 
-    mesh& draw();
+    mesh& vertices ( const std::vector<T>& vertices ) {
+        _vbo.data ( vertices );
+
+        return *this;
+    }
+
+    mesh& indices ( const std::vector<GLuint>& indices ) {
+        _ebo.data ( indices );
+
+        return *this;
+    }
+
+    mesh& attribs ( const std::vector<vertex_attrib<T>>& attribs ) {
+        _attribs = attribs;
+
+        return *this;
+    }
+
+    mesh& attribs ( const std::vector<attrib>& attribs ) {
+        _attribs = glpp::vertex_attrib_builder<T>::sequential ( attribs );
+
+        return *this;
+    }
+
+    mesh& program ( const program& program ) {
+        for ( auto& attrib : _attribs ) {
+            attrib.location ( program.attribute_location ( attrib.name() ) );
+            attrib.define_pointer();
+            attrib.enable_array();
+        }
+
+        return *this;
+    }
+
+    mesh& draw() {
+        glDrawElements ( GL_TRIANGLES, _ebo.elements(), GL_UNSIGNED_INT, 0 );
+
+        return *this;
+    }
 
 private:
+    vertex_buffer<T> _vbo;
+
     element_array_buffer _ebo;
 
+    std::vector<vertex_attrib<T>> _attribs;
+
     vertex_array _vao;
-
-    vertex_buffer<GLfloat> _vbo;
-
-    std::shared_ptr<program> _program;
 };
 }
 

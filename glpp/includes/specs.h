@@ -8,31 +8,31 @@
 namespace glpp
 {
 template<typename T>
-struct coords_2d {
+struct coords_2 {
     T x, y;
 
 
-    coords_2d() = default;
+    coords_2() = default;
 
-    coords_2d( T x, T y )
+    coords_2( T x, T y )
         : x ( x ), y ( y ) {}
 
-    coords_2d( coords_2d&& move ) = default;
+    coords_2( coords_2&& move ) = default;
 
-    coords_2d( const coords_2d& copy ) = default;
+    coords_2( const coords_2& copy ) = default;
 
-    virtual ~coords_2d() = default;
+    virtual ~coords_2() = default;
 
-    coords_2d& operator=( coords_2d&& move ) = default;
+    coords_2& operator=( coords_2&& move ) = default;
 
-    coords_2d& operator=( const coords_2d& copy ) = default;
+    coords_2& operator=( const coords_2& copy ) = default;
 
 
-    bool operator==( const coords_2d& comp ) {
+    bool operator==( const coords_2& comp ) {
         return x == comp.x && y == comp.y;
     }
 
-    bool operator!=( const coords_2d& comp ) {
+    bool operator!=( const coords_2& comp ) {
         return x != comp.x || y != comp.y;
     }
 
@@ -43,31 +43,31 @@ struct coords_2d {
 };
 
 template<typename T>
-struct coords_3d {
+struct coords_3 {
     T x, y, z;
 
 
-    coords_3d() = default;
+    coords_3() = default;
 
-    coords_3d( T x, T y, T z )
+    coords_3( T x, T y, T z )
         : x ( x ), y ( y ), z ( z ) {}
 
-    coords_3d( coords_3d&& move ) = default;
+    coords_3( coords_3&& move ) = default;
 
-    coords_3d( const coords_3d& copy ) = default;
+    coords_3( const coords_3& copy ) = default;
 
-    virtual ~coords_3d() = default;
+    virtual ~coords_3() = default;
 
-    coords_3d& operator=( coords_3d&& move ) = default;
+    coords_3& operator=( coords_3&& move ) = default;
 
-    coords_3d& operator=( const coords_3d& copy ) = default;
+    coords_3& operator=( const coords_3& copy ) = default;
 
 
-    bool operator==( const coords_3d& comp ) {
+    bool operator==( const coords_3& comp ) {
         return x == comp.x && y == comp.y && z == comp.z;
     }
 
-    bool operator!=( const coords_3d& comp ) {
+    bool operator!=( const coords_3& comp ) {
         return x != comp.x || y != comp.y || z != comp.z;
     }
 
@@ -79,31 +79,31 @@ struct coords_3d {
 };
 
 template<typename T>
-struct dims_2d {
+struct dims_2 {
     T width, height;
 
 
-    dims_2d() = default;
+    dims_2() = default;
 
-    dims_2d( T x, T y )
+    dims_2( T x, T y )
         : width ( x ), height ( y ) {}
 
-    dims_2d( dims_2d&& move ) = default;
+    dims_2( dims_2&& move ) = default;
 
-    dims_2d( const dims_2d& copy ) = default;
+    dims_2( const dims_2& copy ) = default;
 
-    virtual ~dims_2d() = default;
+    virtual ~dims_2() = default;
 
-    dims_2d& operator=( dims_2d&& move ) = default;
+    dims_2& operator=( dims_2&& move ) = default;
 
-    dims_2d& operator=( const dims_2d& copy ) = default;
+    dims_2& operator=( const dims_2& copy ) = default;
 
 
-    bool operator==( const dims_2d& comp ) {
+    bool operator==( const dims_2& comp ) {
         return width == comp.width && height == comp.height;
     }
 
-    bool operator!=( const dims_2d& comp ) {
+    bool operator!=( const dims_2& comp ) {
         return width != comp.width || height != comp.height;
     }
 
@@ -114,33 +114,33 @@ struct dims_2d {
 };
 
 template<typename T>
-struct dims_3d {
+struct dims_3 {
     T width, height, depth;
 
 
-    dims_3d() = default;
+    dims_3() = default;
 
-    dims_3d( T x, T y, T z )
+    dims_3( T x, T y, T z )
         : width ( x ), height ( y ), depth ( z ) {}
 
-    dims_3d( dims_3d&& move ) = default;
+    dims_3( dims_3&& move ) = default;
 
-    dims_3d( const dims_3d& copy ) = default;
+    dims_3( const dims_3& copy ) = default;
 
-    virtual ~dims_3d() = default;
+    virtual ~dims_3() = default;
 
-    dims_3d& operator=( dims_3d&& move ) = default;
+    dims_3& operator=( dims_3&& move ) = default;
 
-    dims_3d& operator=( const dims_3d& copy ) = default;
+    dims_3& operator=( const dims_3& copy ) = default;
 
 
-    bool operator==( const dims_3d& comp ) {
+    bool operator==( const dims_3& comp ) {
         return width == comp.width
                && height == comp.height
                && depth == comp.depth;
     }
 
-    bool operator!=( const dims_3d& comp ) {
+    bool operator!=( const dims_3& comp ) {
         return width != comp.width
                || height != comp.height
                || depth != comp.depth;
@@ -153,8 +153,9 @@ struct dims_3d {
     }
 };
 
-typedef coords_2d<GLint> coords_2i;
-typedef dims_2d<GLuint>  dims_2u;
+typedef coords_2<GLint> coords_2i;
+typedef dims_2<GLuint>  dims_2u;
+typedef dims_2<GLfloat> dims_2f;
 }
 
 #endif // ifndef GLPP_SPECS_H

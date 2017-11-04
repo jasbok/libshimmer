@@ -138,17 +138,17 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
-    std::shared_ptr<glpp::program> prog = std::make_shared<glpp::program>();
-    prog->attach ( fragment ).attach ( vertex ).link()
+    glpp::program prog;
+    prog.attach ( fragment ).attach ( vertex ).link()
         .detach ( fragment ).detach ( vertex );
 
-    if ( !prog->link_status() ) {
+    if ( !prog.link_status() ) {
         std::cerr << "Unable to link shaders into program:\n"
-                  << prog->info_log()
+                  << prog.info_log()
                   << std::endl;
     }
 
-    prog->use()
+    prog.use()
         .uniform ( "tex_a", 1 )
         .uniform ( "tex_b", 2 );
 
@@ -173,39 +173,10 @@ int main ( int argc, char** argv ) {
         .min_filter ( glpp::texture_2d::min_filter::nearest )
         .mag_filter ( glpp::texture_2d::mag_filter::nearest );
 
-    glpp::vertex_buffer<GLfloat> vbo;
-    vbo.bind().data ( {
-        // Top Right
-        1.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f,
-
-        // Bottom Right
-        1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f,
-
-        // Bottom Left
-        -1.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f,
-
-        // TOP Left
-        -1.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f
-    } ).unbind();
-
-    glpp::element_array_buffer ebo;
-    ebo.bind().data ( {
-        0, 1, 3,
-        1, 2, 3
-    } ).unbind();
-
     GLPP_CHECK_ERROR ( "Initialising mesh..." );
 
-    glpp::mesh mesh;
-    mesh.vertices ( std::move ( vbo ), std::move ( ebo ) ).shader ( prog );
+    glpp::quad<GLfloat> quad ( { 1.0, 1.0 } );
+    quad.bind().program ( prog );
 
     GLPP_CHECK_ERROR ( "Initialised mesh." );
 
@@ -244,22 +215,24 @@ int main ( int argc, char** argv ) {
             texture_c.bind_texture_unit ( texture_c_unit );
         }
 
-        mesh.bind();
+        quad.bind();
 
-        prog->uniform ( "factor",     factor );
-        prog->uniform ( "model",      model );
-        prog->uniform ( "view",       view );
-        prog->uniform ( "projection", projection );
-        mesh.draw();
+        prog.uniform ( "factor", factor )
+            .uniform ( "model",      model )
+            .uniform ( "view",       view )
+            .uniform ( "projection", projection );
 
-        prog->uniform ( "factor", 1.0f - factor );
-        prog->uniform ( "model",
-                        glm::translate ( model,
-                                         glm::vec3 ( 1.0f, 1.0f,
-                                                     1.0f ) ) );
-        prog->uniform ( "view",       view );
-        prog->uniform ( "projection", projection );
-        mesh.draw();
+        quad.dimensions ( { factor, 1.0f - factor } )
+            .draw();
+
+        prog.uniform ( "factor", 1.0f - factor )
+            .uniform ( "model",
+                       glm::translate ( model,
+                                        glm::vec3 ( 1.0f, 1.0f,
+                                                    1.0f ) ) );
+
+        quad.dimensions ( { 1.0f - factor, factor } )
+            .draw();
 
         SDL_GL_SwapWindow ( WINDOW );
 
