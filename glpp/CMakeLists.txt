@@ -49,6 +49,7 @@ set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/attribute.h
         ${INCLUDE_DIR}/buffer.h
+        ${INCLUDE_DIR}/cube.h
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/enums.h
         ${INCLUDE_DIR}/glpp.h

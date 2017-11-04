@@ -175,8 +175,8 @@ int main ( int argc, char** argv ) {
 
     GLPP_CHECK_ERROR ( "Initialising mesh..." );
 
-    glpp::quad<GLfloat> quad ( { 1.0, 1.0 } );
-    quad.bind().program ( prog );
+    glpp::cube<GLfloat> cube ( { 1.0, 1.0, 1.0 } );
+    cube.bind().program ( prog );
 
     GLPP_CHECK_ERROR ( "Initialised mesh." );
 
@@ -215,24 +215,16 @@ int main ( int argc, char** argv ) {
             texture_c.bind_texture_unit ( texture_c_unit );
         }
 
-        quad.bind();
+        cube.bind();
 
         prog.uniform ( "factor", factor )
-            .uniform ( "model",      model )
+            .uniform ( "model",
+                       glm::rotate ( model, factor * 10.0f,
+                                     glm::vec3 ( 2.5f, 1.0f, 0.5f ) ) )
             .uniform ( "view",       view )
             .uniform ( "projection", projection );
 
-        quad.dimensions ( { factor, 1.0f - factor } )
-            .draw();
-
-        prog.uniform ( "factor", 1.0f - factor )
-            .uniform ( "model",
-                       glm::translate ( model,
-                                        glm::vec3 ( 1.0f, 1.0f,
-                                                    1.0f ) ) );
-
-        quad.dimensions ( { 1.0f - factor, factor } )
-            .draw();
+        cube.draw();
 
         SDL_GL_SwapWindow ( WINDOW );
 

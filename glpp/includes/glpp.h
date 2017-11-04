@@ -3,6 +3,7 @@
 
 #include "attribute.h"
 #include "buffer.h"
+#include "cube.h"
 #include "debug.h"
 #include "element_array_buffer.h"
 #include "enums.h"
