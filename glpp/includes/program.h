@@ -1,10 +1,11 @@
 #ifndef GLPP_PROGRAM_H
 #define GLPP_PROGRAM_H
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace glpp
@@ -119,20 +120,24 @@ public:
                        bool                        transpose = false );
 
 
-    program& uniform ( const std::string&          name,
-                       const glm::mat2& value,
-                       bool                        transpose = false );
+    program& uniform ( const std::string& name,
+                       const glm::mat2&   value,
+                       bool               transpose = false );
 
-    program& uniform ( const std::string&          name,
-                       const glm::mat3& value,
-                       bool                        transpose = false );
+    program& uniform ( const std::string& name,
+                       const glm::mat3&   value,
+                       bool               transpose = false );
 
-    program& uniform ( const std::string&          name,
-                       const glm::mat4& value,
-                       bool                        transpose = false );
+    program& uniform ( const std::string& name,
+                       const glm::mat4&   value,
+                       bool               transpose = false );
 
 private:
     GLuint _handle;
+
+    mutable std::unordered_map<std::string, GLint> _attrib_locations;
+
+    mutable std::unordered_map<std::string, GLint> _uniform_locations;
 };
 }
 

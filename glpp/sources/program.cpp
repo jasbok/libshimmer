@@ -75,11 +75,29 @@ program& program::unbind() {
 }
 
 GLint program::attribute_location ( const string& name ) const {
-    return glGetAttribLocation ( _handle, name.c_str() );
+    const auto& item = _attrib_locations.find ( name );
+
+    if ( item != _attrib_locations.end() ) {
+        return item->second;
+    }
+
+    GLint location = glGetAttribLocation ( _handle, name.c_str() );
+    _attrib_locations.insert ( { name, location } );
+
+    return location;
 }
 
 GLint program::uniform_location ( const string& name ) const {
-    return glGetUniformLocation ( _handle, name.c_str() );
+    const auto& item = _uniform_locations.find ( name );
+
+    if ( item != _uniform_locations.end() ) {
+        return item->second;
+    }
+
+    GLint location = glGetUniformLocation ( _handle, name.c_str() );
+    _uniform_locations.insert ( { name, location } );
+
+    return location;
 }
 
 program& program::uniform ( const string& name, GLfloat v0 ) {
@@ -341,14 +359,13 @@ program& program::uniform ( const string&          name,
     return *this;
 }
 
-
 program& program::uniform ( const std::string& name,
                             const glm::mat2&   value,
                             bool               transpose ) {
     glUniformMatrix2fv ( uniform_location ( name ),
                          1,
                          transpose,
-                         glm::value_ptr(value) );
+                         glm::value_ptr ( value ) );
 
     return *this;
 }
@@ -359,7 +376,7 @@ program& program::uniform ( const std::string& name,
     glUniformMatrix3fv ( uniform_location ( name ),
                          1,
                          transpose,
-                         glm::value_ptr(value) );
+                         glm::value_ptr ( value ) );
 
     return *this;
 }
@@ -370,8 +387,7 @@ program& program::uniform ( const std::string& name,
     glUniformMatrix4fv ( uniform_location ( name ),
                          1,
                          transpose,
-                         glm::value_ptr(value) );
+                         glm::value_ptr ( value ) );
 
     return *this;
 }
-
