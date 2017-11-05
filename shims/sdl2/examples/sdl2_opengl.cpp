@@ -1,7 +1,5 @@
 #include "glpp.h"
 
-#include "stb/stb_image.h"
-
 #include <SDL2/SDL.h>
 
 SDL_Window*   WINDOW;
@@ -153,36 +151,6 @@ int init_opengl() {
     return 0;
 }
 
-glpp::texture_2d load_texture ( const std::string& path ) {
-    int width, height, channels;
-    uint8_t* data =
-        stbi_load ( path.c_str(), &width, &height, &channels, 0 );
-
-    if ( !data ) {
-        std::cerr << "Could not load image..." << std::endl;
-
-        return glpp::texture_2d (
-            glpp::texture_2d::internal_format::rgb );
-    }
-
-    auto format = channels == 3
-                  ? glpp::pixels::format::rgb
-                  : glpp::pixels::format::rgba;
-
-    glpp::texture_2d texture ( glpp::texture_2d::internal_format::rgb );
-
-    texture.bind();
-
-    texture.image ( glpp::pixels ( std::unique_ptr<uint8_t>( data ),
-                                   { static_cast<GLuint>(width),
-                                     static_cast<GLuint>(height) },
-                                   format,
-                                   glpp::pixels::type::gl_unsigned_byte ) );
-    texture.generate_mipmap();
-
-    return texture;
-}
-
 int main ( int argc, char** argv ) {
     init_opengl();
 
@@ -218,10 +186,14 @@ int main ( int argc, char** argv ) {
         .uniform ( "tex_a", 1 )
         .uniform ( "tex_b", 2 );
 
-    glpp::texture_2d texture_a      = load_texture ( "data/img/ck4.png" );
-    glpp::texture_2d texture_b      = load_texture ( "data/img/wolf.png" );
-    glpp::texture_2d texture_c      = load_texture ( "data/img/doom.gif" );
-    glpp::texture_2d texture_cursor = load_texture ( "data/img/cursor.png" );
+    glpp::texture_2d texture_a = glpp::utils::texture_2d_from (
+        "data/img/ck4.png" );
+    glpp::texture_2d texture_b = glpp::utils::texture_2d_from (
+        "data/img/wolf.png" );
+    glpp::texture_2d texture_c = glpp::utils::texture_2d_from (
+        "data/img/doom.gif" );
+    glpp::texture_2d texture_cursor = glpp::utils::texture_2d_from (
+        "data/img/cursor.png" );
 
     int texture_a_unit = 1;
     int texture_b_unit = 2;

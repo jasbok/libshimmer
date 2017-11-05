@@ -82,6 +82,7 @@ set( SOURCES
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/shader.cpp
+        ${SOURCES_DIR}/stb_image.cpp
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp
