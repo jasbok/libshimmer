@@ -2,17 +2,24 @@
 
 #include "stb/stb_image.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <SDL2/SDL.h>
-
-#include <iostream>
-#include <string>
 
 SDL_Window*   WINDOW;
 SDL_Renderer* RENDERER;
 
 SDL_GLContext GL_CONTEXT;
+static const unsigned int SCREEN_WIDTH  = 1600;
+static const unsigned int SCREEN_HEIGHT = 900;
+static const bool USE_FULLSCREEN        = false;
+
+glpp::camera camera;
+glm::vec3    move;
+glm::vec3    rotate;
+float move_rate   = 1;
+float rotate_rate = 1;
+
+bool mouse_left_down  = false;
+bool mouse_right_down = false;
 
 bool RUNNING = true;
 
@@ -27,9 +34,68 @@ void poll_events() {
         if ( event.type == SDL_QUIT ) {
             RUNNING = false;
         }
-        else if ( event.type == SDL_KEYDOWN ) {
-            if ( event.key.keysym.sym == SDLK_q ) {
+        else if ( (event.type == SDL_MOUSEBUTTONDOWN)
+                  || (event.type == SDL_MOUSEBUTTONUP) ) {
+            bool button_down = (event.type == SDL_MOUSEBUTTONDOWN);
+
+            switch ( event.button.button ) {
+            case SDL_BUTTON_LEFT:
+                mouse_left_down = button_down;
+                break;
+
+            case SDL_BUTTON_RIGHT:
+                mouse_right_down = button_down;
+                break;
+            }
+        }
+        else if ( (event.type == SDL_KEYDOWN)
+                  || (event.type == SDL_KEYUP) ) {
+            bool key_down = event.type == SDL_KEYDOWN;
+
+            switch ( event.key.keysym.sym ) {
+            case SDLK_q:
                 RUNNING = false;
+                break;
+
+            case SDLK_w:
+                move.z = 1 * key_down;
+                break;
+
+            case SDLK_s:
+                move.z = -1 * key_down;
+                break;
+
+            case SDLK_a:
+                move.x = 1 * key_down;
+                break;
+
+            case SDLK_d:
+                move.x = -1 * key_down;
+                break;
+
+            case SDLK_e:
+                move.y = 1 * key_down;
+                break;
+
+            case SDLK_c:
+                move.y = -1 * key_down;
+                break;
+
+            case SDLK_LEFT:
+                rotate.y = 1 * key_down;
+                break;
+
+            case SDLK_RIGHT:
+                rotate.y = -1 * key_down;
+                break;
+
+            case SDLK_UP:
+                rotate.x = -1 * key_down;
+                break;
+
+            case SDLK_DOWN:
+                rotate.x = 1 * key_down;
+                break;
             }
         }
     }
@@ -52,8 +118,8 @@ int init_opengl() {
     if ( (WINDOW = SDL_CreateWindow ( "SDL2 Example",
                                       100,
                                       100,
-                                      1600,
-                                      900,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT,
                                       SDL_WINDOW_OPENGL |
                                       SDL_WINDOW_SHOWN )) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 window: " );
@@ -138,17 +204,17 @@ int main ( int argc, char** argv ) {
                   << std::endl;
     }
 
-    glpp::program prog;
-    prog.attach ( fragment ).attach ( vertex ).link()
+    glpp::program program;
+    program.attach ( fragment ).attach ( vertex ).link()
         .detach ( fragment ).detach ( vertex );
 
-    if ( !prog.link_status() ) {
+    if ( !program.link_status() ) {
         std::cerr << "Unable to link shaders into program:\n"
-                  << prog.info_log()
+                  << program.info_log()
                   << std::endl;
     }
 
-    prog.use()
+    program.use()
         .uniform ( "tex_a", 1 )
         .uniform ( "tex_b", 2 );
 
@@ -163,39 +229,41 @@ int main ( int argc, char** argv ) {
 
     texture_a.bind_texture_unit ( texture_a_unit )
         .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
+        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
+        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     texture_b.bind_texture_unit ( texture_b_unit )
         .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
+        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
+        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     texture_c.bind_texture_unit ( texture_c_unit )
         .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
+        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
+        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
-    GLPP_CHECK_ERROR ( "Initialising mesh..." );
-
-    glpp::cube<GLfloat> cube ( { 1.0, 1.0, 1.0 } );
-    cube.bind().program ( prog );
-
-    GLPP_CHECK_ERROR ( "Initialised mesh." );
+    glpp::cube<GLfloat> cube ( { 100.0, 75.0, 100.0 } );
+    cube.bind().program ( program );
 
     float factor = 0.0f;
     float update = 0.001f;
 
     glm::mat4 model = glm::rotate ( glm::mat4 ( 1.0f ),
                                     glm::radians ( -0.0f ),
-                                    glm::  vec3 ( 0.0f, 1.0f, 0.0f ) );
+                                    glm::vec3 ( 0.0f, 1.0f, 0.0f ) );
 
-    glm::mat4 view = glm::translate ( glm::mat4 ( 1.0f ),
-                                      glm::vec3 ( 0.0f, 0.0f, -5.0f ) );
-
-    glm::mat4 projection = glm::perspective ( glm::radians ( 60.0f ),
+    glm::mat4 projection = glm::perspective ( glm::radians ( 50.0f ),
                                               1600.0f / 900.0f,
-                                              0.1f,
-                                              100.0f );
+                                              0.01f,
+                                              1000.0f );
 
     glEnable ( GL_DEPTH_TEST );
+
+    glm::ivec2 mouse_coords;
+    SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -217,11 +285,27 @@ int main ( int argc, char** argv ) {
 
         cube.bind();
 
-        prog.uniform ( "factor", factor )
-            .uniform ( "model",
-                       glm::rotate ( model, factor * 10.0f,
-                                     glm::vec3 ( 2.5f, 1.0f, 0.5f ) ) )
-            .uniform ( "view",       view )
+
+        glm::ivec2 previous_mouse_coords = mouse_coords;
+        SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
+
+        if ( mouse_left_down ) {
+            glm::vec3 mouse_rotate {
+                mouse_coords.y - previous_mouse_coords.y,
+                previous_mouse_coords.x - mouse_coords.x,
+                0
+            };
+
+            camera.rotate ( mouse_rotate * 0.25f );
+        }
+
+        program.uniform ( "factor", factor )
+            .uniform ( "model", model )
+            .uniform ( "view",  camera
+                           .move ( move * move_rate )
+                           .rotate ( rotate * rotate_rate )
+
+                           .view() )
             .uniform ( "projection", projection );
 
         cube.draw();

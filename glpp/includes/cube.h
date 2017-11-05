@@ -16,24 +16,6 @@ public:
     {
         _mesh.bind()
             .indices ( {
-                //                0, 1, 2,
-                //                3, 4, 5,
-
-                //                6, 7, 8,
-                //                9, 10, 11,
-
-                //                12, 13, 14,
-                //                15, 16, 17,
-
-                //                18, 19, 20,
-                //                21, 22, 23,
-
-                //                24, 25, 26,
-                //                27, 28, 29,
-
-                //                30, 31, 32,
-                //                33, 34, 35
-
                 // Front
                 0, 1, 3,
                 1, 2, 3,
@@ -97,84 +79,6 @@ public:
         _dimensions = dimensions;
 
         _mesh.vertices ( {
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 0,
-                //                dimensions.width, -dimensions.height,
-                // -dimensions.depth, 1, 0,
-                //                dimensions.width, dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                dimensions.width, dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                -dimensions.width, dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 0,
-
-                //                -dimensions.width, -dimensions.height,
-                // dimensions.depth, 0, 0,
-                //                dimensions.width, -dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 1,
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 1,
-                //                -dimensions.width, dimensions.height,
-                // dimensions.depth, 0, 1,
-                //                -dimensions.width, -dimensions.height,
-                // dimensions.depth, 0, 0,
-
-                //                -dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                -dimensions.width, dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                -dimensions.width, -dimensions.height,
-                // dimensions.depth, 0, 0,
-                //                -dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                dimensions.width, dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                dimensions.width, -dimensions.height,
-                // dimensions.depth, 0, 0,
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                dimensions.width, -dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                dimensions.width, -dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                dimensions.width, -dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                -dimensions.width, -dimensions.height,
-                // dimensions.depth, 0, 0,
-                //                -dimensions.width, -dimensions.height,
-                // -dimensions.depth, 0, 1,
-
-                //                -dimensions.width, dimensions.height,
-                // -dimensions.depth, 0, 1,
-                //                dimensions.width, dimensions.height,
-                // -dimensions.depth, 1, 1,
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                dimensions.width, dimensions.height,
-                // dimensions.depth, 1, 0,
-                //                -dimensions.width, dimensions.height,
-                // dimensions.depth, 0, 0,
-                //                -dimensions.width, dimensions.height,
-                // -dimensions.depth, 0, 1,
-
                 // Front Top Right
                 _dimensions.width, _dimensions.height, _dimensions.depth,
                 1, 0,
@@ -228,19 +132,19 @@ public:
 
                 // Back Bottom Right
                 _dimensions.width, -_dimensions.height, -_dimensions.depth,
-                1, 1,
+                1, 0,
 
                 // Front Bottom Right
                 _dimensions.width, -_dimensions.height, _dimensions.depth,
-                1, 0,
+                1, 1,
 
                 // Front Bottom Left
                 -_dimensions.width, -_dimensions.height, _dimensions.depth,
-                0, 0,
+                0, 1,
 
                 // Back Bottom Left
                 -_dimensions.width, -_dimensions.height, -_dimensions.depth,
-                0, 1,
+                0, 0,
             } );
 
         return *this;

@@ -49,6 +49,7 @@ set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/attribute.h
         ${INCLUDE_DIR}/buffer.h
+        ${INCLUDE_DIR}/camera.h
         ${INCLUDE_DIR}/cube.h
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/enums.h
@@ -76,6 +77,7 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
+        ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
