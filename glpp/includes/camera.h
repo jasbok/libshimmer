@@ -9,7 +9,7 @@ namespace glpp
 class camera
 {
 public:
-    camera() = default;
+    camera();
 
     camera( glm::vec3 position,
             glm::vec3 rotation );

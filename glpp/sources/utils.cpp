@@ -19,14 +19,12 @@ string utils::read_all ( const string& path ) {
 
 texture_2d utils::texture_2d_from ( const std::string& path ) {
     int width, height, channels;
-    uint8_t* data =
-        stbi_load ( path.c_str(), &width, &height, &channels, 0 );
+    uint8_t* data = stbi_load ( path.c_str(), &width, &height, &channels, 0 );
 
     if ( !data ) {
         std::cerr << "Could not load image..." << std::endl;
 
-        return glpp::texture_2d (
-            glpp::texture_2d::internal_format::rgb );
+        return glpp::texture_2d ( glpp::texture_2d::internal_format::rgb );
     }
 
     auto format = channels == 3

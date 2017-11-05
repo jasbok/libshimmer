@@ -11,6 +11,7 @@ static const unsigned int SCREEN_HEIGHT = 900;
 static const bool USE_FULLSCREEN        = false;
 
 glpp::camera camera;
+glpp::camera render_target_camera;
 glm::vec3    move;
 glm::vec3    rotate;
 float move_rate   = 1;
@@ -18,6 +19,7 @@ float rotate_rate = 1;
 
 bool mouse_left_down  = false;
 bool mouse_right_down = false;
+glm::ivec2 mouse_coords;
 
 bool RUNNING = true;
 
@@ -96,6 +98,21 @@ void poll_events() {
                 break;
             }
         }
+    }
+}
+
+void update_camera() {
+    glm::ivec2 previous_mouse_coords = mouse_coords;
+    SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
+
+    if ( mouse_left_down ) {
+        glm::vec3 mouse_rotate {
+            mouse_coords.y - previous_mouse_coords.y,
+            previous_mouse_coords.x - mouse_coords.x,
+            0
+        };
+
+        camera.rotate ( mouse_rotate * 0.25f );
     }
 }
 
@@ -217,15 +234,33 @@ int main ( int argc, char** argv ) {
         .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
         .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
+
+    glpp::texture_2d render_target ( glpp::texture_2d::internal_format::rgb );
+    render_target.bind();
+    render_target.image ( glpp::pixels ( nullptr, { SCREEN_WIDTH, SCREEN_HEIGHT },
+                                         glpp::pixels::format::rgb,
+                                         glpp::pixels::type::gl_unsigned_byte ) );
+
+    render_target.generate_mipmap();
+
+    glpp::framebuffer fbo;
+    fbo.bind().attach ( render_target ).unbind();
+
     glpp::cube<GLfloat> cube ( { 100.0, 75.0, 100.0 } );
     cube.bind().program ( program );
+
+    glpp::quad<GLfloat> quad ( { 10.0, 10.0 } );
+    quad.bind().program ( program );
 
     float factor = 0.0f;
     float update = 0.001f;
 
-    glm::mat4 model = glm::rotate ( glm::mat4 ( 1.0f ),
-                                    glm::radians ( -0.0f ),
-                                    glm::vec3 ( 0.0f, 1.0f, 0.0f ) );
+    glm::mat4 cube_model = glm::rotate ( glm::mat4 ( 1.0f ),
+                                         glm::radians ( -0.0f ),
+                                         glm::   vec3 ( 0.0f, 1.0f, 0.0f ) );
+
+    glm::mat4 quad_model = glm::translate ( glm::mat4 ( 1.0f ),
+                                            glm::vec3 ( 0.0f, 0.0f, 50.0f ) );
 
     glm::mat4 projection = glm::perspective ( glm::radians ( 50.0f ),
                                               1600.0f / 900.0f,
@@ -234,8 +269,7 @@ int main ( int argc, char** argv ) {
 
     glEnable ( GL_DEPTH_TEST );
 
-    glm::ivec2 mouse_coords;
-    SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
+    program.uniform ( "projection", projection );
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -244,43 +278,43 @@ int main ( int argc, char** argv ) {
 
         factor += update;
         factor  = factor > 1.0f ? 0.0f : factor;
+        program.uniform ( "factor", factor );
 
         if ( factor == 0.0f ) {
             texture_a_unit = --texture_a_unit < 0 ? 2 : texture_a_unit;
             texture_b_unit = --texture_b_unit < 0 ? 2 : texture_b_unit;
             texture_c_unit = --texture_c_unit < 0 ? 2 : texture_c_unit;
-
-            texture_a.bind_texture_unit ( texture_a_unit );
-            texture_b.bind_texture_unit ( texture_b_unit );
-            texture_c.bind_texture_unit ( texture_c_unit );
         }
 
-        cube.bind();
+        texture_a.bind_texture_unit ( texture_a_unit );
+        texture_b.bind_texture_unit ( texture_b_unit );
+        texture_c.bind_texture_unit ( texture_c_unit );
 
+        update_camera();
 
-        glm::ivec2 previous_mouse_coords = mouse_coords;
-        SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
+        program.uniform ( "view", render_target_camera.view() );
+        fbo.bind();
+        glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+        program.uniform ( "model", cube_model );
+        cube.bind().draw().unbind();
+        fbo.unbind();
 
-        if ( mouse_left_down ) {
-            glm::vec3 mouse_rotate {
-                mouse_coords.y - previous_mouse_coords.y,
-                previous_mouse_coords.x - mouse_coords.x,
-                0
-            };
+        program.uniform ( "view", camera
+                              .move ( move * move_rate )
+                              .rotate ( rotate * rotate_rate )
+                              .view() );
 
-            camera.rotate ( mouse_rotate * 0.25f );
-        }
+        program.uniform ( "model", cube_model );
+        cube.bind().draw().unbind();
 
-        program.uniform ( "factor", factor )
-            .uniform ( "model", model )
-            .uniform ( "view",  camera
-                           .move ( move * move_rate )
-                           .rotate ( rotate * rotate_rate )
+        render_target.bind_texture_unit ( 0 );
+        render_target.bind_texture_unit ( 1 );
+        render_target.bind_texture_unit ( 2 );
 
-                           .view() )
-            .uniform ( "projection", projection );
+        render_target_camera.rotate ( { 0.01f, 0.2f, 0.0f } );
 
-        cube.draw();
+        program.uniform ( "model", quad_model );
+        quad.bind().draw().unbind();
 
         SDL_GL_SwapWindow ( WINDOW );
 

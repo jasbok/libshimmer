@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "element_array_buffer.h"
 #include "enums.h"
+#include "framebuffer.h"
 #include "mbuffer.h"
 #include "mesh.h"
 #include "pixels.h"

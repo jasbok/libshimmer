@@ -53,6 +53,7 @@ set( HEADERS
         ${INCLUDE_DIR}/cube.h
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/enums.h
+        ${INCLUDE_DIR}/framebuffer.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/mbuffer.h
         ${INCLUDE_DIR}/mesh.h
@@ -79,6 +80,7 @@ set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
         ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
+        ${SOURCES_DIR}/framebuffer.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/shader.cpp
