@@ -27,6 +27,11 @@ public:
         linear  = GL_LINEAR
     };
 
+    enum class filter : GLenum {
+        nearest = GL_NEAREST,
+        linear  = GL_LINEAR
+    };
+
     enum class texture_wrap : GLenum {
         clamp_to_edge   = GL_CLAMP_TO_EDGE,
         mirrored_repeat = GL_MIRRORED_REPEAT,
@@ -61,9 +66,13 @@ public:
     texture_2d& bind_texture_unit ( unsigned int unit );
 
 
+    texture_2d& filters ( enum filter filter );
+
     texture_2d& min_filter ( enum min_filter filter );
 
     texture_2d& mag_filter ( enum mag_filter filter );
+
+    texture_2d& wrap ( enum texture_wrap wrap );
 
     texture_2d& wrap_s ( enum texture_wrap wrap );
 

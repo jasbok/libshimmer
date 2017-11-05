@@ -55,17 +55,18 @@ set( HEADERS
         ${INCLUDE_DIR}/enums.h
         ${INCLUDE_DIR}/framebuffer.h
         ${INCLUDE_DIR}/glpp.h
+        ${INCLUDE_DIR}/material.h
         ${INCLUDE_DIR}/mbuffer.h
         ${INCLUDE_DIR}/mesh.h
         ${INCLUDE_DIR}/pixels.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/quad.h
+        ${INCLUDE_DIR}/resource_loader.h
         ${INCLUDE_DIR}/shader.h
         ${INCLUDE_DIR}/specs.h
         ${INCLUDE_DIR}/texture.h
         ${INCLUDE_DIR}/texture_2d.h
         ${INCLUDE_DIR}/uniform.h
-        ${INCLUDE_DIR}/utils.h
         ${INCLUDE_DIR}/vertex_array.h
         ${INCLUDE_DIR}/vertex_attrib.h
         ${INCLUDE_DIR}/vertex_buffer.h)
@@ -81,14 +82,15 @@ set( SOURCES
         ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/framebuffer.cpp
+        ${SOURCES_DIR}/material.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
+        ${SOURCES_DIR}/resource_loader.cpp
         ${SOURCES_DIR}/shader.cpp
         ${SOURCES_DIR}/stb_image.cpp
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp
         ${SOURCES_DIR}/uniform.cpp
-        ${SOURCES_DIR}/utils.cpp
         ${SOURCES_DIR}/vertex_array.cpp)
 
 

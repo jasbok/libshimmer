@@ -5,14 +5,14 @@ in vec2 f_texcoord;
 
 out vec4 FragColor;
 
-uniform sampler2D tex_a;
-uniform sampler2D tex_b;
-uniform float factor;
+uniform sampler2D texture_a;
+uniform sampler2D texture_b;
+uniform float blend_factor;
 
 void main()
 {
-    FragColor = mix(texture(tex_a, f_texcoord),
-                    texture(tex_b, f_texcoord),
-                    factor)
+    FragColor = mix(texture(texture_a, f_texcoord),
+                    texture(texture_b, f_texcoord),
+                    blend_factor)
                 + vec4(f_colour, 1.0f);
 }

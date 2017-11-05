@@ -175,101 +175,59 @@ int init_opengl() {
 int main ( int argc, char** argv ) {
     init_opengl();
 
-    glpp::shader fragment ( glpp::shader::type::fragment,
-        glpp::utils::read_all ( "data/glsl/example.frag" ) );
+    glpp::resource_loader loader ( { "data/glsl", "data/img" } );
 
-    if ( !fragment.compile().compile_status() ) {
-        std::cerr << "Unable to compile fragment shader:\n"
-                  << fragment.info_log()
-                  << std::endl;
-    }
+    glpp::program program = loader.program ( "example.vert", "example.frag" );
+    program.use().uniform ( "texture_a", 1 ).uniform ( "texture_b", 2 );
 
-    glpp::shader vertex ( glpp::shader::type::vertex,
-        glpp::utils::read_all ( "data/glsl/example.vert" ) );
-
-    if ( !vertex.compile().compile_status() ) {
-        std::cerr << "Unable to compile vertex shader:\n"
-                  << vertex.info_log()
-                  << std::endl;
-    }
-
-    glpp::program program;
-    program.attach ( fragment ).attach ( vertex ).link()
-        .detach ( fragment ).detach ( vertex );
-
-    if ( !program.link_status() ) {
-        std::cerr << "Unable to link shaders into program:\n"
-                  << program.info_log()
-                  << std::endl;
-    }
-
-    program.use()
-        .uniform ( "tex_a", 1 )
-        .uniform ( "tex_b", 2 );
-
-    glpp::texture_2d texture_a = glpp::utils::texture_2d_from (
-        "data/img/ck4.png" );
-    glpp::texture_2d texture_b = glpp::utils::texture_2d_from (
-        "data/img/wolf.png" );
-    glpp::texture_2d texture_c = glpp::utils::texture_2d_from (
-        "data/img/doom.gif" );
-    glpp::texture_2d texture_cursor = glpp::utils::texture_2d_from (
-        "data/img/cursor.png" );
+    glpp::texture_2d texture_a      = loader.texture_2d ( "ck4.png" );
+    glpp::texture_2d texture_b      = loader.texture_2d ( "wolf.png" );
+    glpp::texture_2d texture_c      = loader.texture_2d ( "doom.gif" );
+    glpp::texture_2d texture_cursor = loader.texture_2d ( "cursor.png" );
 
     int texture_a_unit = 1;
     int texture_b_unit = 2;
     int texture_c_unit = 0;
 
     texture_a.bind_texture_unit ( texture_a_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
-        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
-        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
+        .filters ( glpp::texture_2d::filter::nearest )
+        .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     texture_b.bind_texture_unit ( texture_b_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
-        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
-        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
+        .filters ( glpp::texture_2d::filter::nearest )
+        .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     texture_c.bind_texture_unit ( texture_c_unit )
-        .min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
-        .wrap_s ( glpp::texture_2d::texture_wrap::mirrored_repeat )
-        .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
-
+        .filters ( glpp::texture_2d::filter::nearest )
+        .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     glpp::framebuffer fbo;
 
-    std::cout << "Creating render texture...\n";
     glpp::texture_2d render_target ( glpp::texture_2d::internal_format::rgb );
     render_target.bind();
     render_target.min_filter ( glpp::texture_2d::min_filter::nearest )
         .mag_filter ( glpp::texture_2d::mag_filter::nearest );
     render_target.image ( glpp::pixels ( nullptr,
-                                         { RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT },
+                                         { RENDER_TARGET_WIDTH,
+                                           RENDER_TARGET_HEIGHT },
                                          glpp::pixels::format::rgb,
                                          glpp::pixels::type::gl_unsigned_byte ) );
 
     render_target.generate_mipmaps();
     fbo.bind().attach_color ( render_target );
 
-    GLPP_CHECK_ERROR ( "Created and attached render target." );
-
-    std::cout << "Creating depth texture...\n";
-    glpp::texture_2d render_target_depth ( glpp::texture_2d::internal_format::depth_component );
+    glpp::texture_2d render_target_depth (
+        glpp::texture_2d::internal_format::depth_component );
     render_target_depth.bind();
     render_target_depth.image ( glpp::pixels ( nullptr,
-                                               { RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT },
-                                               glpp::pixels::format::depth_component,
+                                               { RENDER_TARGET_WIDTH,
+                                                 RENDER_TARGET_HEIGHT },
+                                               glpp::pixels::format::
+                                                   depth_component,
                                                glpp::pixels::type::gl_float ) );
-
-    GLPP_CHECK_ERROR ( "Created render depth target." );
 
     render_target_depth.generate_mipmaps();
     fbo.attach_depth ( render_target_depth ).unbind();
-
-    GLPP_CHECK_ERROR ( "Attached render depth target." );
 
     glpp::cube<GLfloat> cube ( { 100.0, 75.0, 100.0 } );
     cube.bind().program ( program );
@@ -282,7 +240,8 @@ int main ( int argc, char** argv ) {
 
     glm::mat4 cube_model = glm::mat4 ( 1.0f );
 
-    glm::mat4 user_model = glm::scale ( glm::mat4 ( 1.0f ), glm::vec3 ( 0.1, 0.1, 0.1 ) );
+    glm::mat4 user_model =
+        glm::scale ( glm::mat4 ( 1.0f ), glm::vec3 ( 0.1, 0.1, 0.1 ) );
 
     glm::mat4 quad_model = glm::translate ( glm::mat4 ( 1.0f ),
                                             glm::vec3 ( 0.0f, 0.0f, 50.0f ) );
@@ -306,7 +265,7 @@ int main ( int argc, char** argv ) {
 
         factor += update;
         factor  = factor > 1.0f ? 0.0f : factor;
-        program.uniform ( "factor", factor );
+        program.uniform ( "blend_factor", factor );
 
         if ( factor == 0.0f ) {
             texture_a_unit = --texture_a_unit < 0 ? 2 : texture_a_unit;
@@ -329,15 +288,12 @@ int main ( int argc, char** argv ) {
         program.uniform ( "model", cube_model );
         cube.draw();
 
-        std::cout << camera.rotation().x << "\n";
-        std::cout << camera.rotation().y << "\n";
-        std::cout << camera.rotation().z << "\n";
-
         user_model = glm::translate ( glm::mat4 ( 1.0 ), camera.position() );
         user_model = glm::rotate ( user_model,
                                    glm::radians ( 90.0f ),
                                    camera.rotation() / 360.0f );
-        user_model = glm::scale ( user_model, glm::vec3 ( 0.02f, 0.02f, 0.02f ) );
+        user_model =
+            glm::scale ( user_model, glm::vec3 ( 0.02f, 0.02f, 0.02f ) );
 
 
         program.uniform ( "model", user_model );

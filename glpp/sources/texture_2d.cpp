@@ -76,6 +76,14 @@ texture_2d& texture_2d::bind_texture_unit ( unsigned int unit ) {
     return *this;
 }
 
+texture_2d& texture_2d::filters ( texture_2d::filter filter )
+{
+    min_filter ( static_cast<enum min_filter>(filter) );
+    mag_filter ( static_cast<enum mag_filter>(filter) );
+
+    return *this;
+}
+
 texture_2d& texture_2d::min_filter ( enum min_filter filter ) {
     glTexParameteri ( static_cast<GLenum>(target()),
                       GL_TEXTURE_MIN_FILTER,
@@ -88,6 +96,14 @@ texture_2d& texture_2d::mag_filter ( enum mag_filter filter ) {
     glTexParameteri ( static_cast<GLenum>(target()),
                       GL_TEXTURE_MAG_FILTER,
                       static_cast<GLenum>(filter) );
+
+    return *this;
+}
+
+texture_2d& texture_2d::wrap ( texture_2d::texture_wrap wrap )
+{
+    wrap_s ( wrap );
+    wrap_t ( wrap );
 
     return *this;
 }
