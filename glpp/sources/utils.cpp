@@ -40,7 +40,7 @@ texture_2d utils::texture_2d_from ( const std::string& path ) {
                                      static_cast<GLuint>(height) },
                                    format,
                                    glpp::pixels::type::gl_unsigned_byte ) );
-    texture.generate_mipmap();
+    texture.generate_mipmaps();
 
     return texture;
 }

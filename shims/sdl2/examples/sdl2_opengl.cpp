@@ -8,7 +8,11 @@ SDL_Renderer* RENDERER;
 SDL_GLContext GL_CONTEXT;
 static const unsigned int SCREEN_WIDTH  = 1600;
 static const unsigned int SCREEN_HEIGHT = 900;
-static const bool USE_FULLSCREEN        = false;
+
+static const unsigned int RENDER_TARGET_WIDTH  = 320;
+static const unsigned int RENDER_TARGET_HEIGHT = 240;
+
+static const bool USE_FULLSCREEN = false;
 
 glpp::camera camera;
 glpp::camera render_target_camera;
@@ -235,32 +239,56 @@ int main ( int argc, char** argv ) {
         .wrap_t ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
 
+    glpp::framebuffer fbo;
+
+    std::cout << "Creating render texture...\n";
     glpp::texture_2d render_target ( glpp::texture_2d::internal_format::rgb );
     render_target.bind();
-    render_target.image ( glpp::pixels ( nullptr, { SCREEN_WIDTH, SCREEN_HEIGHT },
+    render_target.min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+    render_target.image ( glpp::pixels ( nullptr,
+                                         { RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT },
                                          glpp::pixels::format::rgb,
                                          glpp::pixels::type::gl_unsigned_byte ) );
 
-    render_target.generate_mipmap();
+    render_target.generate_mipmaps();
+    fbo.bind().attach_color ( render_target );
 
-    glpp::framebuffer fbo;
-    fbo.bind().attach ( render_target ).unbind();
+    GLPP_CHECK_ERROR ( "Created and attached render target." );
+
+    std::cout << "Creating depth texture...\n";
+    glpp::texture_2d render_target_depth ( glpp::texture_2d::internal_format::depth_component );
+    render_target_depth.bind();
+    render_target_depth.image ( glpp::pixels ( nullptr,
+                                               { RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT },
+                                               glpp::pixels::format::depth_component,
+                                               glpp::pixels::type::gl_float ) );
+
+    GLPP_CHECK_ERROR ( "Created render depth target." );
+
+    render_target_depth.generate_mipmaps();
+    fbo.attach_depth ( render_target_depth ).unbind();
+
+    GLPP_CHECK_ERROR ( "Attached render depth target." );
 
     glpp::cube<GLfloat> cube ( { 100.0, 75.0, 100.0 } );
     cube.bind().program ( program );
 
-    glpp::quad<GLfloat> quad ( { 10.0, 10.0 } );
+    glpp::quad<GLfloat> quad ( { 25.0, 25.0 } );
     quad.bind().program ( program );
 
     float factor = 0.0f;
     float update = 0.001f;
 
-    glm::mat4 cube_model = glm::rotate ( glm::mat4 ( 1.0f ),
-                                         glm::radians ( -0.0f ),
-                                         glm::   vec3 ( 0.0f, 1.0f, 0.0f ) );
+    glm::mat4 cube_model = glm::mat4 ( 1.0f );
+
+    glm::mat4 user_model = glm::scale ( glm::mat4 ( 1.0f ), glm::vec3 ( 0.1, 0.1, 0.1 ) );
 
     glm::mat4 quad_model = glm::translate ( glm::mat4 ( 1.0f ),
                                             glm::vec3 ( 0.0f, 0.0f, 50.0f ) );
+    quad_model = glm::rotate ( quad_model,
+                               glm::radians ( 180.0f ),
+                               glm::vec3 ( 0.0f, 0.0f, 1.0f ) );
 
     glm::mat4 projection = glm::perspective ( glm::radians ( 50.0f ),
                                               1600.0f / 900.0f,
@@ -295,9 +323,30 @@ int main ( int argc, char** argv ) {
         program.uniform ( "view", render_target_camera.view() );
         fbo.bind();
         glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+        glViewport ( 0, 0, RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT );
+        cube.bind();
+
         program.uniform ( "model", cube_model );
-        cube.bind().draw().unbind();
+        cube.draw();
+
+        std::cout << camera.rotation().x << "\n";
+        std::cout << camera.rotation().y << "\n";
+        std::cout << camera.rotation().z << "\n";
+
+        user_model = glm::translate ( glm::mat4 ( 1.0 ), camera.position() );
+        user_model = glm::rotate ( user_model,
+                                   glm::radians ( 90.0f ),
+                                   camera.rotation() / 360.0f );
+        user_model = glm::scale ( user_model, glm::vec3 ( 0.02f, 0.02f, 0.02f ) );
+
+
+        program.uniform ( "model", user_model );
+        cube.draw();
+
+        cube.unbind();
         fbo.unbind();
+
+        glViewport ( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
         program.uniform ( "view", camera
                               .move ( move * move_rate )
@@ -307,11 +356,13 @@ int main ( int argc, char** argv ) {
         program.uniform ( "model", cube_model );
         cube.bind().draw().unbind();
 
+        render_target.bind();
+        render_target.generate_mipmaps();
         render_target.bind_texture_unit ( 0 );
         render_target.bind_texture_unit ( 1 );
         render_target.bind_texture_unit ( 2 );
 
-        render_target_camera.rotate ( { 0.01f, 0.2f, 0.0f } );
+        // render_target_camera.rotate ( { 0.01f, 0.2f, 0.0f } );
 
         program.uniform ( "model", quad_model );
         quad.bind().draw().unbind();

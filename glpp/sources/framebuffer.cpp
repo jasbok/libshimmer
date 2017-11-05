@@ -47,11 +47,23 @@ GLenum framebuffer::check_status() const
     return glCheckFramebufferStatus ( GL_FRAMEBUFFER );
 }
 
-framebuffer& framebuffer::attach ( const texture_2d& texture,
-                                   GLint             mipmap_level )
+framebuffer& framebuffer::attach_color ( const texture_2d& texture,
+                                         GLint             mipmap_level )
 {
     glFramebufferTexture2D ( GL_FRAMEBUFFER,
                              GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D,
+                             texture.handle(),
+                             mipmap_level );
+
+    return *this;
+}
+
+framebuffer& framebuffer::attach_depth ( const texture_2d& texture,
+                                         GLint             mipmap_level )
+{
+    glFramebufferTexture2D ( GL_FRAMEBUFFER,
+                             GL_DEPTH_ATTACHMENT,
                              GL_TEXTURE_2D,
                              texture.handle(),
                              mipmap_level );

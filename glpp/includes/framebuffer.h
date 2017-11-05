@@ -24,8 +24,11 @@ public:
 
     framebuffer& unbind();
 
-    framebuffer& attach ( const texture_2d& texture,
-                          GLint             mipmap_level = 0 );
+    framebuffer& attach_color ( const texture_2d& texture,
+                                GLint             mipmap_level = 0 );
+
+    framebuffer& attach_depth ( const texture_2d& texture,
+                                GLint             mipmap_level = 0 );
 
     GLenum check_status() const;
 

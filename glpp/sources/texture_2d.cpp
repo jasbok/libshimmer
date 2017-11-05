@@ -63,7 +63,7 @@ texture_2d& texture_2d::sub_image ( const coords_2i& offset,
     return *this;
 }
 
-texture_2d& texture_2d::generate_mipmap() {
+texture_2d& texture_2d::generate_mipmaps() {
     glGenerateMipmap ( static_cast<GLenum>(target()) );
 
     return *this;

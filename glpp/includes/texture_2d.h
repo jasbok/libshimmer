@@ -56,9 +56,9 @@ public:
                             const pixels&    pixels,
                             GLint            level = 0 );
 
-    texture_2d& generate_mipmap();
+    texture_2d& generate_mipmaps();
 
-    texture_2d& bind_texture_unit(unsigned int unit);
+    texture_2d& bind_texture_unit ( unsigned int unit );
 
 
     texture_2d& min_filter ( enum min_filter filter );
