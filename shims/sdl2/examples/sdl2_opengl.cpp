@@ -229,34 +229,35 @@ int main ( int argc, char** argv ) {
     render_target_depth.generate_mipmaps();
     fbo.attach_depth ( render_target_depth ).unbind();
 
-    glpp::cube<GLfloat> cube ( { 100.0, 75.0, 100.0 } );
+    glpp::cube<GLfloat> cube ( { 1.0, 1.0, 1.0 } );
     cube.bind().program ( program );
 
-    glpp::quad<GLfloat> quad ( { 25.0, 25.0 } );
+    glpp::quad<GLfloat> quad ( { 1.0, 0.75 } );
     quad.bind().program ( program );
 
-    float factor = 0.0f;
-    float update = 0.001f;
 
-    glm::mat4 cube_model = glm::mat4 ( 1.0f );
+    glpp::entity outer_cube;
+    outer_cube.scale ( { 500.0, 250.0, 500.0 } );
 
-    glm::mat4 user_model =
-        glm::scale ( glm::mat4 ( 1.0f ), glm::vec3 ( 0.1, 0.1, 0.1 ) );
+    glpp::entity avatar;
+    avatar.scale ( { 1.0, 0.25, 0.25 } );
 
-    glm::mat4 quad_model = glm::translate ( glm::mat4 ( 1.0f ),
-                                            glm::vec3 ( 0.0f, 0.0f, 50.0f ) );
-    quad_model = glm::rotate ( quad_model,
-                               glm::radians ( 180.0f ),
-                               glm::vec3 ( 0.0f, 0.0f, 1.0f ) );
+    glpp::entity mirror;
+    mirror.position ( { 0.0f, 0.0f, 50.0f } )
+        .rotation ( { 0.0f, 0.0f, 180.0f } )
+        .scale ( { 25.0f, 25.0f, 25.0f } );
 
     glm::mat4 projection = glm::perspective ( glm::radians ( 50.0f ),
                                               1600.0f / 900.0f,
                                               0.01f,
-                                              1000.0f );
+                                              2000.0f );
 
     glEnable ( GL_DEPTH_TEST );
 
     program.uniform ( "projection", projection );
+
+    float factor = 0.0f;
+    float update = 0.001f;
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -283,20 +284,15 @@ int main ( int argc, char** argv ) {
         fbo.bind();
         glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         glViewport ( 0, 0, RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT );
+
         cube.bind();
 
-        program.uniform ( "model", cube_model );
+        avatar.position ( camera.position() ).rotation (
+            camera.rotation() * glm::vec3 ( -1.0f, -1.0f, 1.0f ) );
+        program.uniform ( "model", avatar.model() );
         cube.draw();
 
-        user_model = glm::translate ( glm::mat4 ( 1.0 ), camera.position() );
-        user_model = glm::rotate ( user_model,
-                                   glm::radians ( 90.0f ),
-                                   camera.rotation() / 360.0f );
-        user_model =
-            glm::scale ( user_model, glm::vec3 ( 0.02f, 0.02f, 0.02f ) );
-
-
-        program.uniform ( "model", user_model );
+        program.uniform ( "model", outer_cube.model() );
         cube.draw();
 
         cube.unbind();
@@ -309,7 +305,7 @@ int main ( int argc, char** argv ) {
                               .rotate ( rotate * rotate_rate )
                               .view() );
 
-        program.uniform ( "model", cube_model );
+        program.uniform ( "model", outer_cube.model() );
         cube.bind().draw().unbind();
 
         render_target.bind();
@@ -318,9 +314,8 @@ int main ( int argc, char** argv ) {
         render_target.bind_texture_unit ( 1 );
         render_target.bind_texture_unit ( 2 );
 
-        // render_target_camera.rotate ( { 0.01f, 0.2f, 0.0f } );
 
-        program.uniform ( "model", quad_model );
+        program.uniform ( "model", mirror.model() );
         quad.bind().draw().unbind();
 
         SDL_GL_SwapWindow ( WINDOW );

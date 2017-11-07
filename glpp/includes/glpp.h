@@ -7,6 +7,7 @@
 #include "cube.h"
 #include "debug.h"
 #include "element_array_buffer.h"
+#include "entity.h"
 #include "enums.h"
 #include "framebuffer.h"
 #include "mbuffer.h"
