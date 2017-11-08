@@ -161,10 +161,17 @@ font_face& font_face::operator=( font_face&& move )
 
 glyph font_face::get_glyph ( wchar_t unicode ) const
 {
-    auto ft_err =  FT_Load_Char ( _face, unicode, FT_LOAD_RENDER );
+    auto glyph_index = FT_Get_Char_Index ( _face, unicode );
+
+    if ( glyph_index == 0 ) {
+        wcerr << "Font does not contain glyph: " << unicode << endl;
+        throw unable_to_load_glyph_exception();
+    }
+
+    auto ft_err = FT_Load_Glyph ( _face, glyph_index, FT_LOAD_RENDER );
 
     if ( ft_err != FT_Err_Ok ) {
-        wcerr << "Unable to load font glyph for " << unicode << endl;
+        wcerr << "Unable to load font glyph: " << unicode << endl;
         throw unable_to_load_glyph_exception();
     }
 
@@ -212,43 +219,44 @@ font_loader::~font_loader()
     FT_Done_FreeType ( _ft );
 }
 
-vector<glyph> font_loader::load ( const string& path, unsigned int size )
+vector<glyph> font_loader::load ( const string& path,
+                                  unsigned int  size,
+                                  unsigned int  dpi )
 {
     FT_Face face;
 
     for ( const auto& search_path : _search_paths ) {
-        std::string font_path = search_path + "/" + path;
-        auto ft_err           = FT_New_Face ( _ft,
-                                              font_path.c_str(),
-                                              0,
-                                              &face );
+        string font_path = search_path + "/" + path;
+        auto   ft_err    = FT_New_Face ( _ft,
+                                         font_path.c_str(),
+                                         0,
+                                         &face );
 
-        if ( ft_err == FT_Err_Unknown_File_Format )
-        {
-            cerr << "Unsupported font found: " << font_path << endl;
+        try {
+            return _convert_to_glyphs ( font_face ( _ft, path, size, dpi ) );
         }
-        else if ( ft_err == FT_Err_Ok )
-        {
-            ft_err = FT_Set_Pixel_Sizes ( face, 0, size );
-
-            if ( ft_err != FT_Err_Ok ) {
-                throw unsupported_font_size_exception();
-            }
-
-            auto glyphs = _convert_to_glyphs ( face );
-
-            return glyphs;
+        catch ( exception ex ) {
+            cerr << "Unable to load font, checking search path... "
+                 << "(" << path << "): "
+                 << ex.what() << std::endl;
         }
     }
 
     throw font_not_found_exception();
 }
 
-std::vector<glyph> font_loader::_convert_to_glyphs ( const FT_Face& face )
+std::vector<glyph> font_loader::_convert_to_glyphs ( const font_face& face )
 {
+    std::vector<glyph> glyphs ( 0x00080 - 0x00020 );
+
+    glyphs.push_back ( face.get_glyph ( 0 ) );
+
     for ( unsigned int c = 0x00020; c < 0x00080; c++ ) {
-        auto glyph_index = FT_Get_Char_Index ( face, c );
+        try {
+            glyphs.push_back ( face.get_glyph ( c ) );
+        }
+        catch ( exception ex ) {}
     }
 
-    return std::vector<glyph>();
+    return glyphs;
 }

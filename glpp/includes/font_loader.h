@@ -106,14 +106,15 @@ public:
     virtual ~font_loader();
 
     std::vector<glyph> load ( const std::string& path,
-                              unsigned int       size );
+                              unsigned int       size,
+                              unsigned int       dpi = 72 );
 
 private:
     std::vector<std::string> _search_paths;
 
     FT_Library _ft;
 
-    std::vector<glyph> _convert_to_glyphs ( const FT_Face& face );
+    std::vector<glyph> _convert_to_glyphs ( const font_face& face );
 };
 
 struct freetype_init_exception : public std::exception {
