@@ -16,12 +16,21 @@ set( OPENGL_LIBRARIES
 
 
 ###############################################################################
+#   Find and store FreeType paths.
+###############################################################################
+find_package( Freetype )
+
+set( FREETYPE_INCLUDES ${FREETYPE_INCLUDE_DIRS} )
+set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} )
+
+###############################################################################
 #   Configure external include directories.
 ###############################################################################
 set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
 
 set ( EXTERNAL_INCLUDES
         ${EXTERNAL_INCLUDE_DIR}
+        ${FREETYPE_INCLUDES}
         ${OPENGL_INCLUDES} )
 
 
@@ -30,6 +39,7 @@ set ( EXTERNAL_INCLUDES
 ###############################################################################
 set( TARGET_LINK_LIBRARIES
         ${CMAKE_THREAD_LIBS_INIT}
+        ${FREETYPE_LIBRARIES}
         ${OPENGL_LIBRARIES} )
 
 
@@ -54,6 +64,7 @@ set( HEADERS
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/entity.h
         ${INCLUDE_DIR}/enums.h
+        ${INCLUDE_DIR}/font_loader.h
         ${INCLUDE_DIR}/framebuffer.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/material.h
@@ -83,6 +94,7 @@ set( SOURCES
         ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/entity.cpp
+        ${SOURCES_DIR}/font_loader.cpp
         ${SOURCES_DIR}/framebuffer.cpp
         ${SOURCES_DIR}/material.cpp
         ${SOURCES_DIR}/pixels.cpp

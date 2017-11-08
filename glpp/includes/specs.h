@@ -36,6 +36,28 @@ struct coords_2 {
         return x != comp.x || y != comp.y;
     }
 
+    coords_2 operator+( const coords_2& op ) {
+        return { x + op.x, y + op.y };
+    }
+
+    coords_2 operator-( const coords_2& op ) {
+        return { x - op.x, y - op.y };
+    }
+
+    coords_2& operator+=( const coords_2& op ) {
+        x += op.x;
+        y += op.y;
+
+        return *this;
+    }
+
+    coords_2& operator-=( const coords_2& op ) {
+        x -= op.x;
+        y -= op.y;
+
+        return *this;
+    }
+
     std::string to_json() const {
         return "{x:" + std::to_string ( x )
                + ",y:" + std::to_string ( y ) + "}";
@@ -69,6 +91,30 @@ struct coords_3 {
 
     bool operator!=( const coords_3& comp ) {
         return x != comp.x || y != comp.y || z != comp.z;
+    }
+
+    coords_3 operator+( const coords_3& op ) {
+        return { x + op.x, y + op.y, z + op.z };
+    }
+
+    coords_3 operator-( const coords_3& op ) {
+        return { x - op.x, y - op.y, z + op.z };
+    }
+
+    coords_3& operator+=( const coords_3& op ) {
+        x += op.x;
+        y += op.y;
+        z += op.z;
+
+        return *this;
+    }
+
+    coords_3& operator-=( const coords_3& op ) {
+        x -= op.x;
+        y -= op.y;
+        z -= op.z;
+
+        return *this;
     }
 
     std::string to_json() const {
@@ -105,6 +151,32 @@ struct dims_2 {
 
     bool operator!=( const dims_2& comp ) {
         return width != comp.width || height != comp.height;
+    }
+
+    dims_2 operator+( const dims_2& op ) {
+        return { width + op.width, height + op.height };
+    }
+
+    dims_2 operator-( const dims_2& op ) {
+        return { width - op.width, height - op.height };
+    }
+
+    dims_2& operator+=( const dims_2& op ) {
+        width  += op.width;
+        height += op.height;
+
+        return *this;
+    }
+
+    dims_2& operator-=( const dims_2& op ) {
+        width  -= op.width;
+        height -= op.height;
+
+        return *this;
+    }
+
+    T area() const {
+        return width * height;
     }
 
     std::string to_json() const {
@@ -144,6 +216,34 @@ struct dims_3 {
         return width != comp.width
                || height != comp.height
                || depth != comp.depth;
+    }
+
+    dims_3 operator+( const dims_3& op ) {
+        return { width + op.width, height + op.height, depth + op.depth };
+    }
+
+    dims_3 operator-( const dims_3& op ) {
+        return { width - op.width, height - op.height, depth - op.depth };
+    }
+
+    dims_3& operator+=( const dims_3& op ) {
+        width  += op.width;
+        height += op.height;
+        depth  += op.depth;
+
+        return *this;
+    }
+
+    dims_3& operator-=( const dims_3& op ) {
+        width  -= op.width;
+        height -= op.height;
+        depth  -= op.depth;
+
+        return *this;
+    }
+
+    T volume() const {
+        return width * height * depth;
     }
 
     std::string to_json() const {
