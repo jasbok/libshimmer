@@ -86,11 +86,11 @@ void poll_events() {
                 break;
 
             case SDLK_LEFT:
-                rotate.y = 1 * key_down;
+                rotate.y = -1 * key_down;
                 break;
 
             case SDLK_RIGHT:
-                rotate.y = -1 * key_down;
+                rotate.y = 1 * key_down;
                 break;
 
             case SDLK_UP:
@@ -112,7 +112,7 @@ void update_camera() {
     if ( mouse_left_down ) {
         glm::vec3 mouse_rotate {
             mouse_coords.y - previous_mouse_coords.y,
-            previous_mouse_coords.x - mouse_coords.x,
+            mouse_coords.x - previous_mouse_coords.x,
             0
         };
 
@@ -213,7 +213,6 @@ int main ( int argc, char** argv ) {
                                          glpp::pixels::format::rgb,
                                          glpp::pixels::type::gl_unsigned_byte ) );
 
-    render_target.generate_mipmaps();
     fbo.bind().attach_color ( render_target );
 
     glpp::texture_2d render_target_depth (
@@ -226,7 +225,6 @@ int main ( int argc, char** argv ) {
                                                    depth_component,
                                                glpp::pixels::type::gl_float ) );
 
-    render_target_depth.generate_mipmaps();
     fbo.attach_depth ( render_target_depth ).unbind();
 
     glpp::cube<GLfloat> cube ( { 1.0, 1.0, 1.0 } );
@@ -240,17 +238,22 @@ int main ( int argc, char** argv ) {
     outer_cube.scale ( { 500.0, 250.0, 500.0 } );
 
     glpp::entity avatar;
-    avatar.scale ( { 1.0, 0.25, 0.25 } );
+    avatar.scale ( { 5.0, 5.0, 10.0 } );
 
     glpp::entity mirror;
-    mirror.position ( { 0.0f, 0.0f, 50.0f } )
-        .rotation ( { 0.0f, 0.0f, 180.0f } )
+    mirror.position ( { 0.0f, 0.0f, 100.0f } )
+        .rotation ( { 0.0f, 180.0f, 180.0f } )
         .scale ( { 25.0f, 25.0f, 25.0f } );
+
+    render_target_camera
+        .position ( { 0.0f, 0.0f, 150.0f } )
+        .rotation ( { 0.0f, 180.0f, 0.0f } );
 
     glm::mat4 projection = glm::perspective ( glm::radians ( 50.0f ),
                                               1600.0f / 900.0f,
                                               0.01f,
                                               2000.0f );
+
 
     glEnable ( GL_DEPTH_TEST );
 
@@ -282,13 +285,18 @@ int main ( int argc, char** argv ) {
 
         program.uniform ( "view", render_target_camera.view() );
         fbo.bind();
+        program.uniform ( "projection",
+                          glm::perspective ( glm::radians ( 30.0f ),
+                                             1.0f,
+                                             0.1f,
+                                             1000.0f ) );
         glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         glViewport ( 0, 0, RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT );
 
         cube.bind();
 
         avatar.position ( camera.position() ).rotation (
-            camera.rotation() * glm::vec3 ( -1.0f, -1.0f, 1.0f ) );
+            camera.rotation() * glm::vec3 ( -1.0f, 1.0f, 1.0f ) );
         program.uniform ( "model", avatar.model() );
         cube.draw();
 
@@ -298,6 +306,7 @@ int main ( int argc, char** argv ) {
         cube.unbind();
         fbo.unbind();
 
+        program.uniform ( "projection", projection );
         glViewport ( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
         program.uniform ( "view", camera

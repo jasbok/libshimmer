@@ -68,12 +68,12 @@ glm::vec3 glpp::camera::rotation() const
 glpp::camera& glpp::camera::update()
 {
     glm::vec3 front;
-    front.x = cos ( glm::radians ( _rotation.x ) ) *
+    front.z = cos ( glm::radians ( _rotation.x ) ) *
               cos ( glm::radians ( _rotation.y ) );
 
     front.y = sin ( glm::radians ( _rotation.x ) );
 
-    front.z = cos ( glm::radians ( _rotation.x ) ) *
+    front.x = cos ( glm::radians ( _rotation.x ) ) *
               sin ( glm::radians ( _rotation.y ) );
 
     _direction = glm::normalize ( front );
