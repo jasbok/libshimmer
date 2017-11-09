@@ -253,9 +253,10 @@ struct dims_3 {
     }
 };
 
-typedef coords_2<GLint> coords_2i;
-typedef dims_2<GLuint>  dims_2u;
-typedef dims_2<GLfloat> dims_2f;
+typedef coords_2<GLint>  coords_2i;
+typedef coords_2<GLuint> coords_2u;
+typedef dims_2<GLuint>   dims_2u;
+typedef dims_2<GLfloat>  dims_2f;
 }
 
 #endif // ifndef GLPP_SPECS_H

@@ -9,6 +9,7 @@
 #include "element_array_buffer.h"
 #include "entity.h"
 #include "enums.h"
+#include "font_loader.h"
 #include "framebuffer.h"
 #include "mbuffer.h"
 #include "mesh.h"

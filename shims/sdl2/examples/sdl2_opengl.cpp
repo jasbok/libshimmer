@@ -172,6 +172,11 @@ int init_opengl() {
     return 0;
 }
 
+void load_font() {
+    glpp::font_loader loader ( { "data/fonts" } );
+    loader.load ( "MODES___.TTF", 24 );
+}
+
 int main ( int argc, char** argv ) {
     init_opengl();
 
@@ -261,6 +266,8 @@ int main ( int argc, char** argv ) {
 
     float factor = 0.0f;
     float update = 0.001f;
+
+    load_font();
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );

@@ -1,9 +1,10 @@
 #ifndef GLPP_FONT_LOADER_H
 #define GLPP_FONT_LOADER_H
 
+#include "glyph.h"
 #include "specs.h"
 
-#include <freetype2/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 
 #include <string>
@@ -11,63 +12,6 @@
 
 namespace glpp
 {
-class glyph
-{
-public:
-    glyph( wchar_t                unicode,
-           const dims_2u&         dims,
-           const coords_2i&       bearing,
-           const coords_2i&       advance,
-           std::vector<uint8_t>&& data );
-
-    glyph( wchar_t                unicode,
-           const dims_2u&         dims,
-           const coords_2i&       bearing,
-           const coords_2i&       advance,
-           const coords_2i&       vertical_bearing,
-           std::vector<uint8_t>&& data );
-
-    glyph( glyph&& move );
-
-    glyph( const glyph& copy ) = delete;
-
-    virtual ~glyph();
-
-    glyph& operator=( glyph&& move );
-
-    glyph& operator=( const glyph& copy ) = delete;
-
-
-    unsigned int unicode() const;
-
-    dims_2u      dims() const;
-
-    coords_2i    bearing() const;
-
-    coords_2i    advance() const;
-
-    bool         has_vertical() const;
-
-    coords_2i    vertical_bearing() const;
-
-    uint8_t*     data();
-
-private:
-    wchar_t _unicode;
-
-    dims_2u _dims;
-
-    coords_2i _bearing;
-
-    coords_2i _advance;
-
-    bool _has_vertical;
-
-    coords_2i _vertical_bearing;
-
-    std::vector<uint8_t> _data;
-};
-
 class font_face
 {
 public:
