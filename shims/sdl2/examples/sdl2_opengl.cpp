@@ -6,13 +6,11 @@ SDL_Window*   WINDOW;
 SDL_Renderer* RENDERER;
 
 SDL_GLContext GL_CONTEXT;
-static const unsigned int SCREEN_WIDTH  = 1600;
-static const unsigned int SCREEN_HEIGHT = 900;
+static const unsigned int SCREEN_WIDTH  = 800;
+static const unsigned int SCREEN_HEIGHT = 480;
 
 static const unsigned int RENDER_TARGET_WIDTH  = 320;
 static const unsigned int RENDER_TARGET_HEIGHT = 240;
-
-static const bool USE_FULLSCREEN = false;
 
 glpp::camera camera;
 glpp::camera render_target_camera;
@@ -172,11 +170,6 @@ int init_opengl() {
     return 0;
 }
 
-void load_font() {
-    glpp::font_loader loader ( { "data/fonts" } );
-    loader.load ( "MODES___.TTF", 24 );
-}
-
 int main ( int argc, char** argv ) {
     init_opengl();
 
@@ -250,6 +243,11 @@ int main ( int argc, char** argv ) {
         .rotation ( { 0.0f, 180.0f, 180.0f } )
         .scale ( { 25.0f, 25.0f, 25.0f } );
 
+    glpp::entity font_atlas;
+    font_atlas.position ( { 100.0f, 0.0f, 0.0f } )
+        .rotation ( { 0.0f, -90.0f, 0.0f } )
+        .scale ( { 25.0f, 25.0f, 25.0f } );
+
     render_target_camera
         .position ( { 0.0f, 0.0f, 150.0f } )
         .rotation ( { 0.0f, 180.0f, 0.0f } );
@@ -267,7 +265,8 @@ int main ( int argc, char** argv ) {
     float factor = 0.0f;
     float update = 0.001f;
 
-    load_font();
+    glpp::font_loader font_loader ( { "data/fonts", "/usr/share/fonts/TTF" } );
+    glpp::font_atlas  font ( font_loader.load ( "MODES___.TTF", 21, 96 ) );
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -330,8 +329,16 @@ int main ( int argc, char** argv ) {
         render_target.bind_texture_unit ( 1 );
         render_target.bind_texture_unit ( 2 );
 
-
         program.uniform ( "model", mirror.model() );
+        quad.bind().draw().unbind();
+
+        font.texture().bind();
+        font.texture().generate_mipmaps();
+        font.texture().bind_texture_unit ( 0 );
+        font.texture().bind_texture_unit ( 1 );
+        font.texture().bind_texture_unit ( 2 );
+
+        program.uniform ( "model", font_atlas.model() );
         quad.bind().draw().unbind();
 
         SDL_GL_SwapWindow ( WINDOW );

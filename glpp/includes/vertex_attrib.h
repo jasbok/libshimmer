@@ -110,10 +110,11 @@ template<typename T>
 class vertex_attrib_builder
 {
 public:
-    vertex_attrib_builder( const attrib& attrib )
+    explicit vertex_attrib_builder( const attrib& attrib )
         : _name ( attrib.name ),
           _size ( attrib.size ),
-          _location ( attrib.location )
+          _location ( attrib.location ),
+          _normalised ( false )
     {}
 
     vertex_attrib_builder& stride ( GLuint stride )       {

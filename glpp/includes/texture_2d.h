@@ -38,7 +38,7 @@ public:
         repeat          = GL_REPEAT
     };
 
-    texture_2d( enum internal_format internal_format );
+    explicit texture_2d( enum internal_format internal_format );
 
     texture_2d( texture_2d&& move );
 

@@ -14,18 +14,18 @@ public:
     attribute( GLint              location,
                const std::string& name );
 
-    attribute(attribute&& move);
+    attribute( attribute&& move );
 
-    attribute(const attribute& copy) = delete;
+    attribute( const attribute& copy ) = delete;
 
     virtual ~attribute();
 
-    attribute& operator=(attribute&& move);
+    attribute& operator=( attribute&& move );
 
-    attribute& operator=(const attribute& copy) = delete;
+    attribute& operator=( const attribute& copy ) = delete;
 
 
-    GLint location() const;
+    GLint       location() const;
 
     std::string name() const;
 

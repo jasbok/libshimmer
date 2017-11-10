@@ -32,7 +32,7 @@ class _buffer
         "Unsupported TARGET for buffer." );
 
 public:
-    _buffer( enum usage usage = usage::static_draw )
+    explicit _buffer( enum usage usage = usage::static_draw )
         : _handle ( 0 ),
           _usage ( usage ),
           _elements ( 0 ),

@@ -6,8 +6,6 @@
 
 using namespace glpp;
 
-const static glm::vec3 ENTITY_FORWARD = { 0.0f, 0.0f, 1.0f };
-
 entity::entity( const glm::vec3& position,
                 const glm::vec3& rotation,
                 const glm::vec3& scale )

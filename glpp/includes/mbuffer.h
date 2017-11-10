@@ -26,7 +26,7 @@ class _mbuffer : public _buffer<TARGET, THIS>
     typedef _buffer<TARGET, THIS> parent;
 
 public:
-    _mbuffer( enum usage usage = usage::static_draw )
+    explicit _mbuffer( enum usage usage = usage::static_draw )
         : parent ( usage )
     {}
 

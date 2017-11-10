@@ -148,6 +148,10 @@ then
     header "Running uncrustify on source files."
     cd $DIR
 
+    GLPP_SOURCE=($(find glpp \( -name *.h                   \
+                                            -o -name *.hpp              \
+                                            -o -name *.cpp \)))
+
     LIBSHIMMER_SOURCE=($(find libshimmer \( -name *.h                   \
                                             -o -name *.hpp              \
                                             -o -name *.cpp \)))
@@ -156,7 +160,9 @@ then
                                     -o -name *.hpp                      \
                                     -o -name *.cpp \)))
 
-    for src in "${LIBSHIMMER_SOURCE[@]}" "${SHIMS_SOURCE[@]}"
+    for src in  "${GLPP_SOURCE[@]}"                               \
+                "${LIBSHIMMER_SOURCE[@]}"                               \
+                "${SHIMS_SOURCE[@]}"
     do
         info "Running uncrustify on: $src"
 
@@ -182,6 +188,7 @@ then
                 --error-exitcode=1                          \
                 --quiet                                     \
                 --enable=all                                \
+                -I glpp/includes/                           \
                 -I libshimmer/includes/                     \
                 -I libshimmer/includes/api                  \
                 -I libshimmer/includes/keyboard             \
@@ -193,7 +200,7 @@ then
                 -I libshimmer/includes/renderer/opengl      \
                 -I libshimmer/includes/utilities            \
                 -I libshimmer/includes/window               \
-                libshimmer/ shims/                          \
+                glpp/ libshimmer/ shims/                          \
                 || err "Errors were reported by cppcheck."
 
     success "No errors were reported by cppcheck."

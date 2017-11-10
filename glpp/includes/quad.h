@@ -10,7 +10,7 @@ template<typename T>
 class quad
 {
 public:
-    quad( const dims_2<T>& dimensions )
+    explicit quad( const dims_2<T>& dimensions )
         : _dimensions(),
           _mesh()
     {

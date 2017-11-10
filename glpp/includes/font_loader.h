@@ -45,7 +45,7 @@ private:
 class font_loader
 {
 public:
-    font_loader( const std::vector<std::string>& paths );
+    explicit font_loader( const std::vector<std::string>& paths );
 
     virtual ~font_loader();
 

@@ -13,7 +13,7 @@ class resource_loader
 public:
     resource_loader();
 
-    resource_loader( const std::vector<std::string>& paths );
+    explicit resource_loader( const std::vector<std::string>& paths );
 
     virtual ~resource_loader() = default;
 

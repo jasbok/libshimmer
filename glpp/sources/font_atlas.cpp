@@ -1,7 +1,10 @@
 #include "font_atlas.h"
 
+#include "pixels.h"
+
 #include <algorithm>
 #include <cmath>
+#include <memory>
 
 using namespace glpp;
 using namespace std;
@@ -18,8 +21,11 @@ coords_2u atlas_glyph::atlas_coords()
 }
 
 font_atlas::font_atlas( std::vector<glyph>&& glyphs )
-    : _atlas_glyphs(), _texture ( texture::internal_format::red )
-{}
+    : _texture ( texture::internal_format::red ),
+      _atlas_glyphs()
+{
+    _get_atlas_glyphs ( glyphs );
+}
 
 font_atlas::~font_atlas() {}
 
@@ -49,51 +55,53 @@ unsigned int font_atlas::_upper_pow2 ( unsigned int i )
 void font_atlas::_get_atlas_glyphs ( std::vector<glyph>& glyphs )
 {
     std::sort ( glyphs.begin(), glyphs.end(), [] ( auto& a, auto& b ) {
-        return a.meta().dims().area() > b.meta().dims().area();
+        return a.meta().dims().height > b.meta().dims().height;
     } );
 
-    unsigned int area = 0;
+    unsigned int glyph_area = 0;
 
     for ( const auto& glyph : glyphs ) {
-        area += glyph.meta().dims().area();
+        glyph_area += (glyph.meta().dims() + dims_2u ( 1, 1 )).area();
     }
 
-    auto side = _upper_pow2 ( static_cast<unsigned int>(sqrt ( area )) );
-    area = side * side;
+    auto side = _upper_pow2 ( static_cast<unsigned int>(sqrt ( glyph_area )) );
+    auto area = side * side;
 
-    for (; _atlas_glyphs.empty(); side *= 2, area = side * side ) {
-        std::vector<bool> used ( area );
+    while ( _atlas_glyphs.empty() == true ) {
+        std::vector<uint8_t> used ( area );
 
-        for ( const auto& glyph : glyphs ) {
-            auto dims   = glyph.meta().dims();
+        for ( auto& glyph : glyphs ) {
+            auto dims   = glyph.meta().dims() + dims_2u ( 1, 1 );
             bool placed = false;
 
-            for ( unsigned int y = 0; y < side; y++ ) {
+            for ( unsigned int y = 0; y < side && !placed; y += 3 ) {
                 if ( y + dims.height >= side ) break;
 
-                unsigned int top    = y * side;
-                unsigned int bottom = (y + dims.height - 1) * side;
-
-                for ( unsigned int x = 0; x < side; x++ ) {
+                for ( unsigned int x = 0; x < side && !placed; x += 3 ) {
                     if ( x + dims.width >= side ) break;
 
-                    unsigned int tl = top + x;
+                    bool do_continue = false;
 
-                    if ( used[tl] ) continue;
+                    for ( unsigned int j = 0; j < dims.height; j += 3 ) {
+                        unsigned int jstep = (j + y) * side;
 
-                    if ( used[tl + dims.width - 1] ) continue;
+                        for ( unsigned int i = 0; i < dims.width; i += 3 ) {
+                            if ( used[jstep + x + i] ) {
+                                do_continue = true;
+                                break;
+                            }
+                        }
 
+                        if ( do_continue ) break;
+                    }
 
-                    unsigned int bl = bottom + x;
+                    if ( do_continue ) continue;
 
-                    if ( used[bl] ) continue;
+                    for ( unsigned int j = 0; j < dims.height; j += 3 ) {
+                        unsigned int jstep = (j + y) * side;
 
-                    if ( used[bl + dims.width - 1] ) continue;
-
-
-                    for ( unsigned int j = top; j <= bottom; j += side ) {
-                        for ( unsigned int i = 0; i < dims.width; i++ ) {
-                            used[j + i] = true;
+                        for ( unsigned int i = 0; i < dims.width; i += 3 ) {
+                            used[jstep + x + i] = true;
                         }
                     }
 
@@ -104,13 +112,19 @@ void font_atlas::_get_atlas_glyphs ( std::vector<glyph>& glyphs )
             }
 
             if ( !placed ) {
+                side = _upper_pow2 ( side + 1 );
+                area = side * side;
                 _atlas_glyphs.clear();
                 break;
             }
         }
     }
 
-    std::vector<uint8_t> atlas_data ( area );
+    std::unique_ptr<uint8_t> atlas_data ( new uint8_t[area] );
+
+    for ( unsigned int i = 0; i < area; i++ ) {
+        atlas_data.get()[i] = 0;
+    }
 
     for ( unsigned int i = 0; i < glyphs.size(); i++ ) {
         const auto& data   = glyphs[i].data();
@@ -118,11 +132,20 @@ void font_atlas::_get_atlas_glyphs ( std::vector<glyph>& glyphs )
         const auto& coords = _atlas_glyphs[i].atlas_coords();
 
         for ( unsigned int y = 0; y < dims.height; y++ ) {
-            unsigned int j = coords.y + y;
+            unsigned int j     = coords.y + y;
+            unsigned int ystep = y * dims.width;
+            unsigned int jstep = j * side;
 
             for ( unsigned int x = 0; x < dims.width; x++ ) {
                 unsigned int i = coords.x + x;
+                atlas_data.get()[jstep + i] = data[ystep + x];
             }
         }
     }
+
+    _texture.bind();
+    _texture.image ( pixels ( std::move ( atlas_data ),
+                              { side, side },
+                              pixels::format::red,
+                              pixels::type::gl_unsigned_byte ) );
 }

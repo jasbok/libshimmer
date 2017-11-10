@@ -51,7 +51,7 @@ public:
 
     enum internal_format internal_format() const;
 
-    texture&                 bind();
+    texture&             bind();
 
     void                 unbind();
 

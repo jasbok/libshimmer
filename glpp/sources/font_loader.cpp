@@ -101,7 +101,8 @@ glyph font_face::get_glyph ( wchar_t unicode ) const
     auto slot    = _face->glyph;
     auto metrics = slot->metrics;
 
-    dims_2u   dims ( metrics.width, metrics.height );
+    // dims_2u   dims ( metrics.width, metrics.height );
+    dims_2u   dims ( slot->bitmap.width, slot->bitmap.rows );
     coords_2i bearing ( metrics.horiBearingX, metrics.horiBearingY );
     coords_2i advance ( metrics.horiAdvance, metrics.vertAdvance );
     coords_2i vertical_bearing ( metrics.vertBearingX, metrics.vertBearingY );
@@ -155,17 +156,21 @@ vector<glyph> font_loader::load ( const string& path,
                                          0,
                                          &face );
 
+        if ( ft_err != FT_Err_Ok ) {
+            print_ft_error ( ft_err, "Could not load font: " + font_path );
+            continue;
+        }
+
         try {
             return _convert_to_glyphs ( font_face ( _ft,
                                                     font_path,
                                                     size,
                                                     dpi ) );
         }
-        catch ( exception ex ) {
-            //            cerr << "Unable to load font, checking search path...
-            // "
-            //                 << "(" << path << "): "
-            //                 << ex.what() << std::endl;
+        catch ( const exception& ex ) {
+            cerr << "Unable to load font, checking search path..."
+                 << "(" << path << "): "
+                 << ex.what() << std::endl;
         }
     }
 
@@ -176,11 +181,16 @@ std::vector<glyph> font_loader::_convert_to_glyphs ( const font_face& face )
 {
     std::vector<glyph> glyphs;
 
-    for ( unsigned int c = 0x00000; c < 0x00080; c++ ) {
+    for ( unsigned int c = 0x00000; c < 0x00200; c++ ) {
         try {
-            glyphs.push_back ( face.get_glyph ( c ) );
+            auto glyph = face.get_glyph ( c );
+            auto dims  = glyph.meta().dims();
+
+            if ( (dims.width > 0) && (dims.height > 0) ) {
+                glyphs.push_back ( std::move ( glyph ) );
+            }
         }
-        catch ( exception ex ) {}
+        catch ( const exception& ex ) {}
     }
 
     return glyphs;

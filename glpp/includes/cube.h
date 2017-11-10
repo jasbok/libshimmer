@@ -10,7 +10,7 @@ template<typename T>
 class cube
 {
 public:
-    cube( const dims_3<T>& dimensions )
+    explicit cube( const dims_3<T>& dimensions )
         : _dimensions(),
           _mesh()
     {

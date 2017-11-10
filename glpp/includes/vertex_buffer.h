@@ -16,7 +16,7 @@ class vertex_buffer : public _mbuffer<GL_ARRAY_BUFFER,
     typedef _mbuffer<GL_ARRAY_BUFFER, vertex_buffer<T>> parent;
 
 public:
-    vertex_buffer( enum usage usage = usage::static_draw )
+    explicit vertex_buffer( enum usage usage = usage::static_draw )
         : parent ( usage )
     {}
 

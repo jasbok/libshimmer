@@ -61,20 +61,20 @@ private:
 class glyph
 {
 public:
-    glyph( const glyph_metadata& meta );
+    explicit glyph( const glyph_metadata& meta );
 
     glyph( const glyph_metadata&  meta,
            std::vector<uint8_t>&& data );
 
     glyph( glyph&& move );
 
-    glyph( const glyph& copy ) = delete;
+    glyph( const glyph& copy ) = default;
 
     virtual ~glyph();
 
     glyph& operator=( glyph&& move );
 
-    glyph& operator=( const glyph& copy ) = delete;
+    glyph& operator=( const glyph& copy ) = default;
 
 
     glyph_metadata        meta() const;

@@ -4,14 +4,16 @@ static const glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };
 
 glpp::camera::camera()
     : _position ( 0, 0, 0 ),
-      _rotation ( 0, 0, 0 )
+      _rotation ( 0, 0, 0 ),
+      _require_update ( false )
 {
     update();
 }
 
 glpp::camera::camera( glm::vec3 position, glm::vec3 rotation )
     : _position ( position ),
-      _rotation ( rotation )
+      _rotation ( rotation ),
+      _require_update ( false )
 {
     update();
 }

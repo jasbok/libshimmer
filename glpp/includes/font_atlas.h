@@ -31,7 +31,7 @@ private:
 class font_atlas
 {
 public:
-    font_atlas( std::vector<glyph>&& glyphs );
+    explicit font_atlas( std::vector<glyph>&& glyphs );
 
     font_atlas( font_atlas&& move );
 
