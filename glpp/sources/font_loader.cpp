@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <iterator>
 
 using namespace glpp;
 using namespace std;
@@ -19,47 +20,102 @@ void print_ft_error(FT_Error ft_err, const string& label)
 
 // *INDENT-ON*
 
-font_face::font_face( const FT_Library&  ft,
-                      const std::string& path,
-                      unsigned int       size,
-                      unsigned int       dpi )
-    : _face(),
+font_spec::font_spec( const string&           id,
+                      const string&           path,
+                      unsigned int            size,
+                      std::vector<range_uint> unicodes )
+    : _id ( id ),
       _path ( path ),
       _size ( size ),
+      _unicodes ( unicodes )
+{}
+
+font_spec& font_spec::path ( const string& path )
+{
+    _path = path;
+
+    return *this;
+}
+
+string font_spec::path() const
+{
+    return _path;
+}
+
+font_spec& font_spec::id ( const string& id )
+{
+    _id = id;
+
+    return *this;
+}
+
+string font_spec::id() const
+{
+    return _id;
+}
+
+font_spec& font_spec::size ( unsigned int size )
+{
+    _size = size;
+
+    return *this;
+}
+
+unsigned int font_spec::size() const
+{
+    return _size;
+}
+
+font_spec& font_spec::unicodes ( const std::vector<range_uint>& unicodes )
+{
+    _unicodes = unicodes;
+
+    return *this;
+}
+
+std::vector<range_uint> font_spec::unicodes() const
+{
+    return _unicodes;
+}
+
+font_face::font_face( const FT_Library& ft,
+                      const font_spec&  font,
+                      unsigned int      dpi )
+    : _face(),
+      _font ( font ),
       _dpi ( dpi )
 {
     auto ft_err = FT_New_Face ( ft,
-                                _path.c_str(),
+                                _font.path().c_str(),
                                 0,
                                 &_face );
 
     if ( ft_err == FT_Err_Unknown_File_Format )
     {
-        print_ft_error ( ft_err, path );
+        print_ft_error ( ft_err, _font.path() );
         throw font_not_supported_exception();
     }
     else if ( ft_err != FT_Err_Ok )
     {
-        print_ft_error ( ft_err, path );
+        print_ft_error ( ft_err, _font.path() );
         throw font_not_found_exception();
     }
 
     ft_err = FT_Set_Char_Size ( _face,
                                 0,
-                                _size * 64,
+                                _font.size() * 64,
                                 0,
                                 _dpi );
 
     if ( ft_err != FT_Err_Ok ) {
-        print_ft_error ( ft_err, path );
+        print_ft_error ( ft_err, _font.path() );
         throw unsupported_font_size_exception();
     }
 }
 
 font_face::font_face( font_face&& move )
     : _face ( move._face ),
-      _path ( std::move ( move._path ) ),
-      _size ( move._size ),
+      _font ( move._font ),
       _dpi ( move._dpi )
 {
     move._face = nullptr;
@@ -73,13 +129,17 @@ font_face::~font_face()
 font_face& font_face::operator=( font_face&& move )
 {
     _face = move._face;
-    _path = std::move ( move._path );
-    _size = move._size;
+    _font = move._font;
     _dpi  = move._dpi;
 
     move._face = nullptr;
 
     return *this;
+}
+
+font_spec font_face::font() const
+{
+    return _font;
 }
 
 glyph font_face::get_glyph ( wchar_t unicode ) const
@@ -101,7 +161,6 @@ glyph font_face::get_glyph ( wchar_t unicode ) const
     auto slot    = _face->glyph;
     auto metrics = slot->metrics;
 
-    // dims_2u   dims ( metrics.width, metrics.height );
     dims_2u   dims ( slot->bitmap.width, slot->bitmap.rows );
     coords_2i bearing ( metrics.horiBearingX, metrics.horiBearingY );
     coords_2i advance ( metrics.horiAdvance, metrics.vertAdvance );
@@ -109,11 +168,13 @@ glyph font_face::get_glyph ( wchar_t unicode ) const
 
     glyph_metadata meta = FT_HAS_VERTICAL ( _face )
                           ? glyph_metadata ( unicode,
+                                             _font.id(),
                                              dims,
                                              bearing,
                                              advance )
 
                           : glyph_metadata ( unicode,
+                                             _font.id(),
                                              dims,
                                              bearing,
                                              advance,
@@ -143,33 +204,19 @@ font_loader::~font_loader()
     FT_Done_FreeType ( _ft );
 }
 
-vector<glyph> font_loader::load ( const string& path,
-                                  unsigned int  size,
-                                  unsigned int  dpi )
+vector<glyph> font_loader::load ( const font_spec& font,
+                                  unsigned int     dpi )
 {
-    FT_Face face;
-
     for ( const auto& search_path : _search_paths ) {
-        string font_path = search_path + "/" + path;
-        auto   ft_err    = FT_New_Face ( _ft,
-                                         font_path.c_str(),
-                                         0,
-                                         &face );
-
-        if ( ft_err != FT_Err_Ok ) {
-            print_ft_error ( ft_err, "Could not load font: " + font_path );
-            continue;
-        }
-
         try {
-            return _convert_to_glyphs ( font_face ( _ft,
-                                                    font_path,
-                                                    size,
-                                                    dpi ) );
+            font_spec curr = font;
+            curr.path ( search_path + "/" + font.path() );
+
+            return _convert_to_glyphs ( font_face ( _ft, curr, dpi ) );
         }
         catch ( const exception& ex ) {
-            cerr << "Unable to load font, checking search path..."
-                 << "(" << path << "): "
+            cerr << "Unable to load font, checking search path... "
+                 << "(" << font.path() << "): "
                  << ex.what() << std::endl;
         }
     }
@@ -177,21 +224,37 @@ vector<glyph> font_loader::load ( const string& path,
     throw font_not_found_exception();
 }
 
+std::vector<glyph> font_loader::load ( const std::vector<font_spec>& fonts,
+                                       unsigned int                  dpi )
+{
+    std::vector<glyph> results;
+
+    for ( const auto& font : fonts ) {
+        auto glyphs = load ( font, dpi );
+        std::move ( glyphs.begin(), glyphs.end(), back_inserter ( results ) );
+    }
+
+    return results;
+}
+
 std::vector<glyph> font_loader::_convert_to_glyphs ( const font_face& face )
 {
     std::vector<glyph> glyphs;
 
-    for ( unsigned int c = 0x00000; c < 0x00200; c++ ) {
-        try {
-            auto glyph = face.get_glyph ( c );
-            auto dims  = glyph.meta().dims();
+    for ( auto range : face.font().unicodes() ) {
+        for ( unsigned int c = range.start; c < range.end; c++ ) {
+            try {
+                auto glyph = face.get_glyph ( c );
+                auto dims  = glyph.meta().dims();
 
-            if ( (dims.width > 0) && (dims.height > 0) ) {
-                glyphs.push_back ( std::move ( glyph ) );
+                if ( (dims.width > 0) && (dims.height > 0) ) {
+                    glyphs.push_back ( std::move ( glyph ) );
+                }
             }
+            catch ( const exception& ex ) {}
         }
-        catch ( const exception& ex ) {}
     }
+
 
     return glyphs;
 }

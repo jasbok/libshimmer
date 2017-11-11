@@ -12,13 +12,59 @@
 
 namespace glpp
 {
+class font_spec
+{
+public:
+    font_spec() = delete;
+
+    font_spec( const std::string&      id,
+               const std::string&      path,
+               unsigned int            size,
+               std::vector<range_uint> unicodes );
+
+    font_spec( font_spec&& move ) = default;
+
+    font_spec( const font_spec& copy ) = default;
+
+    virtual ~font_spec() = default;
+
+    font_spec& operator=( font_spec&& move ) = default;
+
+    font_spec& operator=( const font_spec& copy ) = default;
+
+
+    font_spec&              id ( const std::string& id );
+
+    std::string             id() const;
+
+    font_spec&              path ( const std::string& path );
+
+    std::string             path() const;
+
+    font_spec&              size ( unsigned int size );
+
+    unsigned int            size() const;
+
+    font_spec&              unicodes ( const std::vector<range_uint>& unicodes );
+
+    std::vector<range_uint> unicodes() const;
+
+private:
+    std::string _id;
+
+    std::string _path;
+
+    unsigned int _size;
+
+    std::vector<range_uint> _unicodes;
+};
+
 class font_face
 {
 public:
-    font_face( const FT_Library&  ft,
-               const std::string& path,
-               unsigned int       size,
-               unsigned int       dpi = 72 );
+    font_face( const FT_Library& ft,
+               const font_spec&  font,
+               unsigned int      dpi = 72 );
 
     font_face( font_face&& move );
 
@@ -30,14 +76,14 @@ public:
 
     font_face& operator=( const font_face& copy ) = delete;
 
+    font_spec  font() const;
+
     glyph      get_glyph ( wchar_t unicode ) const;
 
 private:
     FT_Face _face;
 
-    std::string _path;
-
-    unsigned int _size;
+    font_spec _font;
 
     unsigned int _dpi;
 };
@@ -49,9 +95,11 @@ public:
 
     virtual ~font_loader();
 
-    std::vector<glyph> load ( const std::string& path,
-                              unsigned int       size,
-                              unsigned int       dpi = 72 );
+    std::vector<glyph> load ( const font_spec& font,
+                              unsigned int     dpi = 72 );
+
+    std::vector<glyph> load ( const std::vector<font_spec>& fonts,
+                              unsigned int                  dpi = 72 );
 
 private:
     std::vector<std::string> _search_paths;

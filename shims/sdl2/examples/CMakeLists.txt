@@ -19,6 +19,10 @@ configure_file(${DATA_GLSL_SRC}/example.frag ${DATA_GLSL_DEST}/example.frag COPY
 configure_file(${DATA_GLSL_SRC}/example.vert ${DATA_GLSL_DEST}/example.vert COPYONLY)
 
 configure_file(${DATA_FONTS_SRC}/mode_seven/MODES___.TTF ${DATA_FONTS_DEST}/MODES___.TTF COPYONLY)
+configure_file(${DATA_FONTS_SRC}/xolonium/Xolonium-Regular.ttf ${DATA_FONTS_DEST}/Xolonium-Regular.ttf COPYONLY)
+configure_file(${DATA_FONTS_SRC}/xolonium/Xolonium-Bold.ttf ${DATA_FONTS_DEST}/Xolonium-Bold.ttf COPYONLY)
+configure_file(${DATA_FONTS_SRC}/xolonium/Xolonium-Regular.otf ${DATA_FONTS_DEST}/Xolonium-Regular.otf COPYONLY)
+configure_file(${DATA_FONTS_SRC}/xolonium/Xolonium-Bold.otf ${DATA_FONTS_DEST}/Xolonium-Bold.otf COPYONLY)
 
 ###############################################################################
 #   Set include directories.

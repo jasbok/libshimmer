@@ -3,11 +3,13 @@
 using namespace glpp;
 using namespace std;
 
-glyph_metadata::glyph_metadata( wchar_t          unicode,
-                                const dims_2u&   dims,
-                                const coords_2i& bearing,
-                                const coords_2i& advance )
+glyph_metadata::glyph_metadata( wchar_t            unicode,
+                                const std::string& group,
+                                const dims_2u&     dims,
+                                const coords_2i&   bearing,
+                                const coords_2i&   advance )
     : _unicode ( unicode ),
+      _group ( group ),
       _dims ( dims ),
       _bearing ( bearing ),
       _advance ( advance ),
@@ -15,12 +17,14 @@ glyph_metadata::glyph_metadata( wchar_t          unicode,
       _vertical_bearing()
 {}
 
-glyph_metadata::glyph_metadata( wchar_t          unicode,
-                                const dims_2u&   dims,
-                                const coords_2i& bearing,
-                                const coords_2i& advance,
-                                const coords_2i& vertical_bearing )
+glyph_metadata::glyph_metadata( wchar_t            unicode,
+                                const std::string& group,
+                                const dims_2u&     dims,
+                                const coords_2i&   bearing,
+                                const coords_2i&   advance,
+                                const coords_2i&   vertical_bearing )
     : _unicode ( unicode ),
+      _group ( group ),
       _dims ( dims ),
       _bearing ( bearing ),
       _advance ( advance ),
@@ -31,6 +35,11 @@ glyph_metadata::glyph_metadata( wchar_t          unicode,
 unsigned int glyph_metadata::unicode() const
 {
     return _unicode;
+}
+
+string glyph_metadata::group() const
+{
+    return _group;
 }
 
 dims_2u glyph_metadata::dims() const

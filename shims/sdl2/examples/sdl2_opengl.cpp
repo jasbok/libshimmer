@@ -6,8 +6,8 @@ SDL_Window*   WINDOW;
 SDL_Renderer* RENDERER;
 
 SDL_GLContext GL_CONTEXT;
-static const unsigned int SCREEN_WIDTH  = 800;
-static const unsigned int SCREEN_HEIGHT = 480;
+static const unsigned int SCREEN_WIDTH  = 1600;
+static const unsigned int SCREEN_HEIGHT = 900;
 
 static const unsigned int RENDER_TARGET_WIDTH  = 320;
 static const unsigned int RENDER_TARGET_HEIGHT = 240;
@@ -265,8 +265,30 @@ int main ( int argc, char** argv ) {
     float factor = 0.0f;
     float update = 0.001f;
 
-    glpp::font_loader font_loader ( { "data/fonts", "/usr/share/fonts/TTF" } );
-    glpp::font_atlas  font ( font_loader.load ( "MODES___.TTF", 21, 96 ) );
+    glpp::font_loader font_loader ( { "data/fonts" } );
+
+    std::vector<glpp::range_uint> unicodes = {
+        glpp::unicodes::basic_latin,
+        glpp::unicodes::latin_1_supplement,
+        glpp::unicodes::latin_extended_a,
+        glpp::unicodes::latin_extended_b,
+        glpp::unicodes::greek_and_coptic
+    };
+
+    auto glyphs = font_loader.load ( {
+        { "mode_seven_13", "MODES___.TTF", 13, unicodes },
+        { "xolonium_regular_13", "Xolonium-Regular.ttf", 13, unicodes },
+        { "xolonium_bold_13", "Xolonium-Bold.ttf", 13, unicodes },
+        { "mode_seven_21", "MODES___.TTF", 21, unicodes },
+        { "xolonium_regular_21", "Xolonium-Regular.otf", 21, unicodes },
+        { "xolonium_bold_21", "Xolonium-Bold.otf", 21, unicodes }
+    }, 96 );
+
+    glpp::font_atlas font ( std::move ( glyphs ), 7, 1.025 );
+
+    //    font.texture().bind();
+    //    font.texture().filters ( glpp::texture_2d::filter::nearest )
+    //        .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );

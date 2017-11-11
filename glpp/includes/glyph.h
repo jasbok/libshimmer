@@ -10,16 +10,18 @@ namespace glpp
 class glyph_metadata
 {
 public:
-    glyph_metadata( wchar_t          unicode,
-                    const dims_2u&   dims,
-                    const coords_2i& bearing,
-                    const coords_2i& advance );
+    glyph_metadata( wchar_t            unicode,
+                    const std::string& group,
+                    const dims_2u&     dims,
+                    const coords_2i&   bearing,
+                    const coords_2i&   advance );
 
-    glyph_metadata( wchar_t          unicode,
-                    const dims_2u&   dims,
-                    const coords_2i& bearing,
-                    const coords_2i& advance,
-                    const coords_2i& vertical_bearing );
+    glyph_metadata( wchar_t            unicode,
+                    const std::string& group,
+                    const dims_2u&     dims,
+                    const coords_2i&   bearing,
+                    const coords_2i&   advance,
+                    const coords_2i&   vertical_bearing );
 
     glyph_metadata( glyph_metadata&& move ) = default;
 
@@ -34,6 +36,8 @@ public:
 
     unsigned int unicode() const;
 
+    std::string  group() const;
+
     dims_2u      dims() const;
 
     coords_2i    bearing() const;
@@ -46,6 +50,8 @@ public:
 
 private:
     wchar_t _unicode;
+
+    std::string _group;
 
     dims_2u _dims;
 

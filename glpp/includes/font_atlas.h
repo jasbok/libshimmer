@@ -4,8 +4,19 @@
 #include "glyph.h"
 #include "texture_2d.h"
 
+#include <unordered_map>
+
 namespace glpp
 {
+struct atlas_coords {
+    atlas_coords( const coords_2u& coords,
+                  const dims_2u&   dims );
+
+    void normalise ( float factor );
+
+    coords_2f tl, tr, bl, br;
+};
+
 class atlas_glyph : public glyph_metadata
 {
 public:
@@ -18,20 +29,22 @@ public:
 
     virtual ~atlas_glyph() = default;
 
-    atlas_glyph& operator=( atlas_glyph&& move ) = default;
+    atlas_glyph&        operator=( atlas_glyph&& move ) = default;
 
-    atlas_glyph& operator=( const atlas_glyph& copy ) = default;
+    atlas_glyph&        operator=( const atlas_glyph& copy ) = default;
 
-    coords_2u    atlas_coords();
+    struct atlas_coords atlas_coords();
 
 private:
-    coords_2u _atlas_coords;
+    struct atlas_coords _atlas_coords;
 };
 
 class font_atlas
 {
 public:
-    explicit font_atlas( std::vector<glyph>&& glyphs );
+    explicit font_atlas( std::vector<glyph>&& glyphs,
+                         unsigned int         spacing = 7,
+                         float                resize_rate = 1.05 );
 
     font_atlas( font_atlas&& move );
 
@@ -44,18 +57,58 @@ public:
     font_atlas& operator=( const font_atlas& copy ) = delete;
 
 
-    texture_2d&               texture();
+    texture_2d&  texture();
 
-    std::vector<atlas_glyph>& glyphs();
+    unsigned int size() const;
+
+    unsigned int spacing() const;
 
 private:
+    typedef std::unordered_map<unsigned int, atlas_glyph> glyph_map;
+    typedef std::unordered_map<std::string, glyph_map>    group_map;
+
     texture_2d _texture;
 
-    std::vector<atlas_glyph> _atlas_glyphs;
+    unsigned int _spacing;
 
-    unsigned int _upper_pow2 ( unsigned int i );
+    unsigned int _size;
 
-    void         _get_atlas_glyphs ( std::vector<glyph>& glyphs );
+    group_map _atlas_glyphs;
+
+    float _resize_rate;
+
+
+    void _calculate_atlas_size ( std::vector<glyph>& glyphs );
+
+    void _design_atlas ( std::vector<glyph>& glyphs );
+
+    void _draw_atlas ( std::vector<glyph>& glyphs );
+
+    void _normalise_coordinates();
+
+
+    void                _increase_size();
+
+    inline unsigned int _correct_texture_size ( unsigned int size );
+
+
+    bool _place ( const std::vector<glyph>& glyphs );
+
+    bool _place ( const glyph&          glyph,
+                  std::vector<uint8_t>& surface );
+
+    void _add_glyph ( const glyph&     glyph,
+                      const coords_2u& coords );
+
+    atlas_glyph& _get_atlas_glyph ( const glyph& glyph  );
+
+    bool         _is_claimed ( const std::vector<uint8_t>& surface,
+                               const coords_2u&            coords,
+                               const dims_2u&              dims );
+
+    void _claim_surface ( std::vector<uint8_t>& surface,
+                          const coords_2u&      coords,
+                          const dims_2u&        dims );
 };
 }
 

@@ -28,11 +28,11 @@ struct coords_2 {
     coords_2& operator=( const coords_2& copy ) = default;
 
 
-    bool operator==( const coords_2& comp ) {
+    bool operator==( const coords_2& comp ) const {
         return x == comp.x && y == comp.y;
     }
 
-    bool operator!=( const coords_2& comp ) {
+    bool operator!=( const coords_2& comp ) const {
         return x != comp.x || y != comp.y;
     }
 
@@ -44,16 +44,27 @@ struct coords_2 {
         return { x - op.x, y - op.y };
     }
 
-    coords_2& operator+=( const coords_2& op ) {
+    coords_2 operator*( const coords_2& op ) {
+        return { x* op.x, y* op.y };
+    }
+
+    coords_2& operator+=( const coords_2& op ) const {
         x += op.x;
         y += op.y;
 
         return *this;
     }
 
-    coords_2& operator-=( const coords_2& op ) {
+    coords_2& operator-=( const coords_2& op ) const {
         x -= op.x;
         y -= op.y;
+
+        return *this;
+    }
+
+    coords_2& operator*=( float factor ) {
+        x *= factor;
+        y *= factor;
 
         return *this;
     }
@@ -85,11 +96,11 @@ struct coords_3 {
     coords_3& operator=( const coords_3& copy ) = default;
 
 
-    bool operator==( const coords_3& comp ) {
+    bool operator==( const coords_3& comp ) const {
         return x == comp.x && y == comp.y && z == comp.z;
     }
 
-    bool operator!=( const coords_3& comp ) {
+    bool operator!=( const coords_3& comp ) const {
         return x != comp.x || y != comp.y || z != comp.z;
     }
 
@@ -98,7 +109,11 @@ struct coords_3 {
     }
 
     coords_3 operator-( const coords_3& op ) {
-        return { x - op.x, y - op.y, z + op.z };
+        return { x - op.x, y - op.y, z - op.z };
+    }
+
+    coords_3 operator*( const coords_3& op ) {
+        return { x* op.x, y* op.y, z* op.z };
     }
 
     coords_3& operator+=( const coords_3& op ) {
@@ -113,6 +128,14 @@ struct coords_3 {
         x -= op.x;
         y -= op.y;
         z -= op.z;
+
+        return *this;
+    }
+
+    coords_3& operator*=( float factor ) {
+        x *= factor;
+        y *= factor;
+        z *= factor;
 
         return *this;
     }
@@ -145,11 +168,11 @@ struct dims_2 {
     dims_2& operator=( const dims_2& copy ) = default;
 
 
-    bool operator==( const dims_2& comp ) {
+    bool operator==( const dims_2& comp ) const {
         return width == comp.width && height == comp.height;
     }
 
-    bool operator!=( const dims_2& comp ) {
+    bool operator!=( const dims_2& comp ) const {
         return width != comp.width || height != comp.height;
     }
 
@@ -159,6 +182,10 @@ struct dims_2 {
 
     dims_2 operator-( const dims_2& op ) {
         return { width - op.width, height - op.height };
+    }
+
+    dims_2 operator*( const dims_2& op ) {
+        return { width* op.width, height* op.height };
     }
 
     dims_2& operator+=( const dims_2& op ) {
@@ -171,6 +198,13 @@ struct dims_2 {
     dims_2& operator-=( const dims_2& op ) {
         width  -= op.width;
         height -= op.height;
+
+        return *this;
+    }
+
+    dims_2& operator*=( float factor ) {
+        width  *= factor;
+        height *= factor;
 
         return *this;
     }
@@ -206,13 +240,13 @@ struct dims_3 {
     dims_3& operator=( const dims_3& copy ) = default;
 
 
-    bool operator==( const dims_3& comp ) {
+    bool operator==( const dims_3& comp ) const {
         return width == comp.width
                && height == comp.height
                && depth == comp.depth;
     }
 
-    bool operator!=( const dims_3& comp ) {
+    bool operator!=( const dims_3& comp ) const {
         return width != comp.width
                || height != comp.height
                || depth != comp.depth;
@@ -224,6 +258,10 @@ struct dims_3 {
 
     dims_3 operator-( const dims_3& op ) {
         return { width - op.width, height - op.height, depth - op.depth };
+    }
+
+    dims_3 operator*( const dims_3& op ) {
+        return { width* op.width, height* op.height, depth* op.depth };
     }
 
     dims_3& operator+=( const dims_3& op ) {
@@ -242,6 +280,14 @@ struct dims_3 {
         return *this;
     }
 
+    dims_3& operator*=( float factor ) {
+        width  *= factor;
+        height *= factor;
+        depth  *= factor;
+
+        return *this;
+    }
+
     T volume() const {
         return width * height * depth;
     }
@@ -253,10 +299,62 @@ struct dims_3 {
     }
 };
 
-typedef coords_2<GLint>  coords_2i;
+typedef coords_2<GLint> coords_2i;
+
 typedef coords_2<GLuint> coords_2u;
-typedef dims_2<GLuint>   dims_2u;
-typedef dims_2<GLfloat>  dims_2f;
+
+typedef coords_2<GLfloat> coords_2f;
+
+typedef dims_2<GLuint> dims_2u;
+
+typedef dims_2<GLfloat> dims_2f;
+
+
+template<typename T>
+struct range {
+    T start, end;
+
+    range() = delete;
+
+    range( T start, T end )
+        : start ( start ), end ( end ) {}
+
+    range( range&& move ) = default;
+
+    range( const range& copy ) = default;
+
+    virtual ~range() = default;
+
+    range& operator=( range&& move ) = default;
+
+    range& operator=( const range& copy ) = default;
+
+
+    bool operator==( const range& comp ) const {
+        return start == comp.start && end == comp.end;
+    }
+
+    bool operator!=( const range& comp ) const {
+        return start != comp.start || end != comp.end;
+    }
+
+    std::string to_json() const {
+        return "{start:" + std::to_string ( start )
+               + ",end:" + std::to_string ( end ) + "}";
+    }
+};
+
+typedef range<unsigned int> range_uint;
+
+namespace unicodes
+{
+static range_uint control_character { 0x00000, 0x00020 };
+static range_uint basic_latin { 0x00020, 0x00080 };
+static range_uint latin_1_supplement { 0x00080, 0x00100 };
+static range_uint latin_extended_a { 0x00100, 0x00180 };
+static range_uint latin_extended_b { 0x00180, 0x00250 };
+static range_uint greek_and_coptic { 0x00370, 0x00400 };
+}
 }
 
 #endif // ifndef GLPP_SPECS_H
