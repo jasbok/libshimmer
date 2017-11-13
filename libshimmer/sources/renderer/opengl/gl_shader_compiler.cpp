@@ -20,7 +20,7 @@ GLuint gl_shader_compiler::compile (
         return 0;
     }
 
-    if ( (type != GL_FRAGMENT_SHADER) && (type != GL_VERTEX_SHADER) ) {
+    if ( ( type != GL_FRAGMENT_SHADER ) && ( type != GL_VERTEX_SHADER ) ) {
         LOGGER->error ( "Incorrect GL type provided to compiler: {}", type );
 
         return 0;

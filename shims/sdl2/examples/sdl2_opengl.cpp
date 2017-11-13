@@ -36,9 +36,9 @@ void poll_events() {
         if ( event.type == SDL_QUIT ) {
             RUNNING = false;
         }
-        else if ( (event.type == SDL_MOUSEBUTTONDOWN)
-                  || (event.type == SDL_MOUSEBUTTONUP) ) {
-            bool button_down = (event.type == SDL_MOUSEBUTTONDOWN);
+        else if ( ( event.type == SDL_MOUSEBUTTONDOWN )
+                  || ( event.type == SDL_MOUSEBUTTONUP ) ) {
+            bool button_down = ( event.type == SDL_MOUSEBUTTONDOWN );
 
             switch ( event.button.button ) {
             case SDL_BUTTON_LEFT:
@@ -50,8 +50,8 @@ void poll_events() {
                 break;
             }
         }
-        else if ( (event.type == SDL_KEYDOWN)
-                  || (event.type == SDL_KEYUP) ) {
+        else if ( ( event.type == SDL_KEYDOWN )
+                  || ( event.type == SDL_KEYUP ) ) {
             bool key_down = event.type == SDL_KEYDOWN;
 
             switch ( event.key.keysym.sym ) {
@@ -132,13 +132,13 @@ int init_opengl() {
         return sdl_error ( "Error) Unable to initialise SDL2: ", false );
     }
 
-    if ( (WINDOW = SDL_CreateWindow ( "SDL2 Example",
-                                      100,
-                                      100,
-                                      SCREEN_WIDTH,
-                                      SCREEN_HEIGHT,
-                                      SDL_WINDOW_OPENGL |
-                                      SDL_WINDOW_SHOWN )) == nullptr ) {
+    if ( ( WINDOW = SDL_CreateWindow ( "SDL2 Example",
+                                       100,
+                                       100,
+                                       SCREEN_WIDTH,
+                                       SCREEN_HEIGHT,
+                                       SDL_WINDOW_OPENGL |
+                                       SDL_WINDOW_SHOWN ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 window: " );
     }
 
@@ -149,7 +149,7 @@ int init_opengl() {
     SDL_GL_SetAttribute ( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
     SDL_GL_SetAttribute ( SDL_GL_DOUBLEBUFFER,          1 );
 
-    if ( (GL_CONTEXT = SDL_GL_CreateContext ( WINDOW )) == nullptr ) {
+    if ( ( GL_CONTEXT = SDL_GL_CreateContext ( WINDOW ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create OpenGL context: " );
     }
 
@@ -183,21 +183,25 @@ int main ( int argc, char** argv ) {
     glpp::texture_2d texture_c      = loader.texture_2d ( "doom.gif" );
     glpp::texture_2d texture_cursor = loader.texture_2d ( "cursor.png" );
 
-    int texture_a_unit = 1;
-    int texture_b_unit = 2;
-    int texture_c_unit = 0;
 
-    texture_a.bind_texture_unit ( texture_a_unit )
-        .filters ( glpp::texture_2d::filter::nearest )
+    texture_a.bind();
+    texture_a.filters ( glpp::texture_2d::filter::nearest )
         .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
-    texture_b.bind_texture_unit ( texture_b_unit )
-        .filters ( glpp::texture_2d::filter::nearest )
+    texture_b.bind();
+    texture_b.filters ( glpp::texture_2d::filter::nearest )
         .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
-    texture_c.bind_texture_unit ( texture_c_unit )
-        .filters ( glpp::texture_2d::filter::nearest )
+    texture_c.bind();
+    texture_c.filters ( glpp::texture_2d::filter::nearest )
         .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
+
+
+    glpp::texture_units cube_textures ( {
+        std::make_shared<glpp::texture_2d>( std::move ( texture_c ) ),
+        std::make_shared<glpp::texture_2d>( std::move ( texture_b ) ),
+        std::make_shared<glpp::texture_2d>( std::move ( texture_a ) )
+    } );
 
     glpp::framebuffer fbo;
 
@@ -263,32 +267,42 @@ int main ( int argc, char** argv ) {
     program.uniform ( "projection", projection );
 
     float factor = 0.0f;
-    float update = 0.001f;
+    float update = 0.0005f;
 
     glpp::font_loader font_loader ( { "data/fonts" } );
 
     std::vector<glpp::range_uint> unicodes = {
         glpp::unicodes::basic_latin,
-        glpp::unicodes::latin_1_supplement,
-        glpp::unicodes::latin_extended_a,
-        glpp::unicodes::latin_extended_b,
-        glpp::unicodes::greek_and_coptic
+
+        //        glpp::unicodes::latin_1_supplement,
+        //        glpp::unicodes::latin_extended_a,
+        //        glpp::unicodes::latin_extended_b,
+        //        glpp::unicodes::greek_and_coptic
     };
 
     auto glyphs = font_loader.load ( {
         { "mode_seven_13", "MODES___.TTF", 13, unicodes },
         { "xolonium_regular_13", "Xolonium-Regular.ttf", 13, unicodes },
         { "xolonium_bold_13", "Xolonium-Bold.ttf", 13, unicodes },
-        { "mode_seven_21", "MODES___.TTF", 21, unicodes },
-        { "xolonium_regular_21", "Xolonium-Regular.otf", 21, unicodes },
-        { "xolonium_bold_21", "Xolonium-Bold.otf", 21, unicodes }
+
+        //        { "mode_seven_21", "MODES___.TTF", 21, unicodes },
+        //        { "xolonium_regular_21", "Xolonium-Regular.otf", 21, unicodes
+        // },
+        //        { "xolonium_bold_21", "Xolonium-Bold.otf", 21, unicodes }
     }, 96 );
 
     glpp::font_atlas font ( std::move ( glyphs ), 7, 1.025 );
 
-    //    font.texture().bind();
-    //    font.texture().filters ( glpp::texture_2d::filter::nearest )
-    //        .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
+    font.texture().bind();
+    font.texture()
+
+    // .filters ( glpp::texture_2d::filter::nearest )
+    // .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat )
+        .generate_mipmaps();
+
+    // std::shared_ptr<glpp::texture_2d> atlas_texture ( &font.texture() );
+
+    // glpp::texture_units atlas_textures ( { atlas_texture, atlas_texture } );
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -300,14 +314,13 @@ int main ( int argc, char** argv ) {
         program.uniform ( "blend_factor", factor );
 
         if ( factor == 0.0f ) {
-            texture_a_unit = --texture_a_unit < 0 ? 2 : texture_a_unit;
-            texture_b_unit = --texture_b_unit < 0 ? 2 : texture_b_unit;
-            texture_c_unit = --texture_c_unit < 0 ? 2 : texture_c_unit;
+            auto& textures = cube_textures.textures();
+            auto  back     = textures.back();
+            textures.pop_back();
+            textures.insert ( textures.begin(), back );
         }
 
-        texture_a.bind_texture_unit ( texture_a_unit );
-        texture_b.bind_texture_unit ( texture_b_unit );
-        texture_c.bind_texture_unit ( texture_c_unit );
+        cube_textures.bind();
 
         update_camera();
 
@@ -359,6 +372,8 @@ int main ( int argc, char** argv ) {
         font.texture().bind_texture_unit ( 0 );
         font.texture().bind_texture_unit ( 1 );
         font.texture().bind_texture_unit ( 2 );
+
+        // atlas_textures.bind();
 
         program.uniform ( "model", font_atlas.model() );
         quad.bind().draw().unbind();

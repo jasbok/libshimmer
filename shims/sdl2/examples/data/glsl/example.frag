@@ -13,6 +13,6 @@ void main()
 {
     FragColor = mix(texture(texture_a, f_texcoord),
                     texture(texture_b, f_texcoord),
-                    blend_factor)
+                    1.0f - blend_factor)
                 + vec4(f_colour, 1.0f);
 }

@@ -49,11 +49,11 @@ enum texture::internal_format texture::internal_format() const {
 }
 
 texture& texture::bind() {
-    glBindTexture ( static_cast<GLenum>(_target), _handle );
+    glBindTexture ( static_cast<GLenum>( _target ), _handle );
 
     return *this;
 }
 
 void texture::unbind() {
-    glBindTexture ( static_cast<GLenum>(_target), 0 );
+    glBindTexture ( static_cast<GLenum>( _target ), 0 );
 }

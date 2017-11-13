@@ -67,13 +67,22 @@ unsigned int font_atlas::size() const
     return _size;
 }
 
+bool font_atlas::has_group ( const string& group ) {
+    return _atlas_glyphs.find ( group ) != _atlas_glyphs.end();
+}
+
+atlas_glyph& font_atlas::get ( const string& group,
+                               unsigned int  unicode ) {
+    return _atlas_glyphs.at ( group ).at ( unicode );
+}
+
 void font_atlas::_calculate_atlas_size ( std::vector<glyph>& glyphs )
 {
     unsigned int optimal_area = 0;
-    dims_2u      space_adjustment ( _spacing / 2, _spacing / 2 );
+    dims_2u space_adjustment ( _spacing / 2, _spacing / 2 );
 
     for ( const auto& glyph : glyphs ) {
-        optimal_area += (glyph.meta().dims() + space_adjustment).area();
+        optimal_area += ( glyph.meta().dims() + space_adjustment ).area();
     }
 
     _size = _correct_texture_size ( sqrt ( optimal_area ) );
@@ -145,7 +154,7 @@ unsigned int font_atlas::_correct_texture_size ( unsigned int size )
     // Round size up to the nearest number divisable by 16.
     // Avoids texture artifacts (diagonal skewing).
 
-    return (size / 16 + 1) * 16;
+    return ( size / 16 + 1 ) * 16;
 }
 
 bool font_atlas::_place ( const std::vector<glyph>& glyphs )
@@ -209,7 +218,7 @@ bool font_atlas::_is_claimed ( const std::vector<uint8_t>& area,
                                const coords_2u&            coords,
                                const dims_2u&              dims ) {
     for ( unsigned int j = 0; j < dims.height; j += _spacing ) {
-        unsigned int jstep = (j + coords.y) * _size;
+        unsigned int jstep = ( j + coords.y ) * _size;
 
         for ( unsigned int i = 0; i < dims.width; i += _spacing ) {
             if ( area[jstep + coords.x + i] ) return true;
@@ -223,7 +232,7 @@ void font_atlas::_claim_surface ( std::vector<uint8_t>& area,
                                   const coords_2u&      coords,
                                   const dims_2u&        dims ) {
     for ( unsigned int j = 0; j < dims.height; j += _spacing ) {
-        unsigned int jstep = (j + coords.y) * _size;
+        unsigned int jstep = ( j + coords.y ) * _size;
 
         for ( unsigned int i = 0; i < dims.width; i += _spacing ) {
             area[jstep + coords.x + i] = true;

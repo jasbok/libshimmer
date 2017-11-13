@@ -22,6 +22,7 @@
 #include "specs.h"
 #include "texture.h"
 #include "texture_2d.h"
+#include "texture_units.h"
 #include "uniform.h"
 #include "vertex_array.h"
 #include "vertex_attrib.h"

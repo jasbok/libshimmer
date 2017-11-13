@@ -12,12 +12,12 @@
                                         # FUNC );                        \
                                abort();                                  \
                            }                                             \
-                           return (FUNC ## _Handle)(dlsym_ptr);          \
-                       } ();                                             \
+                           return ( FUNC ## _Handle )( dlsym_ptr );      \
+                       } ( );                                            \
     }
 
 #define HANDLE_TYPEDEF( RET, FUNC, \
-                        ARGS ... ) typedef RET (*FUNC ## _Handle)( ARGS )
+                        ARGS ... ) typedef RET ( *FUNC ## _Handle )( ARGS )
 
 #define SHIM( RET, FUNC, ARGS ... )     \
     HANDLE_TYPEDEF ( RET, FUNC, ARGS ); \

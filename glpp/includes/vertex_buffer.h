@@ -7,7 +7,9 @@
 
 namespace glpp
 {
-template<typename T, size_t T_SIZE = sizeof(T), GLenum T_ENUM = to_glenum<T>()>
+template<typename T,
+         size_t T_SIZE = sizeof( T ),
+         GLenum T_ENUM = to_glenum<T>( )>
 class vertex_buffer : public _mbuffer<GL_ARRAY_BUFFER,
                                       vertex_buffer<T, T_SIZE, T_ENUM>>
 {

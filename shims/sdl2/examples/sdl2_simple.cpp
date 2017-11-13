@@ -44,29 +44,29 @@ int main ( int argc, char** argv ) {
         return sdl_error ( "Error) Unable to initialise SDL2: ", false );
     }
 
-    if ( (WINDOW = SDL_CreateWindow ( "SDL2 Example",
-                                      100,
-                                      100,
-                                      320,
-                                      240,
-                                      SDL_WINDOW_SHOWN )) == nullptr ) {
+    if ( ( WINDOW = SDL_CreateWindow ( "SDL2 Example",
+                                       100,
+                                       100,
+                                       320,
+                                       240,
+                                       SDL_WINDOW_SHOWN ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 window: " );
     }
 
-    if ( (RENDERER =
-              SDL_CreateRenderer ( WINDOW, -1,
-                                   SDL_RENDERER_ACCELERATED |
-                                   SDL_RENDERER_PRESENTVSYNC )) == nullptr ) {
+    if ( ( RENDERER =
+               SDL_CreateRenderer ( WINDOW, -1,
+                                    SDL_RENDERER_ACCELERATED |
+                                    SDL_RENDERER_PRESENTVSYNC ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 renderer: " );
     }
 
-    if ( (IMAGE = SDL_LoadBMP ( "data/ck4.bmp" )) == nullptr ) {
+    if ( ( IMAGE = SDL_LoadBMP ( "data/ck4.bmp" ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to load test image: " );
     }
 
 
-    if ( (TEXTURE =
-              SDL_CreateTextureFromSurface ( RENDERER, IMAGE )) == nullptr ) {
+    if ( ( TEXTURE =
+               SDL_CreateTextureFromSurface ( RENDERER, IMAGE ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create texture from image: " );
     }
 

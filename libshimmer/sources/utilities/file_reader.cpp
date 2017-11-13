@@ -17,7 +17,7 @@ string file_reader::read ( const string& path )
     ifstream ifs ( path );
 
     if ( ifs.is_open() ) {
-        content = string ( (std::istreambuf_iterator<char>( ifs )),
+        content = string ( ( std::istreambuf_iterator<char>( ifs ) ),
                            std::istreambuf_iterator<char>() );
         ifs.close();
     } else {

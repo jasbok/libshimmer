@@ -42,19 +42,19 @@ private:
 };
 
 struct file_read_exception : public std::exception {
-    const char* what() const throw() {
+    const char* what() const throw( ) {
         return "Could not read file.";
     }
 };
 
 struct shader_compile_exception : public std::exception {
-    const char* what() const throw() {
+    const char* what() const throw( ) {
         return "Could not compile shader.";
     }
 };
 
 struct program_link_exception : public std::exception {
-    const char* what() const throw() {
+    const char* what() const throw( ) {
         return "Could not link program.";
     }
 };

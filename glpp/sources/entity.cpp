@@ -76,9 +76,19 @@ glm::vec3 entity::scale() const
 entity& entity::update_model()
 {
     _model = glm::translate ( glm::mat4 ( 1.0f ), _position );
-    _model = glm::rotate ( _model, glm::radians ( _rotation.z ), { 0.0f, 0.0f, 1.0f } );
-    _model = glm::rotate ( _model, glm::radians ( _rotation.x ), { 1.0f, 0.0f, 0.0f } );
-    _model = glm::rotate ( _model, glm::radians ( _rotation.y ), { 0.0f, 1.0f, 0.0f } );
+
+    _model = glm::rotate ( _model,
+                           glm::radians ( _rotation.z ),
+                           { 0.0f, 0.0f, 1.0f } );
+
+    _model = glm::rotate ( _model,
+                           glm::radians ( _rotation.x ),
+                           { 1.0f, 0.0f, 0.0f } );
+
+    _model = glm::rotate ( _model,
+                           glm::radians ( _rotation.y ),
+                           { 0.0f, 1.0f, 0.0f } );
+
     _model = glm::scale ( _model, _scale );
 
     _requires_update = false;
@@ -91,4 +101,9 @@ glm::mat4 entity::model()
     if ( _requires_update ) update_model();
 
     return _model;
+}
+
+entity& entity::draw()
+{
+    return *this;
 }

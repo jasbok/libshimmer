@@ -123,8 +123,8 @@ pixels resource_loader::image ( const string& path ) const
                           : glpp::pixels::format::rgba;
 
             return glpp::pixels ( std::unique_ptr<uint8_t>( data ),
-                                  { static_cast<GLuint>(width),
-                                    static_cast<GLuint>(height) },
+                                  { static_cast<GLuint>( width ),
+                                    static_cast<GLuint>( height ) },
                                   format,
                                   glpp::pixels::type::gl_unsigned_byte );
         }

@@ -8,7 +8,7 @@ gl_mesh::gl_mesh( const vector<GLfloat>&    vertices,
                   unsigned int              vertices_stride,
                   unsigned int              elements_stride )
     : _vertices ( GL_ARRAY_BUFFER,
-          sizeof(GLfloat) * vertices.size(),
+          sizeof( GLfloat ) * vertices.size(),
           ( GLvoid* )vertices.data() ),
 
       _vertices_stride ( vertices_stride ),
@@ -16,7 +16,7 @@ gl_mesh::gl_mesh( const vector<GLfloat>&    vertices,
       _vertices_count ( vertices.size() / vertices_stride ),
 
       _elements ( GL_ELEMENT_ARRAY_BUFFER,
-          sizeof(GLsizeiptr) * elements.size(),
+          sizeof( GLsizeiptr ) * elements.size(),
           ( GLvoid* )elements.data() ),
 
       _elements_stride ( elements_stride ),

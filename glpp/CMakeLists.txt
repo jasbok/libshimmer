@@ -33,7 +33,6 @@ set ( EXTERNAL_INCLUDES
         ${FREETYPE_INCLUDES}
         ${OPENGL_INCLUDES} )
 
-    message(==========> ${EXTERNAL_INCLUDES})
 
 ###############################################################################
 #   List external target link libraries
@@ -65,22 +64,29 @@ set( HEADERS
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/entity.h
         ${INCLUDE_DIR}/enums.h
+        ${INCLUDE_DIR}/font.h
         ${INCLUDE_DIR}/font_atlas.h
+        ${INCLUDE_DIR}/font_face.h
         ${INCLUDE_DIR}/font_loader.h
+        ${INCLUDE_DIR}/font_spec.h
         ${INCLUDE_DIR}/framebuffer.h
+        ${INCLUDE_DIR}/ft_wrapper.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/glyph.h
         ${INCLUDE_DIR}/material.h
         ${INCLUDE_DIR}/mbuffer.h
         ${INCLUDE_DIR}/mesh.h
+        ${INCLUDE_DIR}/phase.h
         ${INCLUDE_DIR}/pixels.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/quad.h
         ${INCLUDE_DIR}/resource_loader.h
         ${INCLUDE_DIR}/shader.h
         ${INCLUDE_DIR}/specs.h
+        ${INCLUDE_DIR}/text.h
         ${INCLUDE_DIR}/texture.h
         ${INCLUDE_DIR}/texture_2d.h
+        ${INCLUDE_DIR}/texture_units.h
         ${INCLUDE_DIR}/uniform.h
         ${INCLUDE_DIR}/vertex_array.h
         ${INCLUDE_DIR}/vertex_attrib.h
@@ -97,18 +103,25 @@ set( SOURCES
         ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/entity.cpp
+        ${SOURCES_DIR}/font.cpp
         ${SOURCES_DIR}/font_atlas.cpp
+        ${SOURCES_DIR}/font_face.cpp
         ${SOURCES_DIR}/font_loader.cpp
+        ${SOURCES_DIR}/font_spec.cpp
         ${SOURCES_DIR}/framebuffer.cpp
+        ${SOURCES_DIR}/ft_wrapper.cpp
         ${SOURCES_DIR}/glyph.cpp
         ${SOURCES_DIR}/material.cpp
+        ${SOURCES_DIR}/phase.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/resource_loader.cpp
         ${SOURCES_DIR}/shader.cpp
         ${SOURCES_DIR}/stb_image.cpp
+        ${SOURCES_DIR}/text.cpp
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp
+        ${SOURCES_DIR}/texture_units.cpp
         ${SOURCES_DIR}/uniform.cpp
         ${SOURCES_DIR}/vertex_array.cpp)
 

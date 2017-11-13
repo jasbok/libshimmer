@@ -15,6 +15,8 @@ namespace glpp
 template<typename T>
 class mesh
 {
+    static_assert ( is_gltype<T>(), "Unsupported TYPE for mesh." );
+
 public:
     mesh() = default;
 
@@ -79,8 +81,12 @@ public:
         return *this;
     }
 
+    template<GLenum MODE = GL_TRIANGLES>
     mesh& draw() {
-        glDrawElements ( GL_TRIANGLES, _ebo.elements(), GL_UNSIGNED_INT, 0 );
+        static_assert ( is_drawmode<MODE>(),
+                        "Unsupported draw MODE for mesh draw function." );
+
+        glDrawElements ( MODE, _ebo.elements(), GL_UNSIGNED_INT, 0 );
 
         return *this;
     }

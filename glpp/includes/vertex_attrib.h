@@ -16,7 +16,8 @@ struct attrib {
     GLint       location = -1;
 };
 
-template<typename T, size_t T_SIZE = sizeof(T), GLenum T_ENUM = to_glenum<T>()>
+template<typename T, size_t T_SIZE = sizeof( T ),
+         GLenum T_ENUM = to_glenum<T>( )>
 class vertex_attrib
 {
 public:
@@ -75,7 +76,7 @@ public:
                                 T_ENUM,
                                 _normalised,
                                 _stride,
-                                reinterpret_cast<void*>(_offset) );
+                                reinterpret_cast<void*>( _offset ) );
 
         return *this;
     }

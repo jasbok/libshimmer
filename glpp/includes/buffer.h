@@ -66,7 +66,7 @@ public:
 
         move._handle = 0;
 
-        return static_cast<THIS&>(*this);
+        return static_cast<THIS&>( *this );
     }
 
     _buffer& operator=( const _buffer& copy ) = delete;
@@ -89,41 +89,41 @@ public:
     }
 
     THIS& bind() {
-        glBindBuffer ( static_cast<GLenum>(TARGET), _handle );
+        glBindBuffer ( static_cast<GLenum>( TARGET ), _handle );
 
-        return static_cast<THIS&>(*this);
+        return static_cast<THIS&>( *this );
     }
 
     void unbind() {
-        glBindBuffer ( static_cast<GLenum>(TARGET), 0 );
+        glBindBuffer ( static_cast<GLenum>( TARGET ), 0 );
     }
 
-    template<typename T, size_t T_SIZE = sizeof(T)>
+    template<typename T, size_t T_SIZE = sizeof( T )>
     THIS& data ( const std::vector<T>& vec ) {
         _elements = vec.size();
         _size     = T_SIZE * _elements;
 
-        glBufferData ( static_cast<GLenum>(TARGET),
+        glBufferData ( static_cast<GLenum>( TARGET ),
                        _size,
                        &vec[0],
-                       static_cast<GLenum>(_usage) );
+                       static_cast<GLenum>( _usage ) );
 
-        return static_cast<THIS&>(*this);
+        return static_cast<THIS&>( *this );
     }
 
-    template<typename T, size_t T_SIZE = sizeof(T)>
+    template<typename T, size_t T_SIZE = sizeof( T )>
     THIS& data ( const std::vector<T>& vec,
                  enum usage            usage ) {
         _elements = vec.size();
         _size     = T_SIZE * _elements;
         _usage    = usage;
 
-        glBufferData ( static_cast<GLenum>(TARGET),
+        glBufferData ( static_cast<GLenum>( TARGET ),
                        _size,
                        &vec[0],
-                       static_cast<GLenum>(_usage) );
+                       static_cast<GLenum>( _usage ) );
 
-        return static_cast<THIS&>(*this);
+        return static_cast<THIS&>( *this );
     }
 
 private:

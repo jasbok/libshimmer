@@ -14,13 +14,13 @@ class gl_buffer : public memory_block
 public:
     gl_buffer( GLenum     target,
                GLsizeiptr size,
-               GLenum     usage = GL_STATIC_DRAW,
+               GLenum     usage  = GL_STATIC_DRAW,
                GLenum     access = GL_WRITE_ONLY );
 
     gl_buffer( GLenum     target,
                GLsizeiptr size,
                GLvoid*    data,
-               GLenum     usage = GL_STATIC_DRAW,
+               GLenum     usage  = GL_STATIC_DRAW,
                GLenum     access = GL_WRITE_ONLY );
 
     virtual ~gl_buffer();

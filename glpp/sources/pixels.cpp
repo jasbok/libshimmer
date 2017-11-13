@@ -54,7 +54,7 @@ enum pixels::type pixels::type() const {
 
 std::string pixels::to_json() const {
     return "{data:" +
-           std::to_string ( reinterpret_cast<size_t>(_data.get()) ) +
+           std::to_string ( reinterpret_cast<size_t>( _data.get() ) ) +
            ",dims:" +
            _dims.to_json() + "";
 }

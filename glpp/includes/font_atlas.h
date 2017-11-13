@@ -43,7 +43,7 @@ class font_atlas
 {
 public:
     explicit font_atlas( std::vector<glyph>&& glyphs,
-                         unsigned int         spacing = 7,
+                         unsigned int         spacing     = 7,
                          float                resize_rate = 1.05 );
 
     font_atlas( font_atlas&& move );
@@ -62,6 +62,12 @@ public:
     unsigned int size() const;
 
     unsigned int spacing() const;
+
+
+    bool         has_group ( const std::string& group );
+
+    atlas_glyph& get ( const std::string& group,
+                       unsigned int       unicode );
 
 private:
     typedef std::unordered_map<unsigned int, atlas_glyph> glyph_map;
@@ -87,9 +93,9 @@ private:
     void _normalise_coordinates();
 
 
-    void                _increase_size();
+    void         _increase_size();
 
-    inline unsigned int _correct_texture_size ( unsigned int size );
+    unsigned int _correct_texture_size ( unsigned int size );
 
 
     bool _place ( const std::vector<glyph>& glyphs );

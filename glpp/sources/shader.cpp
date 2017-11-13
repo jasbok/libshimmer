@@ -7,7 +7,7 @@ using namespace std;
 
 shader::shader( enum type     type,
                 const string& source )
-    : _handle ( glCreateShader ( static_cast<GLenum>(type) ) ),
+    : _handle ( glCreateShader ( static_cast<GLenum>( type ) ) ),
       _type ( type ),
       _source ( source )
 {}

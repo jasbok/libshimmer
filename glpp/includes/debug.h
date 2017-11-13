@@ -66,7 +66,7 @@ bool gl_get_errors (
     bool   found_errors = false;
     GLenum err;
 
-    while ( (err = glGetError()) != GL_NO_ERROR ) {
+    while ( ( err = glGetError() ) != GL_NO_ERROR ) {
         found_errors = true;
         std::cerr << "[" << label << "] " << file
                   << ":" << line

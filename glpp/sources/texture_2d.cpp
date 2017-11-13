@@ -34,14 +34,14 @@ texture_2d& texture_2d::image ( const pixels& pixels,
                                 GLint         level ) {
     _dims = pixels.dims();
 
-    glTexImage2D ( static_cast<GLenum>(target()),
+    glTexImage2D ( static_cast<GLenum>( target() ),
                    level,
-                   static_cast<GLenum>(internal_format()),
+                   static_cast<GLenum>( internal_format() ),
                    _dims.width,
                    _dims.height,
                    0,
-                   static_cast<GLenum>(pixels.format()),
-                   static_cast<GLenum>(pixels.type()),
+                   static_cast<GLenum>( pixels.format() ),
+                   static_cast<GLenum>( pixels.type() ),
                    pixels.data() );
 
     return *this;
@@ -50,21 +50,21 @@ texture_2d& texture_2d::image ( const pixels& pixels,
 texture_2d& texture_2d::sub_image ( const coords_2i& offset,
                                     const pixels&    pixels,
                                     GLint            level ) {
-    glTexSubImage2D ( static_cast<GLenum>(target()),
+    glTexSubImage2D ( static_cast<GLenum>( target() ),
                       level,
                       offset.x,
                       offset.y,
                       pixels.dims().width,
                       pixels.dims().height,
-                      static_cast<GLenum>(pixels.format()),
-                      static_cast<GLenum>(pixels.type()),
+                      static_cast<GLenum>( pixels.format() ),
+                      static_cast<GLenum>( pixels.type() ),
                       pixels.data() );
 
     return *this;
 }
 
 texture_2d& texture_2d::generate_mipmaps() {
-    glGenerateMipmap ( static_cast<GLenum>(target()) );
+    glGenerateMipmap ( static_cast<GLenum>( target() ) );
 
     return *this;
 }
@@ -78,24 +78,24 @@ texture_2d& texture_2d::bind_texture_unit ( unsigned int unit ) {
 
 texture_2d& texture_2d::filters ( texture_2d::filter filter )
 {
-    min_filter ( static_cast<enum min_filter>(filter) );
-    mag_filter ( static_cast<enum mag_filter>(filter) );
+    min_filter ( static_cast<enum min_filter>( filter ) );
+    mag_filter ( static_cast<enum mag_filter>( filter ) );
 
     return *this;
 }
 
 texture_2d& texture_2d::min_filter ( enum min_filter filter ) {
-    glTexParameteri ( static_cast<GLenum>(target()),
+    glTexParameteri ( static_cast<GLenum>( target() ),
                       GL_TEXTURE_MIN_FILTER,
-                      static_cast<GLenum>(filter) );
+                      static_cast<GLenum>( filter ) );
 
     return *this;
 }
 
 texture_2d& texture_2d::mag_filter ( enum mag_filter filter ) {
-    glTexParameteri ( static_cast<GLenum>(target()),
+    glTexParameteri ( static_cast<GLenum>( target() ),
                       GL_TEXTURE_MAG_FILTER,
-                      static_cast<GLenum>(filter) );
+                      static_cast<GLenum>( filter ) );
 
     return *this;
 }
@@ -109,17 +109,17 @@ texture_2d& texture_2d::wrap ( texture_2d::texture_wrap wrap )
 }
 
 texture_2d& texture_2d::wrap_s ( enum texture_wrap wrap ) {
-    glTexParameteri ( static_cast<GLenum>(target()),
+    glTexParameteri ( static_cast<GLenum>( target() ),
                       GL_TEXTURE_WRAP_S,
-                      static_cast<GLenum>(wrap) );
+                      static_cast<GLenum>( wrap ) );
 
     return *this;
 }
 
 texture_2d& texture_2d::wrap_t ( enum texture_wrap wrap ) {
-    glTexParameteri ( static_cast<GLenum>(target()),
+    glTexParameteri ( static_cast<GLenum>( target() ),
                       GL_TEXTURE_WRAP_T,
-                      static_cast<GLenum>(wrap) );
+                      static_cast<GLenum>( wrap ) );
 
     return *this;
 }

@@ -9,13 +9,14 @@ gl_quad::gl_quad( shared_ptr<gl_program>         program,
                   vector<shared_ptr<gl_texture>> textures )
     : _program ( program ),
       _textures ( textures ),
-      _vbo ( make_shared<gl_buffer>( GL_ARRAY_BUFFER, sizeof(GLfloat) * 20 ) ),
+      _vbo ( make_shared<gl_buffer>( GL_ARRAY_BUFFER,
+                                     sizeof( GLfloat ) * 20 ) ),
       _vao ( make_shared<gl_vertex_array>() )
 {
     if ( !_ebo ) {
         _ebo = make_shared<gl_buffer>(
             GL_ELEMENT_ARRAY_BUFFER,
-            sizeof(GLuint) * 6,
+            sizeof( GLuint ) * 6,
             std::vector<GLuint>( { 1, 2, 3, 3, 4, 1 } ).data() );
     }
     shape ( 1.0 );
@@ -27,13 +28,14 @@ gl_quad::gl_quad( shared_ptr<gl_program>         program,
                   bool                           flip_y )
     : _program ( program ),
       _textures ( textures ),
-      _vbo ( make_shared<gl_buffer>( GL_ARRAY_BUFFER, sizeof(GLfloat) * 20 ) ),
+      _vbo ( make_shared<gl_buffer>( GL_ARRAY_BUFFER,
+                                     sizeof( GLfloat ) * 20 ) ),
       _vao ( make_shared<gl_vertex_array>() )
 {
     if ( !_ebo ) {
         _ebo = make_shared<gl_buffer>(
             GL_ELEMENT_ARRAY_BUFFER,
-            sizeof(GLuint) * 6,
+            sizeof( GLuint ) * 6,
             std::vector<GLuint>( { 1, 2, 3, 3, 4, 1 } ).data() );
     }
 

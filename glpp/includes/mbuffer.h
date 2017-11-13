@@ -46,12 +46,12 @@ public:
 
     _mbuffer& operator=( const _mbuffer& copy ) = delete;
 
-    template<typename T, size_t T_SIZE = sizeof(T)>
+    template<typename T, size_t T_SIZE = sizeof( T )>
     gsl::span<T> map ( enum access access ) {
-        auto ptr = glMapBuffer ( TARGET, static_cast<GLenum>(access) );
+        auto ptr = glMapBuffer ( TARGET, static_cast<GLenum>( access ) );
 
-        return gsl::span<T>( static_cast<T*>(ptr),
-                             static_cast<long>(parent::size() / T_SIZE) );
+        return gsl::span<T>( static_cast<T*>( ptr ),
+                             static_cast<long>( parent::size() / T_SIZE ) );
     }
 
     bool unmap() {
