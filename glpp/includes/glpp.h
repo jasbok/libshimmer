@@ -1,6 +1,7 @@
 #ifndef GLPP_GLPP_H
 #define GLPP_GLPP_H
 
+#include "atlas_builder.h"
 #include "attribute.h"
 #include "buffer.h"
 #include "camera.h"
@@ -9,7 +10,6 @@
 #include "element_array_buffer.h"
 #include "entity.h"
 #include "enums.h"
-#include "font_atlas.h"
 #include "font_loader.h"
 #include "framebuffer.h"
 #include "mbuffer.h"

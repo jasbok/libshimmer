@@ -1,7 +1,6 @@
 #ifndef GLPP_TEXT_H
 #define GLPP_TEXT_H
 
-#include "font_atlas.h"
 #include "mesh.h"
 
 #include <string>

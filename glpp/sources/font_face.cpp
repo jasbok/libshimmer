@@ -88,27 +88,18 @@ glyph font_face::get_glyph ( wchar_t unicode ) const
     auto slot    = _face->glyph;
     auto metrics = slot->metrics;
 
-    dims_2u   dims ( slot->bitmap.width, slot->bitmap.rows );
-    coords_2i bearing ( metrics.horiBearingX, metrics.horiBearingY );
-    coords_2i advance ( metrics.horiAdvance, metrics.vertAdvance );
-    coords_2i vertical_bearing ( metrics.vertBearingX, metrics.vertBearingY );
+    glyph_meta meta;
+    meta.unicode = unicode;
+    meta.dims    = { slot->bitmap.width, slot->bitmap.rows };
+    meta.bearing = coords_2i ( metrics.horiBearingX, metrics.horiBearingY );
+    meta.advance = coords_2i ( metrics.horiAdvance, metrics.vertAdvance );
 
-    glyph_metadata meta = FT_HAS_VERTICAL ( _face )
-                          ? glyph_metadata ( unicode,
-                                             _font.id(),
-                                             dims,
-                                             bearing,
-                                             advance )
+    meta.has_vertical     = FT_HAS_VERTICAL ( _face );
+    meta.vertical_bearing = coords_2i ( metrics.vertBearingX,
+                                        metrics.vertBearingY );
 
-                          : glyph_metadata ( unicode,
-                                             _font.id(),
-                                             dims,
-                                             bearing,
-                                             advance,
-                                             vertical_bearing );
+    bitmap bitmap ( meta.dims );
+    memcpy ( bitmap.data.data(), slot->bitmap.buffer, bitmap.dims.area() );
 
-    vector<uint8_t> data ( dims.area() );
-    memcpy ( data.data(), slot->bitmap.buffer, dims.area() );
-
-    return glyph ( meta, std::move ( data ) );
+    return { meta, std::move ( bitmap ) };
 }

@@ -36,15 +36,15 @@ struct coords_2 {
         return x != comp.x || y != comp.y;
     }
 
-    coords_2 operator+( const coords_2& op ) {
+    coords_2 operator+( const coords_2& op ) const {
         return { x + op.x, y + op.y };
     }
 
-    coords_2 operator-( const coords_2& op ) {
+    coords_2 operator-( const coords_2& op ) const {
         return { x - op.x, y - op.y };
     }
 
-    coords_2 operator*( const coords_2& op ) {
+    coords_2 operator*( const coords_2& op ) const {
         return { x* op.x, y* op.y };
     }
 
@@ -104,15 +104,15 @@ struct coords_3 {
         return x != comp.x || y != comp.y || z != comp.z;
     }
 
-    coords_3 operator+( const coords_3& op ) {
+    coords_3 operator+( const coords_3& op ) const {
         return { x + op.x, y + op.y, z + op.z };
     }
 
-    coords_3 operator-( const coords_3& op ) {
+    coords_3 operator-( const coords_3& op ) const {
         return { x - op.x, y - op.y, z - op.z };
     }
 
-    coords_3 operator*( const coords_3& op ) {
+    coords_3 operator*( const coords_3& op ) const {
         return { x* op.x, y* op.y, z* op.z };
     }
 
@@ -176,15 +176,15 @@ struct dims_2 {
         return width != comp.width || height != comp.height;
     }
 
-    dims_2 operator+( const dims_2& op ) {
+    dims_2 operator+( const dims_2& op ) const {
         return { width + op.width, height + op.height };
     }
 
-    dims_2 operator-( const dims_2& op ) {
+    dims_2 operator-( const dims_2& op ) const {
         return { width - op.width, height - op.height };
     }
 
-    dims_2 operator*( const dims_2& op ) {
+    dims_2 operator*( const dims_2& op ) const {
         return { width* op.width, height* op.height };
     }
 
@@ -252,15 +252,15 @@ struct dims_3 {
                || depth != comp.depth;
     }
 
-    dims_3 operator+( const dims_3& op ) {
+    dims_3 operator+( const dims_3& op ) const {
         return { width + op.width, height + op.height, depth + op.depth };
     }
 
-    dims_3 operator-( const dims_3& op ) {
+    dims_3 operator-( const dims_3& op ) const {
         return { width - op.width, height - op.height, depth - op.depth };
     }
 
-    dims_3 operator*( const dims_3& op ) {
+    dims_3 operator*( const dims_3& op ) const {
         return { width* op.width, height* op.height, depth* op.depth };
     }
 

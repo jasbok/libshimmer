@@ -15,8 +15,8 @@ font_loader::font_loader( const vector<string>& paths )
 
 font_loader::~font_loader() {}
 
-vector<glyph> font_loader::load ( const font_spec& font,
-                                  unsigned int     dpi )
+glyph_pack font_loader::load ( const font_spec& font,
+                               unsigned int     dpi )
 {
     ft_wrapper ft;
 
@@ -37,31 +37,35 @@ vector<glyph> font_loader::load ( const font_spec& font,
     throw font_not_found_exception();
 }
 
-std::vector<glyph> font_loader::load ( const std::vector<font_spec>& fonts,
-                                       unsigned int                  dpi )
+glyph_pack font_loader::load ( const std::vector<font_spec>& fonts,
+                               unsigned int                  dpi )
 {
-    std::vector<glyph> results;
+    glyph_pack pack;
 
     for ( const auto& font : fonts ) {
-        auto glyphs = load ( font, dpi );
-        std::move ( glyphs.begin(), glyphs.end(), back_inserter ( results ) );
+        auto data = load ( font, dpi );
+        std::move ( data.bitmaps.begin(), data.bitmaps.end(),
+                    back_inserter ( pack.bitmaps ) );
+        std::move ( data.metas.begin(), data.metas.end(),
+                    back_inserter ( pack.metas ) );
     }
 
-    return results;
+    return pack;
 }
 
-std::vector<glyph> font_loader::_convert_to_glyphs ( const font_face& face )
+glyph_pack font_loader::_convert_to_glyphs ( const font_face& face )
 {
-    std::vector<glyph> glyphs;
+    glyph_pack pack;
 
     for ( auto range : face.font().unicodes() ) {
         for ( unsigned int c = range.start; c < range.end; c++ ) {
             try {
                 auto glyph = face.get_glyph ( c );
-                auto dims  = glyph.meta().dims();
+                auto dims  = glyph.meta.dims;
 
-                if ( ( dims.width > 0 ) && ( dims.height > 0 ) ) {
-                    glyphs.push_back ( std::move ( glyph ) );
+                if ( glyph.meta.dims.area() > 0 ) {
+                    pack.metas.push_back ( std::move ( glyph.meta ) );
+                    pack.bitmaps.push_back ( std::move ( glyph.bitmap ) );
                 }
             }
             catch ( const exception& ex ) {}
@@ -69,5 +73,5 @@ std::vector<glyph> font_loader::_convert_to_glyphs ( const font_face& face )
     }
 
 
-    return glyphs;
+    return pack;
 }

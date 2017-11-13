@@ -57,7 +57,9 @@ set( INCLUDES
 ###############################################################################
 set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
+        ${INCLUDE_DIR}/atlas_builder.h
         ${INCLUDE_DIR}/attribute.h
+        ${INCLUDE_DIR}/bitmap.h
         ${INCLUDE_DIR}/buffer.h
         ${INCLUDE_DIR}/camera.h
         ${INCLUDE_DIR}/cube.h
@@ -65,7 +67,6 @@ set( HEADERS
         ${INCLUDE_DIR}/entity.h
         ${INCLUDE_DIR}/enums.h
         ${INCLUDE_DIR}/font.h
-        ${INCLUDE_DIR}/font_atlas.h
         ${INCLUDE_DIR}/font_face.h
         ${INCLUDE_DIR}/font_loader.h
         ${INCLUDE_DIR}/font_spec.h
@@ -100,11 +101,12 @@ set( SOURCES_DIR ${GLPP_ROOT}/sources )
 
 set( SOURCES
         ${SOURCES_DIR}/attribute.cpp
+        ${SOURCES_DIR}/atlas_builder.cpp
+        ${SOURCES_DIR}/bitmap.cpp
         ${SOURCES_DIR}/camera.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/entity.cpp
         ${SOURCES_DIR}/font.cpp
-        ${SOURCES_DIR}/font_atlas.cpp
         ${SOURCES_DIR}/font_face.cpp
         ${SOURCES_DIR}/font_loader.cpp
         ${SOURCES_DIR}/font_spec.cpp

@@ -1,96 +1,60 @@
 #ifndef GLPP_GLYPH_H
 #define GLPP_GLYPH_H
 
-#include "specs.h"
+#include "bitmap.h"
 
 #include <vector>
 
 namespace glpp
 {
-class glyph_metadata
+struct glyph_meta
 {
-public:
-    glyph_metadata( wchar_t            unicode,
-                    const std::string& group,
-                    const dims_2u&     dims,
-                    const coords_2i&   bearing,
-                    const coords_2i&   advance );
+    wchar_t unicode;
 
-    glyph_metadata( wchar_t            unicode,
-                    const std::string& group,
-                    const dims_2u&     dims,
-                    const coords_2i&   bearing,
-                    const coords_2i&   advance,
-                    const coords_2i&   vertical_bearing );
+    std::string group;
 
-    glyph_metadata( glyph_metadata&& move ) = default;
+    dims_2u dims;
 
-    glyph_metadata( const glyph_metadata& copy ) = default;
+    coords_2i bearing;
 
-    virtual ~glyph_metadata() = default;
+    coords_2i advance;
 
-    glyph_metadata& operator=( glyph_metadata&& move ) = default;
+    bool has_vertical;
 
-    glyph_metadata& operator=( const glyph_metadata& copy ) = default;
-
-
-    unsigned int unicode() const;
-
-    std::string  group() const;
-
-    dims_2u      dims() const;
-
-    coords_2i    bearing() const;
-
-    coords_2i    advance() const;
-
-    bool         has_vertical() const;
-
-    coords_2i    vertical_bearing() const;
-
-private:
-    wchar_t _unicode;
-
-    std::string _group;
-
-    dims_2u _dims;
-
-    coords_2i _bearing;
-
-    coords_2i _advance;
-
-    bool _has_vertical;
-
-    coords_2i _vertical_bearing;
+    coords_2i vertical_bearing;
 };
 
-class glyph
+struct glyph_pack
 {
-public:
-    explicit glyph( const glyph_metadata& meta );
+    glyph_pack() = default;
 
-    glyph( const glyph_metadata&  meta,
-           std::vector<uint8_t>&& data );
+    glyph_pack( glyph_pack&& move ) = default;
 
-    glyph( glyph&& move );
+    glyph_pack( const glyph_pack& copy ) = delete;
 
-    glyph( const glyph& copy ) = default;
+    glyph_pack& operator=( glyph_pack&& move ) = default;
 
-    virtual ~glyph();
-
-    glyph& operator=( glyph&& move );
-
-    glyph& operator=( const glyph& copy ) = default;
+    glyph_pack& operator=( const glyph_pack& copy ) = delete;
 
 
-    glyph_metadata        meta() const;
+    std::vector<struct glyph_meta> metas;
 
-    std::vector<uint8_t>& data();
+    std::vector<struct bitmap> bitmaps;
+};
 
-private:
-    glyph_metadata _meta;
+struct glyph {
+    glyph( glyph&& move ) = default;
 
-    std::vector<uint8_t> _data;
+    glyph( const glyph& copy ) = delete;
+
+    glyph& operator=( glyph&& move ) = default;
+
+    glyph& operator=( const glyph& copy ) = delete;
+
+
+    struct glyph_meta meta;
+
+    struct bitmap bitmap;
 };
 }
 

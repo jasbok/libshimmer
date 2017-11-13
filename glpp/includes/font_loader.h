@@ -12,16 +12,16 @@ public:
 
     virtual ~font_loader();
 
-    std::vector<glyph> load ( const font_spec& font,
-                              unsigned int     dpi = 72 );
+    glyph_pack load ( const font_spec& font,
+                      unsigned int     dpi = 72 );
 
-    std::vector<glyph> load ( const std::vector<font_spec>& fonts,
-                              unsigned int                  dpi = 72 );
+    glyph_pack load ( const std::vector<font_spec>& fonts,
+                      unsigned int                  dpi = 72 );
 
 private:
     std::vector<std::string> _search_paths;
 
-    std::vector<glyph> _convert_to_glyphs ( const font_face& face );
+    glyph_pack _convert_to_glyphs ( const font_face& face );
 };
 }
 

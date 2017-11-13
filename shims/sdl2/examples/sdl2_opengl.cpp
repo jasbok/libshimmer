@@ -273,8 +273,8 @@ int main ( int argc, char** argv ) {
 
     std::vector<glpp::range_uint> unicodes = {
         glpp::unicodes::basic_latin,
+        glpp::unicodes::latin_1_supplement,
 
-        //        glpp::unicodes::latin_1_supplement,
         //        glpp::unicodes::latin_extended_a,
         //        glpp::unicodes::latin_extended_b,
         //        glpp::unicodes::greek_and_coptic
@@ -284,25 +284,17 @@ int main ( int argc, char** argv ) {
         { "mode_seven_13", "MODES___.TTF", 13, unicodes },
         { "xolonium_regular_13", "Xolonium-Regular.ttf", 13, unicodes },
         { "xolonium_bold_13", "Xolonium-Bold.ttf", 13, unicodes },
-
-        //        { "mode_seven_21", "MODES___.TTF", 21, unicodes },
-        //        { "xolonium_regular_21", "Xolonium-Regular.otf", 21, unicodes
-        // },
-        //        { "xolonium_bold_21", "Xolonium-Bold.otf", 21, unicodes }
+        { "mode_seven_21", "MODES___.TTF", 21, unicodes },
+        { "xolonium_regular_21", "Xolonium-Regular.otf", 21, unicodes },
+        { "xolonium_bold_21", "Xolonium-Bold.otf", 21, unicodes }
     }, 96 );
 
-    glpp::font_atlas font ( std::move ( glyphs ), 7, 1.025 );
+    glpp::atlas_builder atlas_builder;
 
-    font.texture().bind();
-    font.texture()
-
-    // .filters ( glpp::texture_2d::filter::nearest )
-    // .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat )
-        .generate_mipmaps();
-
-    // std::shared_ptr<glpp::texture_2d> atlas_texture ( &font.texture() );
-
-    // glpp::texture_units atlas_textures ( { atlas_texture, atlas_texture } );
+    atlas_builder.sort ( glyphs.bitmaps );
+    auto atlas = atlas_builder.build ( glyphs.bitmaps, 5 );
+    atlas.texture.bind();
+    atlas.texture.generate_mipmaps();
 
     while ( RUNNING ) {
         GLPP_CHECK_ERROR ( "GL Error" );
@@ -367,13 +359,10 @@ int main ( int argc, char** argv ) {
         program.uniform ( "model", mirror.model() );
         quad.bind().draw().unbind();
 
-        font.texture().bind();
-        font.texture().generate_mipmaps();
-        font.texture().bind_texture_unit ( 0 );
-        font.texture().bind_texture_unit ( 1 );
-        font.texture().bind_texture_unit ( 2 );
-
-        // atlas_textures.bind();
+        atlas.texture.bind();
+        atlas.texture.bind_texture_unit ( 0 );
+        atlas.texture.bind_texture_unit ( 1 );
+        atlas.texture.bind_texture_unit ( 2 );
 
         program.uniform ( "model", font_atlas.model() );
         quad.bind().draw().unbind();
