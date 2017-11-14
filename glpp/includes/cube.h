@@ -40,7 +40,7 @@ public:
                 0, 4, 5,
                 5, 1, 0
             } )
-            .attribs ( {
+            .template attribs<T>( {
                 { "position", 3 },
                 { "texcoord", 2 }
             } );
@@ -78,7 +78,7 @@ public:
     cube& dimensions ( const dims_3<T>& dimensions ) {
         _dimensions = dimensions;
 
-        _mesh.vertices ( {
+        _mesh.vertices<T>( {
                 // Front Top Right
                 _dimensions.width, _dimensions.height, _dimensions.depth,
                 1, 0,
@@ -165,7 +165,7 @@ public:
 private:
     dims_3<T> _dimensions;
 
-    mesh<T> _mesh;
+    mesh _mesh;
 };
 }
 

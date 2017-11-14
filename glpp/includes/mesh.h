@@ -12,11 +12,8 @@
 
 namespace glpp
 {
-template<typename T>
 class mesh
 {
-    static_assert ( is_gltype<T>(), "Unsupported TYPE for mesh." );
-
 public:
     mesh() = default;
 
@@ -47,6 +44,7 @@ public:
         return *this;
     }
 
+    template<typename T>
     mesh& vertices ( const std::vector<T>& vertices ) {
         _vbo.data ( vertices );
 
@@ -59,12 +57,13 @@ public:
         return *this;
     }
 
-    mesh& attribs ( const std::vector<vertex_attrib<T>>& attribs ) {
+    mesh& attribs ( const std::vector<vertex_attrib>& attribs ) {
         _attribs = attribs;
 
         return *this;
     }
 
+    template<typename T>
     mesh& attribs ( const std::vector<attrib>& attribs ) {
         _attribs = glpp::vertex_attrib_builder<T>::sequential ( attribs );
 
@@ -92,11 +91,11 @@ public:
     }
 
 private:
-    vertex_buffer<T> _vbo;
+    vertex_buffer _vbo;
 
     element_array_buffer _ebo;
 
-    std::vector<vertex_attrib<T>> _attribs;
+    std::vector<vertex_attrib> _attribs;
 
     vertex_array _vao;
 };

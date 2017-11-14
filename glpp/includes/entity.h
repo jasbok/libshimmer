@@ -68,7 +68,7 @@ private:
 
     std::vector<std::shared_ptr<texture>> _textures;
 
-    std::shared_ptr<mesh<GLfloat>> _mesh;
+    std::shared_ptr<mesh> _mesh;
 
     bool _requires_update;
 };

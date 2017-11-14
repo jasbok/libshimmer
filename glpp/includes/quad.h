@@ -19,7 +19,7 @@ public:
                 0, 1, 3,
                 1, 2, 3
             } )
-            .attribs ( {
+            .template attribs<T>( {
                 { "position", 3 },
                 { "texcoord", 2 }
             } );
@@ -57,7 +57,7 @@ public:
     quad& dimensions ( const dims_2<T>& dimensions ) {
         _dimensions = dimensions;
 
-        _mesh.vertices ( {
+        _mesh.vertices<T>( {
                 // Top Right
                 _dimensions.width, _dimensions.height, 0,
                 1, 0,
@@ -93,7 +93,7 @@ public:
 private:
     dims_2<T> _dimensions;
 
-    mesh<T> _mesh;
+    mesh _mesh;
 };
 }
 

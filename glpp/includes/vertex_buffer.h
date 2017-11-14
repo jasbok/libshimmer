@@ -7,15 +7,9 @@
 
 namespace glpp
 {
-template<typename T,
-         size_t T_SIZE = sizeof( T ),
-         GLenum T_ENUM = to_glenum<T>( )>
-class vertex_buffer : public _mbuffer<GL_ARRAY_BUFFER,
-                                      vertex_buffer<T, T_SIZE, T_ENUM>>
+class vertex_buffer : public _mbuffer<GL_ARRAY_BUFFER, vertex_buffer>
 {
-    static_assert ( is_gltype<T>(), "Unsupported TYPE for vertex buffer." );
-
-    typedef _mbuffer<GL_ARRAY_BUFFER, vertex_buffer<T>> parent;
+    typedef _mbuffer<GL_ARRAY_BUFFER, vertex_buffer> parent;
 
 public:
     explicit vertex_buffer( enum usage usage = usage::static_draw )
@@ -38,19 +32,6 @@ public:
     }
 
     vertex_buffer& operator=( const vertex_buffer& copy ) = delete;
-
-    vertex_buffer& data ( const std::vector<T>& vec ) {
-        return parent::data ( vec );
-    }
-
-    vertex_buffer& data ( const std::vector<T>& vec,
-                          enum usage            usage ) {
-        return parent::data ( vec, usage );
-    }
-
-    gsl::span<T> map ( enum access access ) {
-        return parent::template map<T>( access );
-    }
 };
 }
 

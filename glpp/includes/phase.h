@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    std::shared_ptr<mesh<GLfloat>> _mesh;
+    std::shared_ptr<mesh> _mesh;
 };
 
 class texture_phase : public phase<mesh_phase, texture_phase>

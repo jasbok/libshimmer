@@ -16,21 +16,21 @@ struct attrib {
     GLint       location = -1;
 };
 
-template<typename T, size_t T_SIZE = sizeof( T ),
-         GLenum T_ENUM = to_glenum<T>( )>
 class vertex_attrib
 {
 public:
-    vertex_attrib( const std::string& name,
-                   GLuint             size,
-                   GLuint             stride,
-                   GLuint             offset,
-                   bool               normalised,
-                   GLint              location = -1 )
+    explicit vertex_attrib( const std::string& name,
+                            GLuint             size,
+                            GLuint             stride,
+                            GLuint             offset,
+                            GLenum             type,
+                            bool               normalised,
+                            GLint              location = -1 )
         : _name ( name ),
           _size ( size ),
-          _stride ( stride * T_SIZE ),
-          _offset ( offset * T_SIZE ),
+          _stride ( stride ),
+          _offset ( offset ),
+          _type ( type ),
           _normalised ( normalised ),
           _location ( location )
     {}
@@ -73,7 +73,7 @@ public:
 
         glVertexAttribPointer ( _location,
                                 _size,
-                                T_ENUM,
+                                _type,
                                 _normalised,
                                 _stride,
                                 reinterpret_cast<void*>( _offset ) );
@@ -102,14 +102,20 @@ private:
 
     GLuint _offset;
 
+    GLenum _type;
+
     bool _normalised;
 
     GLint _location;
 };
 
-template<typename T>
+template<typename T,
+         size_t T_SIZE = sizeof( T ),
+         GLenum T_ENUM = to_glenum<T>( )>
 class vertex_attrib_builder
 {
+    static_assert ( is_gltype<T>(), "Unsupported type, must be a GL type." );
+
 public:
     explicit vertex_attrib_builder( const attrib& attrib )
         : _name ( attrib.name ),
@@ -136,19 +142,20 @@ public:
         return *this;
     }
 
-    vertex_attrib<T> build() {
-        return vertex_attrib<T>( _name,
-                                 _size,
-                                 _stride,
-                                 _offset,
-                                 _normalised,
-                                 _location );
+    vertex_attrib build() {
+        return vertex_attrib ( _name,
+                               _size,
+                               _stride * T_SIZE,
+                               _offset * T_SIZE,
+                               T_ENUM,
+                               _normalised,
+                               _location );
     }
 
-    static std::vector<vertex_attrib<T>> sequential (
+    static std::vector<vertex_attrib> sequential (
         const std::vector<attrib>& attribs,
         bool                       normalised = false ) {
-        std::vector<vertex_attrib<T>> vertex_attibs;
+        std::vector<vertex_attrib> vertex_attibs;
 
         unsigned int stride = _get_stride ( attribs );
         unsigned int offset = 0;

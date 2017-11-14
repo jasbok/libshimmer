@@ -38,7 +38,7 @@ public:
 private:
     std::string _content;
 
-    mesh<GLuint> _mesh;
+    mesh _mesh;
 
     void _update();
 };

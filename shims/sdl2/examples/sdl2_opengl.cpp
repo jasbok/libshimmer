@@ -235,7 +235,6 @@ int main ( int argc, char** argv ) {
     glpp::quad<GLfloat> quad ( { 1.0, 0.75 } );
     quad.bind().program ( program );
 
-
     glpp::entity outer_cube;
     outer_cube.scale ( { 500.0, 250.0, 500.0 } );
 
