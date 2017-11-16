@@ -13,6 +13,9 @@ entity::entity( const glm::vec3& position,
       _rotation ( rotation ),
       _scale ( scale ),
       _model ( 1.0f ),
+      _program(),
+      _textures(),
+      _mesh(),
       _requires_update ( false )
 {
     update_model();
@@ -101,6 +104,38 @@ glm::mat4 entity::model()
     if ( _requires_update ) update_model();
 
     return _model;
+}
+
+entity& entity::program ( const std::shared_ptr<class program>& program ) {
+    _program = program;
+
+    return *this;
+}
+
+std::shared_ptr<program> entity::program() {
+    return _program;
+}
+
+entity& entity::textures (
+    const std::shared_ptr<texture_units>& textures )
+{
+    _textures = textures;
+
+    return *this;
+}
+
+std::shared_ptr<texture_units> entity::textures() {
+    return _textures;
+}
+
+entity& entity::mesh ( const std::shared_ptr<class mesh>& mesh ) {
+    _mesh = mesh;
+
+    return *this;
+}
+
+std::shared_ptr<mesh> entity::mesh() {
+    return _mesh;
 }
 
 entity& entity::draw()

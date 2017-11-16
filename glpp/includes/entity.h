@@ -3,7 +3,7 @@
 
 #include "mesh.h"
 #include "program.h"
-#include "texture_2d.h"
+#include "texture_units.h"
 
 #include <glm/glm.hpp>
 
@@ -52,8 +52,22 @@ public:
 
     glm::mat4 model();
 
+    entity&   program (
+        const std::shared_ptr<program>& program );
 
-    entity& draw();
+    std::shared_ptr<class program> program();
+
+    entity&                        textures (
+        const std::shared_ptr<texture_units>& textures );
+
+    std::shared_ptr<texture_units> textures();
+
+    entity&                        mesh (
+        const std::shared_ptr<mesh>& mesh );
+
+    std::shared_ptr<class mesh> mesh();
+
+    entity&                     draw();
 
 private:
     glm::vec3 _position;
@@ -64,11 +78,11 @@ private:
 
     glm::mat4 _model;
 
-    std::shared_ptr<program> _program;
+    std::shared_ptr<class program> _program;
 
-    std::vector<std::shared_ptr<texture>> _textures;
+    std::shared_ptr<texture_units> _textures;
 
-    std::shared_ptr<mesh> _mesh;
+    std::shared_ptr<class mesh> _mesh;
 
     bool _requires_update;
 };

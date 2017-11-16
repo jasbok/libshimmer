@@ -309,6 +309,28 @@ typedef dims_2<GLuint> dims_2u;
 
 typedef dims_2<GLfloat> dims_2f;
 
+template<typename C, typename D>
+struct viewport {
+    C coords;
+    D dims;
+
+    viewport() = default;
+
+    viewport( const C& coords, const D& dims )
+        : coords ( coords ), dims ( dims ) {}
+
+    viewport( viewport&& move ) = default;
+
+    viewport( const viewport& copy ) = default;
+
+    virtual ~viewport() = default;
+
+    viewport& operator=( viewport&& move ) = default;
+
+    viewport& operator=( const viewport& copy ) = default;
+};
+
+typedef viewport<coords_2i, dims_2<GLsizei>> viewport_int;
 
 template<typename T>
 struct range {

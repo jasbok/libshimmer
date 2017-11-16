@@ -77,11 +77,12 @@ set( HEADERS
         ${INCLUDE_DIR}/material.h
         ${INCLUDE_DIR}/mbuffer.h
         ${INCLUDE_DIR}/mesh.h
-        ${INCLUDE_DIR}/phase.h
         ${INCLUDE_DIR}/pixels.h
         ${INCLUDE_DIR}/program.h
         ${INCLUDE_DIR}/quad.h
         ${INCLUDE_DIR}/resource_loader.h
+        ${INCLUDE_DIR}/scene.h
+        ${INCLUDE_DIR}/scene_phase.h
         ${INCLUDE_DIR}/shader.h
         ${INCLUDE_DIR}/specs.h
         ${INCLUDE_DIR}/text.h
@@ -114,10 +115,11 @@ set( SOURCES
         ${SOURCES_DIR}/ft_wrapper.cpp
         ${SOURCES_DIR}/glyph.cpp
         ${SOURCES_DIR}/material.cpp
-        ${SOURCES_DIR}/phase.cpp
         ${SOURCES_DIR}/pixels.cpp
         ${SOURCES_DIR}/program.cpp
         ${SOURCES_DIR}/resource_loader.cpp
+        ${SOURCES_DIR}/scene.cpp
+        ${SOURCES_DIR}/scene_phase.cpp
         ${SOURCES_DIR}/shader.cpp
         ${SOURCES_DIR}/stb_image.cpp
         ${SOURCES_DIR}/text.cpp
