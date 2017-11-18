@@ -14,6 +14,10 @@ texture_units& texture_units::textures ( const texture_units::group& textures )
     return *this;
 }
 
+std::shared_ptr<texture_units> texture_units::make_shared(group group){
+        return std::make_shared<texture_units>(group);
+}
+
 texture_units::group& texture_units::textures() {
     return _textures;
 }

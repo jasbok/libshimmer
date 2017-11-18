@@ -162,10 +162,10 @@ pair<bool, coords_2u> atlas_builder::_place ( const bitmap&  bitmap,
     auto& sdims = surface.dims;
     coords_2u coords;
 
-    for ( coords.y = 1; coords.y < sdims.height; coords.y += spacing ) {
+    for ( coords.y = 1; coords.y < sdims.height - 1; coords.y += spacing ) {
         if ( coords.y + bdims.height >= sdims.height ) break;
 
-        for ( coords.x = 1; coords.x < sdims.width; coords.x += spacing ) {
+        for ( coords.x = 1; coords.x < sdims.width - 1; coords.x += spacing ) {
             if ( coords.x + bdims.width >= sdims.width ) break;
 
             if ( _is_claimed ( surface, coords, bdims, spacing ) ) continue;

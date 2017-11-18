@@ -309,6 +309,10 @@ typedef dims_2<GLuint> dims_2u;
 
 typedef dims_2<GLfloat> dims_2f;
 
+typedef dims_3<GLuint> dims_3u;
+
+typedef dims_3<GLfloat> dims_3f;
+
 template<typename C, typename D>
 struct viewport {
     C coords;

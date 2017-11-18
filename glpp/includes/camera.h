@@ -11,8 +11,9 @@ class camera
 public:
     camera();
 
-    camera( glm::vec3 position,
-            glm::vec3 rotation );
+    camera( const glm::vec3& position,
+            const glm::vec3& rotation,
+            const glm::mat4& projection );
 
     camera( camera&& move ) = default;
 
@@ -41,6 +42,28 @@ public:
 
     glm::mat4 view();
 
+
+    camera& projection ( const glm::mat4& projection );
+
+    camera& perspective ( float fov,
+                         float aspect,
+                         float near,
+                         float far );
+
+    camera& ortho ( float left,
+                    float right,
+                    float bottom,
+                    float top );
+
+    camera& ortho ( float left,
+                    float right,
+                    float bottom,
+                    float top,
+                    float near,
+                    float far );
+
+    glm::mat4 projection();
+
 private:
     glm::vec3 _position;
 
@@ -53,6 +76,8 @@ private:
     glm::vec3 _right;
 
     glm::mat4 _view;
+
+    glm::mat4 _projection;
 
     bool _require_update;
 

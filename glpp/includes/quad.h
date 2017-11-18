@@ -7,14 +7,13 @@
 namespace glpp
 {
 template<typename T>
-class quad
+class quad : public mesh
 {
 public:
     explicit quad( const dims_2<T>& dimensions )
-        : _dimensions(),
-          _mesh()
+        : _dimensions()
     {
-        _mesh.bind()
+        bind()
             .indices ( {
                 0, 1, 3,
                 1, 2, 3
@@ -38,16 +37,12 @@ public:
     quad& operator=( const quad& copy ) = delete;
 
 
-    quad& bind() {
-        _mesh.bind();
-
-        return *this;
+    static auto make_shared ( const dims_2<T>& dimensions ) {
+        return std::make_shared<quad>( dimensions );
     }
 
-    quad& unbind() {
-        _mesh.unbind();
-
-        return *this;
+    static auto make_unique ( const dims_2<T>& dimensions ) {
+        return std::make_unique<quad>( dimensions );
     }
 
     dims_2<T> dimensions() {
@@ -57,7 +52,7 @@ public:
     quad& dimensions ( const dims_2<T>& dimensions ) {
         _dimensions = dimensions;
 
-        _mesh.vertices<T>( {
+        vertices<T>( {
                 // Top Right
                 _dimensions.width, _dimensions.height, 0,
                 1, 0,
@@ -78,22 +73,8 @@ public:
         return *this;
     }
 
-    quad& program ( const program& program ) {
-        _mesh.program ( program );
-
-        return *this;
-    }
-
-    quad& draw() {
-        _mesh.draw();
-
-        return *this;
-    }
-
 private:
     dims_2<T> _dimensions;
-
-    mesh _mesh;
 };
 }
 

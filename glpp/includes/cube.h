@@ -4,17 +4,18 @@
 #include "mesh.h"
 #include "specs.h"
 
+#include <memory>
+
 namespace glpp
 {
 template<typename T>
-class cube
+class cube : public mesh
 {
 public:
-    explicit cube( const dims_3<T>& dimensions )
-        : _dimensions(),
-          _mesh()
+    cube( const dims_3<T>& dimensions )
+        : _dimensions()
     {
-        _mesh.bind()
+        bind()
             .indices ( {
                 // Front
                 0, 1, 3,
@@ -59,16 +60,12 @@ public:
     cube& operator=( const cube& copy ) = delete;
 
 
-    cube& bind() {
-        _mesh.bind();
-
-        return *this;
+    static auto make_shared ( const dims_3<T>& dimensions ) {
+        return std::make_shared<cube>( dimensions );
     }
 
-    cube& unbind() {
-        _mesh.unbind();
-
-        return *this;
+    static auto make_unique ( const dims_3<T>& dimensions ) {
+        return std::make_unique<cube>( dimensions );
     }
 
     dims_3<T> dimensions() {
@@ -78,7 +75,7 @@ public:
     cube& dimensions ( const dims_3<T>& dimensions ) {
         _dimensions = dimensions;
 
-        _mesh.vertices<T>( {
+        vertices<T>( {
                 // Front Top Right
                 _dimensions.width, _dimensions.height, _dimensions.depth,
                 1, 0,
@@ -150,22 +147,8 @@ public:
         return *this;
     }
 
-    cube& program ( const program& program ) {
-        _mesh.program ( program );
-
-        return *this;
-    }
-
-    cube& draw() {
-        _mesh.draw();
-
-        return *this;
-    }
-
 private:
     dims_3<T> _dimensions;
-
-    mesh _mesh;
 };
 }
 

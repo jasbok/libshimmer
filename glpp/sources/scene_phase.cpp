@@ -1,5 +1,7 @@
 #include "scene_phase.h"
 
+#include <iostream>
+
 using namespace glpp;
 using namespace std;
 
@@ -40,7 +42,7 @@ scene_phase& scene_phase::entities ( vector<shared_ptr<entity>>&& entities )
 scene_phase& scene_phase::add ( const shared_ptr<entity>& entity ) {
     auto it = std::find ( _entities.begin(), _entities.end(), entity );
 
-    if ( it != _entities.end() ) {
+    if ( it == _entities.end() ) {
         _entities.push_back ( entity );
     }
 
@@ -62,39 +64,26 @@ void scene_phase::draw() {
     std::shared_ptr<texture_units> bound_texture_units;
     std::shared_ptr<mesh> bound_mesh;
 
-    _setup();
-
     for ( auto& entity : _entities ) {
-        if ( entity->program() != bound_program ) {
+        if ( entity->program() && entity->program() != bound_program ) {
             bound_program = entity->program();
             bound_program->use();
-            bound_program->uniform ( "view", _camera->view() );
+            bound_program->uniform ( "view",       _camera->view() );
+            bound_program->uniform ( "projection", _camera->projection() );
         }
 
-        if ( entity->textures() != bound_texture_units ) {
+        if ( entity->textures() && entity->textures() != bound_texture_units ) {
             bound_texture_units = entity->textures();
             bound_texture_units->bind();
         }
 
-        if ( entity->mesh() != bound_mesh ) {
+        if ( entity->mesh() && entity->mesh() != bound_mesh ) {
             bound_mesh = entity->mesh();
             bound_mesh->bind();
+            bound_mesh->program ( *bound_program );
         }
 
         bound_program->uniform ( "model", entity->model() );
         bound_mesh->draw();
-    }
-}
-
-void scene_phase::_setup() {
-    if ( _viewport ) {
-        glViewport ( _viewport->coords.x,
-                     _viewport->coords.x,
-                     _viewport->dims.width,
-                     _viewport->dims.height );
-    }
-
-    if ( _fbo ) {
-        _fbo->bind();
     }
 }

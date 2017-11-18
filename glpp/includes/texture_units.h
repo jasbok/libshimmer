@@ -23,6 +23,8 @@ public:
 
     virtual ~texture_units() = default;
 
+    static std::shared_ptr<texture_units> make_shared(group group);
+
     texture_units& operator=( texture_units&& move ) = default;
 
     texture_units& operator=( const texture_units& copy ) = default;

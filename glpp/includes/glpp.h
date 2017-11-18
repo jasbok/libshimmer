@@ -18,6 +18,7 @@
 #include "program.h"
 #include "quad.h"
 #include "resource_loader.h"
+#include "scene.h"
 #include "shader.h"
 #include "specs.h"
 #include "texture.h"

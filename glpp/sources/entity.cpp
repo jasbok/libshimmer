@@ -140,5 +140,9 @@ std::shared_ptr<mesh> entity::mesh() {
 
 entity& entity::draw()
 {
+    _program->use();
+    _textures->bind();
+    _mesh->draw();
+
     return *this;
 }

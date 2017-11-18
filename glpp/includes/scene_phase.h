@@ -60,8 +60,6 @@ private:
     std::shared_ptr<class framebuffer> _fbo;
 
     std::vector<std::shared_ptr<entity>> _entities;
-
-    void _setup();
 };
 }
 
