@@ -43,9 +43,9 @@ FT_Library ft_wrapper::handle() const
 void ft_wrapper::print_error(FT_Error ft_err, const string &label)
 {
     #undef __FTERRORS_H__
-    #define FT_ERRORDEF( e, v, s )  case e: cerr << s << ": " << label << endl; break;
+    #define FT_ERRORDEF( e, v, s )  case e: cerr << "freetype - " << s << ": " << label << endl; break;
     #define FT_ERROR_START_LIST     switch (ft_err) {
-    #define FT_ERROR_END_LIST       default: cerr << label << "Unknown FT_Error: " << endl;}
+    #define FT_ERROR_END_LIST       default: cerr << "freetype - " << label << "Unknown FT_Error: " << endl;}
     #include FT_ERRORS_H
 }
 // *INDENT-ON*

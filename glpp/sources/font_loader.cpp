@@ -28,9 +28,9 @@ glyph_pack font_loader::load ( const font_spec& font,
             return _convert_to_glyphs ( font_face ( ft, curr, dpi ) );
         }
         catch ( const exception& ex ) {
-            cerr << "Unable to load font, checking search path... "
-                 << "(" << font.path() << "): "
-                 << ex.what() << std::endl;
+//             cerr << "Unable to load font, checking search path... "
+//                  << "(" << font.path() << "): "
+//                  << ex.what() << std::endl;
         }
     }
 

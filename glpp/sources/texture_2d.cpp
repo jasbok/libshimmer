@@ -26,6 +26,27 @@ texture_2d& texture_2d::operator=( texture_2d&& move ) {
     return *this;
 }
 
+std::shared_ptr<texture_2d> texture_2d::make_shared (
+    enum texture::internal_format internal_format ) {
+    return std::make_shared<texture_2d>( internal_format );
+}
+
+std::shared_ptr<texture_2d> texture_2d::make_shared (
+    dims_2u                       dims,
+    enum texture::internal_format internal_format,
+    enum pixels::format           format,
+    enum pixels::type             type ) {
+    auto texture = std::make_shared<texture_2d>( internal_format );
+
+    texture->bind();
+    texture->image ( { nullptr,
+                       dims,
+                       format,
+                       type } );
+
+    return texture;
+}
+
 dims_2u texture_2d::dims() const {
     return _dims;
 }

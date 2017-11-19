@@ -10,6 +10,7 @@ set(DATA_GLSL_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/glsl)
 set(DATA_FONTS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/fonts)
 set(DATA_FONTS_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/fonts)
 
+configure_file(${DATA_IMG_SRC}/ck4.bmp ${DATA_IMG_DEST}/ck4.bmp COPYONLY)
 configure_file(${DATA_IMG_SRC}/ck4.png ${DATA_IMG_DEST}/ck4.png COPYONLY)
 configure_file(${DATA_IMG_SRC}/cursor.png ${DATA_IMG_DEST}/cursor.png COPYONLY)
 configure_file(${DATA_IMG_SRC}/doom.gif ${DATA_IMG_DEST}/doom.gif COPYONLY)

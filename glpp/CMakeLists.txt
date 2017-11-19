@@ -105,6 +105,7 @@ set( SOURCES
         ${SOURCES_DIR}/atlas_builder.cpp
         ${SOURCES_DIR}/bitmap.cpp
         ${SOURCES_DIR}/camera.cpp
+        ${SOURCES_DIR}/debug.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/entity.cpp
         ${SOURCES_DIR}/font.cpp

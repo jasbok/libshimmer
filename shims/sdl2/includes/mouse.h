@@ -3,6 +3,8 @@
 
 #include "shim.h"
 
+#include <SDL.h>
+
 SHIM ( int,         SDL_CaptureMouse,
        SDL_bool enabled );
 

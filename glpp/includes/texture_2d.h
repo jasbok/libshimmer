@@ -1,15 +1,15 @@
 #ifndef GLPP_TEXTURE_2D_H
 #define GLPP_TEXTURE_2D_H
 
+#include "pixels.h"
 #include "specs.h"
 #include "texture.h"
 
+#include <memory>
 #include <vector>
 
 namespace glpp
 {
-class pixels;
-
 class texture_2d : public texture
 {
 public:
@@ -50,6 +50,15 @@ public:
 
     texture_2d& operator=( const texture_2d& copy ) = delete;
 
+
+    static std::shared_ptr<texture_2d> make_shared (
+        enum internal_format internal_format );
+
+    static std::shared_ptr<texture_2d> make_shared (
+        dims_2u              dims,
+        enum internal_format internal_format = internal_format::rgb,
+        enum pixels::format  format          = pixels::format::rgb,
+        enum pixels::type    type            = pixels::type::gl_unsigned_byte );
 
     dims_2u dims() const;
 

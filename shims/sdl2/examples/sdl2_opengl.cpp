@@ -6,18 +6,16 @@ SDL_Window*   WINDOW;
 SDL_Renderer* RENDERER;
 
 SDL_GLContext GL_CONTEXT;
-static const unsigned int SCREEN_WIDTH  = 1600;
-static const unsigned int SCREEN_HEIGHT = 900;
 
-static const unsigned int RENDER_TARGET_WIDTH  = 320;
-static const unsigned int RENDER_TARGET_HEIGHT = 240;
+static const glpp::dims_2u SCREEN_DIMS = { 320, 240 };
+static const glpp::dims_2u RENDER_DIMS = { 320, 240 };
 
 auto camera               = std::make_shared<glpp::camera>();
 auto render_target_camera = std::make_shared<glpp::camera>();
 glm::vec3 move;
 glm::vec3 rotate;
 float     move_rate   = 2.5f;
-float     rotate_rate = 1.0f;
+float     rotate_rate = 2.5f;
 
 bool mouse_left_down  = false;
 bool mouse_right_down = false;
@@ -139,8 +137,8 @@ int init_opengl() {
     if ( ( WINDOW = SDL_CreateWindow ( "SDL2 Example",
                                        100,
                                        100,
-                                       SCREEN_WIDTH,
-                                       SCREEN_HEIGHT,
+                                       SCREEN_DIMS.width,
+                                       SCREEN_DIMS.height,
                                        SDL_WINDOW_OPENGL |
                                        SDL_WINDOW_SHOWN ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create SDL2 window: " );
@@ -179,13 +177,6 @@ int main ( int argc, char** argv ) {
 
     glpp::resource_loader loader ( { "data/glsl", "data/img" } );
 
-    auto program =
-        std::make_shared<glpp::program>( loader.program ( "example.vert",
-                                                          "example.frag" ) );
-
-
-    program->use().uniform ( "texture_a", 1 ).uniform ( "texture_b", 2 );
-
     auto texture_a =
         std::make_shared<glpp::texture_2d>( loader.texture_2d ( "ck4.png" ) );
     auto texture_b =
@@ -194,7 +185,6 @@ int main ( int argc, char** argv ) {
         std::make_shared<glpp::texture_2d>( loader.texture_2d ( "doom.gif" ) );
     auto texture_cursor =
         std::make_shared<glpp::texture_2d>( loader.texture_2d ( "cursor.png" ) );
-
 
     texture_a->bind();
     texture_a->filters ( glpp::texture_2d::filter::nearest )
@@ -208,29 +198,68 @@ int main ( int argc, char** argv ) {
     texture_c->filters ( glpp::texture_2d::filter::nearest )
         .wrap ( glpp::texture_2d::texture_wrap::mirrored_repeat );
 
+    auto render_target = glpp::texture_2d::make_shared ( RENDER_DIMS );
+    render_target->
+        min_filter ( glpp::texture_2d::min_filter::nearest )
+        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
+
+    auto render_target_depth = glpp::texture_2d::make_shared (
+        RENDER_DIMS,
+        glpp::texture_2d::internal_format::depth_component,
+        glpp::pixels::format::depth_component,
+        glpp::pixels::type::gl_float );
+
+    auto fbo = std::make_shared<glpp::framebuffer>();
+    fbo->
+        bind()
+        .attach_color ( *render_target )
+        .attach_depth ( *render_target_depth ).unbind();
+
+    auto cube = glpp::cube<GLfloat>::make_shared ( { 1.0f, 1.0f, 1.0f } );
 
     auto cube_textures = glpp::texture_units::make_shared ( { texture_c,
                                                               texture_b,
                                                               texture_a } );
 
-    auto fbo = std::make_shared<glpp::framebuffer>();
+    auto program =
+        std::make_shared<glpp::program>( loader.program ( "example.vert",
+                                                          "example.frag" ) );
+    program->use().uniform ( "texture_a", 1 ).uniform ( "texture_b", 2 );
 
-    auto render_target = std::make_shared<glpp::texture_2d>(
-        glpp::texture_2d::internal_format::rgb );
+    auto outer_cube = std::make_shared<glpp::entity>();
+    outer_cube->
+        program ( program )
+        .textures ( cube_textures )
+        .mesh ( cube )
+        .scale ( { 500.0, 250.0, 500.0 } );
+
+    auto avatar = std::make_shared<glpp::entity>();
+    avatar->
+        program ( program )
+        .textures ( cube_textures )
+        .mesh ( cube )
+        .scale ( { 5.0, 5.0, 10.0 } );
+
+
+    auto quad = glpp::quad<GLfloat>::make_shared ( { 1.0, 0.75 } );
 
     auto mirror_textures = glpp::texture_units::make_shared ( { render_target,
                                                                 render_target,
                                                                 render_target } );
+    auto mirror = std::make_shared<glpp::entity>();
+    mirror->
+        program ( program )
+        .textures ( mirror_textures )
+        .mesh ( quad )
+        .position ( { 0.0f, 0.0f, 100.0f } )
+        .rotation ( { 0.0f, 180.0f, 180.0f } )
+        .scale ( { 25.0f, 25.0f, 25.0f } );
 
     glpp::font_loader font_loader ( { "data/fonts" } );
 
     std::vector<glpp::range_uint> unicodes = {
         glpp::unicodes::basic_latin,
         glpp::unicodes::latin_1_supplement,
-
-        //        glpp::unicodes::latin_extended_a,
-        //        glpp::unicodes::latin_extended_b,
-        //        glpp::unicodes::greek_and_coptic
     };
 
     auto glyphs = font_loader.load ( {
@@ -257,60 +286,6 @@ int main ( int argc, char** argv ) {
                                                                atlas_texture,
                                                                atlas_texture } );
 
-    render_target->bind();
-    render_target->min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest );
-    render_target->image ( glpp::pixels ( nullptr,
-                                          { RENDER_TARGET_WIDTH,
-                                            RENDER_TARGET_HEIGHT },
-                                          glpp::pixels::format::rgb,
-                                          glpp::pixels::type::gl_unsigned_byte ) );
-
-    fbo->bind().attach_color ( *render_target );
-
-    auto render_target_depth = std::make_shared<glpp::texture_2d>(
-        glpp::texture_2d::internal_format::depth_component );
-
-    render_target_depth->bind();
-    render_target_depth->image ( glpp::pixels ( nullptr,
-                                                { RENDER_TARGET_WIDTH,
-                                                  RENDER_TARGET_HEIGHT },
-                                                glpp::pixels::format::
-                                                    depth_component,
-                                                glpp::pixels::type::gl_float ) );
-
-    fbo->attach_depth ( *render_target_depth ).unbind();
-
-    auto cube = glpp::cube<GLfloat>::make_shared ( { 1.0f, 1.0f, 1.0f } );
-    cube->bind().program ( *program );
-
-    auto quad = glpp::quad<GLfloat>::make_shared ( { 1.0, 0.75 } );
-    quad->bind().program ( *program );
-
-
-    auto outer_cube = std::make_shared<glpp::entity>();
-    outer_cube->
-        program ( program )
-        .textures ( cube_textures )
-        .mesh ( cube )
-        .scale ( { 500.0, 250.0, 500.0 } );
-
-    auto avatar = std::make_shared<glpp::entity>();
-    avatar->
-        program ( program )
-        .textures ( cube_textures )
-        .mesh ( cube )
-        .scale ( { 5.0, 5.0, 10.0 } );
-
-    auto mirror = std::make_shared<glpp::entity>();
-    mirror->
-        program ( program )
-        .textures ( mirror_textures )
-        .mesh ( quad )
-        .position ( { 0.0f, 0.0f, 100.0f } )
-        .rotation ( { 0.0f, 180.0f, 180.0f } )
-        .scale ( { 25.0f, 25.0f, 25.0f } );
-
     auto font_atlas = std::make_shared<glpp::entity>();
     font_atlas->
         program ( program )
@@ -320,21 +295,13 @@ int main ( int argc, char** argv ) {
         .rotation ( { 0.0f, -90.0f, 0.0f } )
         .scale ( { 25.0f, 25.0f, 25.0f } );
 
-    camera->perspective ( 50,
-                          SCREEN_WIDTH / ( float )SCREEN_HEIGHT,
-                          0.01f,
-                          2000.0f );
-
     render_target_camera->
         position ( { 0.0f, 0.0f, 150.0f } )
         .rotation ( { 0.0f, 180.0f, 0.0f } )
         .perspective ( 30.0f, 1.0f, 0.1f, 1000.0f );
 
     auto mirror_viewport = std::make_shared<glpp::viewport_int>();
-    mirror_viewport->dims = { RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT };
-
-    auto main_viewport = std::make_shared<glpp::viewport_int>();
-    main_viewport->dims = { SCREEN_WIDTH, SCREEN_HEIGHT };
+    mirror_viewport->dims = RENDER_DIMS;
 
     glpp::scene_phase mirror_scene ( "mirror",
         render_target_camera,
@@ -344,6 +311,16 @@ int main ( int argc, char** argv ) {
     mirror_scene
         .add ( outer_cube )
         .add ( avatar );
+
+
+    camera->perspective ( 50,
+                          SCREEN_DIMS.wh_ratio(),
+                          0.01f,
+                          2000.0f );
+
+    auto main_viewport = std::make_shared<glpp::viewport_int>();
+    main_viewport->dims = SCREEN_DIMS;
+
 
     glpp::scene_phase main_scene ( "main",
         camera,
@@ -357,8 +334,8 @@ int main ( int argc, char** argv ) {
     glpp::scene scene;
     scene.add ( std::move ( mirror_scene ) );
     scene.add ( std::move ( main_scene ) );
-
     glEnable ( GL_DEPTH_TEST );
+
 
     float factor = 0.0f;
     float update = 0.0005f;

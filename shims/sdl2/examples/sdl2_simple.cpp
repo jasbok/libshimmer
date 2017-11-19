@@ -60,7 +60,7 @@ int main ( int argc, char** argv ) {
         return sdl_error ( "Error) Unable to create SDL2 renderer: " );
     }
 
-    if ( ( IMAGE = SDL_LoadBMP ( "data/ck4.bmp" ) ) == nullptr ) {
+    if ( ( IMAGE = SDL_LoadBMP ( "data/img/ck4.bmp" ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to load test image: " );
     }
 

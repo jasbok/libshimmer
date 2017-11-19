@@ -1,14 +1,10 @@
-#ifndef LIBSHIMMER_SHIMMER_H
-#define LIBSHIMMER_SHIMMER_H
+#ifndef SHIMMER_SHIMMER_H
+#define SHIMMER_SHIMMER_H
 
-#include "api/init_api.h"
-#include "api/keyboard_api.h"
-#include "api/mouse_api.h"
-#include "api/renderer_api.h"
-#include "api/window_api.h"
-#include "macros/shim_macros.h"
-
-#include <memory>
+#include "macros.h"
+#include "options.h"
+#include "renderer.h"
+#include "specs.h"
 
 namespace shimmer
 {
@@ -19,14 +15,18 @@ public:
 
     virtual ~shimmer();
 
-    std::shared_ptr<keyboard_api> keyboard();
+    void create_window ( std::string&     title,
+                         glpp::coords_2i& coords,
+                         glpp::dims_2u&   dims );
 
-    std::shared_ptr<mouse_api>    mouse();
+    void resize_window ( glpp::dims_2u& dims );
 
-    std::shared_ptr<renderer_api> renderer();
+    bool scaling_enabled() const;
 
-    std::shared_ptr<window_api>   window();
+private:
+    struct application _app;
+    struct options _options;
 };
 }
 
-#endif // ifndef LIBSHIMMER_SHIMMER_H
+#endif // ifndef SHIMMER_SHIMMER_H

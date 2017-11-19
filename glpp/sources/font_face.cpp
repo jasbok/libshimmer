@@ -24,7 +24,7 @@ font_face::font_face( const ft_wrapper& ft,
     }
     else if ( ft_err != FT_Err_Ok )
     {
-        ft_wrapper::print_error ( ft_err, _font.path() );
+        //ft_wrapper::print_error ( ft_err, _font.path() );
         throw font_not_found_exception();
     }
 
@@ -74,7 +74,7 @@ glyph font_face::get_glyph ( wchar_t unicode ) const
     auto glyph_index = FT_Get_Char_Index ( _face, unicode );
 
     if ( glyph_index == 0 ) {
-        wcerr << "Font does not contain glyph: " << unicode << endl;
+        //wcerr << "Font does not contain glyph: " << unicode << endl;
         throw unable_to_load_glyph_exception();
     }
 

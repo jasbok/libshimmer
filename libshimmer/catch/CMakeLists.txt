@@ -59,12 +59,4 @@ configure_file(data/images/8x9x8_rgba.jpeg data/images/8x9x8_rgba.jpeg COPYONLY)
 ###############################################################################
 enable_testing()
 
-add_test( file_reader catch "[file_reader]" )
-add_test( gl_pixel catch "[gl_pixel]" )
-add_test( gl_program_manager catch "[gl_program_manager]" )
-add_test( gl_shader_compiler catch "[gl_shader_compiler]" )
-add_test( gl_shader_linker catch "[gl_shader_linker]" )
-add_test( gl_shader_manager catch "[gl_shader_manager]" )
-add_test( glsl_variable_extractor catch "[glsl_variable_extractor]" )
-add_test( regex_helper catch "[regex_helper]" )
-add_test( simple_cache catch "[simple_cache]" )
+# add_test( file_reader catch "[file_reader]" )
