@@ -28,18 +28,10 @@ void renderer::init ( const struct application& application,
                 shader.fragment ) );
     }
 
-    _application_texture = std::make_shared<glpp::texture_2d>(
-        glpp::texture_2d::internal_format::rgb );
+    _application_texture = glpp::texture_2d::make_shared (
+        application.surface.dims );
+    _application_texture->filters ( glpp::texture_2d::filter::linear );
 
-    _application_texture->bind();
-    _application_texture->
-        min_filter ( glpp::texture_2d::min_filter::nearest )
-        .mag_filter ( glpp::texture_2d::mag_filter::nearest )
-        .image ( glpp::pixels ( nullptr,
-                                application.surface.dims,
-                                glpp::pixels::format::rgb,
-                                glpp::pixels::type::gl_unsigned_byte ) );
 
     _application_surface = glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } );
-    _background_surface  = glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } );
 }

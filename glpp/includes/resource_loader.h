@@ -35,7 +35,10 @@ public:
 
     pixels           image ( const std::string& path ) const;
 
-    class texture_2d texture_2d ( const std::string& path ) const;
+    class texture_2d texture_2d (
+            const std::string&               path,
+            enum texture_2d::internal_format internal_format =
+                texture_2d::internal_format::rgb ) const;
 
 private:
     std::vector<std::string> _search_paths;

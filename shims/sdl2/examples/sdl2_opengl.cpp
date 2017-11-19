@@ -7,11 +7,12 @@ SDL_Renderer* RENDERER;
 
 SDL_GLContext GL_CONTEXT;
 
-static const glpp::dims_2u SCREEN_DIMS = { 320, 240 };
+static const glpp::dims_2u SCREEN_DIMS = { 1600, 900 };
 static const glpp::dims_2u RENDER_DIMS = { 320, 240 };
 
 auto camera               = std::make_shared<glpp::camera>();
 auto render_target_camera = std::make_shared<glpp::camera>();
+
 glm::vec3 move;
 glm::vec3 rotate;
 float     move_rate   = 2.5f;
@@ -120,6 +121,15 @@ void update_camera() {
         .rotate ( rotate * rotate_rate );
 }
 
+void update_cursor ( const std::shared_ptr<glpp::entity>& cursor ) {
+    SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
+
+    //    cursor->position ( { -mouse_coords.x, SCREEN_DIMS.height -
+    // mouse_coords.y,
+    //                         0 } );
+    cursor->position ( { mouse_coords.x, mouse_coords.y, 0 } );
+}
+
 int sdl_error ( const std::string& err, bool do_quit = true ) {
     std::cerr << err << SDL_GetError() << std::endl;
     cleanup();
@@ -150,6 +160,9 @@ int init_opengl() {
     SDL_GL_SetAttribute ( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
     SDL_GL_SetAttribute ( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
     SDL_GL_SetAttribute ( SDL_GL_DOUBLEBUFFER,          1 );
+
+    SDL_ShowCursor ( 0 );
+
 
     if ( ( GL_CONTEXT = SDL_GL_CreateContext ( WINDOW ) ) == nullptr ) {
         return sdl_error ( "Error) Unable to create OpenGL context: " );
@@ -183,8 +196,6 @@ int main ( int argc, char** argv ) {
         std::make_shared<glpp::texture_2d>( loader.texture_2d ( "wolf.png" ) );
     auto texture_c =
         std::make_shared<glpp::texture_2d>( loader.texture_2d ( "doom.gif" ) );
-    auto texture_cursor =
-        std::make_shared<glpp::texture_2d>( loader.texture_2d ( "cursor.png" ) );
 
     texture_a->bind();
     texture_a->filters ( glpp::texture_2d::filter::nearest )
@@ -255,6 +266,34 @@ int main ( int argc, char** argv ) {
         .rotation ( { 0.0f, 180.0f, 180.0f } )
         .scale ( { 25.0f, 25.0f, 25.0f } );
 
+
+    auto cursor_program = std::make_shared<glpp::program>(
+        loader.program ( "ui.vert",
+                         "default.frag" ) );
+
+    program->use().uniform ( "tex", 0 );
+
+    auto texture_cursor = std::make_shared<glpp::texture_2d>(
+        loader.texture_2d ( "cursor.png",
+                            glpp::texture_2d::internal_format::rgba ) );
+
+    texture_cursor->wrap ( glpp::texture_2d::texture_wrap::clamp_to_edge );
+
+    auto cursor_textures =
+        glpp::texture_units::make_shared ( { texture_cursor } );
+
+    auto cursor_quad =
+        glpp::quad<GLfloat>::make_shared ( texture_cursor->dims() );
+
+    auto cursor = std::make_shared<glpp::entity>();
+    cursor->
+        program ( cursor_program )
+        .textures ( cursor_textures )
+        .mesh ( cursor_quad )
+        .rotate ( { 180, 0, 0 } )
+        .scale ( { 0.25, 0.25, 1 } );
+
+
     glpp::font_loader font_loader ( { "data/fonts" } );
 
     std::vector<glpp::range_uint> unicodes = {
@@ -310,17 +349,18 @@ int main ( int argc, char** argv ) {
 
     mirror_scene
         .add ( outer_cube )
-        .add ( avatar );
+        .add ( avatar )
+        .capabilities ( { GL_DEPTH_TEST } )
+        .clear_bits ( { GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT } );
 
+
+    auto main_viewport = std::make_shared<glpp::viewport_int>();
+    main_viewport->dims = SCREEN_DIMS;
 
     camera->perspective ( 50,
                           SCREEN_DIMS.wh_ratio(),
                           0.01f,
                           2000.0f );
-
-    auto main_viewport = std::make_shared<glpp::viewport_int>();
-    main_viewport->dims = SCREEN_DIMS;
-
 
     glpp::scene_phase main_scene ( "main",
         camera,
@@ -329,20 +369,33 @@ int main ( int argc, char** argv ) {
     main_scene
         .add ( outer_cube )
         .add ( mirror )
-        .add ( font_atlas );
+        .add ( font_atlas )
+        .capabilities ( { GL_DEPTH_TEST } )
+        .clear_bits ( { GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT } );
+
+    glpp::scene_phase ui_scene ( "ui" );
+    ui_scene.camera()->screen ( SCREEN_DIMS ); // .rotate ( { 0, 180, 0 } );
+    ui_scene
+        .add ( cursor )
+        .capabilities ( { GL_BLEND } )
+        .blend_function ( { GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA } );
 
     glpp::scene scene;
+
     scene.add ( std::move ( mirror_scene ) );
     scene.add ( std::move ( main_scene ) );
-    glEnable ( GL_DEPTH_TEST );
-
+    scene.add ( std::move ( ui_scene ) );
 
     float factor = 0.0f;
     float update = 0.0005f;
 
     while ( RUNNING ) {
+        GLPP_CHECK_ERROR ( "Main" );
+
         factor += update;
         factor  = factor > 1.0f ? 0.0f : factor;
+
+        program->use();
         program->uniform ( "blend_factor", factor );
 
         if ( factor == 0.0f ) {
@@ -356,6 +409,8 @@ int main ( int argc, char** argv ) {
         avatar->
             position ( camera->position() )
             .rotation ( camera->rotation() * glm::vec3 ( -1.0f, 1.0f, 1.0f ) );
+
+        update_cursor ( cursor );
 
         scene.draw();
 

@@ -1,6 +1,8 @@
 #ifndef GLPP_CAMERA_H
 #define GLPP_CAMERA_H
 
+#include "specs.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -46,9 +48,9 @@ public:
     camera& projection ( const glm::mat4& projection );
 
     camera& perspective ( float fov,
-                         float aspect,
-                         float near,
-                         float far );
+                          float aspect,
+                          float near,
+                          float far );
 
     camera& ortho ( float left,
                     float right,
@@ -61,6 +63,8 @@ public:
                     float top,
                     float near,
                     float far );
+
+    camera&   screen ( const dims_2u& dims );
 
     glm::mat4 projection();
 

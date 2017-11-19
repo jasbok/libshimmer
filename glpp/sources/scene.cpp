@@ -16,8 +16,6 @@ scene_phase& scene::phase ( const string& id ) {
         }
     }
 
-    std::cerr << "Could not find the specified scene phase: "
-              << id << std::endl;
     throw phase_not_found_exception();
 }
 
@@ -26,7 +24,7 @@ void scene::draw() {
     std::shared_ptr<framebuffer>  current_fbo;
 
     for ( auto& phase : _phases ) {
-        if ( phase.viewport() != current_viewport ) {
+        if ( phase.viewport() && ( phase.viewport() != current_viewport ) ) {
             current_viewport = phase.viewport();
 
             glViewport ( current_viewport->coords.x,
@@ -43,7 +41,6 @@ void scene::draw() {
                 current_fbo->unbind();
             }
 
-            glClear ( GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT );
             current_fbo = phase.framebuffer();
         }
 

@@ -134,9 +134,11 @@ pixels resource_loader::image ( const string& path ) const
     throw file_read_exception();
 }
 
-class texture_2d resource_loader::texture_2d ( const string& path ) const
+class texture_2d resource_loader::texture_2d (
+        const string&                    path,
+        enum texture_2d::internal_format internal_format ) const
 {
-    class texture_2d texture ( texture_2d::internal_format::rgb );
+    class texture_2d texture ( internal_format );
 
     texture.bind();
     texture.image ( image ( path ) );

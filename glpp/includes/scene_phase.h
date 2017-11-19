@@ -14,6 +14,12 @@ namespace glpp
 class scene_phase
 {
 public:
+    struct blend_function {
+        GLenum source_factor, destination_factor;
+    };
+
+    scene_phase( const std::string id );
+
     scene_phase( const std::string                    id,
                  const std::shared_ptr<camera>&       camera,
                  const std::shared_ptr<viewport_int>& viewport,
@@ -48,7 +54,13 @@ public:
         const std::shared_ptr<entity>& entity );
 
 
-    void draw();
+    scene_phase& capabilities ( const std::vector<GLenum>& capabilities );
+
+    scene_phase& clear_bits ( const std::vector<GLenum>& clear_bits );
+
+    scene_phase& blend_function ( const struct blend_function& function );
+
+    void         draw();
 
 private:
     std::string _id;
@@ -60,6 +72,12 @@ private:
     std::shared_ptr<class framebuffer> _fbo;
 
     std::vector<std::shared_ptr<entity>> _entities;
+
+    std::vector<GLenum> _capabilities;
+
+    std::optional<GLenum> _clear_bits;
+
+    std::optional<struct blend_function> _blend_function;
 };
 }
 

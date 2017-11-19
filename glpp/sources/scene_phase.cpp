@@ -5,6 +5,14 @@
 using namespace glpp;
 using namespace std;
 
+scene_phase::scene_phase( const string id )
+    : _id ( id ),
+      _camera ( std::make_shared<class camera>() ),
+      _viewport(),
+      _fbo(),
+      _entities()
+{}
+
 scene_phase::scene_phase( const string                              id,
                           const std::shared_ptr<class camera>&      camera,
                           const std::shared_ptr<viewport_int>&      viewport,
@@ -30,6 +38,33 @@ shared_ptr<viewport_int> scene_phase::viewport() const {
 
 shared_ptr<class framebuffer> scene_phase::framebuffer() const {
     return _fbo;
+}
+
+scene_phase& scene_phase::capabilities ( const std::vector<GLenum>& capabilities )
+{
+    _capabilities = capabilities;
+
+    return *this;
+}
+
+scene_phase& scene_phase::clear_bits ( const std::vector<GLenum>& clear_bits )
+{
+    GLenum bits = 0;
+
+    for ( auto& clear_bit : clear_bits ) {
+        bits |= clear_bit;
+    }
+
+    _clear_bits = bits;
+
+    return *this;
+}
+
+scene_phase& scene_phase::blend_function ( const struct blend_function& func )
+{
+    _blend_function = func;
+
+    return *this;
 }
 
 scene_phase& scene_phase::entities ( vector<shared_ptr<entity>>&& entities )
@@ -64,20 +99,31 @@ void scene_phase::draw() {
     std::shared_ptr<texture_units> bound_texture_units;
     std::shared_ptr<mesh> bound_mesh;
 
+    for ( auto& capability : _capabilities ) {
+        glEnable ( capability );
+    }
+
+    if ( _clear_bits.has_value() ) glClear ( _clear_bits.value() );
+
+    if ( _blend_function.has_value() ) glBlendFunc (
+            _blend_function->source_factor,
+            _blend_function->destination_factor );
+
     for ( auto& entity : _entities ) {
-        if ( entity->program() && entity->program() != bound_program ) {
+        if ( entity->program() && ( entity->program() != bound_program ) ) {
             bound_program = entity->program();
             bound_program->use();
             bound_program->uniform ( "view",       _camera->view() );
             bound_program->uniform ( "projection", _camera->projection() );
         }
 
-        if ( entity->textures() && entity->textures() != bound_texture_units ) {
+        if ( entity->textures() &&
+             ( entity->textures() != bound_texture_units ) ) {
             bound_texture_units = entity->textures();
             bound_texture_units->bind();
         }
 
-        if ( entity->mesh() && entity->mesh() != bound_mesh ) {
+        if ( entity->mesh() && ( entity->mesh() != bound_mesh ) ) {
             bound_mesh = entity->mesh();
             bound_mesh->bind();
             bound_mesh->program ( *bound_program );
@@ -85,5 +131,9 @@ void scene_phase::draw() {
 
         bound_program->uniform ( "model", entity->model() );
         bound_mesh->draw();
+    }
+
+    for ( auto& capability : _capabilities ) {
+        glDisable ( capability );
     }
 }

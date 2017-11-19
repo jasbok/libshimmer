@@ -5,11 +5,7 @@ static const glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };
 glpp::camera::camera()
     : _position ( 0, 0, 0 ),
       _rotation ( 0, 0, 0 ),
-      _projection ( glm::perspective (
-              glm::radians ( 60.0f ),
-              16.0f / 9.0f,
-              0.1f,
-              1000.0f ) ),
+      _projection ( glm::mat4 ( 1.0f ) ),
       _require_update ( false )
 {
     update();
@@ -106,9 +102,9 @@ glm::mat4 glpp::camera::view()
 }
 
 glpp::camera& glpp::camera::perspective ( float fov,
-                                         float aspect,
-                                         float near,
-                                         float far ) {
+                                          float aspect,
+                                          float near,
+                                          float far ) {
     _projection = glm::perspective ( glm::radians ( fov ),
                                      aspect,
                                      near,
@@ -143,6 +139,11 @@ glpp::camera& glpp::camera::ortho ( float left,
                                far );
 
     return *this;
+}
+
+glpp::camera& glpp::camera::screen ( const glpp::dims_2u& dims )
+{
+    return ortho ( 0, dims.width, dims.height, 0 );
 }
 
 glpp::camera& glpp::camera::projection ( const glm::mat4& projection ) {
