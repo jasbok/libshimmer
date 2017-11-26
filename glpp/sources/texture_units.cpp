@@ -14,8 +14,8 @@ texture_units& texture_units::textures ( const texture_units::group& textures )
     return *this;
 }
 
-std::shared_ptr<texture_units> texture_units::make_shared(group group){
-        return std::make_shared<texture_units>(group);
+std::shared_ptr<texture_units> texture_units::make_shared ( group group ) {
+    return std::make_shared<texture_units>( group );
 }
 
 texture_units::group& texture_units::textures() {
@@ -30,6 +30,16 @@ texture_units& texture_units::bind()   {
             texture->bind_texture_unit ( unit );
         }
         unit++;
+    }
+
+    return *this;
+}
+
+texture_units& texture_units::filters ( const texture_2d::filter& filter )
+{
+    for ( auto& texture : _textures ) {
+        texture->bind();
+        texture->filters ( filter );
     }
 
     return *this;

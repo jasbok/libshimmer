@@ -18,14 +18,16 @@ public:
 
     virtual ~scene() = default;
 
-    scene& operator=( scene&& move ) = default;
+    scene&       operator=( scene&& move ) = default;
 
-    scene& operator=( const scene& copy ) = delete;
+    scene&       operator=( const scene& copy ) = delete;
+
+    scene_phase& operator[]( const std::string& id );
 
 
     scene&       add ( scene_phase&& phase );
 
-    scene_phase& phase ( const std::string& id );
+    scene_phase& find ( const std::string& id );
 
     void         draw();
 

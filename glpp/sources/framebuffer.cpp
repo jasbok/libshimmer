@@ -42,6 +42,11 @@ framebuffer& framebuffer::unbind()
     return *this;
 }
 
+GLuint framebuffer::handle()
+{
+    return _handle;
+}
+
 GLenum framebuffer::check_status() const
 {
     return glCheckFramebufferStatus ( GL_FRAMEBUFFER );

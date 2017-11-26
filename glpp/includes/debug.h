@@ -17,6 +17,8 @@ std::string gl_error_to_string ( GLenum err );
 bool        gl_get_errors ( const std::string& file,
                             int                line,
                             const std::string& label = "GL_ERROR" );
+
+std::string gl_framebuffer_status_to_string ( GLenum status );
 }
 
 #endif // ifndef GLPP_DEBUG_H

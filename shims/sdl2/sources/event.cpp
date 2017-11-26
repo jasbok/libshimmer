@@ -9,44 +9,23 @@ int SDL_PollEvent ( SDL_Event* event )
     if ( available ) {
         switch ( event->type ) {
         case SDL_MOUSEBUTTONDOWN:
-
-            //             printf ( "Mouse DOWN position: %i,  %i\n",
-            //                      event->motion.x,
-            //                      event->motion.y );
-            //
-            //             printf ( "Mouse DOWN position (rel): %i,  %i\n",
-            //                      event->motion.xrel,
-            //                      event->motion.yrel );
-            break;
-
         case SDL_MOUSEBUTTONUP:
-
-            //             printf ( "Mouse UP position: %i,  %i\n",
-            //                      event->motion.x,
-            //                      event->motion.y );
-            //
-            //             printf ( "Mouse UP position (rel): %i,  %i\n",
-            //                      event->motion.xrel,
-            //                      event->motion.yrel );
-            break;
-
         case SDL_MOUSEMOTION:
-
-            //             printf ( "Mouse MOTION position: %i,  %i\n",
-            //                      event->motion.x,
-            //                      event->motion.y );
-            //
-            //             printf ( "Mouse MOTION position (rel): %i,  %i\n",
-            //                      event->motion.xrel,
-            //                      event->motion.yrel );
+            shim.mouse_coords = { event->motion.x, event->motion.y };
+            libshimmer->mouse_coords ( shim.mouse_coords );
+            event->motion.x = shim.mouse_coords.x;
+            event->motion.y = shim.mouse_coords.y;
             break;
 
         case SDL_WINDOWEVENT:
-            switch (event->window.event){
-                case SDL_WINDOWEVENT_RESIZED:
-                    glpp::dims_2u dims(event->window.data1, event->window.data2);
-                    libshimmer->resize_window(dims);
-                    break;
+
+            switch ( event->window.event ) {
+            case SDL_WINDOWEVENT_RESIZED:
+                glpp::dims_2u dims ( event->window.data1, event->window.data2 );
+                libshimmer->resize_window ( dims );
+                event->type = 0;
+
+                break;
             }
             break;
         }

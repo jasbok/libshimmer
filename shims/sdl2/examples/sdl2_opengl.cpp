@@ -123,10 +123,6 @@ void update_camera() {
 
 void update_cursor ( const std::shared_ptr<glpp::entity>& cursor ) {
     SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
-
-    //    cursor->position ( { -mouse_coords.x, SCREEN_DIMS.height -
-    // mouse_coords.y,
-    //                         0 } );
     cursor->position ( { mouse_coords.x, mouse_coords.y, 0 } );
 }
 
@@ -374,7 +370,7 @@ int main ( int argc, char** argv ) {
         .clear_bits ( { GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT } );
 
     glpp::scene_phase ui_scene ( "ui" );
-    ui_scene.camera()->screen ( SCREEN_DIMS ); // .rotate ( { 0, 180, 0 } );
+    ui_scene.camera()->screen ( SCREEN_DIMS );
     ui_scene
         .add ( cursor )
         .capabilities ( { GL_BLEND } )

@@ -7,6 +7,9 @@ set(DATA_IMG_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/img)
 set(DATA_GLSL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl)
 set(DATA_GLSL_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/glsl)
 
+set(DATA_GLSL_2_1_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl2.1)
+set(DATA_GLSL_2_1_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/glsl2.1)
+
 set(DATA_FONTS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/fonts)
 set(DATA_FONTS_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/fonts)
 
@@ -15,6 +18,11 @@ configure_file(${DATA_IMG_SRC}/ck4.png ${DATA_IMG_DEST}/ck4.png COPYONLY)
 configure_file(${DATA_IMG_SRC}/cursor.png ${DATA_IMG_DEST}/cursor.png COPYONLY)
 configure_file(${DATA_IMG_SRC}/doom.gif ${DATA_IMG_DEST}/doom.gif COPYONLY)
 configure_file(${DATA_IMG_SRC}/wolf.png ${DATA_IMG_DEST}/wolf.png COPYONLY)
+
+configure_file(${DATA_GLSL_2_1_SRC}/example.frag ${DATA_GLSL_2_1_DEST}/example.frag COPYONLY)
+configure_file(${DATA_GLSL_2_1_SRC}/example.vert ${DATA_GLSL_2_1_DEST}/example.vert COPYONLY)
+configure_file(${DATA_GLSL_2_1_SRC}/default.frag ${DATA_GLSL_2_1_DEST}/default.frag COPYONLY)
+configure_file(${DATA_GLSL_2_1_SRC}/ui.vert ${DATA_GLSL_2_1_DEST}/ui.vert COPYONLY)
 
 configure_file(${DATA_GLSL_SRC}/example.frag ${DATA_GLSL_DEST}/example.frag COPYONLY)
 configure_file(${DATA_GLSL_SRC}/example.vert ${DATA_GLSL_DEST}/example.vert COPYONLY)

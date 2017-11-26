@@ -136,4 +136,8 @@ void scene_phase::draw() {
     for ( auto& capability : _capabilities ) {
         glDisable ( capability );
     }
+
+    if ( bound_program ) bound_program->unbind();
+
+    if ( bound_mesh ) bound_mesh->unbind();
 }

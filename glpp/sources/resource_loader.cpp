@@ -105,6 +105,14 @@ class program resource_loader::program (
     return program;
 }
 
+std::shared_ptr<class program> resource_loader::shared_program (
+    const string& vertex_shader_path,
+    const string& fragment_shader_path ) const
+{
+    return std::make_shared<class program>( program ( vertex_shader_path,
+                                                      fragment_shader_path ) );
+}
+
 pixels resource_loader::image ( const string& path ) const
 {
     int width, height, channels;

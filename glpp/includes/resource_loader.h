@@ -33,6 +33,10 @@ public:
     class program program ( const std::string& vertex_shader_path,
                             const std::string& fragment_shader_path ) const;
 
+    std::shared_ptr<class program> shared_program (
+        const std::string& vertex_shader_path,
+        const std::string& fragment_shader_path ) const;
+
     pixels           image ( const std::string& path ) const;
 
     class texture_2d texture_2d (

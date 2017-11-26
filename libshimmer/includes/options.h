@@ -29,7 +29,8 @@ struct application {
 
 struct options {
     struct general {
-        std::optional<std::vector<std::string>> resource_paths;
+        std::vector<std::string> resource_paths =
+        { "./data", };
     };
 
     struct video {
@@ -39,11 +40,22 @@ struct options {
             std::string fragment;
         };
 
-        std::optional<shader> application_shader;
+        shader application_shader = { "glsl2.1/example.vert",
+                                      "glsl2.1/default.frag" };
+
+        bool application_linear_filter = false;
+
+        float application_aspect_ratio = 4.0f / 3.0f;
 
         std::optional<shader> background_shader;
 
+        bool background_linear_filter = false;
+
+
         std::optional<shader> scaling_shader;
+
+        bool scaling_linear_filter = false;
+
 
         std::optional<glpp::dims_2u> application_resolution;
 

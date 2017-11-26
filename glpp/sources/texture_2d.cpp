@@ -55,6 +55,8 @@ texture_2d& texture_2d::image ( const pixels& pixels,
                                 GLint         level ) {
     _dims = pixels.dims();
 
+    if ( _dims.area() == 0 ) throw texture_2d_area_zero_exception();
+
     glTexImage2D ( static_cast<GLenum>( target() ),
                    level,
                    static_cast<GLenum>( internal_format() ),

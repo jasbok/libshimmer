@@ -19,13 +19,29 @@ public:
                          glpp::coords_2i& coords,
                          glpp::dims_2u&   dims );
 
-    void resize_window ( glpp::dims_2u& dims );
+    void          init();
 
-    bool scaling_enabled() const;
+    void          init_renderer();
+
+    void          resize_window ( glpp::dims_2u& dims );
+
+    void          refresh_display();
+
+    glpp::dims_2u application_resolution() const;
+
+    glpp::dims_2u window_resolution() const;
+
+    bool          scaling_enabled() const;
+
+    void          activate_application_texture();
+
+    void          mouse_coords ( glpp::coords_2i& coords );
 
 private:
     struct application _app;
     struct options _options;
+
+    renderer _renderer;
 };
 }
 

@@ -24,6 +24,8 @@ public:
 
     framebuffer& unbind();
 
+    GLuint       handle();
+
     framebuffer& attach_color ( const texture_2d& texture,
                                 GLint             mipmap_level = 0 );
 

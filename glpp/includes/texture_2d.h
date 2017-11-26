@@ -90,6 +90,12 @@ public:
 private:
     dims_2u _dims;
 };
+
+struct texture_2d_area_zero_exception : public std::exception {
+    const char* what() const throw( ) {
+        return "The area of the specified texture image is zero.";
+    }
+};
 }
 
 #endif // ifndef GLPP_TEXTURE_2D_H
