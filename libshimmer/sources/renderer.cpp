@@ -13,7 +13,6 @@ renderer::renderer()
 
 void renderer::init ( const struct application& application,
                       const struct options&     options ) {
-    printf ( "Initialising renderer...\n" );
     _setup_resource_loader ( options );
     _construct_application_surface ( application, options );
     _construct_surface_phase ( application );
@@ -23,15 +22,13 @@ void renderer::init ( const struct application& application,
 
 void renderer::update ( const struct application& application )
 {
-    printf ( "Updating renderer (application)." );
-    auto& surface            = _scene["surface"];
+    auto& surface = _scene["surface"];
+
     surface.viewport()->dims = application.window.dims;
 }
 
 void renderer::update ( const struct options::video& options )
-{
-    printf ( "Updating renderer (options)." );
-}
+{}
 
 void renderer::activate_application_texture()
 {
@@ -63,8 +60,6 @@ void renderer::_construct_application_surface (
 
     _application_surface = std::make_shared<glpp::entity>();
 
-    printf ( "Surface dims: %s\n", application.surface.dims.to_json().c_str() );
-
     _application_surface->
         program ( application_program )
         .textures ( glpp::texture_units::make_shared ( {
@@ -84,7 +79,7 @@ void renderer::_construct_surface_phase ( const struct application& application 
         std::make_shared<glpp::viewport_int>() );
 
     surface_phase.viewport()->coords = { 0, 0 };
-    surface_phase.viewport()->dims   = application.surface.dims;
+    surface_phase.viewport()->dims   = application.window.dims;
 
     surface_phase.camera()->rotate ( { 0.0, 180.0, 0.0 } );
 

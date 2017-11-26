@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "debug.h"
+
 using namespace glpp;
 using namespace std;
 
@@ -110,27 +112,36 @@ void scene_phase::draw() {
             _blend_function->destination_factor );
 
     for ( auto& entity : _entities ) {
+        GLPP_CHECK_ERROR ( "Scene Phase: Drawing entity..." );
+
         if ( entity->program() && ( entity->program() != bound_program ) ) {
             bound_program = entity->program();
             bound_program->use();
+            GLPP_CHECK_ERROR ( "Scene Phase: used program" );
             bound_program->uniform ( "view",       _camera->view() );
             bound_program->uniform ( "projection", _camera->projection() );
+            GLPP_CHECK_ERROR ( "Scene Phase: bound program" );
         }
 
         if ( entity->textures() &&
              ( entity->textures() != bound_texture_units ) ) {
             bound_texture_units = entity->textures();
             bound_texture_units->bind();
+
+            GLPP_CHECK_ERROR ( "Scene Phase: bound textures" );
         }
 
         if ( entity->mesh() && ( entity->mesh() != bound_mesh ) ) {
             bound_mesh = entity->mesh();
             bound_mesh->bind();
             bound_mesh->program ( *bound_program );
+
+            GLPP_CHECK_ERROR ( "Scene Phase: bound mesh" );
         }
 
         bound_program->uniform ( "model", entity->model() );
         bound_mesh->draw();
+        GLPP_CHECK_ERROR ( "Scene Phase: drew phase" );
     }
 
     for ( auto& capability : _capabilities ) {

@@ -10,11 +10,16 @@
 extern std::shared_ptr<class ::shimmer::shimmer> libshimmer;
 
 struct shim {
-    SDL_Window*     window;
-    SDL_Renderer*   renderer;
-    SDL_Texture*    target;
-    SDL_GLContext   gl_context;
+    SDL_Window*   window;
+    SDL_Renderer* renderer;
+    SDL_Texture*  target;
+    SDL_GLContext gl_context;
+
+    glpp::dims_2u   window_dims;
+    glpp::coords_2i window_coords;
     glpp::coords_2i mouse_coords;
+
+    bool gl_initiliased = false;
 };
 
 extern struct shim shim;

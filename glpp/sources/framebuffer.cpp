@@ -35,11 +35,9 @@ framebuffer& framebuffer::bind()
     return *this;
 }
 
-framebuffer& framebuffer::unbind()
+void framebuffer::unbind()
 {
     glBindFramebuffer ( GL_FRAMEBUFFER, 0 );
-
-    return *this;
 }
 
 GLuint framebuffer::handle()

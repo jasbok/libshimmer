@@ -2,7 +2,7 @@
 
 int SDL_PollEvent ( SDL_Event* event )
 {
-    SHIM_LOG ( 1000 );
+    SHIM_LOG ( 10 );
 
     auto available = sym::SDL_PollEvent ( event );
 
@@ -17,14 +17,23 @@ int SDL_PollEvent ( SDL_Event* event )
             event->motion.y = shim.mouse_coords.y;
             break;
 
+
         case SDL_WINDOWEVENT:
 
             switch ( event->window.event ) {
-            case SDL_WINDOWEVENT_RESIZED:
-                glpp::dims_2u dims ( event->window.data1, event->window.data2 );
-                libshimmer->resize_window ( dims );
-                event->type = 0;
+            case SDL_WINDOWEVENT_MOVED:
+                shim.window_coords =
+                { event->window.data1, event->window.data2 };
+                libshimmer->move_window ( shim.window_coords );
+                event->window.data2 = shim.window_coords.x;
+                event->window.data2 =  shim.window_coords.y;
+                break;
 
+            case SDL_WINDOWEVENT_RESIZED:
+                shim.window_dims = glpp::dims_2u ( event->window.data1,
+                                                   event->window.data2 );
+                libshimmer->resize_window ( shim.window_dims );
+                event->type = 0;
                 break;
             }
             break;

@@ -40,10 +40,6 @@ void scene::draw() {
         if ( phase.viewport() && ( phase.viewport() != current_viewport ) ) {
             current_viewport = phase.viewport();
 
-            printf ( "Setting viewport: %s, %s\n",
-                     current_viewport->coords.to_json().c_str(),
-                     current_viewport->dims.to_json().c_str() );
-
             glViewport ( current_viewport->coords.x,
                          current_viewport->coords.y,
                          current_viewport->dims.width,
@@ -55,14 +51,13 @@ void scene::draw() {
         if ( phase.framebuffer() != current_fbo ) {
             if ( phase.framebuffer() ) {
                 phase.framebuffer()->bind();
-                GLPP_CHECK_ERROR ( "Phase: Bound FBO" );
-            }
-            else if ( current_fbo ) {
-                current_fbo->unbind();
-                GLPP_CHECK_ERROR ( "Phase: Unbound FBO" );
             }
 
             current_fbo = phase.framebuffer();
+        }
+        else {
+            // TODO: Optimise this line out.
+            glpp::framebuffer::unbind();
         }
         GLPP_CHECK_ERROR ( "Phase: Set FBO" );
 

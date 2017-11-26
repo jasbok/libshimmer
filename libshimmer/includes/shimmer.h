@@ -19,11 +19,17 @@ public:
                          glpp::coords_2i& coords,
                          glpp::dims_2u&   dims );
 
+    glpp::dims_2u app_surface_dims();
+
+    void          set_window_title ( std::string& title );
+
     void          init();
 
     void          init_renderer();
 
     void          resize_window ( glpp::dims_2u& dims );
+
+    void          move_window ( glpp::coords_2i& coords );
 
     void          refresh_display();
 
@@ -41,7 +47,7 @@ private:
     struct application _app;
     struct options _options;
 
-    renderer _renderer;
+    std::shared_ptr<renderer> _renderer;
 };
 }
 

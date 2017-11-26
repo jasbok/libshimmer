@@ -10,31 +10,38 @@ using namespace std;
 namespace shimmer
 {
 shimmer::shimmer()
-{
-    std::cout << "Shimmer: initialising...\n";
-    std::cout << "Shimmer: initialised.\n";
-}
+{}
 
 shimmer::~shimmer()
-{
-    std::cout << "Shimmer: cleaning resources...\n";
-    std::cout << "Shimmer: cleaned resources.\n";
-}
+{}
 
 void shimmer::create_window ( string&    title,
                               coords_2i& coords,
                               dims_2u&   dims )
 {
-    _app.window.title  = title;
-    _app.window.coords = coords;
-    _app.window.dims   = dims;
-    _app.surface.dims  = dims;
+    _app.window.title = title;
+    _app.surface.dims = dims;
 
+    if ( _app.window.dims.area() == 0 ) {
+        _app.window.coords = coords;
+        _app.window.dims   = dims;
+    }
+    else {
+        coords = _app.window.coords;
+        dims   = _app.window.dims;
+    }
+
+    set_window_title ( title );
+}
+
+dims_2u shimmer::app_surface_dims()
+{
+    return _app.surface.dims;
+}
+
+void shimmer::set_window_title ( string& title )
+{
     title += " [shimmer]";
-
-    std::cout << "Create Window: " << title
-              << ", coords: " << coords.to_json()
-              << ", dims: " << dims.to_json() << std::endl;
 }
 
 void shimmer::init()
@@ -42,21 +49,25 @@ void shimmer::init()
 
 void shimmer::init_renderer()
 {
-    _renderer.init ( _app, _options );
+    _renderer = std::make_shared<renderer>();
+    _renderer->init ( _app, _options );
 }
 
 void shimmer::resize_window ( glpp::dims_2u& dims )
 {
-    std::cout << "Resizing window: " << dims.to_json() << std::endl;
-
     _app.window.dims = dims;
-    _renderer.update ( _app );
+    _renderer->update ( _app );
     dims = _app.surface.dims;
+}
+
+void shimmer::move_window ( coords_2i& coords )
+{
+    _app.window.coords = coords;
 }
 
 void shimmer::refresh_display()
 {
-    _renderer.render();
+    _renderer->render();
 }
 
 bool shimmer::scaling_enabled() const
@@ -66,7 +77,7 @@ bool shimmer::scaling_enabled() const
 
 void shimmer::activate_application_texture()
 {
-    _renderer.activate_application_texture();
+    _renderer->activate_application_texture();
 }
 
 void shimmer::mouse_coords ( coords_2i& coords )
@@ -74,7 +85,12 @@ void shimmer::mouse_coords ( coords_2i& coords )
     const auto& app_dims = _app.surface.dims;
     const auto& win_dims = _app.window.dims;
 
+    printf ( "app_dims: %s\n", app_dims.to_json().c_str() );
+    printf ( "win_dims: %s\n", win_dims.to_json().c_str() );
+
     coords.x *= app_dims.width / ( float )win_dims.width;
     coords.y *= app_dims.height / ( float )win_dims.height;
+
+    printf ( "mouse coords: %s\n", coords.to_json().c_str() );
 }
 }

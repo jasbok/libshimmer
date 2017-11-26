@@ -22,7 +22,7 @@ public:
 
     framebuffer& bind();
 
-    framebuffer& unbind();
+    static void  unbind();
 
     GLuint       handle();
 
