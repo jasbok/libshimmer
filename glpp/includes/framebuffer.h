@@ -32,7 +32,7 @@ public:
     framebuffer& attach_depth ( const texture_2d& texture,
                                 GLint             mipmap_level = 0 );
 
-    GLenum check_status() const;
+    static GLenum check_status();
 
 private:
     GLuint _handle;

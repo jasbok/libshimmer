@@ -27,7 +27,8 @@ texture_units& texture_units::bind()   {
 
     for ( auto& texture : _textures ) {
         if ( texture != nullptr ) {
-            texture->bind_texture_unit ( unit );
+            glActiveTexture ( GL_TEXTURE0 + unit );
+            glBindTexture ( GL_TEXTURE_2D, texture->handle() );
         }
         unit++;
     }

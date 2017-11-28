@@ -19,7 +19,7 @@ struct shim {
     glpp::coords_2i window_coords;
     glpp::coords_2i mouse_coords;
 
-    bool gl_initiliased = false;
+    bool opengl_initiliased = false;
 };
 
 extern struct shim shim;

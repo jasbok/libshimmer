@@ -1,6 +1,7 @@
 #include "shimmer.h"
 
 #include "debug.h"
+#include "glpp.h"
 
 #include <iostream>
 
@@ -75,9 +76,9 @@ bool shimmer::scaling_enabled() const
     return _options.video.scaling_shader.has_value();
 }
 
-void shimmer::activate_application_texture()
+void shimmer::capture_application_texture()
 {
-    _renderer->activate_application_texture();
+    _renderer->create_application_texture_from_bound ( _app, _options );
 }
 
 void shimmer::mouse_coords ( coords_2i& coords )
@@ -85,12 +86,7 @@ void shimmer::mouse_coords ( coords_2i& coords )
     const auto& app_dims = _app.surface.dims;
     const auto& win_dims = _app.window.dims;
 
-    printf ( "app_dims: %s\n", app_dims.to_json().c_str() );
-    printf ( "win_dims: %s\n", win_dims.to_json().c_str() );
-
     coords.x *= app_dims.width / ( float )win_dims.width;
     coords.y *= app_dims.height / ( float )win_dims.height;
-
-    printf ( "mouse coords: %s\n", coords.to_json().c_str() );
 }
 }

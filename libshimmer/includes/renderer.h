@@ -29,16 +29,18 @@ public:
 
     void update ( const struct options::video& options );
 
-    void activate_application_texture();
+    void create_application_texture_from_bound (
+        const struct application& application,
+        const struct options&     options );
 
     void render();
 
 private:
     glpp::resource_loader _resource_loader;
 
-    std::shared_ptr<glpp::entity> _application_surface;
+    std::shared_ptr<glpp::texture_2d> _application_texture;
 
-    glpp::texture_unit _application_tu;
+    std::shared_ptr<glpp::entity> _application_surface;
 
     std::shared_ptr<glpp::entity> _background_surface;
 

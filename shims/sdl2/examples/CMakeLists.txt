@@ -22,6 +22,8 @@ configure_file(${DATA_IMG_SRC}/wolf.png ${DATA_IMG_DEST}/wolf.png COPYONLY)
 configure_file(${DATA_GLSL_2_1_SRC}/example.frag ${DATA_GLSL_2_1_DEST}/example.frag COPYONLY)
 configure_file(${DATA_GLSL_2_1_SRC}/example.vert ${DATA_GLSL_2_1_DEST}/example.vert COPYONLY)
 configure_file(${DATA_GLSL_2_1_SRC}/default.frag ${DATA_GLSL_2_1_DEST}/default.frag COPYONLY)
+configure_file(${DATA_GLSL_2_1_SRC}/xbrz3x.frag ${DATA_GLSL_2_1_DEST}/xbrz3x.frag COPYONLY)
+configure_file(${DATA_GLSL_2_1_SRC}/xbrz4x.frag ${DATA_GLSL_2_1_DEST}/xbrz4x.frag COPYONLY)
 configure_file(${DATA_GLSL_2_1_SRC}/ui.vert ${DATA_GLSL_2_1_DEST}/ui.vert COPYONLY)
 
 configure_file(${DATA_GLSL_SRC}/example.frag ${DATA_GLSL_DEST}/example.frag COPYONLY)

@@ -41,7 +41,7 @@ struct options {
         };
 
         shader application_shader = { "glsl2.1/example.vert",
-                                      "glsl2.1/default.frag" };
+                                      "glsl2.1/xbrz4x.frag" };
 
         bool application_linear_filter = false;
 

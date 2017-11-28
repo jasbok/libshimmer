@@ -1,5 +1,7 @@
 #include "texture.h"
 
+#include <iostream>
+
 using namespace glpp;
 
 texture::texture( enum target          target,
@@ -7,27 +9,43 @@ texture::texture( enum target          target,
                   )
     : _handle ( 0 ),
       _target ( target ),
-      _internal_format ( internal_format )
+      _internal_format ( internal_format ),
+      _owning ( true )
 {
     glGenTextures ( 1, &_handle );
 }
 
+texture::texture( enum target          target,
+                  enum internal_format internal_format,
+                  GLuint               handle )
+    : _handle ( handle ),
+      _target ( target ),
+      _internal_format ( internal_format ),
+      _owning ( false )
+{}
+
 texture::texture( texture&& move )
     : _handle ( move._handle ),
       _target ( move._target ),
-      _internal_format ( move._internal_format )
+      _internal_format ( move._internal_format ),
+      _owning ( move._owning )
 {
     move._handle = 0;
 }
 
 texture::~texture() {
-    glDeleteTextures ( 1, &_handle );
+    if ( _owning ) {
+        glDeleteTextures ( 1, &_handle );
+    }
 }
 
 texture& texture::operator=( texture&& move ) {
-    glDeleteTextures ( 1, &_handle );
+    if ( _owning ) {
+        glDeleteTextures ( 1, &_handle );
+    }
 
     _handle          = move._handle;
+    _owning          = move._owning;
     _target          = move._target;
     _internal_format = move._internal_format;
 
@@ -56,4 +74,9 @@ texture& texture::bind() {
 
 void texture::unbind() {
     glBindTexture ( static_cast<GLenum>( _target ), 0 );
+}
+
+bool texture::owning()
+{
+    return _owning;
 }

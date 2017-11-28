@@ -40,6 +40,10 @@ public:
 
     explicit texture_2d( enum internal_format internal_format );
 
+    explicit texture_2d( GLuint               handle,
+                         dims_2u              dims,
+                         enum internal_format internal_format );
+
     texture_2d( texture_2d&& move );
 
     texture_2d( const texture_2d& copy ) = delete;
@@ -53,6 +57,11 @@ public:
 
     static std::shared_ptr<texture_2d> make_shared (
         enum internal_format internal_format );
+
+    static std::shared_ptr<texture_2d> make_shared (
+        GLuint               handle,
+        dims_2u              dims,
+        enum internal_format internal_format  );
 
     static std::shared_ptr<texture_2d> make_shared (
         dims_2u              dims,
@@ -80,6 +89,13 @@ public:
     texture_2d& min_filter ( enum min_filter filter );
 
     texture_2d& mag_filter ( enum mag_filter filter );
+
+    static void set_filters ( enum filter filter );
+
+    static void set_min_filter ( enum min_filter filter );
+
+    static void set_mag_filter ( enum mag_filter filter );
+
 
     texture_2d& wrap ( enum texture_wrap wrap );
 

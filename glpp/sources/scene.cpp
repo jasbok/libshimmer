@@ -52,7 +52,9 @@ void scene::draw() {
             if ( phase.framebuffer() ) {
                 phase.framebuffer()->bind();
             }
-
+            else {
+                glpp::framebuffer::unbind();
+            }
             current_fbo = phase.framebuffer();
         }
         else {

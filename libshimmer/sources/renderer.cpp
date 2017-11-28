@@ -7,8 +7,7 @@
 using namespace shimmer;
 
 renderer::renderer()
-    : _resource_loader(),
-      _application_tu ( 10 )
+    : _resource_loader()
 {}
 
 void renderer::init ( const struct application& application,
@@ -30,9 +29,22 @@ void renderer::update ( const struct application& application )
 void renderer::update ( const struct options::video& options )
 {}
 
-void renderer::activate_application_texture()
+void renderer::create_application_texture_from_bound (
+    const struct application& application,
+    const struct options&     options )
 {
-    _application_tu.activate();
+    GLint texture_handle;
+
+    glGetIntegerv ( GL_TEXTURE_BINDING_2D, &texture_handle );
+
+    *_application_texture =
+        std::move ( glpp::texture_2d ( texture_handle,
+                                       application.surface.dims,
+                                       glpp::texture::internal_format::rgba ) );
+
+    if ( options.video.application_linear_filter ) _application_texture->
+            filters (
+            glpp::texture_2d::filter::linear );
 }
 
 void renderer::render()
@@ -55,16 +67,17 @@ void renderer::_construct_application_surface (
     auto application_program = _resource_loader.shared_program (
         application_shader.vertex, application_shader.fragment );
 
-    application_program->use().uniform ( "application",
-                                         _application_tu.index() );
+    application_program->use().uniform ( "application", 0 );
+
+    _application_texture =
+        glpp::texture_2d::make_shared ( application.surface.dims );
 
     _application_surface = std::make_shared<glpp::entity>();
 
     _application_surface->
         program ( application_program )
-        .textures ( glpp::texture_units::make_shared ( {
-        glpp::texture_2d::make_shared ( application.surface.dims )
-    } ) )
+        .textures ( glpp::texture_units::make_shared (
+                        { _application_texture } ) )
         .mesh ( glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } ) );
 
     if ( video.application_linear_filter ) _application_surface->textures()->
@@ -81,7 +94,9 @@ void renderer::_construct_surface_phase ( const struct application& application 
     surface_phase.viewport()->coords = { 0, 0 };
     surface_phase.viewport()->dims   = application.window.dims;
 
-    surface_phase.camera()->rotate ( { 0.0, 180.0, 0.0 } );
+    surface_phase.camera()->rotate ( {
+        0.0, 180.0, 0.0
+    } );
 
     surface_phase
         .clear_bits ( { GL_COLOR_BUFFER_BIT } )

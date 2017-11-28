@@ -34,6 +34,10 @@ public:
     texture( enum target          target,
              enum internal_format internal_format );
 
+    texture( enum target          target,
+             enum internal_format internal_format,
+             GLuint               handle );
+
     texture( texture&& move );
 
     texture( const texture& copy ) = delete;
@@ -55,12 +59,16 @@ public:
 
     void                 unbind();
 
+    bool                 owning();
+
 private:
     GLuint _handle;
 
     enum target _target;
 
     enum internal_format _internal_format;
+
+    bool _owning;
 };
 }
 

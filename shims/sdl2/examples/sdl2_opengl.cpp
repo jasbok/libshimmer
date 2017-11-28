@@ -231,7 +231,7 @@ int main ( int argc, char** argv ) {
     auto program =
         std::make_shared<glpp::program>( loader.program ( "example.vert",
                                                           "example.frag" ) );
-    program->use().uniform ( "texture_a", 1 ).uniform ( "texture_b", 2 );
+    program->use().uniform ( "texture_a", 0 ).uniform ( "texture_b", 1 );
 
     auto outer_cube = std::make_shared<glpp::entity>();
     outer_cube->
@@ -411,8 +411,6 @@ int main ( int argc, char** argv ) {
         scene.draw();
 
         SDL_GL_SwapWindow ( WINDOW );
-
-        SDL_Delay ( 10 );
 
         poll_events();
     }

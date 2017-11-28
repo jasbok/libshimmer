@@ -2,6 +2,54 @@
 
 #include "SDL_render.h"
 
+#include "debug.h"
+
+void capture_application_target() {
+    SDL_GL_BindTexture ( shim.target, nullptr, nullptr );
+    libshimmer->capture_application_texture();
+}
+
+void set_application_render_target() {
+    if ( shim.target ) {
+        SDL_DestroyTexture ( shim.target );
+    }
+
+    int w, h;
+
+    SDL_GetWindowSize ( shim.window, &w, &h );
+
+    shim.target = SDL_CreateTexture ( shim.renderer,
+                                      SDL_PIXELFORMAT_BGRA32,
+                                      SDL_TEXTUREACCESS_TARGET,
+                                      w, h );
+
+    if ( SDL_SetRenderTarget ( shim.renderer, shim.target ) != 0 ) {
+        std::cout << "Could not set render target: "
+                  << SDL_GetError() << std::endl;
+
+        std::cout << glpp::gl_framebuffer_status_to_string (
+            glpp::framebuffer::check_status() ) << "\n";
+    }
+
+    capture_application_target();
+}
+
+void init_shimmer() {
+    if ( !shim.opengl_initiliased ) {
+        glewExperimental = GL_TRUE;
+
+        GLenum glew_err = glewInit();
+
+        if ( glew_err ) {
+            std::cerr << "Error) Unable to initialise GLEW: "
+                      << glewGetErrorString ( glew_err ) << std::endl;
+        }
+
+        shim.opengl_initiliased = true;
+    }
+
+    libshimmer->init_renderer();
+}
 
 SDL_Window* SDL_CreateWindow ( const char* title,
                                int         x,
@@ -35,38 +83,13 @@ SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
                                    Uint32      flags ) {
     SHIM_LOG ( 10 );
 
-    shim.renderer = sym::SDL_CreateRenderer ( window, index, flags );
+    shim.renderer = sym::SDL_CreateRenderer ( window, -1,
+                                              SDL_RENDERER_ACCELERATED |
+                                              SDL_RENDERER_TARGETTEXTURE );
 
-    int w, h;
-    SDL_GetWindowSize ( window, &w, &h );
+    init_shimmer();
 
-    if ( shim.target ) {
-        SDL_DestroyTexture ( shim.target );
-    }
-
-    shim.target = SDL_CreateTexture ( shim.renderer,
-                                      SDL_PIXELFORMAT_ABGR8888,
-                                      SDL_TEXTUREACCESS_TARGET,
-                                      w, h );
-
-    SDL_SetRenderTarget ( shim.renderer, shim.target );
-
-    if ( !shim.gl_initiliased ) {
-        glewExperimental = GL_TRUE;
-
-        GLenum glew_err = glewInit();
-
-        if ( glew_err ) {
-            std::cerr << "Error) Unable to initialise GLEW: "
-                      << glewGetErrorString ( glew_err ) << std::endl;
-        }
-
-        shim.gl_initiliased = true;
-    }
-
-    libshimmer->init_renderer();
-    libshimmer->activate_application_texture();
-    SDL_GL_BindTexture ( shim.target, nullptr, nullptr );
+    set_application_render_target();
 
     return shim.renderer;
 }
@@ -89,7 +112,14 @@ int SDL_CreateWindowAndRenderer ( int            width,
         return -1;
     }
 
-    shim.renderer = SDL_CreateRenderer ( shim.window, 0, 0 );
+    shim.renderer = SDL_CreateRenderer ( shim.window,
+                                         -1,
+                                         SDL_RENDERER_ACCELERATED |
+                                         SDL_RENDERER_TARGETTEXTURE  );
+
+    init_shimmer();
+
+    set_application_render_target();
 
     return shim.renderer ? 0 : -1;
 }
@@ -97,9 +127,13 @@ int SDL_CreateWindowAndRenderer ( int            width,
 void SDL_RenderPresent ( SDL_Renderer* renderer ) {
     SHIM_LOG ( 10 );
 
-    if ( ( shim.renderer == renderer ) && ( shim.target != nullptr ) ) {
+    if ( shim.renderer == renderer ) {
+        SDL_SetRenderTarget ( shim.renderer, nullptr );
+
         libshimmer->refresh_display();
-        SDL_GL_SwapWindow ( shim.window );
+        sym::SDL_RenderPresent ( renderer );
+
+        SDL_SetRenderTarget ( shim.renderer, shim.target );
     }
     else {
         sym::SDL_RenderPresent ( renderer );

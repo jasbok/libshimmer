@@ -39,7 +39,7 @@ public:
 
     bool          scaling_enabled() const;
 
-    void          activate_application_texture();
+    void          capture_application_texture();
 
     void          mouse_coords ( glpp::coords_2i& coords );
 
