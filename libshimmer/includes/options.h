@@ -45,7 +45,7 @@ struct options {
 
         bool application_linear_filter = false;
 
-        float application_aspect_ratio = 4.0f / 3.0f;
+        glpp::dims_2f application_viewport = { 1.0f, 1.0f };
 
         std::optional<shader> background_shader;
 

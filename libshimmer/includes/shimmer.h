@@ -44,8 +44,8 @@ public:
     void          mouse_coords ( glpp::coords_2i& coords );
 
 private:
-    struct application _app;
-    struct options _options;
+    std::shared_ptr<struct application> _app;
+    std::shared_ptr<struct options> _options;
 
     std::shared_ptr<renderer> _renderer;
 };

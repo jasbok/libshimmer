@@ -17,21 +17,17 @@ namespace shimmer
 class renderer
 {
 public:
-    renderer();
+    renderer( const std::shared_ptr<struct application>& application,
+              const std::shared_ptr<struct options>&     options );
 
     virtual ~renderer() = default;
 
 
-    void init ( const struct application& application,
-                const struct options&     options );
+    void init();
 
-    void update ( const struct application& application );
+    void update();
 
-    void update ( const struct options::video& options );
-
-    void create_application_texture_from_bound (
-        const struct application& application,
-        const struct options&     options );
+    void create_application_texture_from_bound();
 
     void render();
 
@@ -39,6 +35,8 @@ private:
     glpp::resource_loader _resource_loader;
 
     std::shared_ptr<glpp::texture_2d> _application_texture;
+
+    std::shared_ptr<glpp::quad<GLfloat>> _application_quad;
 
     std::shared_ptr<glpp::entity> _application_surface;
 
@@ -49,15 +47,20 @@ private:
     glpp::scene _scene;
 
 
-    void _setup_resource_loader ( const struct options& options );
+    std::shared_ptr<struct application> _application;
 
-    void _construct_application_surface (
-        const struct application& application,
-        const struct options&     options );
+    std::shared_ptr<struct options> _options;
 
-    void _construct_surface_phase ( const struct application& application );
 
-    void _construct_application_phase ( const struct application& application );
+    void          _setup_resource_loader();
+
+    void          _construct_application_surface();
+
+    void          _construct_surface_phase();
+
+    void          _construct_application_phase();
+
+    glpp::dims_2f _calculate_quad_dimensions();
 };
 }
 

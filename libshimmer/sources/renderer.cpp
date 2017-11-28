@@ -6,32 +6,32 @@
 
 using namespace shimmer;
 
-renderer::renderer()
-    : _resource_loader()
+renderer::renderer(
+    const std::shared_ptr<struct application>& application,
+    const std::shared_ptr<struct options>&     options )
+    : _resource_loader(),
+      _application ( application ),
+      _options ( options )
 {}
 
-void renderer::init ( const struct application& application,
-                      const struct options&     options ) {
-    _setup_resource_loader ( options );
-    _construct_application_surface ( application, options );
-    _construct_surface_phase ( application );
+void renderer::init() {
+    _setup_resource_loader();
+    _construct_application_surface();
+    _construct_surface_phase();
 
     // _construct_application_phase ( application );
 }
 
-void renderer::update ( const struct application& application )
+void renderer::update()
 {
     auto& surface = _scene["surface"];
 
-    surface.viewport()->dims = application.window.dims;
+    surface.viewport()->dims = _application->window.dims;
+    _application_quad->bind();
+    _application_quad->dimensions ( _calculate_quad_dimensions() );
 }
 
-void renderer::update ( const struct options::video& options )
-{}
-
-void renderer::create_application_texture_from_bound (
-    const struct application& application,
-    const struct options&     options )
+void renderer::create_application_texture_from_bound()
 {
     GLint texture_handle;
 
@@ -39,10 +39,10 @@ void renderer::create_application_texture_from_bound (
 
     *_application_texture =
         std::move ( glpp::texture_2d ( texture_handle,
-                                       application.surface.dims,
+                                       _application->surface.dims,
                                        glpp::texture::internal_format::rgba ) );
 
-    if ( options.video.application_linear_filter ) _application_texture->
+    if ( _options->video.application_linear_filter ) _application_texture->
             filters (
             glpp::texture_2d::filter::linear );
 }
@@ -52,16 +52,14 @@ void renderer::render()
     _scene.draw();
 }
 
-void renderer::_setup_resource_loader ( const options& options )
+void renderer::_setup_resource_loader()
 {
-    _resource_loader.search_paths ( options.general.resource_paths );
+    _resource_loader.search_paths ( _options->general.resource_paths );
 }
 
-void renderer::_construct_application_surface (
-    const struct application& application,
-    const struct options&     options )
+void renderer::_construct_application_surface()
 {
-    auto& video              = options.video;
+    auto& video              = _options->video;
     auto& application_shader = video.application_shader;
 
     auto application_program = _resource_loader.shared_program (
@@ -70,7 +68,10 @@ void renderer::_construct_application_surface (
     application_program->use().uniform ( "application", 0 );
 
     _application_texture =
-        glpp::texture_2d::make_shared ( application.surface.dims );
+        glpp::texture_2d::make_shared ( _application->surface.dims );
+
+    _application_quad = glpp::quad<GLfloat>::make_shared (
+        video.application_viewport );
 
     _application_surface = std::make_shared<glpp::entity>();
 
@@ -78,13 +79,13 @@ void renderer::_construct_application_surface (
         program ( application_program )
         .textures ( glpp::texture_units::make_shared (
                         { _application_texture } ) )
-        .mesh ( glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } ) );
+        .mesh ( _application_quad );
 
     if ( video.application_linear_filter ) _application_surface->textures()->
             filters ( glpp::texture_2d::filter::linear );
 }
 
-void renderer::_construct_surface_phase ( const struct application& application )
+void renderer::_construct_surface_phase()
 {
     glpp::scene_phase surface_phase (
         "surface",
@@ -92,7 +93,7 @@ void renderer::_construct_surface_phase ( const struct application& application 
         std::make_shared<glpp::viewport_int>() );
 
     surface_phase.viewport()->coords = { 0, 0 };
-    surface_phase.viewport()->dims   = application.window.dims;
+    surface_phase.viewport()->dims   = _application->window.dims;
 
     surface_phase.camera()->rotate ( {
         0.0, 180.0, 0.0
@@ -105,8 +106,7 @@ void renderer::_construct_surface_phase ( const struct application& application 
     _scene.add ( std::move ( surface_phase ) );
 }
 
-void renderer::_construct_application_phase (
-    const struct application& application )
+void renderer::_construct_application_phase()
 {
     glpp::scene_phase application_phase (
         "application",
@@ -115,7 +115,7 @@ void renderer::_construct_application_phase (
         std::make_shared<glpp::framebuffer>() );
 
     application_phase.viewport()->coords = { 0, 0 };
-    application_phase.viewport()->dims   = application.surface.dims;
+    application_phase.viewport()->dims   = _application->surface.dims;
 
     application_phase
         .clear_bits ( { GL_COLOR_BUFFER_BIT } )
@@ -123,4 +123,33 @@ void renderer::_construct_application_phase (
         attach_color ( *_application_surface->textures()->textures()[0] );
 
     _scene.add ( std::move ( application_phase ) );
+}
+
+glpp::dims_2f renderer::_calculate_quad_dimensions()
+{
+    std::string ar_option = "original";
+
+    auto& app_dims = _application->surface.dims;
+    auto& win_dims = _application->window.dims;
+
+    if ( ar_option.compare ( "stretch" ) == 0 ) {
+        return { 1.0f, 1.0f };
+    } else {
+        float ar_app    = app_dims.wh_ratio();
+        float ar_video  = win_dims.wh_ratio();
+        float ar_factor = ar_app / ar_video;
+
+        if ( ar_option.compare ( "original" ) != 0 ) {
+            glpp::dims_2f ar = { 1.0, 1.0 };
+            ar_factor = ar.wh_ratio() / win_dims.wh_ratio();
+        }
+
+        if ( ar_option.compare ( "zoom" ) == 0 ) {
+            return { ar_factor < 1.0f ?  1.0f : ar_factor,
+                     ar_factor < 1.0f ? 1.0f / ar_factor : 1.0f };
+        } else {
+            return { ar_factor > 1.0f ?  1.0f : ar_factor,
+                     ar_factor > 1.0f ? 1.0f / ar_factor : 1.0f };
+        }
+    }
 }
