@@ -64,16 +64,21 @@ SDL_Window* SDL_CreateWindow ( const char* title,
     glpp::dims_2u   dims ( w, h );
     libshimmer->create_window ( wtitle, coords, dims );
 
-    // if ( libshimmer->scaling_enabled() )
+    if ( !shim.window ) {
+        // if ( libshimmer->scaling_enabled() )
 
-    flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+        flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
 
-    shim.window = sym::SDL_CreateWindow ( wtitle.c_str(),
-                                          coords.x,
-                                          coords.y,
-                                          dims.width,
-                                          dims.height,
-                                          flags );
+        shim.window = sym::SDL_CreateWindow ( wtitle.c_str(),
+                                              coords.x,
+                                              coords.y,
+                                              dims.width,
+                                              dims.height,
+                                              flags );
+    }
+    else {
+        set_application_render_target();
+    }
 
     return shim.window;
 }
@@ -83,15 +88,21 @@ SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
                                    Uint32      flags ) {
     SHIM_LOG ( 10 );
 
-    shim.renderer = sym::SDL_CreateRenderer ( window, -1,
-                                              SDL_RENDERER_ACCELERATED |
-                                              SDL_RENDERER_TARGETTEXTURE );
+    if (  shim.window == window  ) {
+        if ( !shim.renderer ) {
+            shim.renderer = sym::SDL_CreateRenderer ( window, -1,
+                                                      SDL_RENDERER_ACCELERATED |
+                                                      SDL_RENDERER_TARGETTEXTURE );
 
-    init_shimmer();
+            init_shimmer();
 
-    set_application_render_target();
+            set_application_render_target();
+        }
 
-    return shim.renderer;
+        return shim.renderer;
+    }
+
+    return sym::SDL_CreateRenderer ( window, index, flags );
 }
 
 int SDL_CreateWindowAndRenderer ( int            width,
@@ -101,25 +112,11 @@ int SDL_CreateWindowAndRenderer ( int            width,
                                   SDL_Renderer** renderer ) {
     SHIM_LOG ( 10 );
 
-    shim.window = SDL_CreateWindow ( "SDL2 Application",
-                                     0,
-                                     0,
-                                     width,
-                                     height,
-                                     window_flags );
+    SDL_CreateWindow ( "SDL2 Application", 0, 0, width, height, window_flags );
 
-    if ( !shim.window ) {
-        return -1;
-    }
+    if ( !shim.window ) return -1;
 
-    shim.renderer = SDL_CreateRenderer ( shim.window,
-                                         -1,
-                                         SDL_RENDERER_ACCELERATED |
-                                         SDL_RENDERER_TARGETTEXTURE  );
-
-    init_shimmer();
-
-    set_application_render_target();
+    SDL_CreateRenderer ( shim.window, 0, 0 );
 
     return shim.renderer ? 0 : -1;
 }
@@ -162,19 +159,17 @@ int SDL_SetWindowDisplayMode ( SDL_Window*            window,
 void SDL_DestroyWindow ( SDL_Window* window ) {
     SHIM_LOG ( 10 );
 
-    // if ( shim.window != window ) {
-    sym::SDL_DestroyWindow ( window );
-
-    // }
+    if ( shim.window != window ) {
+        sym::SDL_DestroyWindow ( window );
+    }
 }
 
 void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
     SHIM_LOG ( 10 );
 
-    // if ( shim.renderer != renderer ) {
-    sym::SDL_DestroyRenderer ( renderer );
-
-    // }
+    if ( shim.renderer != renderer ) {
+        sym::SDL_DestroyRenderer ( renderer );
+    }
 }
 
 void SDL_GetWindowSize ( SDL_Window* window,
