@@ -37,8 +37,6 @@ public:
 
     glpp::dims_2u window_resolution() const;
 
-    bool          scaling_enabled() const;
-
     void          capture_application_texture();
 
     void          mouse_coords ( glpp::coords_2i& coords );
@@ -48,6 +46,10 @@ private:
     std::shared_ptr<struct options> _options;
 
     std::shared_ptr<renderer> _renderer;
+
+    void _load_config();
+
+    void _save_config() const;
 };
 }
 

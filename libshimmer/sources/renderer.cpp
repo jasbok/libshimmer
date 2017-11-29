@@ -42,9 +42,9 @@ void renderer::create_application_texture_from_bound()
                                        _application->surface.dims,
                                        glpp::texture::internal_format::rgba ) );
 
-    if ( _options->video.application_linear_filter ) _application_texture->
-            filters (
-            glpp::texture_2d::filter::linear );
+    if ( _options->video.application_shader.linear_filter ) {
+        _application_texture->filters ( glpp::texture_2d::filter::linear );
+    }
 }
 
 void renderer::render()
@@ -70,8 +70,7 @@ void renderer::_construct_application_surface()
     _application_texture =
         glpp::texture_2d::make_shared ( _application->surface.dims );
 
-    _application_quad = glpp::quad<GLfloat>::make_shared (
-        video.application_viewport );
+    _application_quad = glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } );
 
     _application_surface = std::make_shared<glpp::entity>();
 
@@ -81,8 +80,9 @@ void renderer::_construct_application_surface()
                         { _application_texture } ) )
         .mesh ( _application_quad );
 
-    if ( video.application_linear_filter ) _application_surface->textures()->
-            filters ( glpp::texture_2d::filter::linear );
+    if ( _options->video.application_shader.linear_filter ) {
+        _application_texture->filters ( glpp::texture_2d::filter::linear );
+    }
 }
 
 void renderer::_construct_surface_phase()
@@ -127,24 +127,22 @@ void renderer::_construct_application_phase()
 
 glpp::dims_2f renderer::_calculate_quad_dimensions()
 {
-    std::string ar_option = "original";
-
     auto& app_dims = _application->surface.dims;
     auto& win_dims = _application->window.dims;
 
-    if ( ar_option.compare ( "stretch" ) == 0 ) {
+    if ( _options->video.aspect_ratio == aspect_ratio::stretch ) {
         return { 1.0f, 1.0f };
     } else {
-        float ar_app    = app_dims.wh_ratio();
-        float ar_video  = win_dims.wh_ratio();
-        float ar_factor = ar_app / ar_video;
+        // float ar_factor = 1.0f / win_dims.wh_ratio();
 
-        if ( ar_option.compare ( "original" ) != 0 ) {
-            glpp::dims_2f ar = { 1.0, 1.0 };
-            ar_factor = ar.wh_ratio() / win_dims.wh_ratio();
-        }
+        float ar_factor = app_dims.wh_ratio() / win_dims.wh_ratio();
 
-        if ( ar_option.compare ( "zoom" ) == 0 ) {
+        //        if ( _options->video.aspect_ratio == aspect_ratio::original )
+        // {
+        //            ar_factor *= app_dims.wh_ratio();
+        //        }
+
+        if ( _options->video.aspect_ratio == aspect_ratio::zoom ) {
             return { ar_factor < 1.0f ?  1.0f : ar_factor,
                      ar_factor < 1.0f ? 1.0f / ar_factor : 1.0f };
         } else {

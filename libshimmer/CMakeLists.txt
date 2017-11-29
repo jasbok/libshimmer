@@ -57,6 +57,7 @@ set( HEADERS
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
+        ${SOURCES_DIR}/options.cpp
         ${SOURCES_DIR}/renderer.cpp
         ${SOURCES_DIR}/shimmer.cpp )
 

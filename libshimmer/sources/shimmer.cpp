@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "glpp.h"
 
+#include <fstream>
 #include <iostream>
 
 using namespace glpp;
@@ -14,7 +15,9 @@ shimmer::shimmer()
     : _app ( std::make_shared<struct application>() ),
       _options ( std::make_shared<struct options>() ),
       _renderer ( std::make_shared<renderer>( _app, _options ) )
-{}
+{
+    _load_config();
+}
 
 shimmer::~shimmer()
 {}
@@ -73,11 +76,6 @@ void shimmer::refresh_display()
     _renderer->render();
 }
 
-bool shimmer::scaling_enabled() const
-{
-    return _options->video.scaling_shader.has_value();
-}
-
 void shimmer::capture_application_texture()
 {
     _renderer->create_application_texture_from_bound();
@@ -90,5 +88,44 @@ void shimmer::mouse_coords ( coords_2i& coords )
 
     coords.x *= app_dims.width / ( float )win_dims.width;
     coords.y *= app_dims.height / ( float )win_dims.height;
+}
+
+void shimmer::_load_config()
+{
+    using json = nlohmann::json;
+
+    try {
+        ifstream fstream ( "shimmer.conf" );
+
+        if ( fstream.is_open() ) {
+            json options_json;
+            fstream >> options_json;
+            *_options = options_json;
+        }
+        else {
+            _save_config();
+        }
+    }
+    catch ( json::exception ex ) {
+        std::cerr << "Unable to parse config file: " << ex.what() << std::endl;
+    }
+    catch ( exception ex ) {
+        std::cerr << "Unable to parse config file: " << ex.what() << std::endl;
+    }
+}
+
+void shimmer::_save_config() const
+{
+    string   path = "shimmer.conf";
+    ofstream fstream ( path );
+
+    if ( fstream.is_open() ) {
+        using json = nlohmann::json;
+        json options_json = *_options;
+        fstream << std::setw ( 4 ) << options_json;
+    }
+    else {
+        std::cerr << "Unable to write config to file: " << path << std::endl;
+    }
 }
 }
