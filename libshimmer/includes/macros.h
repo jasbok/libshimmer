@@ -17,24 +17,46 @@
     }
 
 #define HANDLE_TYPEDEF( RET, FUNC, \
-                        ARGS ... ) typedef RET ( *FUNC ## _Handle )( ARGS )
+                        ... ) typedef RET ( *FUNC ## _Handle )( ... )
 
-#define SHIM( RET, FUNC, ARGS ... )     \
-    HANDLE_TYPEDEF ( RET, FUNC, ARGS ); \
-    DLSYM ( FUNC );                     \
-    RET FUNC ( ARGS )
+#define SHIM( RET, FUNC, ... )         \
+    HANDLE_TYPEDEF ( RET, FUNC, ... ); \
+    DLSYM ( FUNC );                    \
+    RET FUNC ( ... )
 
 #ifdef DEBUG
+# include <chrono>
 
-# define SHIM_LOG( MAX )                                                   \
-    static unsigned int _SHIM_LOG_COUNT = 0;                               \
-    if ( _SHIM_LOG_COUNT++ < MAX )                                         \
-        printf ( "=> Handle: %s (%u/%u)\n", __FUNCTION__, _SHIM_LOG_COUNT, \
-                 MAX )
+# define SHIM_LOG()                                               \
+    using namespace std::chrono;                                  \
+    static unsigned int _COUNTER           = 0;                   \
+    static steady_clock::time_point _START = steady_clock::now(); \
+    static bool  _FIRST_CALL               = true;                \
+    static float _INTERVAL                 = 1.0f;                \
+                                                                  \
+    auto _DURATION = duration_cast<duration<float>>(              \
+        steady_clock::now() - _START );                           \
+                                                                  \
+    _COUNTER++;                                                   \
+                                                                  \
+    if ( _FIRST_CALL ) {                                          \
+        printf ( "[[ %s ]]\n", __FUNCTION__ );                    \
+        _FIRST_CALL = false;                                      \
+    }                                                             \
+    else if ( _DURATION.count() > _INTERVAL ) {                   \
+        printf ( "%ux %s (%.2f/sec)\n",                           \
+                 _COUNTER,                                        \
+                 __FUNCTION__,                                    \
+                 _COUNTER / _DURATION.count() );                  \
+                                                                  \
+        _COUNTER   = 0;                                           \
+        _INTERVAL *= 2;                                           \
+        _START     = steady_clock::now();                         \
+    }
 
 #else // ifdef DEBUG
-# define SHIM_LOG( MAX )
-#endif // ifdef DEBUG
+# define SHIM_LOG()
+#endif  // ifdef DEBUG
 
 
         #define FLUENT( CLASS, TYPE, NAME )    \

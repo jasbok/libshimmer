@@ -3,8 +3,6 @@
 
 #include "shim.h"
 
-#include <GL/glew.h>
-
 SHIM ( SDL_Window*, SDL_CreateWindow,
        const char*,
        int,

@@ -2,8 +2,6 @@
 
 #include "SDL_render.h"
 
-#include "debug.h"
-
 void capture_application_target() {
     SDL_GL_BindTexture ( shim.target, nullptr, nullptr );
     libshimmer->capture_application_texture();
@@ -23,29 +21,18 @@ void set_application_render_target() {
                                       SDL_TEXTUREACCESS_TARGET,
                                       w, h );
 
-    if ( SDL_SetRenderTarget ( shim.renderer, shim.target ) != 0 ) {
-        std::cout << "Could not set render target: "
-                  << SDL_GetError() << std::endl;
-
-        std::cout << glpp::gl_framebuffer_status_to_string (
-            glpp::framebuffer::check_status() ) << "\n";
-    }
+    SDL_SetRenderTarget ( shim.renderer, shim.target );
 
     capture_application_target();
 }
 
 void init_shimmer() {
-    if ( !shim.opengl_initiliased ) {
-        glewExperimental = GL_TRUE;
+    glewExperimental = GL_TRUE;
+    GLenum glew_err = glewInit();
 
-        GLenum glew_err = glewInit();
-
-        if ( glew_err ) {
-            std::cerr << "Error) Unable to initialise GLEW: "
-                      << glewGetErrorString ( glew_err ) << std::endl;
-        }
-
-        shim.opengl_initiliased = true;
+    if ( glew_err ) {
+        std::cerr << "Error) Unable to initialise GLEW: "
+                  << glewGetErrorString ( glew_err ) << std::endl;
     }
 
     libshimmer->init_renderer();
@@ -57,7 +44,7 @@ SDL_Window* SDL_CreateWindow ( const char* title,
                                int         w,
                                int         h,
                                Uint32      flags ) {
-    SHIM_LOG ( 2 );
+    SHIM_LOG();
 
     std::string wtitle = title;
     glpp::coords_2i coords ( x, y );
@@ -65,8 +52,6 @@ SDL_Window* SDL_CreateWindow ( const char* title,
     libshimmer->create_window ( wtitle, coords, dims );
 
     if ( !shim.window ) {
-        // if ( libshimmer->scaling_enabled() )
-
         flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
 
         shim.window = sym::SDL_CreateWindow ( wtitle.c_str(),
@@ -86,7 +71,7 @@ SDL_Window* SDL_CreateWindow ( const char* title,
 SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
                                    int         index,
                                    Uint32      flags ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     if (  shim.window == window  ) {
         if ( !shim.renderer ) {
@@ -110,7 +95,7 @@ int SDL_CreateWindowAndRenderer ( int            width,
                                   Uint32         window_flags,
                                   SDL_Window**   window,
                                   SDL_Renderer** renderer ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     SDL_CreateWindow ( "SDL2 Application", 0, 0, width, height, window_flags );
 
@@ -122,7 +107,7 @@ int SDL_CreateWindowAndRenderer ( int            width,
 }
 
 void SDL_RenderPresent ( SDL_Renderer* renderer ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     if ( shim.renderer == renderer ) {
         SDL_SetRenderTarget ( shim.renderer, nullptr );
@@ -138,7 +123,7 @@ void SDL_RenderPresent ( SDL_Renderer* renderer ) {
 }
 
 void SDL_GL_SwapWindow ( SDL_Window* window ) {
-    SHIM_LOG ( 1 );
+    SHIM_LOG();
     sym::SDL_GL_SwapWindow ( window );
 }
 
@@ -151,13 +136,13 @@ void SDL_SetWindowTitle ( SDL_Window* window,
 
 int SDL_SetWindowDisplayMode ( SDL_Window*            window,
                                const SDL_DisplayMode* mode ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     return sym::SDL_SetWindowDisplayMode ( window, mode );
 }
 
 void SDL_DestroyWindow ( SDL_Window* window ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     if ( shim.window != window ) {
         sym::SDL_DestroyWindow ( window );
@@ -165,7 +150,7 @@ void SDL_DestroyWindow ( SDL_Window* window ) {
 }
 
 void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     if ( shim.renderer != renderer ) {
         sym::SDL_DestroyRenderer ( renderer );
@@ -175,6 +160,8 @@ void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
 void SDL_GetWindowSize ( SDL_Window* window,
                          int*        w,
                          int*        h ) {
+    SHIM_LOG();
+
     auto dims = libshimmer->app_surface_dims();
 
     *w = dims.width;

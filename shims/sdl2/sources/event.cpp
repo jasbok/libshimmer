@@ -2,7 +2,7 @@
 
 int SDL_PollEvent ( SDL_Event* event )
 {
-    SHIM_LOG ( 10 );
+    SHIM_LOG();
 
     auto available = sym::SDL_PollEvent ( event );
 

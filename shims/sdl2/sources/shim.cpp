@@ -5,7 +5,7 @@ std::shared_ptr<class ::shimmer::shimmer> libshimmer = nullptr;
 struct shim shim;
 
 int SDL_Init ( Uint32 flags ) {
-    SHIM_LOG ( 1 );
+    SHIM_LOG();
 
     if ( !libshimmer ) {
         libshimmer = std::make_shared<class shimmer::shimmer>();
@@ -16,6 +16,6 @@ int SDL_Init ( Uint32 flags ) {
 }
 
 void SDL_Quit() {
-    SHIM_LOG ( 1 );
+    SHIM_LOG();
     sym::SDL_Quit();
 }

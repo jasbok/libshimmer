@@ -133,14 +133,7 @@ glpp::dims_2f renderer::_calculate_quad_dimensions()
     if ( _options->video.aspect_ratio == aspect_ratio::stretch ) {
         return { 1.0f, 1.0f };
     } else {
-        // float ar_factor = 1.0f / win_dims.wh_ratio();
-
         float ar_factor = app_dims.wh_ratio() / win_dims.wh_ratio();
-
-        //        if ( _options->video.aspect_ratio == aspect_ratio::original )
-        // {
-        //            ar_factor *= app_dims.wh_ratio();
-        //        }
 
         if ( _options->video.aspect_ratio == aspect_ratio::zoom ) {
             return { ar_factor < 1.0f ?  1.0f : ar_factor,
