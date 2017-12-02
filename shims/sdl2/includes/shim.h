@@ -21,6 +21,7 @@ struct shim {
 
 extern struct shim shim;
 
+void init_shimmer();
 
 SHIM ( int,  SDL_Init, Uint32 flags );
 SHIM ( void, SDL_Quit, void );

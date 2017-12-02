@@ -139,3 +139,9 @@ set( SOURCES
 add_library( glpp SHARED ${HEADERS} ${SOURCES} )
 target_include_directories( glpp PUBLIC ${INCLUDES} ${EXTERNAL_INCLUDES} )
 target_link_libraries( glpp ${TARGET_LINK_LIBRARIES} )
+
+
+###############################################################################
+#   Install libs and shaders
+###############################################################################
+install( TARGETS glpp DESTINATION lib )

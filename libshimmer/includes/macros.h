@@ -26,32 +26,41 @@
 
 #ifdef DEBUG
 # include <chrono>
+# include <fstream>
 
-# define SHIM_LOG()                                               \
-    using namespace std::chrono;                                  \
-    static unsigned int _COUNTER           = 0;                   \
-    static steady_clock::time_point _START = steady_clock::now(); \
-    static bool  _FIRST_CALL               = true;                \
-    static float _INTERVAL                 = 1.0f;                \
-                                                                  \
-    auto _DURATION = duration_cast<duration<float>>(              \
-        steady_clock::now() - _START );                           \
-                                                                  \
-    _COUNTER++;                                                   \
-                                                                  \
-    if ( _FIRST_CALL ) {                                          \
-        printf ( "[[ %s ]]\n", __FUNCTION__ );                    \
-        _FIRST_CALL = false;                                      \
-    }                                                             \
-    else if ( _DURATION.count() > _INTERVAL ) {                   \
-        printf ( "%ux %s (%.2f/sec)\n",                           \
-                 _COUNTER,                                        \
-                 __FUNCTION__,                                    \
-                 _COUNTER / _DURATION.count() );                  \
-                                                                  \
-        _COUNTER   = 0;                                           \
-        _INTERVAL *= 2;                                           \
-        _START     = steady_clock::now();                         \
+static std::ofstream _SHIMMER_LOG_FILE ( "/tmp/shimmer.log" );
+
+# define SHIM_LOG()                                                       \
+    using namespace std::chrono;                                          \
+    static unsigned int _COUNTER           = 0;                           \
+    static steady_clock::time_point _START = steady_clock::now();         \
+    static bool  _FIRST_CALL               = true;                        \
+    static float _INTERVAL                 = 1.0f;                        \
+                                                                          \
+    auto _DURATION = duration_cast<duration<float>>(                      \
+        steady_clock::now() - _START );                                   \
+                                                                          \
+    _COUNTER++;                                                           \
+                                                                          \
+    if ( _FIRST_CALL ) {                                                  \
+        printf ( "[[ %s ]]\n", __FUNCTION__ );                            \
+        _SHIMMER_LOG_FILE << "[[ " << __FUNCTION__ << " ]]" << std::endl; \
+        _FIRST_CALL = false;                                              \
+    }                                                                     \
+    else if ( _DURATION.count() > _INTERVAL ) {                           \
+        printf ( "%ux %s (%.2f/sec)\n",                                   \
+                 _COUNTER,                                                \
+                 __FUNCTION__,                                            \
+                 _COUNTER / _DURATION.count() );                          \
+                                                                          \
+        _SHIMMER_LOG_FILE << _COUNTER << "x " << __FUNCTION__             \
+                          << "(" << std::setprecision ( 2 )               \
+                          <<  _COUNTER / _DURATION.count()                \
+                          << "/sec)" << std::endl;                        \
+                                                                          \
+        _COUNTER   = 0;                                                   \
+        _INTERVAL *= 2;                                                   \
+        _START     = steady_clock::now();                                 \
     }
 
 #else // ifdef DEBUG

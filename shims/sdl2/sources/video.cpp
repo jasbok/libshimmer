@@ -26,7 +26,7 @@ void set_application_render_target() {
     capture_application_target();
 }
 
-void init_shimmer() {
+void init_renderer() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
 
@@ -45,6 +45,10 @@ SDL_Window* SDL_CreateWindow ( const char* title,
                                int         h,
                                Uint32      flags ) {
     SHIM_LOG();
+
+    if ( !libshimmer ) {
+        init_shimmer();
+    }
 
     std::string wtitle = title;
     glpp::coords_2i coords ( x, y );
@@ -79,7 +83,7 @@ SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
                                                       SDL_RENDERER_ACCELERATED |
                                                       SDL_RENDERER_TARGETTEXTURE );
 
-            init_shimmer();
+            init_renderer();
 
             set_application_render_target();
         }

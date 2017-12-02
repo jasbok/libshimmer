@@ -48,3 +48,13 @@ target_link_libraries(shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES})
 #   Build example programs.
 ###############################################################################
 add_subdirectory( examples )
+
+
+###############################################################################
+#   Install libs and shaders
+###############################################################################
+set_target_properties( shimmer_sdl2 PROPERTIES
+                            INSTALL_RPATH_USE_LINK_PATH TRUE
+                            INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib )
+
+install( TARGETS shimmer_sdl2 DESTINATION lib )

@@ -1,52 +1,28 @@
 #ifndef SHIMMER_OPTIONS_H
 #define SHIMMER_OPTIONS_H
 
+#include "environment.h"
 #include "specs.h"
 
 #include "json/json.hpp"
 
-#include <string>
-#include <vector>
-
 namespace shimmer
 {
-template<typename T>
-class serialisable
+struct general_options
 {
-public:
-    virtual void to_json ( nlohmann::json& json,
-                           const T&        obj ) = 0;
+    std::vector<std::string> font_paths;
 
-    virtual void from_json ( const nlohmann::json& json,
-                             T&                    obj ) = 0;
-};
+    std::vector<std::string> image_paths;
 
-struct application {
-    struct surface {
-        glpp::dims_2u dims;
-    };
+    std::vector<std::string> shader_paths;
 
-    struct window {
-        std::string title;
-
-        glpp::coords_2i coords;
-
-        glpp::dims_2u dims;
-    };
-
-    struct surface surface;
-
-    struct window window;
-};
-
-struct general_options {
-    std::vector<std::string> resource_paths = { "./data", };
+    void set_env ( const environment& env );
 };
 
 struct shader_options {
-    std::string vertex = "glsl2.1/example.vert";
+    std::string vertex = "/glsl1.3/default.vert";
 
-    std::string fragment = "glsl2.1/default.frag";
+    std::string fragment = "/glsl1.3/default.frag";
 
     bool linear_filter = false;
 
@@ -67,10 +43,13 @@ struct video_options {
     enum aspect_ratio aspect_ratio = aspect_ratio::original;
 };
 
-struct options {
+struct options
+{
     struct general_options general;
 
     struct video_options video;
+
+    void set_env ( const environment& env );
 };
 
 void to_json ( nlohmann::json&        json,

@@ -1,8 +1,8 @@
 #ifndef SHIMMER_SHIMMER_H
 #define SHIMMER_SHIMMER_H
 
+#include "config.h"
 #include "macros.h"
-#include "options.h"
 #include "renderer.h"
 #include "specs.h"
 
@@ -42,14 +42,9 @@ public:
     void          mouse_coords ( glpp::coords_2i& coords );
 
 private:
-    std::shared_ptr<struct application> _app;
-    std::shared_ptr<struct options> _options;
+    std::shared_ptr<config> _config;
 
     std::shared_ptr<renderer> _renderer;
-
-    void _load_config();
-
-    void _save_config() const;
 };
 }
 

@@ -12,18 +12,18 @@ using namespace std;
 #include <iostream>
 
 resource_loader::resource_loader()
-    : _search_paths { "." }
+    : _search_paths { "", "." }
 {}
 
 resource_loader::resource_loader( const std::vector<string>& paths )
-    : _search_paths { "." }
+    : _search_paths { "", "." }
 {
     _search_paths.insert ( _search_paths.end(), paths.begin(), paths.end() );
 }
 
 resource_loader& resource_loader::search_paths ( const vector<string>& paths )
 {
-    _search_paths = { "." };
+    _search_paths = { "", "." };
     _search_paths.insert ( _search_paths.end(), paths.begin(), paths.end() );
 
     return *this;

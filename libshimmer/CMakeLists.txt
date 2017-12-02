@@ -1,4 +1,13 @@
 ###############################################################################
+#   Build Variables
+###############################################################################
+set(INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+set(INSTALL_DATA ${INSTALL_PREFIX}/share)
+set(INSTALL_FONTS ${INSTALL_DATA}/fonts)
+set(INSTALL_IMAGES ${INSTALL_DATA}/images)
+set(INSTALL_SHADERS ${INSTALL_DATA}/shaders)
+
+###############################################################################
 #   Copy default files.
 ###############################################################################
 set(DATA_GLSL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl)
@@ -45,9 +54,15 @@ set( INCLUDES
 
 set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
+        ${INCLUDE_DIR}/application.h
+        ${INCLUDE_DIR}/config.h
+        ${INCLUDE_DIR}/config_variables.h.in
+        ${INCLUDE_DIR}/environment.h
+        ${INCLUDE_DIR}/file_reader.h
         ${INCLUDE_DIR}/macros.h
         ${INCLUDE_DIR}/options.h
         ${INCLUDE_DIR}/renderer.h
+        ${INCLUDE_DIR}/shader_reader.h
         ${INCLUDE_DIR}/shimmer.h )
 
 
@@ -57,9 +72,18 @@ set( HEADERS
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
+        ${SOURCES_DIR}/config.cpp
+        ${SOURCES_DIR}/environment.cpp
+        ${SOURCES_DIR}/file_reader.cpp
         ${SOURCES_DIR}/options.cpp
         ${SOURCES_DIR}/renderer.cpp
+        ${SOURCES_DIR}/shader_reader.cpp
         ${SOURCES_DIR}/shimmer.cpp )
+
+###############################################################################
+#   Replace build variables.
+###############################################################################
+configure_file( ${INCLUDE_DIR}/config_variables.h.in ${INCLUDE_DIR}/config_variables.h )
 
 
 ###############################################################################
@@ -76,3 +100,13 @@ target_link_libraries( shimmer glpp ${TARGET_LINK_LIBRARIES} )
 #   Build catch tests.
 ###############################################################################
 #add_subdirectory( catch )
+
+
+###############################################################################
+#   Install libs and shaders
+###############################################################################
+set_target_properties( shimmer PROPERTIES
+                            INSTALL_RPATH_USE_LINK_PATH TRUE
+                            INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib )
+
+install( TARGETS shimmer DESTINATION lib )
