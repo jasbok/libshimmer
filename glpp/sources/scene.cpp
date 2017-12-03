@@ -47,7 +47,6 @@ void scene::draw() {
         }
         GLPP_CHECK_ERROR ( "Phase: Set Viewports" );
 
-
         if ( phase.framebuffer() != current_fbo ) {
             if ( phase.framebuffer() ) {
                 phase.framebuffer()->bind();

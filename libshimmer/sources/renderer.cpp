@@ -2,11 +2,14 @@
 
 #include "pixels.h"
 
+#include "debug.h"
+
 using namespace shimmer;
 
 renderer::renderer(
     const std::shared_ptr<config>& config )
     : _config ( config ),
+      _images ( config->opts.general.image_paths ),
       _shaders ( config->opts.general.shader_paths )
 {
     _construct_application_surface();
@@ -38,6 +41,29 @@ void renderer::create_application_texture_from_bound()
     }
 }
 
+void renderer::create_application_framebuffer()
+{
+    _application_framebuffer = std::make_shared<glpp::framebuffer>();
+    _application_framebuffer->bind();
+    _application_framebuffer->attach_color ( *_application_texture );
+
+    GLPP_CHECK_FRAMEBUFFER ( "Create Application Framebuffer" );
+}
+
+void renderer::bind_application_framebuffer()
+{
+    _application_framebuffer->bind();
+
+    GLPP_CHECK_FRAMEBUFFER ( "Bind Application Framebuffer" );
+}
+
+void renderer::unbind_application_framebuffer()
+{
+    _application_framebuffer->unbind();
+
+    GLPP_CHECK_FRAMEBUFFER ( "Unbind Application Framebuffer" );
+}
+
 void renderer::render()
 {
     _scene.draw();
@@ -56,8 +82,15 @@ void renderer::_construct_application_surface()
 
     _application_texture =
         glpp::texture_2d::make_shared ( _config->app.surface.dims );
+    _application_texture->bind();
+    _application_texture->generate_mipmaps();
 
-    _application_quad = glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f } );
+    if ( _config->opts.video.application_shader.linear_filter ) {
+        _application_texture->filters ( glpp::texture_2d::filter::linear );
+    }
+
+    _application_quad =
+        glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f }, true );
 
     _application_surface = std::make_shared<glpp::entity>();
 
@@ -66,10 +99,6 @@ void renderer::_construct_application_surface()
         .textures ( glpp::texture_units::make_shared (
                         { _application_texture } ) )
         .mesh ( _application_quad );
-
-    if ( _config->opts.video.application_shader.linear_filter ) {
-        _application_texture->filters ( glpp::texture_2d::filter::linear );
-    }
 }
 
 void renderer::_construct_surface_phase()

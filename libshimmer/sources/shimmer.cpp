@@ -19,13 +19,11 @@ shimmer::shimmer()
 shimmer::~shimmer()
 {}
 
-void shimmer::create_window ( string&    title,
-                              coords_2i& coords,
+void shimmer::create_window ( coords_2i& coords,
                               dims_2u&   dims )
 {
     auto& app = _config->app;
 
-    app.window.title = title;
     app.surface.dims = dims;
 
     if ( app.window.dims.area() == 0 ) {
@@ -36,18 +34,25 @@ void shimmer::create_window ( string&    title,
         coords = app.window.coords;
         dims   = app.window.dims;
     }
+}
 
+void shimmer::create_window ( string&    title,
+                              coords_2i& coords,
+                              dims_2u&   dims )
+{
     set_window_title ( title );
+    create_window ( coords, dims );
+}
+
+void shimmer::set_window_title ( string& title )
+{
+    _config->app.window.title = title;
+    title                    += " [shimmer]";
 }
 
 dims_2u shimmer::app_surface_dims()
 {
     return _config->app.surface.dims;
-}
-
-void shimmer::set_window_title ( string& title )
-{
-    title += " [shimmer]";
 }
 
 void shimmer::init()
@@ -78,6 +83,21 @@ void shimmer::refresh_display()
 void shimmer::capture_application_texture()
 {
     _renderer->create_application_texture_from_bound();
+}
+
+void shimmer::create_application_framebuffer()
+{
+    _renderer->create_application_framebuffer();
+}
+
+void shimmer::bind_application_framebuffer()
+{
+    _renderer->bind_application_framebuffer();
+}
+
+void shimmer::unbind_application_framebuffer()
+{
+    _renderer->unbind_application_framebuffer();
 }
 
 void shimmer::mouse_coords ( coords_2i& coords )

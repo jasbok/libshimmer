@@ -10,7 +10,7 @@ template<typename T>
 class quad : public mesh
 {
 public:
-    explicit quad( const dims_2<T>& dimensions )
+    explicit quad( const dims_2<T>& dimensions, bool flip_y = false )
         : _dimensions()
     {
         bind()
@@ -23,7 +23,7 @@ public:
                 { "texcoord", 2 }
             } );
 
-        this->dimensions ( dimensions );
+        this->dimensions ( dimensions, flip_y );
     }
 
     quad( quad&& move ) = default;
@@ -37,8 +37,9 @@ public:
     quad& operator=( const quad& copy ) = delete;
 
 
-    static auto make_shared ( const dims_2<T>& dimensions ) {
-        return std::make_shared<quad>( dimensions );
+    static auto make_shared ( const dims_2<T>& dimensions,
+                              bool             flip_y = false ) {
+        return std::make_shared<quad>( dimensions, flip_y );
     }
 
     static auto make_unique ( const dims_2<T>& dimensions ) {
@@ -49,24 +50,26 @@ public:
         return _dimensions;
     }
 
-    quad& dimensions ( const dims_2<T>& dimensions ) {
+    quad& dimensions ( const dims_2<T>& dimensions, bool flip_y = false ) {
         _dimensions = dimensions;
+
+        T sign = flip_y ? -1 : 1;
 
         vertices<T>( {
                 // Top Right
-                _dimensions.width, _dimensions.height, 0,
+                _dimensions.width, sign * _dimensions.height, 0,
                 1, 0,
 
                 // Bottom Right
-                _dimensions.width, -_dimensions.height, 0,
+                _dimensions.width, sign * -_dimensions.height, 0,
                 1, 1,
 
                 // Bottom Left
-                -_dimensions.width, -_dimensions.height, 0,
+                -_dimensions.width, sign * -_dimensions.height, 0,
                 0, 1,
 
                 // TOP Left
-                -_dimensions.width, _dimensions.height, 0,
+                -_dimensions.width, sign * _dimensions.height, 0,
                 0, 0
             } );
 

@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "framebuffer.h"
 
 std::string glpp::gl_error_to_string ( GLenum err ) {
     switch ( err ) {
@@ -109,4 +110,22 @@ std::string glpp::gl_framebuffer_status_to_string ( GLenum status ) {
     }
 
     return "Framebuffer complete.";
+}
+
+bool glpp::gl_check_framebuffer ( const std::string& file,
+                                  int                line,
+                                  const std::string& label )
+{
+    auto status = glpp::framebuffer::check_status();
+
+    if ( status != GL_FRAMEBUFFER_COMPLETE ) {
+        std::cerr << "[" << label << "] " << file
+                  << ":" << line
+                  << " => " << glpp::gl_framebuffer_status_to_string ( status )
+                  << std::endl;
+
+        return true;
+    }
+
+    return false;
 }

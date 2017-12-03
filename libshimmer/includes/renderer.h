@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "config.h"
 #include "framebuffer.h"
+#include "image_reader.h"
 #include "program.h"
 #include "quad.h"
 #include "scene.h"
@@ -25,12 +26,22 @@ public:
 
     void create_application_texture_from_bound();
 
+    void create_application_framebuffer();
+
+    void bind_application_framebuffer();
+
+    void unbind_application_framebuffer();
+
     void render();
 
 private:
     std::shared_ptr<config> _config;
 
+    image_reader _images;
+
     shader_reader _shaders;
+
+    std::shared_ptr<glpp::framebuffer> _application_framebuffer;
 
     std::shared_ptr<glpp::texture_2d> _application_texture;
 

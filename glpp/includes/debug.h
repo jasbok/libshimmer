@@ -10,11 +10,20 @@
                                                         __LINE__, \
                                                         LABEL )
 
+#define GLPP_CHECK_FRAMEBUFFER( LABEL ) glpp::gl_check_framebuffer ( __FILE__, \
+                                                                     __LINE__, \
+                                                                     LABEL )
+
 namespace glpp
 {
 std::string gl_error_to_string ( GLenum err );
 
 bool        gl_get_errors ( const std::string& file,
+                            int                line,
+                            const std::string& label = "GL_ERROR" );
+
+
+bool gl_check_framebuffer ( const std::string& file,
                             int                line,
                             const std::string& label = "GL_ERROR" );
 

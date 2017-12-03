@@ -69,8 +69,7 @@ public:
         enum pixels::format  format          = pixels::format::rgb,
         enum pixels::type    type            = pixels::type::gl_unsigned_byte );
 
-    dims_2u dims() const;
-
+    dims_2u     dims() const;
 
     texture_2d& image ( const pixels& pixels,
                         GLint         level = 0 );

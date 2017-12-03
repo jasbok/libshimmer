@@ -59,6 +59,7 @@ set( HEADERS
         ${INCLUDE_DIR}/config_variables.h.in
         ${INCLUDE_DIR}/environment.h
         ${INCLUDE_DIR}/file_reader.h
+        ${INCLUDE_DIR}/image_reader.h
         ${INCLUDE_DIR}/macros.h
         ${INCLUDE_DIR}/options.h
         ${INCLUDE_DIR}/renderer.h
@@ -75,6 +76,7 @@ set( SOURCES
         ${SOURCES_DIR}/config.cpp
         ${SOURCES_DIR}/environment.cpp
         ${SOURCES_DIR}/file_reader.cpp
+        ${SOURCES_DIR}/image_reader.cpp
         ${SOURCES_DIR}/options.cpp
         ${SOURCES_DIR}/renderer.cpp
         ${SOURCES_DIR}/shader_reader.cpp
