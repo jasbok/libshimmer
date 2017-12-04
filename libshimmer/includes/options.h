@@ -2,6 +2,7 @@
 #define SHIMMER_OPTIONS_H
 
 #include "environment.h"
+#include "serialisers.h"
 #include "specs.h"
 
 #include "json/json.hpp"
@@ -41,6 +42,8 @@ struct video_options {
     shader_options background_shader;
 
     enum aspect_ratio aspect_ratio = aspect_ratio::original;
+
+    class limiter refresh_rate_limiter;
 };
 
 struct options

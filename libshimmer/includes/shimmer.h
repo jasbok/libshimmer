@@ -48,6 +48,10 @@ public:
 
     void          unbind_application_framebuffer();
 
+    bool          limit_refresh_rate();
+
+    void          application_texture_flip_y ( bool flip_y );
+
     void          mouse_coords ( glpp::coords_2i& coords );
 
 private:

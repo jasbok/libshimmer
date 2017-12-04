@@ -21,33 +21,8 @@ void process_event ( SDL_Event* event )
                 shim.window_dims =
                     glpp::dims_2u ( event->resize.w, event->resize.h );
 
-                shim.video = sym::SDL_SetVideoMode ( shim.window_dims.width,
-                                                     shim.window_dims.height,
-                                                     24,
-                                                     SDL_HWSURFACE | SDL_OPENGL |
-                                                     SDL_RESIZABLE );
-
-                libshimmer->resize_window ( shim.window_dims );
-
-                libshimmer->init_renderer();
-
-                libshimmer->create_application_framebuffer();
+                shim.do_resize = true;
             }
-
-            //            if ( shimmer_->video()->video_resolution() !=
-            // shimmer::dimensions<> (
-            //                        target->w,
-            //                        target->h ) ) {
-            //                target = sym::SDL_SetVideoMode (
-            //
-            //
-            //                        shimmer_->video()->video_resolution().w,
-            //
-            //
-            //                        shimmer_->video()->video_resolution().h,
-            //                             32,
-            //                             SDL_RESIZABLE | SDL_OPENGL );
-            //            }
 
             // Do not propagate resize event to application
             event->active.type = SDL_NOEVENT;

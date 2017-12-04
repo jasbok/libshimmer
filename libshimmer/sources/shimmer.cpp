@@ -100,6 +100,16 @@ void shimmer::unbind_application_framebuffer()
     _renderer->unbind_application_framebuffer();
 }
 
+bool shimmer::limit_refresh_rate()
+{
+    return _config->opts.video.refresh_rate_limiter.check();
+}
+
+void shimmer::application_texture_flip_y ( bool flip_y )
+{
+    _renderer->application_texture_flip_y ( flip_y );
+}
+
 void shimmer::mouse_coords ( coords_2i& coords )
 {
     const auto& app_dims = _config->app.surface.dims;

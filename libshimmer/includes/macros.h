@@ -43,15 +43,15 @@ static std::ofstream _SHIMMER_LOG_FILE ( "/tmp/shimmer.log" );
     _COUNTER++;                                                           \
                                                                           \
     if ( _FIRST_CALL ) {                                                  \
-        printf ( "[[ %s ]]\n", __FUNCTION__ );                            \
+        std::cout << "[[ " << __FUNCTION__ << " ]]" << std::endl;         \
         _SHIMMER_LOG_FILE << "[[ " << __FUNCTION__ << " ]]" << std::endl; \
         _FIRST_CALL = false;                                              \
     }                                                                     \
     else if ( _DURATION.count() > _INTERVAL ) {                           \
-        printf ( "%ux %s (%.2f/sec)\n",                                   \
-                 _COUNTER,                                                \
-                 __FUNCTION__,                                            \
-                 _COUNTER / _DURATION.count() );                          \
+        std::cout << _COUNTER << "x " << __FUNCTION__                     \
+                  << "(" << std::setprecision ( 2 )                       \
+                  <<  _COUNTER / _DURATION.count()                        \
+                  << "/sec)" << std::endl;                                \
                                                                           \
         _SHIMMER_LOG_FILE << _COUNTER << "x " << __FUNCTION__             \
                           << "(" << std::setprecision ( 2 )               \

@@ -32,6 +32,8 @@ public:
 
     void unbind_application_framebuffer();
 
+    void application_texture_flip_y ( bool flip );
+
     void render();
 
 private:
@@ -42,6 +44,8 @@ private:
     shader_reader _shaders;
 
     std::shared_ptr<glpp::framebuffer> _application_framebuffer;
+
+    bool _application_texture_flip_y;
 
     std::shared_ptr<glpp::texture_2d> _application_texture;
 

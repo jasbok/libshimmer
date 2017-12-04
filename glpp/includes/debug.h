@@ -6,13 +6,20 @@
 #include <iostream>
 #include <string>
 
-#define GLPP_CHECK_ERROR( LABEL ) glpp::gl_get_errors ( __FILE__, \
-                                                        __LINE__, \
-                                                        LABEL )
+#ifndef DEBUG
+# define GLPP_CHECK_ERROR( LABEL )
 
-#define GLPP_CHECK_FRAMEBUFFER( LABEL ) glpp::gl_check_framebuffer ( __FILE__, \
-                                                                     __LINE__, \
-                                                                     LABEL )
+# define GLPP_CHECK_FRAMEBUFFER( LABEL )
+
+#else // ifndef DEBUG
+
+# define GLPP_CHECK_ERROR( LABEL ) \
+    glpp::gl_get_errors ( __FILE__, __LINE__, LABEL )
+
+# define GLPP_CHECK_FRAMEBUFFER( LABEL ) \
+    glpp::gl_check_framebuffer ( __FILE__, __LINE__, LABEL )
+
+#endif // ifndef DEBUG
 
 namespace glpp
 {

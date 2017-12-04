@@ -1,6 +1,7 @@
 #ifndef SHIMS_SDL_SHIM_H
 #define SHIMS_SDL_SHIM_H
 
+#include "limiter.h"
 #include "shimmer.h"
 
 #include <SDL.h>
@@ -9,14 +10,12 @@
 
 struct shim {
     SDL_Surface* video;
+    bool         do_resize = false;
 
     glpp::dims_2u   window_dims;
     glpp::coords_2i window_coords;
     std::string     window_title;
     glpp::coords_2i mouse_coords;
-
-    void ( * bindFramebuffer )( GLenum,
-                                GLuint );
 };
 
 extern struct shim shim;

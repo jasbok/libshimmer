@@ -10,7 +10,8 @@ renderer::renderer(
     const std::shared_ptr<config>& config )
     : _config ( config ),
       _images ( config->opts.general.image_paths ),
-      _shaders ( config->opts.general.shader_paths )
+      _shaders ( config->opts.general.shader_paths ),
+      _application_texture_flip_y ( false )
 {
     _construct_application_surface();
     _construct_surface_phase();
@@ -22,7 +23,8 @@ void renderer::update()
 
     surface.viewport()->dims = _config->app.window.dims;
     _application_quad->bind();
-    _application_quad->dimensions ( _calculate_quad_dimensions() );
+    _application_quad->dimensions ( _calculate_quad_dimensions(),
+                                    _application_texture_flip_y );
 }
 
 void renderer::create_application_texture_from_bound()
@@ -36,8 +38,8 @@ void renderer::create_application_texture_from_bound()
                                        _config->app.surface.dims,
                                        glpp::texture::internal_format::rgba ) );
 
-    if ( _config->opts.video.application_shader.linear_filter ) {
-        _application_texture->filters ( glpp::texture_2d::filter::linear );
+    if ( !_config->opts.video.application_shader.linear_filter ) {
+        _application_texture->filters ( glpp::texture_2d::filter::nearest );
     }
 }
 
@@ -64,6 +66,15 @@ void renderer::unbind_application_framebuffer()
     GLPP_CHECK_FRAMEBUFFER ( "Unbind Application Framebuffer" );
 }
 
+void renderer::application_texture_flip_y ( bool flip_y )
+{
+    _application_texture_flip_y = flip_y;
+
+    _application_quad->bind();
+    _application_quad->dimensions ( _calculate_quad_dimensions(),
+                                    _application_texture_flip_y );
+}
+
 void renderer::render()
 {
     _scene.draw();
@@ -85,12 +96,12 @@ void renderer::_construct_application_surface()
     _application_texture->bind();
     _application_texture->generate_mipmaps();
 
-    if ( _config->opts.video.application_shader.linear_filter ) {
-        _application_texture->filters ( glpp::texture_2d::filter::linear );
+    if ( !_config->opts.video.application_shader.linear_filter ) {
+        _application_texture->filters ( glpp::texture_2d::filter::nearest );
     }
 
     _application_quad =
-        glpp::quad<GLfloat>::make_shared ( { 1.0f, 1.0f }, true );
+        glpp::quad<GLfloat>::make_shared ( _calculate_quad_dimensions() );
 
     _application_surface = std::make_shared<glpp::entity>();
 

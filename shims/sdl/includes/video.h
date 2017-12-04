@@ -5,6 +5,8 @@
 
 void init_renderer();
 
+void setup_video();
+
 SHIM ( SDL_Surface*, SDL_SetVideoMode,
        int width,
        int height,
@@ -39,14 +41,5 @@ SHIM ( void, SDL_WM_SetCaption,
 SHIM ( void, SDL_WM_GetCaption,
        char** title,
        char** icon );
-
-void shim_glBindFramebuffer ( GLenum target,
-                              GLuint framebuffer );
-
-// SHIM ( void*, glXGetProcAddress, const GLubyte * procName );
-
-typedef void (* fp)();
-
-SHIM ( fp, glXGetProcAddress, const GLubyte * procName );
 
 #endif // ifndef SHIMS_SDL_VIDEO_H
