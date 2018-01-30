@@ -10,3 +10,4 @@ build
 *.user
 *.kate-swp
 *.autosave
+libshimmer/includes/config_variables.h
