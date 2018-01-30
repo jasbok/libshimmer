@@ -63,6 +63,7 @@ set( HEADERS
         ${INCLUDE_DIR}/limiter.h
         ${INCLUDE_DIR}/macros.h
         ${INCLUDE_DIR}/options.h
+        ${INCLUDE_DIR}/pipeline.h
         ${INCLUDE_DIR}/renderer.h
         ${INCLUDE_DIR}/serialisers.h
         ${INCLUDE_DIR}/shader_reader.h

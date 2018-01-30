@@ -56,6 +56,11 @@ void renderer::bind_application_framebuffer()
 {
     _application_framebuffer->bind();
 
+    glViewport ( 0,
+                 0,
+                 _config->app.surface.dims.width,
+                 _config->app.surface.dims.height );
+
     GLPP_CHECK_FRAMEBUFFER ( "Bind Application Framebuffer" );
 }
 

@@ -9,7 +9,6 @@ void init_shimmer() {
 
     if ( !libshimmer ) {
         libshimmer = std::make_shared<class shimmer::shimmer>();
-        libshimmer->init();
     }
 }
 

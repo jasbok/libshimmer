@@ -24,10 +24,13 @@ extern std::shared_ptr<class ::shimmer::shimmer> libshimmer;
 
 void init_shimmer();
 
-SHIM ( int,  SDL_Init,
+SHIM ( int,          SDL_Init,
        Uint32 flags );
 
-SHIM ( void, SDL_Quit,
+SHIM ( void,         SDL_Quit,
        void );
+
+SHIM ( SDL_GrabMode, SDL_WM_GrabInput,
+       SDL_GrabMode mode );
 
 #endif // ifndef SHIMS_SDL_SHIM_H

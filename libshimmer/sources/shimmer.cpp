@@ -55,9 +55,6 @@ dims_2u shimmer::app_surface_dims()
     return _config->app.surface.dims;
 }
 
-void shimmer::init()
-{}
-
 void shimmer::init_renderer()
 {
     _renderer = std::make_shared<renderer>( _config );

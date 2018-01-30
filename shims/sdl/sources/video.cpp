@@ -30,16 +30,16 @@ SDL_Surface* SDL_SetVideoMode ( int    width,
                                 Uint32 flags ) {
     SHIM_LOG();
 
-    libshimmer->init();
     shim.window_coords = glpp::coords_2i ( 0, 0 );
     shim.window_dims   = glpp::dims_2u ( width, height );
     libshimmer->create_window ( shim.window_coords, shim.window_dims );
 
-    if ( !shim.video ) setup_video();
+    if ( !shim.video ) {
+        setup_video();
+    }
 
     init_renderer();
     libshimmer->application_texture_flip_y ( true );
-
     libshimmer->create_application_framebuffer();
 
     return shim.video;
@@ -49,6 +49,12 @@ SDL_Surface* SDL_GetVideoSurface ( void ) {
     SHIM_LOG();
 
     return shim.video;
+}
+
+const SDL_VideoInfo* SDL_GetVideoInfo ( void ) {
+    SHIM_LOG();
+
+    return sym::SDL_GetVideoInfo();
 }
 
 void SDL_UpdateRect ( SDL_Surface* screen,
@@ -71,6 +77,48 @@ void SDL_UpdateRects ( SDL_Surface* screen, int numrects, SDL_Rect* rects ) {
     sym::SDL_UpdateRects ( screen, numrects, rects );
 }
 
+SDL_Surface* SDL_CreateRGBSurface ( Uint32 flags,
+                                    int    width,
+                                    int    height,
+                                    int    bitsPerPixel,
+                                    Uint32 Rmask,
+                                    Uint32 Gmask,
+                                    Uint32 Bmask,
+                                    Uint32 Amask ) {
+    SHIM_LOG();
+
+    return sym::SDL_CreateRGBSurface ( flags,
+                                       width,
+                                       height,
+                                       bitsPerPixel,
+                                       Rmask,
+                                       Gmask,
+                                       Bmask,
+                                       Amask );
+}
+
+SDL_Surface* SDL_CreateRGBSurfaceFrom ( void*  pixels,
+                                        int    width,
+                                        int    height,
+                                        int    depth,
+                                        int    pitch,
+                                        Uint32 Rmask,
+                                        Uint32 Gmask,
+                                        Uint32 Bmask,
+                                        Uint32 Amask ) {
+    SHIM_LOG();
+
+    return sym::SDL_CreateRGBSurface ( pixels,
+                                       width,
+                                       height,
+                                       depth,
+                                       pitch,
+                                       Rmask,
+                                       Gmask,
+                                       Bmask,
+                                       Amask );
+}
+
 int SDL_Flip ( SDL_Surface* screen ) {
     SHIM_LOG();
 
@@ -86,14 +134,6 @@ void SDL_GL_SwapBuffers ( void ) {
 
     if ( libshimmer->limit_refresh_rate() ) return;
 
-    if ( shim.do_resize ) {
-        setup_video();
-
-        libshimmer->resize_window ( shim.window_dims );
-
-        shim.do_resize = false;
-    }
-
     libshimmer->unbind_application_framebuffer();
 
     libshimmer->refresh_display();
@@ -101,10 +141,6 @@ void SDL_GL_SwapBuffers ( void ) {
     sym::SDL_GL_SwapBuffers();
 
     libshimmer->bind_application_framebuffer();
-    glViewport ( 0,
-                 0,
-                 libshimmer->app_surface_dims().width,
-                 libshimmer->app_surface_dims().height );
 }
 
 void SDL_WM_SetCaption ( const char* title, const char* icon ) {
@@ -128,3 +164,7 @@ void SDL_WM_GetCaption ( char** title, char** icon ) {
         strcpy ( *title, shim.window_title.c_str() );
     }
 }
+
+// void glBindFramebuffer ( GLenum target, GLuint handle ) {
+//    sym::glBindFramebuffer ( target, handle );
+// }

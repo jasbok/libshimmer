@@ -9,7 +9,6 @@ void init_shimmer() {
 
     if ( !libshimmer ) {
         libshimmer = std::make_shared<class shimmer::shimmer>();
-        libshimmer->init();
     }
 }
 
@@ -23,4 +22,12 @@ int SDL_Init ( Uint32 flags ) {
 
 void SDL_Quit ( void ) {
     SHIM_LOG();
+}
+
+SDL_GrabMode SDL_WM_GrabInput ( SDL_GrabMode mode ) {
+    SHIM_LOG();
+
+    sym::SDL_WM_GrabInput ( SDL_GRAB_OFF );
+
+    return mode;
 }

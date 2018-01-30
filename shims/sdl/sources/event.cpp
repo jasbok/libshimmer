@@ -21,7 +21,9 @@ void process_event ( SDL_Event* event )
                 shim.window_dims =
                     glpp::dims_2u ( event->resize.w, event->resize.h );
 
-                shim.do_resize = true;
+                setup_video();
+
+                libshimmer->resize_window ( shim.window_dims );
             }
 
             // Do not propagate resize event to application

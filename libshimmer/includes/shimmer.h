@@ -26,8 +26,6 @@ public:
 
     glpp::dims_2u app_surface_dims();
 
-    void          init();
-
     void          init_renderer();
 
     void          resize_window ( glpp::dims_2u& dims );
