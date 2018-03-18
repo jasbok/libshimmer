@@ -1,10 +1,9 @@
 #ifndef GLPP_FT_WRAPPER_H
 #define GLPP_FT_WRAPPER_H
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include "glyph.h"
 
-#include <exception>
+#include <memory>
 #include <string>
 
 namespace glpp
@@ -13,32 +12,17 @@ class ft_wrapper
 {
 public:
     ft_wrapper();
+    virtual ~ft_wrapper();
 
-    ft_wrapper( const ft_wrapper& copy ) = delete;
+    void load_face ( const std::string& path,
+                     const unsigned int size,
+                     const unsigned int dpi );
 
-    ft_wrapper( ft_wrapper&& move );
-
-    ~ft_wrapper();
-
-    ft_wrapper& operator=( const ft_wrapper& copy ) = delete;
-
-    ft_wrapper& operator=( ft_wrapper&& move );
-
-
-    FT_Library handle() const;
-
-
-    static void print_error ( FT_Error           ft_err,
-                              const std::string& label );
+    glyph get_glyph ( wchar_t unicode ) const;
 
 private:
-    FT_Library _ft;
-};
-
-struct freetype_init_exception : public std::exception {
-    const char* what() const throw( ) {
-        return "Could not initialise FreeType.";
-    }
+    class impl;
+    std::unique_ptr<impl> _impl;
 };
 }
 

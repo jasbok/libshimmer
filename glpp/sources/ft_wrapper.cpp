@@ -1,4 +1,5 @@
 #include "ft_wrapper.h"
+#include "ft_wrapper_impl.h"
 
 #include <iostream>
 
@@ -6,46 +7,19 @@ using namespace glpp;
 using namespace std;
 
 ft_wrapper::ft_wrapper()
-    : _ft()
-{
-    auto ft_err = FT_Init_FreeType ( &_ft );
+    : _impl ( std::make_unique<impl>() )
+{}
 
-    if ( ft_err != FT_Err_Ok ) {
-        throw freetype_init_exception();
-    }
+ft_wrapper::~ft_wrapper() = default;
+
+void ft_wrapper::load_face ( const string&      path,
+                             const unsigned int size,
+                             const unsigned int dpi )
+{
+    _impl->load_face ( path, size, dpi );
 }
 
-ft_wrapper::ft_wrapper( ft_wrapper&& move )
-    : _ft ( move._ft )
+glyph ft_wrapper::get_glyph ( wchar_t unicode ) const
 {
-    move._ft = nullptr;
+    return _impl->get_glyph ( unicode );
 }
-
-ft_wrapper::~ft_wrapper()
-{
-    FT_Done_FreeType ( _ft );
-}
-
-ft_wrapper& ft_wrapper::operator=( ft_wrapper&& move )
-{
-    _ft      = move._ft;
-    move._ft = nullptr;
-
-    return *this;
-}
-
-FT_Library ft_wrapper::handle() const
-{
-    return _ft;
-}
-
-// *INDENT-OFF*
-void ft_wrapper::print_error(FT_Error ft_err, const string &label)
-{
-    #undef __FTERRORS_H__
-    #define FT_ERRORDEF( e, v, s )  case e: cerr << "freetype - " << s << ": " << label << endl; break;
-    #define FT_ERROR_START_LIST     switch (ft_err) {
-    #define FT_ERROR_END_LIST       default: cerr << "freetype - " << label << "Unknown FT_Error: " << endl;}
-    #include FT_ERRORS_H
-}
-// *INDENT-ON*

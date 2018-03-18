@@ -1,7 +1,8 @@
 #ifndef GLPP_FONT_LOADER_H
 #define GLPP_FONT_LOADER_H
 
-#include "font_face.h"
+#include "font_spec.h"
+#include "glyph.h"
 
 namespace glpp
 {
@@ -20,8 +21,6 @@ public:
 
 private:
     std::vector<std::string> _search_paths;
-
-    glyph_pack _convert_to_glyphs ( const font_face& face );
 };
 }
 

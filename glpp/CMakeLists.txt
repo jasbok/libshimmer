@@ -23,6 +23,7 @@ find_package( Freetype )
 set( FREETYPE_INCLUDES ${FREETYPE_INCLUDE_DIRS} )
 set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} )
 
+
 ###############################################################################
 #   Configure external include directories.
 ###############################################################################
@@ -66,12 +67,11 @@ set( HEADERS
         ${INCLUDE_DIR}/element_array_buffer.h
         ${INCLUDE_DIR}/entity.h
         ${INCLUDE_DIR}/enums.h
-        ${INCLUDE_DIR}/font.h
-        ${INCLUDE_DIR}/font_face.h
         ${INCLUDE_DIR}/font_loader.h
         ${INCLUDE_DIR}/font_spec.h
         ${INCLUDE_DIR}/framebuffer.h
         ${INCLUDE_DIR}/ft_wrapper.h
+        ${INCLUDE_DIR}/ft_wrapper_impl.h
         ${INCLUDE_DIR}/glpp.h
         ${INCLUDE_DIR}/glyph.h
         ${INCLUDE_DIR}/material.h
@@ -109,12 +109,11 @@ set( SOURCES
         ${SOURCES_DIR}/debug.cpp
         ${SOURCES_DIR}/element_array_buffer.cpp
         ${SOURCES_DIR}/entity.cpp
-        ${SOURCES_DIR}/font.cpp
-        ${SOURCES_DIR}/font_face.cpp
         ${SOURCES_DIR}/font_loader.cpp
         ${SOURCES_DIR}/font_spec.cpp
         ${SOURCES_DIR}/framebuffer.cpp
         ${SOURCES_DIR}/ft_wrapper.cpp
+        ${SOURCES_DIR}/ft_wrapper_impl.cpp
         ${SOURCES_DIR}/glyph.cpp
         ${SOURCES_DIR}/material.cpp
         ${SOURCES_DIR}/pixels.cpp
