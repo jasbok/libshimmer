@@ -4,6 +4,7 @@
 #include "application.h"
 #include "environment.h"
 #include "options.h"
+#include "pipeline.h"
 
 #include <string>
 #include <vector>
@@ -24,6 +25,8 @@ public:
     application app;
 
     options opts;
+
+    struct pipeline pipeline;
 };
 }
 

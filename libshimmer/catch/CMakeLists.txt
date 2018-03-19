@@ -21,12 +21,17 @@ include_directories( ${CATCH_INCLUDES} )
 ###############################################################################
 #file( GLOB_RECURSE CATCH_TESTS ${LIB_SHIMMER_ROOT}/catch/tests/*.cpp )
 
+set ( CATCH_TESTS_ROOT ${LIB_SHIMMER_ROOT}/catch/tests)
+
+set ( CATCH_TESTS
+        ${CATCH_TESTS_ROOT}/pipeline.cpp )
+
 
 ###############################################################################
 #   List sources
 ###############################################################################
 set( CATCH_SOURCES
-        ${SOURCES}
+        #${SOURCES}
         ${CATCH_TESTS}
         catch.cpp )
 
@@ -35,7 +40,7 @@ set( CATCH_SOURCES
 #   Build shared library
 ###############################################################################
 add_executable( catch ${CATCH_SOURCES} ${HEADERS} )
-target_link_libraries( catch ${TARGET_LINK_LIBRARIES} ${GLUT_LIBRARY} )
+target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES} ${GLUT_LIBRARY})
 
 
 ###############################################################################
@@ -53,6 +58,9 @@ configure_file(data/images/8x9x8_rgb_adam7.png data/images/8x9x8_rgb_adam7.png C
 configure_file(data/images/8x9x8_rgba_adam7.png data/images/8x9x8_rgba_adam7.png COPYONLY)
 configure_file(data/images/8x9x8_rgb.jpeg data/images/8x9x8_rgb.jpeg COPYONLY)
 configure_file(data/images/8x9x8_rgba.jpeg data/images/8x9x8_rgba.jpeg COPYONLY)
+configure_file(data/images/8x9x8_rgba.jpeg data/images/8x9x8_rgba.jpeg COPYONLY)
+
+configure_file(data/config/pipeline.json data/config/pipeline.json COPYONLY)
 
 ###############################################################################
 #   Add the CTest unit tests to the project.

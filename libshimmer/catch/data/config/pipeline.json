@@ -1,50 +1,38 @@
 {
-    "textures" : [
+    "stages" : [
         {
-            "id" : "image",
-            "path" : "path/to/my/image.png"
-        }
-    ],
-    "pipeline" : {
-        "stages" : [
-            {
-                "passes" : [
-                    {
-                        "texture_bindings" : [
-                            {
-                                "variable" : "application",
-                                "texture_id" : "application"
-                            },
-                            {
-                                "variable" : "image",
-                                "texture_id" : "image"
-                            }
-                        ],
-                        "uniforms" : [
-                            {
-                                "variable" : "var1",
-                                "value" : "1.0"
-                            },
-                            {
-                                "variable" : "var2",
-                                "value" : "1.0"
-                            }
-                        ],
-                        "shader" : {
-                            "vertex" : "vertex.vert",
-                            "fragment" : "fragment.frag"
+            "input" : "application",
+            "output" : "stage_1_out",
+            "scale" : 2.0,
+            "passes" : [
+                {
+                    "texture_bindings" : [
+                        {
+                            "variable" : "application",
+                            "texture_id" : "application"
                         },
-                        "blend_func" : "src_dest_one"
-                    }
-                ],
-                "out" : {
-                    "id" : "stage_1",
-                    "scaled" : {
-                        "texture_id" : "application",
-                        "scale" : 2.0
-                    }
+                        {
+                            "variable" : "image",
+                            "texture_id" : "image"
+                        }
+                    ],
+                    "uniforms" : [
+                        {
+                            "variable" : "var1",
+                            "value" : "1.0"
+                        },
+                        {
+                            "variable" : "var2",
+                            "value" : "2.0"
+                        }
+                    ],
+                    "shader" : {
+                        "vertex" : "vertex.vert",
+                        "fragment" : "fragment.frag"
+                    },
+                    "blend_function" : "src_dest_one"
                 }
-            }
-        ]
-    }
+            ]
+        }
+    ]
 }

@@ -2,10 +2,13 @@
 
 #include "catch/catch.hpp"
 
-#include <GL/glew.h>
+#include "plog/Appenders/ConsoleAppender.h"
+#include "plog/Log.h"
+
+// #include <GL/glew.h>
 
 // Include gl.h after glew.h
-#include <GL/freeglut.h>
+// #include <GL/freeglut.h>
 
 int main ( int argc, char* argv[] )
 {
@@ -28,7 +31,11 @@ int main ( int argc, char* argv[] )
     //        }
     //    }
 
-    //    int result = Catch::Session().run ( argc, argv );
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 
-    //    return result < 0xff ? result : 0xff;
+    plog::init ( plog::debug, &consoleAppender );
+
+    int result = Catch::Session().run ( argc, argv );
+
+    return result < 0xff ? result : 0xff;
 }

@@ -25,7 +25,6 @@ set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
 set ( EXTERNAL_INCLUDES
         ${EXTERNAL_INCLUDE_DIR} )
 
-
 ###############################################################################
 #   List external target link libraries
 ###############################################################################
@@ -82,6 +81,7 @@ set( SOURCES
         ${SOURCES_DIR}/image_reader.cpp
         ${SOURCES_DIR}/limiter.cpp
         ${SOURCES_DIR}/options.cpp
+        ${SOURCES_DIR}/pipeline.cpp
         ${SOURCES_DIR}/renderer.cpp
         ${SOURCES_DIR}/serialisers.cpp
         ${SOURCES_DIR}/shader_reader.cpp
@@ -106,7 +106,7 @@ target_link_libraries( shimmer glpp ${TARGET_LINK_LIBRARIES} )
 ###############################################################################
 #   Build catch tests.
 ###############################################################################
-#add_subdirectory( catch )
+add_subdirectory( catch )
 
 
 ###############################################################################
