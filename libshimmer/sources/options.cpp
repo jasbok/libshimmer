@@ -140,13 +140,13 @@ void shimmer::from_json ( const nlohmann::json& json, aspect_ratio& obj )
     }
 }
 
-void glpp::to_json ( nlohmann::json& json, const glpp::dims_2f& obj )
+void shimmer::to_json ( nlohmann::json& json, const dims_2f& obj )
 {
     json["width"]  = obj.width;
     json["height"] = obj.height;
 }
 
-void glpp::from_json ( const nlohmann::json& json, glpp::dims_2f& obj )
+void shimmer::from_json ( const nlohmann::json& json, dims_2f& obj )
 {
     obj.width  = json.at ( "width" );
     obj.height = json.at ( "height" );

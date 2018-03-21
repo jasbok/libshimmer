@@ -1,9 +1,9 @@
 #ifndef SHIMMER_OPTIONS_H
 #define SHIMMER_OPTIONS_H
 
+#include "common.h"
 #include "environment.h"
 #include "serialisers.h"
-#include "specs.h"
 
 #include "json/json.hpp"
 
@@ -84,15 +84,11 @@ void to_json ( nlohmann::json& json,
 
 void from_json ( const nlohmann::json& json,
                  options&              obj );
-}
 
-namespace glpp
-{
 void to_json ( nlohmann::json& json,
                const dims_2f&  obj );
 
 void from_json ( const nlohmann::json& json,
                  dims_2f&              obj );
 }
-
 #endif // ifndef SHIMMER_OPTIONS_H

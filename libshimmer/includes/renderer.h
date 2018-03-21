@@ -59,13 +59,13 @@ private:
 
     glpp::scene _scene;
 
-    void          _construct_application_surface();
+    void             _construct_application_surface();
 
-    void          _construct_surface_phase();
+    void             _construct_surface_phase();
 
-    void          _construct_application_phase();
+    void             _construct_application_phase();
 
-    glpp::dims_2f _calculate_quad_dimensions();
+    shimmer::dims_2f _calculate_quad_dimensions();
 };
 }
 

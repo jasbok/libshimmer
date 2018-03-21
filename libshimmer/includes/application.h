@@ -1,20 +1,21 @@
 #ifndef SHIMMER_APPLICATION_H
 #define SHIMMER_APPLICATION_H
 
-#include "specs.h"
+#include "common.h"
 
-namespace shimmer{
+namespace shimmer
+{
 struct application {
     struct surface {
-        glpp::dims_2u dims;
+        dims_2u dims;
     };
 
     struct window {
         std::string title;
 
-        glpp::coords_2i coords;
+        coords_2i coords;
 
-        glpp::dims_2u dims;
+        dims_2u dims;
     };
 
     struct surface surface;
@@ -23,4 +24,4 @@ struct application {
 };
 }
 
-#endif
+#endif // ifndef SHIMMER_APPLICATION_H

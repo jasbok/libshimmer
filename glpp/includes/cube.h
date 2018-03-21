@@ -4,6 +4,8 @@
 #include "mesh.h"
 #include "specs.h"
 
+#include "common/dims.h"
+
 #include <memory>
 
 namespace glpp
@@ -12,7 +14,7 @@ template<typename T>
 class cube : public mesh
 {
 public:
-    cube( const dims_3<T>& dimensions )
+    cube( const common::dims_3<T>& dimensions )
         : _dimensions()
     {
         bind()
@@ -60,19 +62,19 @@ public:
     cube& operator=( const cube& copy ) = delete;
 
 
-    static auto make_shared ( const dims_3<T>& dimensions ) {
+    static auto make_shared ( const common::dims_3<T>& dimensions ) {
         return std::make_shared<cube>( dimensions );
     }
 
-    static auto make_unique ( const dims_3<T>& dimensions ) {
+    static auto make_unique ( const common::dims_3<T>& dimensions ) {
         return std::make_unique<cube>( dimensions );
     }
 
-    dims_3<T> dimensions() {
+    common::dims_3<T> dimensions() {
         return _dimensions;
     }
 
-    cube& dimensions ( const dims_3<T>& dimensions ) {
+    cube& dimensions ( const common::dims_3<T>& dimensions ) {
         _dimensions = dimensions;
 
         vertices<T>( {
@@ -148,7 +150,7 @@ public:
     }
 
 private:
-    dims_3<T> _dimensions;
+    common::dims_3<T> _dimensions;
 };
 }
 

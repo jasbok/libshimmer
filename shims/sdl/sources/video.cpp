@@ -30,8 +30,8 @@ SDL_Surface* SDL_SetVideoMode ( int    width,
                                 Uint32 flags ) {
     SHIM_LOG();
 
-    shim.window_coords = glpp::coords_2i ( 0, 0 );
-    shim.window_dims   = glpp::dims_2u ( width, height );
+    shim.window_coords = shimmer::coords_2i ( 0, 0 );
+    shim.window_dims   = shimmer::dims_2u ( width, height );
     libshimmer->create_window ( shim.window_coords, shim.window_dims );
 
     if ( !shim.video ) {

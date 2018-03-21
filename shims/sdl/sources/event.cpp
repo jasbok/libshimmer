@@ -19,7 +19,7 @@ void process_event ( SDL_Event* event )
             if ( shim.video && ( event->resize.w <= 1920 ) &&
                  ( event->resize.h <= 1080 ) ) {
                 shim.window_dims =
-                    glpp::dims_2u ( event->resize.w, event->resize.h );
+                    shimmer::dims_2u ( event->resize.w, event->resize.h );
 
                 setup_video();
 

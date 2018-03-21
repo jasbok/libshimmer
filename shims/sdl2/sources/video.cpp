@@ -51,8 +51,8 @@ SDL_Window* SDL_CreateWindow ( const char* title,
     }
 
     std::string wtitle = title;
-    glpp::coords_2i coords ( x, y );
-    glpp::dims_2u   dims ( w, h );
+    shimmer::coords_2i coords ( x, y );
+    shimmer::dims_2u   dims ( w, h );
     libshimmer->create_window ( wtitle, coords, dims );
 
     if ( !shim.window ) {

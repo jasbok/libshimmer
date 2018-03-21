@@ -37,7 +37,7 @@ set( CATCH_SOURCES
 
 
 ###############################################################################
-#   Build shared library
+#   Build catch executable
 ###############################################################################
 add_executable( catch ${CATCH_SOURCES} ${HEADERS} )
 target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES} ${GLUT_LIBRARY})

@@ -60,7 +60,7 @@ void shimmer::init_renderer()
     _renderer = std::make_shared<renderer>( _config );
 }
 
-void shimmer::resize_window ( glpp::dims_2u& dims )
+void shimmer::resize_window ( dims_2u& dims )
 {
     _config->app.window.dims = dims;
     dims                     = _config->app.surface.dims;

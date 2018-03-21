@@ -14,9 +14,9 @@ struct shim {
     SDL_Renderer* renderer;
     SDL_Texture*  target;
 
-    glpp::dims_2u   window_dims;
-    glpp::coords_2i window_coords;
-    glpp::coords_2i mouse_coords;
+    shimmer::dims_2u   window_dims;
+    shimmer::coords_2i window_coords;
+    shimmer::coords_2i mouse_coords;
 };
 
 extern struct shim shim;

@@ -157,7 +157,7 @@ void renderer::_construct_application_phase()
     _scene.add ( std::move ( application_phase ) );
 }
 
-glpp::dims_2f renderer::_calculate_quad_dimensions()
+dims_2f renderer::_calculate_quad_dimensions()
 {
     auto& app_dims = _config->app.surface.dims;
     auto& win_dims = _config->app.window.dims;

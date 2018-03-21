@@ -50,6 +50,7 @@ set( TARGET_LINK_LIBRARIES
 set( INCLUDE_DIR ${GLPP_ROOT}/includes )
 
 set( INCLUDES
+        ${ROOT}
         ${INCLUDE_DIR} )
 
 

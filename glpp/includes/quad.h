@@ -4,13 +4,17 @@
 #include "mesh.h"
 #include "specs.h"
 
+#include "common/coords.h"
+#include "common/dims.h"
+
 namespace glpp
 {
 template<typename T>
 class quad : public mesh
 {
 public:
-    explicit quad( const dims_2<T>& dimensions, bool flip_y = false )
+    explicit quad( const common::dims_2<T>& dimensions,
+                   bool                     flip_y = false )
         : _dimensions()
     {
         bind()
@@ -37,20 +41,21 @@ public:
     quad& operator=( const quad& copy ) = delete;
 
 
-    static auto make_shared ( const dims_2<T>& dimensions,
-                              bool             flip_y = false ) {
+    static auto make_shared ( const common::dims_2<T>& dimensions,
+                              bool                     flip_y = false ) {
         return std::make_shared<quad>( dimensions, flip_y );
     }
 
-    static auto make_unique ( const dims_2<T>& dimensions ) {
+    static auto make_unique ( const common::dims_2<T>& dimensions ) {
         return std::make_unique<quad>( dimensions );
     }
 
-    dims_2<T> dimensions() {
+    common::dims_2<T> dimensions() {
         return _dimensions;
     }
 
-    quad& dimensions ( const dims_2<T>& dimensions, bool flip_y = false ) {
+    quad& dimensions ( const common::dims_2<T>& dimensions,
+                       bool                     flip_y = false ) {
         _dimensions = dimensions;
 
         T sign = flip_y ? -1 : 1;
@@ -77,7 +82,7 @@ public:
     }
 
 private:
-    dims_2<T> _dimensions;
+    common::dims_2<T> _dimensions;
 };
 }
 

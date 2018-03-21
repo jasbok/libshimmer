@@ -30,8 +30,8 @@ int SDL_PollEvent ( SDL_Event* event )
                 break;
 
             case SDL_WINDOWEVENT_RESIZED:
-                shim.window_dims = glpp::dims_2u ( event->window.data1,
-                                                   event->window.data2 );
+                shim.window_dims = shimmer::dims_2u ( event->window.data1,
+                                                      event->window.data2 );
                 libshimmer->resize_window ( shim.window_dims );
                 event->type = 0;
                 break;
