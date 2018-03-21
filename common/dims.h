@@ -47,6 +47,10 @@ struct dims_2 {
         return { width* op.width, height* op.height };
     }
 
+    dims_2 operator/( const dims_2& op ) const {
+        return { width / op.width, height / op.height };
+    }
+
     dims_2& operator+=( const dims_2& op ) {
         width  += op.width;
         height += op.height;
@@ -91,6 +95,13 @@ struct dims_2 {
                + ",height:" + std::to_string ( height ) + "}";
     }
 };
+
+template<typename T>
+std::ostream& operator<<( std::ostream& os, const dims_2<T>& value ) {
+    os << value.to_json();
+
+    return os;
+}
 
 template<typename T>
 struct dims_3 {
@@ -179,5 +190,12 @@ struct dims_3 {
                + ",depth:" + std::to_string ( depth ) + "}";
     }
 };
+
+template<typename T>
+std::ostream& operator<<( std::ostream& os, const dims_3<T>& value ) {
+    os << value.to_json();
+
+    return os;
+}
 }
 #endif // ifndef COMMON_DIMS_H

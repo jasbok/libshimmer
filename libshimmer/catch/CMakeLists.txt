@@ -1,37 +1,24 @@
 ###############################################################################
-#   Find GLUT.
-###############################################################################
-find_package( GLUT )
-
-
-###############################################################################
 #   Configure include directories.
 ###############################################################################
-set( CATCH_INCLUDES
-        ${LIB_SHIMMER_ROOT}/catch/includes
-        ${GLUT_INCLUDE_DIRS}
-        ${INCLUDES}
-        ${EXTERNAL_INCLUDES} )
-
-include_directories( ${CATCH_INCLUDES} )
+include_directories(
+    ${CATCH_INCLUDES}
+    ${LIB_SHIMMER_ROOT} )
 
 
 ###############################################################################
 #   Collect all test files.
 ###############################################################################
-#file( GLOB_RECURSE CATCH_TESTS ${LIB_SHIMMER_ROOT}/catch/tests/*.cpp )
-
-set ( CATCH_TESTS_ROOT ${LIB_SHIMMER_ROOT}/catch/tests)
-
 set ( CATCH_TESTS
-        ${CATCH_TESTS_ROOT}/pipeline.cpp )
+        mouse.cpp
+        pipeline.cpp )
 
 
 ###############################################################################
 #   List sources
 ###############################################################################
 set( CATCH_SOURCES
-        #${SOURCES}
+        ${SOURCES}
         ${CATCH_TESTS}
         catch.cpp )
 
@@ -39,8 +26,8 @@ set( CATCH_SOURCES
 ###############################################################################
 #   Build catch executable
 ###############################################################################
-add_executable( catch ${CATCH_SOURCES} ${HEADERS} )
-target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES} ${GLUT_LIBRARY})
+add_executable( catch catch.cpp ${CATCH_TESTS} )
+target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES})
 
 
 ###############################################################################

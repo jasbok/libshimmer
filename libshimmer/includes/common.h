@@ -4,12 +4,15 @@
 #include "common/coords.h"
 #include "common/dims.h"
 
-namespace shimmer {
+namespace shimmer
+{
 typedef common::coords_2<int> coords_2i;
+
+typedef common::coords_2<float> coords_2f;
 
 typedef common::dims_2<unsigned int> dims_2u;
 
 typedef common::dims_2<float> dims_2f;
 }
 
-#endif
+#endif // ifndef SHIMMER_COMMON_H

@@ -81,6 +81,9 @@ TEST_CASE ( "Operations on 2D dimensions." ) {
     CHECK ( ( b * a ) == dims_2u{ 0, 0 } );
     CHECK ( ( b * d ) == dims_2u{ 256000, 144000 } );
 
+    CHECK ( ( b / d ) == dims_2u { 0, 0 } );
+    CHECK ( ( d / b ) == dims_2u { 2, 2 } );
+
     b += c;
     c += d;
     CHECK ( b == dims_2u{ 640, 480 } );

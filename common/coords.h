@@ -85,6 +85,13 @@ struct coords_2 {
 };
 
 template<typename T>
+std::ostream& operator<<( std::ostream& os, const coords_2<T>& value ) {
+    os << value.to_json();
+
+    return os;
+}
+
+template<typename T>
 struct coords_3 {
     T x, y, z;
 
@@ -163,5 +170,12 @@ struct coords_3 {
                + ",z:" + std::to_string ( z ) + "}";
     }
 };
+
+template<typename T>
+std::ostream& operator<<( std::ostream& os, const coords_3<T>& value ) {
+    os << value.to_json();
+
+    return os;
+}
 }
 #endif // ifndef COMMON_COORDS_H
