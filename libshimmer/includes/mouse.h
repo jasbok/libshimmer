@@ -2,14 +2,14 @@
 #define SHIMMER_MOUSE_H
 
 #include "common.h"
-#include "event.h"
+#include "system.h"
 
 namespace shimmer
 {
 /**
- * @brief Transforms mouse coordinates.
+ * @brief Mouse system to transform mouse coordinates.
  */
-class mouse
+class mouse : public system
 {
 public:
     mouse();
@@ -17,16 +17,16 @@ public:
     virtual ~mouse();
 
     /**
+     * @brief Send an event to the mouse system.
+     * @param event The event.
+     */
+    virtual void send ( const class event& event );
+
+    /**
      * @brief Transforms the input coordinates inplace.
      * @param coords Coords to transform.
      */
     coords_2i transform ( const coords_2i& coords );
-
-    /**
-     * @brief Send an event to the mouse system.
-     * @param event The event.
-     */
-    void send ( const class event& base_event );
 
     /**
      * @brief Sets the application dimensions.

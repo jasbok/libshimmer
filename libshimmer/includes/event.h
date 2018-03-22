@@ -17,6 +17,7 @@ public:
         KEY_PRESSED,
         MOUSE_COORDS_CHANGE,
         WINDOW_DIMS_CHANGE,
+        WINDOW_TITLE_CHANGE
     };
 
     event( enum type );
@@ -24,7 +25,7 @@ public:
     virtual ~event();
 
     /**
-     * @brief type
+     * @brief Get the events type.
      * @return The event's type.
      */
     type type() const;
@@ -48,6 +49,14 @@ template<enum event::type TYPE, typename T>
 class event_data : public event
 {
 public:
+    const static enum event::type type = TYPE;
+
+    event_data( const event_data<TYPE, T>& ) = default;
+
+    event_data( event_data<TYPE, T>&& ) = default;
+
+    virtual ~event_data() = default;
+
     event_data( const T& data )
         : event ( TYPE ), _data ( data  )
     {}
@@ -57,7 +66,7 @@ public:
     {}
 
     /**
-     * @brief data
+     * @brief data Gets the data associated with an event.
      * @return The data associated with an event.
      */
     T data() const {
@@ -73,6 +82,9 @@ typedef event_data<event::type::APPLICATION_DIMS_CHANGE,
 
 typedef event_data<event::type::WINDOW_DIMS_CHANGE,
                    dims_2u> window_dims_change;
+
+typedef event_data<event::type::WINDOW_TITLE_CHANGE,
+                   std::string> window_title_change;
 }
 
 #endif // ifndef SHIMMER_EVENT_H
