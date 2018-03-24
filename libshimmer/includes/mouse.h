@@ -61,7 +61,7 @@ private:
      * @brief Receives an application event.
      * @param event The event to receive.
      */
-    void _application_event ( const application_dims_change& event );
+    void _application_event ( const display_resolution_change& event );
 
     /**
      * @brief Receives a window event.

@@ -56,6 +56,7 @@ set( HEADERS
         ${INCLUDE_DIR}/application.h
         ${INCLUDE_DIR}/config.h
         ${INCLUDE_DIR}/config_variables.h.in
+        ${INCLUDE_DIR}/display.h
         ${INCLUDE_DIR}/environment.h
         ${INCLUDE_DIR}/event.h
         ${INCLUDE_DIR}/event_logger.h
@@ -81,6 +82,7 @@ set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
         ${SOURCES_DIR}/config.cpp
+        ${SOURCES_DIR}/display.cpp
         ${SOURCES_DIR}/environment.cpp
         ${SOURCES_DIR}/event.cpp
         ${SOURCES_DIR}/event_logger.cpp

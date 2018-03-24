@@ -15,10 +15,16 @@ template<typename T>
 class event_logger : public system
 {
 public:
+    event_logger()
+        : system ( "event_logger" ),
+          _logging_enabled ( false ),
+          _capturing_enabled ( true )
+    {}
+
     event_logger( const std::string& name )
         : system ( name ),
           _logging_enabled ( false ),
-          _capturing_enabled ( false )
+          _capturing_enabled ( true )
     {}
 
     virtual ~event_logger() {}

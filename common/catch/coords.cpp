@@ -5,7 +5,9 @@
 typedef common::coords_2<int> coords_2i;
 typedef common::coords_3<int> coords_3i;
 
-TEST_CASE ( "Create 2D coords." ) {
+const static char* TAGS = "[coords]";
+
+TEST_CASE ( "Create 2D coords.", TAGS ) {
     coords_2i a;
     coords_2i b ( 1, 2 );
     coords_2i c ( b );
@@ -20,7 +22,7 @@ TEST_CASE ( "Create 2D coords." ) {
     CHECK ( c.y == 2 );
 }
 
-TEST_CASE ( "Copy 2D coords." ) {
+TEST_CASE ( "Copy 2D coords.", TAGS ) {
     coords_2i a ( 0, 0 );
     coords_2i b ( 1, 2 );
 

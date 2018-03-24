@@ -5,22 +5,21 @@
 
 using namespace shimmer;
 
-TEST_CASE ( "Construct window system." ) {
+const static char* TAGS = "[window]";
+
+TEST_CASE ( "Construct window system.", TAGS ) {
     window window;
 
     CHECK ( window.dimensions() == dims_2u{ 0, 0 } );
     CHECK ( window.title() == "" );
 }
 
-TEST_CASE ( "Set window dimensions." ) {
+TEST_CASE ( "Set window dimensions.", TAGS ) {
     window  window;
     dims_2u dims = { 320, 240 };
 
     event_logger<window_dims_change> parent_logger ( "parent" );
     event_logger<window_dims_change> component_logger ( "component" );
-
-    parent_logger.capturing ( true );
-    component_logger.capturing ( true );
 
     parent_logger.add_component ( &window );
     window.add_component ( &component_logger );
@@ -38,16 +37,13 @@ TEST_CASE ( "Set window dimensions." ) {
     CHECK ( component_logger.events().size() == 0 );
 }
 
-TEST_CASE ( "Set window title." ) {
+TEST_CASE ( "Set window title.", TAGS ) {
     window window;
 
     std::string title = "window 1";
 
     event_logger<window_title_change> parent_logger ( "parent" );
     event_logger<window_title_change> component_logger ( "component" );
-
-    parent_logger.capturing ( true );
-    component_logger.capturing ( true );
 
     parent_logger.add_component ( &window );
     window.add_component ( &component_logger );

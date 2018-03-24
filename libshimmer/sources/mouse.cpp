@@ -20,7 +20,7 @@ coords_2i mouse::transform ( const coords_2i& coords ) {
 
 void mouse::send ( const event& event ) {
     switch ( event.type() ) {
-    case event::type::APPLICATION_DIMS_CHANGE:
+    case event::type::DISPLAY_RESOLUTION_CHANGE:
         _application_event ( event );
         break;
 
@@ -53,7 +53,7 @@ void mouse::_update_transform() {
     _transform = { div.width, div.height };
 }
 
-void mouse::_application_event ( const application_dims_change& event ) {
+void mouse::_application_event ( const display_resolution_change& event ) {
     application ( event.data() );
 }
 

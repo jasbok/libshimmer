@@ -5,7 +5,9 @@
 typedef common::dims_2<unsigned int> dims_2u;
 typedef common::dims_3<unsigned int> dims_3u;
 
-TEST_CASE ( "Create 2D dimensions." ) {
+const static char* TAGS = "[dims]";
+
+TEST_CASE ( "Create 2D dimensions.", TAGS ) {
     dims_2u a;
     dims_2u b ( 320, 240 );
     dims_2u c ( b );
@@ -20,7 +22,7 @@ TEST_CASE ( "Create 2D dimensions." ) {
     CHECK ( c.height == 240 );
 }
 
-TEST_CASE ( "Copy 2D dimensions." ) {
+TEST_CASE ( "Copy 2D dimensions.", TAGS ) {
     dims_2u a ( 0, 0 );
     dims_2u b ( 320, 240 );
 
@@ -33,7 +35,7 @@ TEST_CASE ( "Copy 2D dimensions." ) {
     CHECK ( b.height == 240 );
 }
 
-TEST_CASE ( "Compare 2D dimensions." ) {
+TEST_CASE ( "Compare 2D dimensions.", TAGS ) {
     dims_2u a ( 0, 0 );
     dims_2u b ( 320, 240 );
     dims_2u c ( 320, 240 );
@@ -63,7 +65,7 @@ TEST_CASE ( "Compare 2D dimensions." ) {
     CHECK ( ( c != dims_2u{ 1, 1 } ) == true );
 }
 
-TEST_CASE ( "Operations on 2D dimensions." ) {
+TEST_CASE ( "Operations on 2D dimensions.", TAGS ) {
     dims_2u a ( 0, 0 );
     dims_2u b ( 320, 240 );
     dims_2u c ( 320, 240 );
@@ -91,7 +93,7 @@ TEST_CASE ( "Operations on 2D dimensions." ) {
     CHECK ( d == dims_2u{ 800, 600 } );
 }
 
-TEST_CASE ( "Create 3D dimensions." ) {
+TEST_CASE ( "Create 3D dimensions.", TAGS ) {
     dims_3u a;
     dims_3u b ( 320, 240, 32 );
     dims_3u c ( b );
@@ -109,7 +111,7 @@ TEST_CASE ( "Create 3D dimensions." ) {
     CHECK ( c.depth == 32 );
 }
 
-TEST_CASE ( "Copy 3D dimensions." ) {
+TEST_CASE ( "Copy 3D dimensions.", TAGS ) {
     dims_3u a ( 0, 0, 0 );
     dims_3u b ( 320, 240, 32 );
 
@@ -124,7 +126,7 @@ TEST_CASE ( "Copy 3D dimensions." ) {
     CHECK ( b.depth == 32 );
 }
 
-TEST_CASE ( "Compare 3D dimensions." ) {
+TEST_CASE ( "Compare 3D dimensions.", TAGS ) {
     dims_3u a ( 0, 0, 0 );
     dims_3u b ( 320, 240, 32 );
     dims_3u c ( 320, 240, 32 );

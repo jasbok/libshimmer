@@ -12,7 +12,8 @@ class event
 {
 public:
     enum type {
-        APPLICATION_DIMS_CHANGE,
+        DISPLAY_DEPTH_CHANGE,
+        DISPLAY_RESOLUTION_CHANGE,
         CONFIG_CHANGE,
         KEY_PRESSED,
         MOUSE_COORDS_CHANGE,
@@ -77,8 +78,11 @@ private:
     T _data;
 };
 
-typedef event_data<event::type::APPLICATION_DIMS_CHANGE,
-                   dims_2u> application_dims_change;
+typedef event_data<event::type::DISPLAY_DEPTH_CHANGE,
+                   unsigned int> display_depth_change;
+
+typedef event_data<event::type::DISPLAY_RESOLUTION_CHANGE,
+                   dims_2u> display_resolution_change;
 
 typedef event_data<event::type::WINDOW_DIMS_CHANGE,
                    dims_2u> window_dims_change;

@@ -10,6 +10,7 @@ include_directories(
 #   Collect all test files.
 ###############################################################################
 set ( CATCH_TESTS
+        display.cpp
         event_logger.cpp
         mouse.cpp
         pipeline.cpp

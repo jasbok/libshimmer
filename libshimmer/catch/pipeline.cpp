@@ -2,8 +2,11 @@
 
 #include "pipeline.h"
 
+const static char* TAGS = "[pipeline]";
+
 TEST_CASE (
-    "Check that pipeline structure is correctly deserialised from json file." )
+    "Check that pipeline structure is correctly deserialised from json file.",
+    tags )
 {
     struct shimmer::pipeline pipeline;
 
