@@ -35,7 +35,7 @@ TEST_CASE ( "Copy 2D coords.", TAGS ) {
     CHECK ( b.y == 2 );
 }
 
-TEST_CASE ( "Compare 2D coords." ) {
+TEST_CASE ( "Compare 2D coords.", TAGS ) {
     coords_2i a ( 0, 0 );
     coords_2i b ( 1, 2 );
     coords_2i c ( 1, 2 );
@@ -65,7 +65,7 @@ TEST_CASE ( "Compare 2D coords." ) {
     CHECK ( ( c != coords_2i{ 1, 1 } ) == true );
 }
 
-TEST_CASE ( "Operations on 2D coords." ) {
+TEST_CASE ( "Operations on 2D coords.", TAGS ) {
     coords_2i a ( 0, 0 );
     coords_2i b ( 1, 2 );
     coords_2i c ( 1, 2 );
@@ -98,7 +98,7 @@ TEST_CASE ( "Operations on 2D coords." ) {
     CHECK ( d == coords_2i{ 2, 6 } );
 }
 
-TEST_CASE ( "Create 3D coords." ) {
+TEST_CASE ( "Create 3D coords.", TAGS ) {
     coords_3i a;
     coords_3i b ( 1, 2, 3 );
     coords_3i c ( b );
@@ -116,7 +116,7 @@ TEST_CASE ( "Create 3D coords." ) {
     CHECK ( c.z == 3 );
 }
 
-TEST_CASE ( "Copy 3D coords." ) {
+TEST_CASE ( "Copy 3D coords.", TAGS ) {
     coords_3i a ( 0, 0, 0 );
     coords_3i b ( 1, 2, 3 );
 
@@ -131,7 +131,7 @@ TEST_CASE ( "Copy 3D coords." ) {
     CHECK ( b.z == 3 );
 }
 
-TEST_CASE ( "Compare 3D coords." ) {
+TEST_CASE ( "Compare 3D coords.", TAGS ) {
     coords_3i a ( 0, 0, 0 );
     coords_3i b ( 1, 2, 3 );
     coords_3i c ( 1, 2, 3 );

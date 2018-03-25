@@ -91,8 +91,8 @@ struct dims_2 {
     }
 
     std::string to_json() const {
-        return "{width:" + std::to_string ( width )
-               + ",height:" + std::to_string ( height ) + "}";
+        return "{\"width\":" + std::to_string ( width )
+               + ",\"height\":" + std::to_string ( height ) + "}";
     }
 };
 
@@ -185,9 +185,9 @@ struct dims_3 {
     }
 
     std::string to_json() const {
-        return "{width:" + std::to_string ( width )
-               + ",height:" + std::to_string ( height )
-               + ",depth:" + std::to_string ( depth ) + "}";
+        return "{\"width\":" + std::to_string ( width )
+               + ",\"height\":" + std::to_string ( height )
+               + ",\"depth\":" + std::to_string ( depth ) + "}";
     }
 };
 

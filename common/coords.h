@@ -79,8 +79,8 @@ struct coords_2 {
     }
 
     std::string to_json() const {
-        return "{x:" + std::to_string ( x )
-               + ",y:" + std::to_string ( y ) + "}";
+        return "{\"x\":" + std::to_string ( x )
+               + ",\"y\":" + std::to_string ( y ) + "}";
     }
 };
 
@@ -165,9 +165,9 @@ struct coords_3 {
     }
 
     std::string to_json() const {
-        return "{x:" + std::to_string ( x )
-               + ",y:" + std::to_string ( y )
-               + ",z:" + std::to_string ( z ) + "}";
+        return "{\"x\":" + std::to_string ( x )
+               + ",\"y\":" + std::to_string ( y )
+               + ",\"z\":" + std::to_string ( z ) + "}";
     }
 };
 

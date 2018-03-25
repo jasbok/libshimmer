@@ -56,17 +56,23 @@ set( HEADERS
         ${INCLUDE_DIR}/application.h
         ${INCLUDE_DIR}/config.h
         ${INCLUDE_DIR}/config_variables.h.in
+        ${INCLUDE_DIR}/coords.h
+        ${INCLUDE_DIR}/dims.h
         ${INCLUDE_DIR}/display.h
         ${INCLUDE_DIR}/environment.h
         ${INCLUDE_DIR}/event.h
+        ${INCLUDE_DIR}/event_collector.h
         ${INCLUDE_DIR}/event_logger.h
+        ${INCLUDE_DIR}/exchange.h
         ${INCLUDE_DIR}/file_reader.h
         ${INCLUDE_DIR}/image_reader.h
+        ${INCLUDE_DIR}/json.h
         ${INCLUDE_DIR}/limiter.h
         ${INCLUDE_DIR}/macros.h
         ${INCLUDE_DIR}/mouse.h
         ${INCLUDE_DIR}/options.h
         ${INCLUDE_DIR}/pipeline.h
+        ${INCLUDE_DIR}/receiver.h
         ${INCLUDE_DIR}/renderer.h
         ${INCLUDE_DIR}/serialisers.h
         ${INCLUDE_DIR}/shader_reader.h
@@ -82,12 +88,14 @@ set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
         ${SOURCES_DIR}/config.cpp
+        ${SOURCES_DIR}/dims.cpp
         ${SOURCES_DIR}/display.cpp
         ${SOURCES_DIR}/environment.cpp
         ${SOURCES_DIR}/event.cpp
         ${SOURCES_DIR}/event_logger.cpp
         ${SOURCES_DIR}/file_reader.cpp
         ${SOURCES_DIR}/image_reader.cpp
+        ${SOURCES_DIR}/json.cpp
         ${SOURCES_DIR}/limiter.cpp
         ${SOURCES_DIR}/mouse.cpp
         ${SOURCES_DIR}/options.cpp

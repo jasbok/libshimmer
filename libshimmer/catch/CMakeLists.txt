@@ -11,7 +11,8 @@ include_directories(
 ###############################################################################
 set ( CATCH_TESTS
         display.cpp
-        event_logger.cpp
+        event_collector.cpp
+        exchange.cpp
         mouse.cpp
         pipeline.cpp
         window.cpp )

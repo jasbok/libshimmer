@@ -1,8 +1,9 @@
 #ifndef SHIMMER_SHIMMER_H
 #define SHIMMER_SHIMMER_H
 
-#include "common.h"
 #include "config.h"
+#include "coords.h"
+#include "dims.h"
 #include "macros.h"
 #include "renderer.h"
 

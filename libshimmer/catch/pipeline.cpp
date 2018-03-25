@@ -6,7 +6,7 @@ const static char* TAGS = "[pipeline]";
 
 TEST_CASE (
     "Check that pipeline structure is correctly deserialised from json file.",
-    tags )
+    TAGS )
 {
     struct shimmer::pipeline pipeline;
 

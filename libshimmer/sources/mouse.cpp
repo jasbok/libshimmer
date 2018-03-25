@@ -20,11 +20,11 @@ coords_2i mouse::transform ( const coords_2i& coords ) {
 
 void mouse::send ( const event& event ) {
     switch ( event.type() ) {
-    case event::type::DISPLAY_RESOLUTION_CHANGE:
+    case event::type::display_resolution_change:
         _application_event ( event );
         break;
 
-    case event::type::WINDOW_DIMS_CHANGE:
+    case event::type::window_dims_change:
         _window_event ( event );
         break;
 

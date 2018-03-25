@@ -139,15 +139,3 @@ void shimmer::from_json ( const nlohmann::json& json, aspect_ratio& obj )
         obj = aspect_ratio::original;
     }
 }
-
-void shimmer::to_json ( nlohmann::json& json, const dims_2f& obj )
-{
-    json["width"]  = obj.width;
-    json["height"] = obj.height;
-}
-
-void shimmer::from_json ( const nlohmann::json& json, dims_2f& obj )
-{
-    obj.width  = json.at ( "width" );
-    obj.height = json.at ( "height" );
-}

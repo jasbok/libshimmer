@@ -1,7 +1,8 @@
 #ifndef SHIMMER_APPLICATION_H
 #define SHIMMER_APPLICATION_H
 
-#include "common.h"
+#include "coords.h"
+#include "dims.h"
 
 namespace shimmer
 {

@@ -1,7 +1,8 @@
 #ifndef SHIMMER_MOUSE_H
 #define SHIMMER_MOUSE_H
 
-#include "common.h"
+#include "coords.h"
+#include "dims.h"
 #include "system.h"
 
 namespace shimmer

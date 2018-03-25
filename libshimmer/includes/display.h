@@ -3,6 +3,8 @@
 
 #include "system.h"
 
+#include "dims.h"
+
 namespace shimmer
 {
 /**
