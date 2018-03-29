@@ -1,31 +1,39 @@
-// #include "catch.hpp"
+#include "catch.hpp"
 
-// #include "event_logger.h"
+#include "event_collector.h"
+#include "event_exchange.h"
 
-// using namespace shimmer;
+using namespace shimmer;
 
-// const static char* TAGS = "[event_logger]";
+const static char* TAGS = "[event_collector]";
 
-// TEST_CASE ( "Construct an event_logger system.", TAGS ) {
-//    event_logger<display_resolution_change> logger ( "logger" );
+TEST_CASE ( "Construct an event_collector.", TAGS ) {
+    event_collector collector;
 
-//    CHECK ( logger.id() == "logger" );
-//    CHECK ( logger.logging() == false );
-//    CHECK ( logger.capturing() == true );
-//    CHECK ( logger.events().size() == 0 );
-// }
+    CHECK ( collector.events().size() == 0 );
+}
 
-// TEST_CASE ( "Capture events using event_logger system.", TAGS ) {
-//    event_logger<display_resolution_change> logger ( "logger" );
+TEST_CASE ( "Capture events using event_collector.", TAGS ) {
+    event_exchange  exchange;
+    event_collector collector;
 
-//    logger.send ( display_resolution_change ( dims_2u{ 320, 240 } ) );
-//    CHECK ( logger.events().size() == 1 );
-//    CHECK ( logger.events()[0].data() == dims_2u{ 320, 240 } );
+    exchange.connect ( window_title_change::type(), collector );
 
-//    logger.send ( display_resolution_change ( dims_2u{ 160, 120 } ) );
-//    logger.send ( display_resolution_change ( dims_2u{ 640, 480 } ) );
-//    CHECK ( logger.events().size() == 3 );
-//    CHECK ( logger.events()[0].data() == dims_2u{ 320, 240 } );
-//    CHECK ( logger.events()[1].data() == dims_2u{ 160, 120 } );
-//    CHECK ( logger.events()[2].data() == dims_2u{ 640, 480 } );
-// }
+    REQUIRE ( collector.events().size() == 0 );
+
+    exchange.send ( window_title_change ( "event0" ) );
+    exchange.send ( window_dims_change ( { 0, 0 } ) );
+
+    REQUIRE ( collector.events().size() == 1 );
+    REQUIRE ( window_title_change ( "event0" ) == *collector.events()[0] );
+
+    exchange.connect ( window_dims_change::type(), collector );
+
+    exchange.send ( window_title_change ( "event1" ) );
+    exchange.send ( window_dims_change ( { 320, 240 } ) );
+
+    REQUIRE ( collector.events().size() == 3 );
+    REQUIRE ( window_title_change ( "event0" ) == *collector.events()[0] );
+    REQUIRE ( window_title_change ( "event1" ) == *collector.events()[1] );
+    REQUIRE ( window_dims_change ( { 320, 240 } ) == *collector.events()[2] );
+}

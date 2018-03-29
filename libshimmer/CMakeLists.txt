@@ -62,6 +62,7 @@ set( HEADERS
         ${INCLUDE_DIR}/environment.h
         ${INCLUDE_DIR}/event.h
         ${INCLUDE_DIR}/event_collector.h
+        ${INCLUDE_DIR}/event_exchange.h
         ${INCLUDE_DIR}/event_logger.h
         ${INCLUDE_DIR}/exchange.h
         ${INCLUDE_DIR}/file_reader.h
@@ -92,6 +93,7 @@ set( SOURCES
         ${SOURCES_DIR}/display.cpp
         ${SOURCES_DIR}/environment.cpp
         ${SOURCES_DIR}/event.cpp
+        ${SOURCES_DIR}/event_collector.cpp
         ${SOURCES_DIR}/event_logger.cpp
         ${SOURCES_DIR}/file_reader.cpp
         ${SOURCES_DIR}/image_reader.cpp

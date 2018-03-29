@@ -1,62 +1,60 @@
-// #include "catch.hpp"
+#include "catch.hpp"
 
-// #include "event_logger.h"
-// #include "window.h"
+#include "event_collector.h"
+#include "event_exchange.h"
+#include "window.h"
 
-// using namespace shimmer;
+using namespace shimmer;
 
-// const static char* TAGS = "[window]";
+const static char* TAGS = "[window]";
 
-// TEST_CASE ( "Construct window system.", TAGS ) {
-//    window window;
+TEST_CASE ( "Construct window system.", TAGS ) {
+    event_exchange exchange;
+    window window ( exchange );
 
-//    CHECK ( window.dimensions() == dims_2u{ 0, 0 } );
-//    CHECK ( window.title() == "" );
-// }
+    CHECK ( window.dimensions() == dims_2u{ 0, 0 } );
+    CHECK ( window.title() == "" );
+}
 
-// TEST_CASE ( "Set window dimensions.", TAGS ) {
-//    window  window;
-//    dims_2u dims = { 320, 240 };
+TEST_CASE ( "Set window dimensions.", TAGS ) {
+    event_exchange  exchange;
+    event_collector collector;
 
-//    event_logger<window_dims_change> parent_logger ( "parent" );
-//    event_logger<window_dims_change> component_logger ( "component" );
+    exchange.connect ( window_dims_change::type(), collector );
 
-//    parent_logger.add_component ( &window );
-//    window.add_component ( &component_logger );
+    window  window ( exchange );
+    dims_2u dims = { 320, 240 };
 
-//    window.dimensions ( dims );
-//    CHECK ( window.dimensions() == dims_2u{ 320, 240 } );
-//    REQUIRE ( parent_logger.events().size() == 1 );
-//    CHECK ( parent_logger.events()[0].data() == dims_2u{ 320, 240 } );
-//    CHECK ( component_logger.events().size() == 0 );
+    window.dimensions ( dims );
+    CHECK ( window.dimensions() == dims_2u{ 320, 240 } );
+    REQUIRE ( collector.events().size() == 1 );
+    CHECK ( window_dims_change ( dims ) == *collector.events()[0] );
 
-//    window.dimensions ( dims_2u{ 640, 480 } );
-//    CHECK ( window.dimensions() == dims_2u{ 640, 480 } );
-//    REQUIRE ( parent_logger.events().size() == 2 );
-//    CHECK ( parent_logger.events()[1].data() == dims_2u{ 640, 480 } );
-//    CHECK ( component_logger.events().size() == 0 );
-// }
+    window.dimensions ( dims_2u{ 640, 480 } );
+    CHECK ( window.dimensions() == dims_2u{ 640, 480 } );
+    REQUIRE ( collector.events().size() == 2 );
+    CHECK ( window_dims_change ( dims ) == *collector.events()[0] );
+    CHECK ( window_dims_change ( { 640, 480 } ) == *collector.events()[1] );
+}
 
-// TEST_CASE ( "Set window title.", TAGS ) {
-//    window window;
+TEST_CASE ( "Set window title.", TAGS ) {
+    event_exchange  exchange;
+    event_collector collector;
 
-//    std::string title = "window 1";
+    exchange.connect ( window_title_change::type(), collector );
 
-//    event_logger<window_title_change> parent_logger ( "parent" );
-//    event_logger<window_title_change> component_logger ( "component" );
+    window window ( exchange );
 
-//    parent_logger.add_component ( &window );
-//    window.add_component ( &component_logger );
+    std::string title = "window 1";
 
-//    window.title ( title );
-//    CHECK ( window.title() == "window 1" );
-//    REQUIRE ( parent_logger.events().size() == 1 );
-//    CHECK ( parent_logger.events()[0].data() == "window 1" );
-//    CHECK ( component_logger.events().size() == 0 );
+    window.title ( title );
+    CHECK ( window.title() == "window 1" );
+    REQUIRE ( collector.events().size() == 1 );
+    CHECK ( window_title_change ( title ) == *collector.events()[0] );
 
-//    window.title ( "window 2" );
-//    CHECK ( window.title() == "window 2" );
-//    REQUIRE ( parent_logger.events().size() == 2 );
-//    CHECK ( parent_logger.events()[1].data() == "window 2" );
-//    CHECK ( component_logger.events().size() == 0 );
-// }
+    window.title ( "window 2" );
+    CHECK ( window.title() == "window 2" );
+    REQUIRE ( collector.events().size() == 2 );
+    CHECK ( window_title_change ( title ) == *collector.events()[0] );
+    CHECK ( window_title_change ( "window 2" ) == *collector.events()[1] );
+}

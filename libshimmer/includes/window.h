@@ -1,25 +1,19 @@
 #ifndef SHIMMER_WINDOW_H
 #define SHIMMER_WINDOW_H
 
-#include "system.h"
+#include "event_exchange.h"
 
 namespace shimmer
 {
 /**
  * @brief Window system that stores the state of the window.
  */
-class window : public system
+class window
 {
 public:
-    window();
+    window( event_exchange& exchange );
 
     virtual ~window();
-
-    /**
-     * @brief Send an event to the system.
-     * @param event The event to send to the system.
-     */
-    virtual void send ( const class event& base_event );
 
     /**
      * @brief dimensions Sets the dimensions of the window.
@@ -48,6 +42,8 @@ public:
     std::string title() const;
 
 private:
+    event_exchange* _exchange;
+
     dims_2u _dimensions;
 
     std::string _title;

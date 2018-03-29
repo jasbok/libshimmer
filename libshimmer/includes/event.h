@@ -104,6 +104,10 @@ public:
         return out;
     }
 
+    bool operator==( const event_data<TYPE, T>& op ) const {
+        return _data == op._data;
+    }
+
 private:
     DATA _data;
 };

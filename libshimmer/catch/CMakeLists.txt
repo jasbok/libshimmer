@@ -12,7 +12,7 @@ include_directories(
 set ( CATCH_TESTS
         display.cpp
         event_collector.cpp
-        exchange.cpp
+        event_exchange.cpp
         mouse.cpp
         pipeline.cpp
         window.cpp )

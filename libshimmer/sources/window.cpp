@@ -2,15 +2,15 @@
 
 namespace shimmer
 {
-window::window() : system ( "window" ) {}
+window::window( event_exchange& exchange )
+    : _exchange ( &exchange )
+{}
 
 window::~window() {}
 
-void    window::send ( const event& base_event ) {}
-
 window& window::dimensions ( const dims_2u& dimensions ) {
     _dimensions = dimensions;
-    send_parent ( window_dims_change ( dimensions ) );
+    _exchange->send ( window_dims_change ( dimensions ) );
 
     return *this;
 }
@@ -21,7 +21,7 @@ dims_2u window::dimensions() const {
 
 window& window::title ( const std::string& title ) {
     _title = title;
-    send_parent ( window_title_change ( title ) );
+    _exchange->send ( window_title_change ( title ) );
 
     return *this;
 }

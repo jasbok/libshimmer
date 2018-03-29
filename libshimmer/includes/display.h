@@ -1,27 +1,21 @@
 #ifndef SHIMMER_DISPLAY_H
 #define SHIMMER_DISPLAY_H
 
-#include "system.h"
-
 #include "dims.h"
+#include "event.h"
+#include "event_exchange.h"
 
 namespace shimmer
 {
 /**
  * @brief Stores metric data of the application's display.
  */
-class display : public system
+class display
 {
 public:
-    display();
+    display( event_exchange& exchange );
 
     virtual ~display();
-
-    /**
-     * @brief Send an event to the system.
-     * @param event The event to send to the system.
-     */
-    virtual void send ( const class event& event );
 
     /**
      * @brief Sets the current resolution of the application's display.
@@ -51,6 +45,8 @@ public:
     unsigned int depth() const;
 
 private:
+    event_exchange* _exchange;
+
     dims_2u _resolution;
 
     unsigned int _depth;

@@ -5,8 +5,7 @@
 using namespace shimmer;
 
 mouse::mouse()
-    : system ( "mouse" ),
-      _application ( dims_2f() ),
+    : _application ( dims_2f() ),
       _window ( dims_2f ( 1, 1 ) )
 {}
 

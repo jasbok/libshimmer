@@ -3,14 +3,15 @@
 
 #include "coords.h"
 #include "dims.h"
-#include "system.h"
+#include "event.h"
+#include "receiver.h"
 
 namespace shimmer
 {
 /**
  * @brief Mouse system to transform mouse coordinates.
  */
-class mouse : public system
+class mouse : public receiver<event>
 {
 public:
     mouse();

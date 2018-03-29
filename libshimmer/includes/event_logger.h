@@ -1,19 +1,19 @@
 #ifndef SHIMMER_EVENT_LOGGER_H
 #define SHIMMER_EVENT_LOGGER_H
 
+#include "event.h"
 #include "receiver.h"
-
-#include <iostream>
 
 namespace shimmer
 {
 /**
  * @brief Logs all events received to the configured logger.
  */
-template<typename T>
-class event_logger : public receiver<T>
+class event_logger : public receiver<event>
 {
 public:
+    event_logger( const std::string& name = "event_logger" );
+
     virtual ~event_logger() = default;
 
     /**
@@ -21,9 +21,10 @@ public:
      * @param event The event to send to the component.
      * @return True if the event was received, false otherwise.
      */
-    virtual void send ( const T& event ) {
-        std::cout << event << std::endl;
-    }
+    virtual void send ( const event& event );
+
+private:
+    const std::string _name;
 };
 }
 
