@@ -5,6 +5,7 @@
 #include "config.h"
 #include "display.h"
 #include "event_exchange.h"
+#include "logger.h"
 #include "macros.h"
 #include "mouse.h"
 #include "renderer.h"
@@ -57,6 +58,8 @@ public:
     void    mouse_coords ( coords_2i& coords );
 
 private:
+    logger _logger;
+
     event_exchange _exchange;
 
     std::shared_ptr<config> _config;

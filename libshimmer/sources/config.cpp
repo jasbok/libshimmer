@@ -1,8 +1,7 @@
 #include "config.h"
 
 #include "file_reader.h"
-
-#include "plog/Log.h"
+#include "logger.h"
 
 #include <iostream>
 

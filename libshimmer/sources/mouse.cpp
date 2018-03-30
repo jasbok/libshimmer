@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-#include "plog/Log.h"
+#include "logger.h"
 
 using namespace shimmer;
 

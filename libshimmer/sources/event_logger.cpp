@@ -1,6 +1,6 @@
 #include "event_logger.h"
 
-#include "plog/Log.h"
+#include "logger.h"
 
 namespace shimmer
 {

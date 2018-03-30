@@ -1,6 +1,6 @@
 #include "pipeline.h"
 
-#include "plog/Log.h"
+#include "logger.h"
 
 #include <fstream>
 #include <iostream>

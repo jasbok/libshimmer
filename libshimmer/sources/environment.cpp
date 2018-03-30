@@ -1,5 +1,7 @@
 #include "environment.h"
 
+#include "common/env.h"
+#include "common/str.h"
 #include "config_variables.h"
 
 #include <cstdlib>
@@ -39,21 +41,23 @@ const static string home_regex = "~|$HOME";
 
 
 environment::environment()
-    : _working_directory ( _read_evar ( working_directory_evar, "." ) ),
+    : _working_directory ( common::evar ( working_directory_evar, "." ) ),
 
-      _home ( _read_evar ( home_evar, _working_directory ) ),
+      _home ( common::evar ( home_evar, _working_directory ) ),
 
-      _cache_home ( _read_evar ( cache_home_evar, _home + "/.cache" ) ),
+      _cache_home ( common::evar ( cache_home_evar, _home + "/.cache" ) ),
 
-      _config_home ( _read_evar ( config_home_evar, _home + "/.config" ) ),
+      _config_home ( common::evar ( config_home_evar,
+              _home + "/.config" ) ),
 
-      _data_home ( _read_evar ( config_home_evar, _home + "/.local/share" ) ),
+      _data_home ( common::evar ( config_home_evar,
+              _home + "/.local/share" ) ),
 
       _pictures_directory (
-          _read_evar ( pictures_dir_evar, _home + "/Pictures" ) ),
+          common::evar ( pictures_dir_evar, _home + "/Pictures" ) ),
 
 
-      _config_path ( _read_evar ( config_path_evar,
+      _config_path ( common::evar ( config_path_evar,
               _config_home + "/shimmer.config" ) ),
 
       _font_paths (
@@ -118,41 +122,12 @@ std::vector<string> environment::shader_paths() const
     return _shader_paths;
 }
 
-string environment::_read_evar ( const string&      evar,
-                                 const std::string& defaultt ) const
-{
-    auto val = getenv ( evar.c_str() );
-
-    return val ?  string ( val ) : defaultt;
-}
-
-std::vector<string> environment::_split_str ( const string& str,
-                                              const regex&  reg ) const
-{
-    vector<string> split;
-
-    string str_reg = str;
-    smatch match;
-
-    while ( regex_search ( str_reg, match, reg ) ) {
-        split.push_back ( match.prefix() );
-
-        str_reg = match.suffix();
-    }
-
-    if ( !str_reg.empty() ) {
-        split.push_back ( str_reg );
-    }
-
-    return split;
-}
-
 std::vector<string> environment::_read_evar_paths (
     const string&                   evar,
     const std::vector<std::string>& defaultt ) const
 {
-    auto val   = _read_evar ( evar );
-    auto paths = _split_str ( val, regex ( paths_split_regex ) );
+    auto val   = common::evar ( evar, "" );
+    auto paths = common::split ( val, regex ( paths_split_regex ) );
 
     paths.insert ( paths.end(), defaultt.begin(), defaultt.end() );
 

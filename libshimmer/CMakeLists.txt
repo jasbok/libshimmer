@@ -74,6 +74,7 @@ set( HEADERS
         ${INCLUDE_DIR}/image_reader.h
         ${INCLUDE_DIR}/json.h
         ${INCLUDE_DIR}/limiter.h
+        ${INCLUDE_DIR}/logger.h
         ${INCLUDE_DIR}/macros.h
         ${INCLUDE_DIR}/mouse.h
         ${INCLUDE_DIR}/options.h
@@ -106,6 +107,7 @@ set( SOURCES
         ${SOURCES_DIR}/image_reader.cpp
         ${SOURCES_DIR}/json.cpp
         ${SOURCES_DIR}/limiter.cpp
+        ${SOURCES_DIR}/logger.cpp
         ${SOURCES_DIR}/mouse.cpp
         ${SOURCES_DIR}/options.cpp
         ${SOURCES_DIR}/pipeline.cpp
@@ -129,7 +131,7 @@ include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
 
 add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
 target_include_directories( shimmer PUBLIC ${INCLUDES} ${EXTERNAL_INCLUDES} )
-target_link_libraries( shimmer glpp ${TARGET_LINK_LIBRARIES} )
+target_link_libraries( shimmer common glpp ${TARGET_LINK_LIBRARIES} )
 
 
 ###############################################################################

@@ -2,9 +2,7 @@
 
 #include "debug.h"
 #include "glpp.h"
-
-#include "plog/Appenders/ColorConsoleAppender.h"
-#include "plog/Log.h"
+#include "logger.h"
 
 #include <fstream>
 #include <iostream>
@@ -23,10 +21,6 @@ shimmer::shimmer()
       _mouse ( _exchange ),
       _window ( _exchange )
 {
-    static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
-
-    plog::init ( plog::debug, &appender );
-
     _config = std::make_shared<config>();
 }
 

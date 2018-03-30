@@ -1,9 +1,8 @@
 #include "renderer.h"
 
 #include "debug.h"
+#include "logger.h"
 #include "pixels.h"
-
-#include "plog/Log.h"
 
 using namespace shimmer;
 

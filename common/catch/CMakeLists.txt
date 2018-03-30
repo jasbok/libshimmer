@@ -11,12 +11,13 @@ include_directories(
 ###############################################################################
 set ( CATCH_TESTS
         coords.cpp
-        dims.cpp )
+        dims.cpp
+        str.cpp)
 
 
 ###############################################################################
 #   Build shared library
 ###############################################################################
-add_executable( catch_common catch.cpp ${CATCH_TESTS} )
+add_executable( catch_common catch.cpp ${SOURCES} ${CATCH_TESTS} )
 #target_link_libraries( catch_common common )
 set_target_properties(catch_common PROPERTIES OUTPUT_NAME "catch" )

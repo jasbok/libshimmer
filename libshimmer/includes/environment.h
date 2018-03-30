@@ -56,13 +56,6 @@ private:
 
     std::vector<std::string> _shader_paths;
 
-
-    std::string _read_evar ( const std::string& evar,
-                             const std::string& defaultt = std::string() ) const;
-
-    std::vector<std::string> _split_str ( const std::string& str,
-                                          const std::regex&  reg ) const;
-
     std::vector<std::string> _read_evar_paths (
         const std::string&              evar,
         const std::vector<std::string>& defaultt =
