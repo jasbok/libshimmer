@@ -11,7 +11,8 @@ renderer::renderer(
     const dims_2u& application_resolution,
     const dims_2u& window_dimensions,
     const options& options )
-    : _application_resolution ( application_resolution ),
+    : _connector ( nullptr ),
+      _application_resolution ( application_resolution ),
       _window_dimensions ( window_dimensions ),
       _opts ( options ),
       _images ( _opts.general.image_paths ),
@@ -20,6 +21,35 @@ renderer::renderer(
 {
     _construct_application_surface();
     _construct_surface_phase();
+}
+
+renderer::renderer(
+    event_connector& connector,
+    const dims_2u&   application_resolution,
+    const dims_2u&   window_dimensions,
+    const options&   options )
+    : _connector ( &connector ),
+      _application_resolution ( application_resolution ),
+      _window_dimensions ( window_dimensions ),
+      _opts ( options ),
+      _images ( _opts.general.image_paths ),
+      _shaders ( _opts.general.shader_paths ),
+      _application_texture_flip_y ( false )
+{
+    _connector->connect ( display_resolution_change::type(), *this );
+    _connector->connect ( window_dims_change::type(),        *this );
+
+    _construct_application_surface();
+    _construct_surface_phase();
+}
+
+renderer::~renderer()
+{
+    if ( _connector ) {
+        LOGD << "Disconnecting render system from events connector.";
+        _connector->disconnect ( display_resolution_change::type(), *this );
+        _connector->disconnect ( window_dims_change::type(),        *this );
+    }
 }
 
 void renderer::send ( const event& event ) {

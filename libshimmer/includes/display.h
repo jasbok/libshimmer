@@ -2,8 +2,7 @@
 #define SHIMMER_DISPLAY_H
 
 #include "dims.h"
-#include "event.h"
-#include "receiver.h"
+#include "event_receiver.h"
 
 namespace shimmer
 {
@@ -13,7 +12,7 @@ namespace shimmer
 class display
 {
 public:
-    display( receiver<event>& exchange );
+    display( event_receiver& exchange );
 
     virtual ~display();
 
@@ -45,7 +44,7 @@ public:
     unsigned int depth() const;
 
 private:
-    receiver<event>* _exchange;
+    event_receiver* _exchange;
 
     dims_2u _resolution;
 

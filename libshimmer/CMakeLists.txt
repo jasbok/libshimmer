@@ -56,14 +56,17 @@ set( HEADERS
         ${INCLUDE_DIR}/application.h
         ${INCLUDE_DIR}/config.h
         ${INCLUDE_DIR}/config_variables.h.in
+        ${INCLUDE_DIR}/connector.h
         ${INCLUDE_DIR}/coords.h
         ${INCLUDE_DIR}/dims.h
         ${INCLUDE_DIR}/display.h
         ${INCLUDE_DIR}/environment.h
         ${INCLUDE_DIR}/event.h
         ${INCLUDE_DIR}/event_collector.h
+        ${INCLUDE_DIR}/event_connector.h
         ${INCLUDE_DIR}/event_exchange.h
         ${INCLUDE_DIR}/event_logger.h
+        ${INCLUDE_DIR}/event_receiver.h
         ${INCLUDE_DIR}/exchange.h
         ${INCLUDE_DIR}/file_reader.h
         ${INCLUDE_DIR}/image_reader.h

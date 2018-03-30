@@ -15,11 +15,11 @@ using namespace std;
 namespace shimmer
 {
 shimmer::shimmer()
-    : _config(),
+    : _exchange(),
+      _config(),
       _renderer(),
-      _exchange(),
       _display ( _exchange ),
-      _mouse(),
+      _mouse ( _exchange ),
       _window ( _exchange )
 {
     static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
@@ -27,8 +27,6 @@ shimmer::shimmer()
     plog::init ( plog::debug, &appender );
 
     _config = std::make_shared<config>();
-    _exchange.connect ( display_resolution_change::type(), _mouse );
-    _exchange.connect ( window_dims_change::type(),        _mouse );
 }
 
 shimmer::~shimmer()
@@ -69,23 +67,10 @@ dims_2u shimmer::app_surface_dims()
 
 void shimmer::init_renderer()
 {
-    if ( _renderer ) {
-        _exchange.disconnect ( display_resolution_change::type(),
-                               *static_pointer_cast<renderer>( _renderer ) );
-
-        _exchange.disconnect ( window_dims_change::type(),
-                               *static_pointer_cast<renderer>( _renderer ) );
-    }
-
-    _renderer = std::make_shared<renderer>( _display.resolution(),
+    _renderer = std::make_shared<renderer>( _exchange,
+                                            _display.resolution(),
                                             _window.dimensions(),
                                             _config->opts );
-
-    _exchange.connect ( display_resolution_change::type(),
-                        *static_pointer_cast<renderer>( _renderer ) );
-
-    _exchange.connect ( window_dims_change::type(),
-                        *static_pointer_cast<renderer>( _renderer ) );
 }
 
 void shimmer::resize_window ( dims_2u& dims )

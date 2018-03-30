@@ -4,12 +4,11 @@
 #include "config.h"
 #include "coords.h"
 #include "dims.h"
-#include "macros.h"
-#include "renderer.h"
-
 #include "display.h"
 #include "event_exchange.h"
+#include "macros.h"
 #include "mouse.h"
+#include "renderer.h"
 #include "window.h"
 
 namespace shimmer
@@ -59,11 +58,11 @@ public:
     void    mouse_coords ( coords_2i& coords );
 
 private:
+    event_exchange _exchange;
+
     std::shared_ptr<config> _config;
 
     std::shared_ptr<renderer> _renderer;
-
-    event_exchange _exchange;
 
     display _display;
 

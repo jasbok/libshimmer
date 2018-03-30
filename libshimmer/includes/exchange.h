@@ -1,7 +1,7 @@
 #ifndef SHIMMER_EXCHANGE_H
 #define SHIMMER_EXCHANGE_H
 
-#include "receiver.h"
+#include "connector.h"
 
 #include "signal/Signal.h"
 
@@ -65,13 +65,13 @@ private:
  * a receiver, based on the signature of the receiver slot and the sent event.
  */
 template<typename S,typename E,bool ( * MATCHER )( const S&,const E& )>
-class exchange : public receiver<E>
+class exchange : public connector<S,E>,public receiver<E>
 {
 public:
-    typedef S                     SIGNATURE;
-    typedef E                     EVENT;
-    typedef slot<SIGNATURE,EVENT> SLOT;
-    typedef receiver<EVENT>       RECEIVER;
+    typedef typename connector<S,E>::SIGNATURE SIGNATURE;
+    typedef typename connector<S,E>::EVENT     EVENT;
+    typedef typename connector<S,E>::RECEIVER  RECEIVER;
+    typedef slot<SIGNATURE,EVENT>              SLOT;
 
     virtual ~exchange() = default;
 
@@ -81,15 +81,12 @@ public:
      * @param receiver The component that should receive events.
      * @return this
      */
-    exchange& connect (const SIGNATURE& signature,
-                       RECEIVER&        receiver) {
+    virtual void connect (const SIGNATURE& signature,
+                          RECEIVER&        receiver) {
         auto slot = SLOT{ signature,receiver };
 
         slot.connect();
-
         _slots.push_back (slot);
-
-        return *this;
     }
 
     /**
@@ -99,13 +96,11 @@ public:
      * disconnected.
      * @return this
      */
-    exchange& disconnect (const SIGNATURE& signature,
-                          RECEIVER&        receiver) {
+    virtual void disconnect (const SIGNATURE& signature,
+                             RECEIVER&        receiver) {
         auto slot = SLOT{ signature,receiver };
 
         _slots.erase (std::remove (_slots.begin(),_slots.end(),slot));
-
-        return *this;
     }
 
     /**

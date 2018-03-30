@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "event_exchange.h"
 #include "mouse.h"
 
 using namespace shimmer;
@@ -45,5 +46,28 @@ TEST_CASE ( "Send events to mouse system.", TAGS ) {
     CHECK ( mouse.transform ( coords ) == coords_2i{ 80, 60 } );
 
     mouse.send ( display_resolution_change ( { 640, 480 } ) );
+    CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
+}
+
+TEST_CASE ( "Connect the mouse system to an events connector.", TAGS ) {
+    event_exchange exchange;
+    mouse mouse ( exchange );
+    coords_2i coords { 160, 120 };
+
+    exchange.send ( display_resolution_change ( { 320, 240 } ) );
+    exchange.send ( window_dims_change ( { 320, 240 } ) );
+    CHECK ( mouse.transform ( coords ) == coords_2i{ 160, 120 } );
+
+    exchange.send ( window_dims_change ( { 640, 480 } ) );
+    CHECK ( mouse.transform ( coords ) == coords_2i{ 80, 60 } );
+
+    exchange.send ( window_dims_change ( { 160, 120 } ) );
+    CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
+
+    exchange.send ( display_resolution_change ( { 160, 120 } ) );
+    exchange.send ( window_dims_change ( { 320, 240 } ) );
+    CHECK ( mouse.transform ( coords ) == coords_2i{ 80, 60 } );
+
+    exchange.send ( display_resolution_change ( { 640, 480 } ) );
     CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
 }

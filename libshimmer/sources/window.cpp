@@ -4,7 +4,7 @@
 
 namespace shimmer
 {
-window::window( receiver<event>& exchange )
+window::window( event_receiver& exchange )
     : _exchange ( &exchange )
 {}
 

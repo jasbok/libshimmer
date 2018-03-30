@@ -1,20 +1,20 @@
 #ifndef SHIMMER_MOUSE_H
 #define SHIMMER_MOUSE_H
 
-#include "coords.h"
-#include "dims.h"
-#include "event.h"
-#include "receiver.h"
+#include "event_connector.h"
+#include "event_receiver.h"
 
 namespace shimmer
 {
 /**
  * @brief Mouse system to transform mouse coordinates.
  */
-class mouse : public receiver<event>
+class mouse : public event_receiver
 {
 public:
     mouse();
+
+    mouse( event_connector& connector );
 
     virtual ~mouse();
 
@@ -45,6 +45,8 @@ public:
     mouse& window ( const dims_2u& window );
 
 private:
+    event_connector* _connector;
+
     coords_2f _coords;
 
     dims_2f _application;

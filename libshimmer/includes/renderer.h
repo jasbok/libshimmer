@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "dims.h"
 #include "event.h"
+#include "event_connector.h"
 #include "framebuffer.h"
 #include "image_reader.h"
 #include "options.h"
@@ -25,7 +26,13 @@ public:
               const dims_2u& window_dimensions,
               const options& options );
 
-    virtual ~renderer() = default;
+    renderer(
+        event_connector& connector,
+        const dims_2u&   application_resolution,
+        const dims_2u&   window_dimensions,
+        const options&   options );
+
+    virtual ~renderer();
 
     /**
      * @brief Send an event to the renderer.
@@ -48,6 +55,8 @@ public:
     void         render();
 
 private:
+    event_connector* _connector;
+
     shimmer::dims_2u _application_resolution;
 
     shimmer::dims_2u _window_dimensions;

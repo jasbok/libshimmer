@@ -5,11 +5,27 @@
 using namespace shimmer;
 
 mouse::mouse()
-    : _application ( dims_2f() ),
+    : _connector ( nullptr ),
+      _application ( dims_2f() ),
       _window ( dims_2f ( 1, 1 ) )
 {}
 
-mouse::~mouse() {}
+mouse::mouse( event_connector& connector )
+    : _connector ( &connector ),
+      _application ( dims_2f() ),
+      _window ( dims_2f ( 1, 1 ) )
+{
+    _connector->connect ( display_resolution_change::type(), *this );
+    _connector->connect ( window_dims_change::type(),        *this );
+}
+
+mouse::~mouse() {
+    if ( _connector ) {
+        LOGD << "Disconnecting mouse system from events connector.";
+        _connector->disconnect ( display_resolution_change::type(), *this );
+        _connector->disconnect ( window_dims_change::type(),        *this );
+    }
+}
 
 coords_2i mouse::transform ( const coords_2i& coords ) {
     _coords = coords;
