@@ -12,8 +12,30 @@ TEST_CASE ( "Construct window system.", TAGS ) {
     event_exchange exchange;
     window window ( exchange );
 
+    CHECK ( window.coordinates() == coords_2i{ 0, 0 } );
     CHECK ( window.dimensions() == dims_2u{ 0, 0 } );
     CHECK ( window.title() == "" );
+}
+
+TEST_CASE ( "Set window coordinates.", TAGS ) {
+    event_exchange  exchange;
+    event_collector collector;
+
+    exchange.connect ( window_coords_change::type(), collector );
+
+    window window ( exchange );
+    coords_2i coords = { 320, 240 };
+
+    window.coordinates ( coords );
+    CHECK ( window.coordinates() == coords_2i{ 320, 240 } );
+    REQUIRE ( collector.events().size() == 1 );
+    CHECK ( window_coords_change ( coords ) == *collector.events()[0] );
+
+    window.coordinates ( coords_2i{ 640, 480 } );
+    CHECK ( window.coordinates() == coords_2i{ 640, 480 } );
+    REQUIRE ( collector.events().size() == 2 );
+    CHECK ( window_coords_change ( coords ) == *collector.events()[0] );
+    CHECK ( window_coords_change ( { 640, 480 } ) == *collector.events()[1] );
 }
 
 TEST_CASE ( "Set window dimensions.", TAGS ) {

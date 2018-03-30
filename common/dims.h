@@ -83,11 +83,11 @@ struct dims_2 {
     }
 
     float wh_ratio() const {
-        return width / ( float )height;
+        return width / static_cast<float>( height );
     }
 
     float hw_ratio() const {
-        return height / ( float )width;
+        return height / static_cast<float>( width );
     }
 
     std::string to_json() const {

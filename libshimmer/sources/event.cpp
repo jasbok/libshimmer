@@ -1,10 +1,10 @@
 #include "event.h"
 
+#include <exception>
+
 namespace shimmer
 {
 event::event( enum event::type type ) : _type ( type ) {}
-
-event::~event() {}
 
 enum event::type event::type() const {
     return _type;
@@ -22,9 +22,14 @@ std::unique_ptr<event> event::clone() const {
     switch ( _type ) {
         MAKE_UNIQUE ( display_depth_change );
         MAKE_UNIQUE ( display_resolution_change );
+        MAKE_UNIQUE ( window_coords_change );
         MAKE_UNIQUE ( window_dims_change );
         MAKE_UNIQUE ( window_title_change );
     }
+
+    throw std::runtime_error ( "The clone() function has not been implemented for "
+                               + shimmer::to_json (
+                                   _type ) );
 }
 
 std::ostream& operator<<( std::ostream&           out,
@@ -51,12 +56,18 @@ std::string to_json ( const enum event::type& type )
     case event::type::display_resolution_change: return string (
             "\"display_resolution_change\"" );
 
+    case event::type::window_coords_change: return string (
+            "\"window_coords_change\"" );
+
     case event::type::window_dims_change: return string (
             "\"window_dims_change\"" );
 
     case event::type::window_title_change: return string (
             "\"window_title_change\"" );
     }
+
+    throw std::runtime_error (
+              "The to_json() function has not been implemented for type." );
 }
 
 bool match_on_type ( const enum event::type& type,

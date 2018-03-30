@@ -16,6 +16,19 @@ public:
     virtual ~window();
 
     /**
+     * @brief coordinates Sets the coordinates of the window.
+     * @param coordinates The new coordinates of the window.
+     * @return this
+     */
+    window& coordinates ( const coords_2i& coordinates );
+
+    /**
+     * @brief coordinates Gets the current coordinates of the window.
+     * @return The coordinates of the window.
+     */
+    coords_2i coordinates() const;
+
+    /**
      * @brief dimensions Sets the dimensions of the window.
      * @param dimensions The new dimensions of the window.
      * @return this
@@ -43,6 +56,8 @@ public:
 
 private:
     event_exchange* _exchange;
+
+    coords_2i _coordinates;
 
     dims_2u _dimensions;
 

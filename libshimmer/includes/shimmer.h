@@ -7,6 +7,11 @@
 #include "macros.h"
 #include "renderer.h"
 
+#include "display.h"
+#include "event_exchange.h"
+#include "mouse.h"
+#include "window.h"
+
 namespace shimmer
 {
 class shimmer
@@ -57,6 +62,14 @@ private:
     std::shared_ptr<config> _config;
 
     std::shared_ptr<renderer> _renderer;
+
+    event_exchange _exchange;
+
+    display _display;
+
+    mouse _mouse;
+
+    window _window;
 };
 }
 

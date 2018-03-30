@@ -29,8 +29,8 @@ public:
     slot(const SIGNATURE& signature,
          RECEIVER&        receiver)
         : signature (signature),
-          _receiver (&receiver),
-          signal()
+          signal(),
+          _receiver (&receiver)
     {
         signal.Connect (_receiver,&RECEIVER::send);
     }

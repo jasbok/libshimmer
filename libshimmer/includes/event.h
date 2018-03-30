@@ -1,6 +1,7 @@
 #ifndef SHIMMER_EVENT_H
 #define SHIMMER_EVENT_H
 
+#include "coords.h"
 #include "dims.h"
 #include "json.h"
 
@@ -18,7 +19,7 @@ public:
 
     event( enum type );
 
-    virtual ~event();
+    virtual ~event() = default;
 
     /**
      * @brief Get the events type.
@@ -66,7 +67,7 @@ class event_data : public event
 public:
     typedef T DATA;
 
-    const static enum event::type type() {
+    static enum event::type type() {
         return TYPE;
     }
 
@@ -118,6 +119,7 @@ bool match_on_type ( const enum event::type& type,
 enum class event::type {
     display_depth_change,
     display_resolution_change,
+    window_coords_change,
     window_dims_change,
     window_title_change
 };
@@ -127,6 +129,9 @@ typedef event_data<event::type::display_depth_change,
 
 typedef event_data<event::type::display_resolution_change,
                    dims_2u> display_resolution_change;
+
+typedef event_data<event::type::window_coords_change,
+                   coords_2i> window_coords_change;
 
 typedef event_data<event::type::window_dims_change,
                    dims_2u> window_dims_change;

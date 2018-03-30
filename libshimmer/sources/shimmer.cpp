@@ -13,8 +13,15 @@ namespace shimmer
 {
 shimmer::shimmer()
     : _config ( std::make_shared<config>() ),
-      _renderer()
-{}
+      _renderer(),
+      _exchange(),
+      _display ( _exchange ),
+      _mouse(),
+      _window ( _exchange )
+{
+    _exchange.connect ( display_resolution_change::type(), _mouse );
+    _exchange.connect ( window_dims_change::type(),        _mouse );
+}
 
 shimmer::~shimmer()
 {}
@@ -22,18 +29,21 @@ shimmer::~shimmer()
 void shimmer::create_window ( coords_2i& coords,
                               dims_2u&   dims )
 {
+    _display.resolution ( dims );
+
+    if ( _window.dimensions().area() == 0 ) {
+        _window.coordinates ( coords );
+        _window.dimensions ( dims );
+    }
+
+    coords = _window.coordinates();
+    dims   = _window.dimensions();
+
+    // TODO: Factor out.
     auto& app = _config->app;
-
-    app.surface.dims = dims;
-
-    if ( app.window.dims.area() == 0 ) {
-        app.window.coords = coords;
-        app.window.dims   = dims;
-    }
-    else {
-        coords = app.window.coords;
-        dims   = app.window.dims;
-    }
+    app.surface.dims  = _display.resolution();
+    app.window.coords = _window.coordinates();
+    app.window.dims   = _window.dimensions();
 }
 
 void shimmer::create_window ( string&    title,
@@ -46,13 +56,17 @@ void shimmer::create_window ( string&    title,
 
 void shimmer::set_window_title ( string& title )
 {
-    _config->app.window.title = title;
-    title                    += " [shimmer]";
+    _window.title ( title );
+    title += " [shimmer]";
+
+    // TODO: Factor out.
+    _config->app.window.title = _window.title();
 }
 
 dims_2u shimmer::app_surface_dims()
 {
-    return _config->app.surface.dims;
+    // return _config->app.surface.dims;
+    return _display.resolution();
 }
 
 void shimmer::init_renderer()
@@ -62,14 +76,20 @@ void shimmer::init_renderer()
 
 void shimmer::resize_window ( dims_2u& dims )
 {
-    _config->app.window.dims = dims;
-    dims                     = _config->app.surface.dims;
+    _window.dimensions ( dims );
+    dims = _display.resolution();
+
+    //
+    // TODO: Factor out.
+    //
+    _config->app.window.dims = _window.dimensions();
+
     _renderer->update();
 }
 
 void shimmer::move_window ( coords_2i& coords )
 {
-    _config->app.window.coords = coords;
+    _window.coordinates ( coords );
 }
 
 void shimmer::refresh_display()
@@ -109,10 +129,12 @@ void shimmer::application_texture_flip_y ( bool flip_y )
 
 void shimmer::mouse_coords ( coords_2i& coords )
 {
-    const auto& app_dims = _config->app.surface.dims;
-    const auto& win_dims = _config->app.window.dims;
+    coords = _mouse.transform ( coords );
 
-    coords.x *= app_dims.width / ( float )win_dims.width;
-    coords.y *= app_dims.height / ( float )win_dims.height;
+    //    const auto& app_dims = _config->app.surface.dims;
+    //    const auto& win_dims = _config->app.window.dims;
+
+    //    coords.x *= app_dims.width / ( float )win_dims.width;
+    //    coords.y *= app_dims.height / ( float )win_dims.height;
 }
 }
