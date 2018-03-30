@@ -1,9 +1,8 @@
 #ifndef SHIMMER_SHIMMER_H
 #define SHIMMER_SHIMMER_H
 
+#include "aspect.h"
 #include "config.h"
-#include "coords.h"
-#include "dims.h"
 #include "display.h"
 #include "event_exchange.h"
 #include "macros.h"
@@ -18,7 +17,7 @@ class shimmer
 public:
     shimmer();
 
-    virtual ~shimmer();
+    virtual ~shimmer() = default;
 
     void create_window ( coords_2i& coords,
                          dims_2u&   dims );
@@ -63,6 +62,8 @@ private:
     std::shared_ptr<config> _config;
 
     std::shared_ptr<renderer> _renderer;
+
+    aspect _aspect;
 
     display _display;
 

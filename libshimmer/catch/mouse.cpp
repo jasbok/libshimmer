@@ -11,7 +11,7 @@ TEST_CASE ( "Transform mouse coordinates.", TAGS ) {
     mouse mouse;
     coords_2i coords { 160, 120 };
 
-    mouse.application ( { 320, 240 } ).window ( { 320, 240 } );
+    mouse.display ( { 320, 240 } ).window ( { 320, 240 } );
     CHECK ( mouse.transform ( coords ) == coords_2i{ 160, 120 } );
 
     mouse.window ( { 640, 480 } );
@@ -20,10 +20,10 @@ TEST_CASE ( "Transform mouse coordinates.", TAGS ) {
     mouse.window ( { 160, 120 } );
     CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
 
-    mouse.application ( { 160, 120 } ).window ( { 320, 240 } );
+    mouse.display ( { 160, 120 } ).window ( { 320, 240 } );
     CHECK ( mouse.transform ( coords ) == coords_2i{ 80, 60 } );
 
-    mouse.application ( { 640, 480 } );
+    mouse.display ( { 640, 480 } );
     CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
 }
 

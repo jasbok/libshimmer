@@ -20,6 +20,8 @@ case event::type::T:     \
 
 std::unique_ptr<event> event::clone() const {
     switch ( _type ) {
+        MAKE_UNIQUE ( aspect_ratio_change );
+        MAKE_UNIQUE ( aspect_ratio_config );
         MAKE_UNIQUE ( display_depth_change );
         MAKE_UNIQUE ( display_resolution_change );
         MAKE_UNIQUE ( window_coords_change );
@@ -45,29 +47,23 @@ std::ostream& operator<<( std::ostream& out, const event& event ) {
     return out;
 }
 
+#define TO_JSON( T ) \
+case event::type::T: return std::string ( "\""# T "\"" )
+
 std::string to_json ( const enum event::type& type )
 {
-    using namespace std;
-
     switch ( type ) {
-    case event::type::display_depth_change: return string (
-            "\"display_depth_change\"" );
-
-    case event::type::display_resolution_change: return string (
-            "\"display_resolution_change\"" );
-
-    case event::type::window_coords_change: return string (
-            "\"window_coords_change\"" );
-
-    case event::type::window_dims_change: return string (
-            "\"window_dims_change\"" );
-
-    case event::type::window_title_change: return string (
-            "\"window_title_change\"" );
+        TO_JSON ( aspect_ratio_change );
+        TO_JSON ( aspect_ratio_config );
+        TO_JSON ( display_depth_change );
+        TO_JSON ( display_resolution_change );
+        TO_JSON ( window_coords_change );
+        TO_JSON ( window_dims_change );
+        TO_JSON ( window_title_change );
     }
 
     throw std::runtime_error (
-              "The to_json() function has not been implemented for type." );
+              "The to_json() function has not been implemented for event::type." );
 }
 
 bool match_on_type ( const enum event::type& type,

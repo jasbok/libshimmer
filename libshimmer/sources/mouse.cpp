@@ -6,14 +6,14 @@ using namespace shimmer;
 
 mouse::mouse()
     : _connector ( nullptr ),
-      _application ( dims_2f() ),
-      _window ( dims_2f ( 1, 1 ) )
+      _display(),
+      _window ( 1, 1 )
 {}
 
 mouse::mouse( event_connector& connector )
     : _connector ( &connector ),
-      _application ( dims_2f() ),
-      _window ( dims_2f ( 1, 1 ) )
+      _display(),
+      _window ( 1, 1 )
 {
     _connector->connect ( display_resolution_change::type(), *this );
     _connector->connect ( window_dims_change::type(),        *this );
@@ -36,7 +36,7 @@ coords_2i mouse::transform ( const coords_2i& coords ) {
 void mouse::send ( const event& event ) {
     switch ( event.type() ) {
     case event::type::display_resolution_change:
-        _application_event ( event );
+        _display_event ( event );
         break;
 
     case event::type::window_dims_change:
@@ -48,8 +48,8 @@ void mouse::send ( const event& event ) {
     }
 }
 
-mouse& mouse::application ( const dims_2u& application ) {
-    _application = application;
+mouse& mouse::display ( const dims_2u& display ) {
+    _display = display;
     _update_transform();
 
     return *this;
@@ -63,13 +63,13 @@ mouse& mouse::window ( const dims_2u& window ) {
 }
 
 void mouse::_update_transform() {
-    auto div = _application / _window;
+    auto div = _display / _window;
 
     _transform = { div.width, div.height };
 }
 
-void mouse::_application_event ( const display_resolution_change& event ) {
-    application ( event.data() );
+void mouse::_display_event ( const display_resolution_change& event ) {
+    display ( event.data() );
 }
 
 void mouse::_window_event ( const window_dims_change& event ) {

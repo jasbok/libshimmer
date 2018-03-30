@@ -25,8 +25,7 @@ config::config() {
             LOGI << "Loaded config from file: " << env.config_path();
         }
         else {
-            LOGW << "Unable to find config file: "
-                 << env.config_path()
+            LOGW << "Unable to find config file: " << env.config_path()
                  << "\nCreating default config.\n";
 
             save();
@@ -35,12 +34,12 @@ config::config() {
         opts.set_env ( env );
     }
     catch ( json::exception ex ) {
-        LOGE << "Unable to parse config file (" << env.config_path()
-             << "): " << ex.what() << std::endl;
+        LOGE << "Unable to parse config file (" << env.config_path() << "): "
+             << ex.what();
     }
     catch ( exception ex ) {
-        LOGE << "Unable to parse config file (" << env.config_path()
-             << "): " << ex.what() << std::endl;
+        LOGE << "Unable to parse config file (" << env.config_path() << "): "
+             << ex.what();
     }
 }
 
@@ -56,13 +55,12 @@ void config::save() const
         }
         else {
             LOGE << "Could not open config file for writing: "
-                 << env.config_path() << std::endl;
+                 << env.config_path();
         }
     }
     catch ( exception ex ) {
-        LOGE << "Unable to write config to file ("
-             << env.config_path() << "): "
-             << ex.what() << std::endl;
+        LOGE << "Unable to write config to file (" << env.config_path() << "): "
+             << ex.what();
     }
 }
 }

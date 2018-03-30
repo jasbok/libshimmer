@@ -65,7 +65,7 @@ private:
  * a receiver, based on the signature of the receiver slot and the sent event.
  */
 template<typename S,typename E,bool ( * MATCHER )( const S&,const E& )>
-class exchange : public connector<S,E>,public receiver<E>
+class exchange : public connector<S,E>
 {
 public:
     typedef typename connector<S,E>::SIGNATURE SIGNATURE;

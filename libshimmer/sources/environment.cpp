@@ -131,7 +131,7 @@ std::vector<string> environment::_split_str ( const string& str,
 {
     vector<string> split;
 
-    string str_reg;
+    string str_reg = str;
     smatch match;
 
     while ( regex_search ( str_reg, match, reg ) ) {
@@ -165,8 +165,11 @@ void environment::_expand ( string&       str,
 {
     smatch match;
 
-    if ( regex_search ( str, match, std::regex ( regex ) ) ) {
-        str.replace ( match.position(), match.size(), expansion );
+    if ( regex_search ( str, match, std::regex ( regex ) )
+         && ( match.position() > 0 ) ) {
+        str.replace ( static_cast<unsigned long>( match.position() ),
+                      match.size(),
+                      expansion );
     }
 }
 

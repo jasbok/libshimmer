@@ -18,6 +18,7 @@ shimmer::shimmer()
     : _exchange(),
       _config(),
       _renderer(),
+      _aspect ( _exchange ),
       _display ( _exchange ),
       _mouse ( _exchange ),
       _window ( _exchange )
@@ -28,9 +29,6 @@ shimmer::shimmer()
 
     _config = std::make_shared<config>();
 }
-
-shimmer::~shimmer()
-{}
 
 void shimmer::create_window ( coords_2i& coords,
                               dims_2u&   dims )

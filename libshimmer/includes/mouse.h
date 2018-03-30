@@ -19,26 +19,26 @@ public:
     virtual ~mouse();
 
     /**
-     * @brief Send an event to the mouse system.
+     * @brief send Send an event to the mouse system.
      * @param event The event.
      */
     virtual void send ( const class event& event );
 
     /**
-     * @brief Transforms the input coordinates inplace.
+     * @brief transform Transforms the input coordinates inplace.
      * @param coords Coords to transform.
      */
     coords_2i transform ( const coords_2i& coords );
 
     /**
-     * @brief Sets the application dimensions.
+     * @brief display Sets the display resolution.
      * @param Dimensions of the application.
      * @return this
      */
-    mouse& application ( const dims_2u& application );
+    mouse& display ( const dims_2u& display );
 
     /**
-     * @brief Sets the window dimensions.
+     * @brief window Sets the window dimensions.
      * @param Dimensions of the window.
      * @return this
      */
@@ -49,26 +49,26 @@ private:
 
     coords_2f _coords;
 
-    dims_2f _application;
+    dims_2f _display;
 
     dims_2f _window;
 
     coords_2f _transform;
 
     /**
-     * @brief Updates the transform using the
+     * @brief _update_transform Updates the transform using the
      * current application and window dimensions.
      */
     void _update_transform();
 
     /**
-     * @brief Receives an application event.
+     * @brief _display_event Receives an display event.
      * @param event The event to receive.
      */
-    void _application_event ( const display_resolution_change& event );
+    void _display_event ( const display_resolution_change& event );
 
     /**
-     * @brief Receives a window event.
+     * @brief _window_event Receives a window event.
      * @param event The event to receive.
      */
     void _window_event ( const window_dims_change& event );

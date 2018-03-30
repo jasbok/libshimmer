@@ -10,6 +10,7 @@ include_directories(
 #   Collect all test files.
 ###############################################################################
 set ( CATCH_TESTS
+        aspect.cpp
         display.cpp
         event_collector.cpp
         event_exchange.cpp

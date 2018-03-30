@@ -1,6 +1,7 @@
 #ifndef SHIMMER_OPTIONS_H
 #define SHIMMER_OPTIONS_H
 
+#include "aspect_ratio.h"
 #include "environment.h"
 #include "serialisers.h"
 
@@ -27,12 +28,6 @@ struct shader_options {
     bool linear_filter = false;
 
     float scale = 1.0f;
-};
-
-enum class aspect_ratio {
-    original,
-    stretch,
-    zoom
 };
 
 struct video_options {

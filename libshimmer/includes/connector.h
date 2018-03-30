@@ -6,7 +6,7 @@
 namespace shimmer
 {
 template<typename S, typename E>
-class connector
+class connector : public receiver<E>
 {
 public:
     typedef S               SIGNATURE;

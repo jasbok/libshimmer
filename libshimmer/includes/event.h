@@ -1,6 +1,7 @@
 #ifndef SHIMMER_EVENT_H
 #define SHIMMER_EVENT_H
 
+#include "aspect_ratio.h"
 #include "coords.h"
 #include "dims.h"
 #include "json.h"
@@ -117,12 +118,20 @@ bool match_on_type ( const enum event::type& type,
                      const event&            event );
 
 enum class event::type {
+    aspect_ratio_change,
+    aspect_ratio_config,
     display_depth_change,
     display_resolution_change,
     window_coords_change,
     window_dims_change,
     window_title_change
 };
+
+typedef event_data<event::type::aspect_ratio_change,
+                   dims_2f> aspect_ratio_change;
+
+typedef event_data<event::type::aspect_ratio_config,
+                   aspect_ratio> aspect_ratio_config;
 
 typedef event_data<event::type::display_depth_change,
                    unsigned int> display_depth_change;

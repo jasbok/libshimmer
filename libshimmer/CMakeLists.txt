@@ -54,6 +54,8 @@ set( INCLUDES
 set( HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
         ${INCLUDE_DIR}/application.h
+        ${INCLUDE_DIR}/aspect.h
+        ${INCLUDE_DIR}/aspect_ratio.h
         ${INCLUDE_DIR}/config.h
         ${INCLUDE_DIR}/config_variables.h.in
         ${INCLUDE_DIR}/connector.h
@@ -91,6 +93,8 @@ set( HEADERS
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
+        ${SOURCES_DIR}/aspect.cpp
+        ${SOURCES_DIR}/aspect_ratio.cpp
         ${SOURCES_DIR}/config.cpp
         ${SOURCES_DIR}/dims.cpp
         ${SOURCES_DIR}/display.cpp

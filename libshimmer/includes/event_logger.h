@@ -1,15 +1,14 @@
 #ifndef SHIMMER_EVENT_LOGGER_H
 #define SHIMMER_EVENT_LOGGER_H
 
-#include "event.h"
-#include "receiver.h"
+#include "event_receiver.h"
 
 namespace shimmer
 {
 /**
- * @brief Logs all events received to the configured logger.
+ * @brief Logs all events received.
  */
-class event_logger : public receiver<event>
+class event_logger : public event_receiver
 {
 public:
     event_logger( const std::string& name = "event_logger" );
