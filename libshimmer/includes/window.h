@@ -1,7 +1,8 @@
 #ifndef SHIMMER_WINDOW_H
 #define SHIMMER_WINDOW_H
 
-#include "event_exchange.h"
+#include "event.h"
+#include "receiver.h"
 
 namespace shimmer
 {
@@ -11,7 +12,7 @@ namespace shimmer
 class window
 {
 public:
-    window( event_exchange& exchange );
+    window( receiver<event>& exchange );
 
     virtual ~window();
 
@@ -55,7 +56,7 @@ public:
     std::string title() const;
 
 private:
-    event_exchange* _exchange;
+    receiver<event>* _exchange;
 
     coords_2i _coordinates;
 

@@ -1,27 +1,47 @@
 #include "renderer.h"
 
+#include "debug.h"
 #include "pixels.h"
 
-#include "debug.h"
+#include "plog/Log.h"
 
 using namespace shimmer;
 
 renderer::renderer(
-    const std::shared_ptr<config>& config )
-    : _config ( config ),
-      _images ( config->opts.general.image_paths ),
-      _shaders ( config->opts.general.shader_paths ),
+    const dims_2u& application_resolution,
+    const dims_2u& window_dimensions,
+    const options& options )
+    : _application_resolution ( application_resolution ),
+      _window_dimensions ( window_dimensions ),
+      _opts ( options ),
+      _images ( _opts.general.image_paths ),
+      _shaders ( _opts.general.shader_paths ),
       _application_texture_flip_y ( false )
 {
     _construct_application_surface();
     _construct_surface_phase();
 }
 
+void renderer::send ( const event& event ) {
+    switch ( event.type() ) {
+    case event::type::display_resolution_change:
+        _application_resolution_event ( event );
+        break;
+
+    case event::type::window_dims_change:
+        _window_dimensions_event ( event );
+        break;
+
+    default:
+        break;
+    }
+}
+
 void renderer::update()
 {
     auto& surface = _scene["surface"];
 
-    surface.viewport()->dims = _config->app.window.dims;
+    surface.viewport()->dims = _window_dimensions;
     _application_quad->bind();
     _application_quad->dimensions ( _calculate_quad_dimensions(),
                                     _application_texture_flip_y );
@@ -34,11 +54,11 @@ void renderer::create_application_texture_from_bound()
     glGetIntegerv ( GL_TEXTURE_BINDING_2D, &texture_handle );
 
     *_application_texture =
-        std::move ( glpp::texture_2d ( texture_handle,
-                                       _config->app.surface.dims,
-                                       glpp::texture::internal_format::rgba ) );
+        glpp::texture_2d ( static_cast<GLuint>( texture_handle ),
+                           _application_resolution,
+                           glpp::texture::internal_format::rgba );
 
-    if ( !_config->opts.video.application_shader.linear_filter ) {
+    if ( !_opts.video.application_shader.linear_filter ) {
         _application_texture->filters ( glpp::texture_2d::filter::nearest );
     }
 }
@@ -56,10 +76,9 @@ void renderer::bind_application_framebuffer()
 {
     _application_framebuffer->bind();
 
-    glViewport ( 0,
-                 0,
-                 _config->app.surface.dims.width,
-                 _config->app.surface.dims.height );
+    glViewport ( 0, 0,
+                 static_cast<GLsizei>( _application_resolution.width ),
+                 static_cast<GLsizei>( _application_resolution.height ) );
 
     GLPP_CHECK_FRAMEBUFFER ( "Bind Application Framebuffer" );
 }
@@ -87,7 +106,7 @@ void renderer::render()
 
 void renderer::_construct_application_surface()
 {
-    auto& video              = _config->opts.video;
+    auto& video              = _opts.video;
     auto& application_shader = video.application_shader;
 
     auto application_program = _shaders.shared_program (
@@ -97,11 +116,11 @@ void renderer::_construct_application_surface()
     application_program->use().uniform ( "application", 0 );
 
     _application_texture =
-        glpp::texture_2d::make_shared ( _config->app.surface.dims );
+        glpp::texture_2d::make_shared ( _application_resolution );
     _application_texture->bind();
     _application_texture->generate_mipmaps();
 
-    if ( !_config->opts.video.application_shader.linear_filter ) {
+    if ( !_opts.video.application_shader.linear_filter ) {
         _application_texture->filters ( glpp::texture_2d::filter::nearest );
     }
 
@@ -125,7 +144,7 @@ void renderer::_construct_surface_phase()
         std::make_shared<glpp::viewport_int>() );
 
     surface_phase.viewport()->coords = { 0, 0 };
-    surface_phase.viewport()->dims   = _config->app.window.dims;
+    surface_phase.viewport()->dims   = _window_dimensions;
 
     surface_phase.camera()->rotate ( {
         0.0, 180.0, 0.0
@@ -147,7 +166,7 @@ void renderer::_construct_application_phase()
         std::make_shared<glpp::framebuffer>() );
 
     application_phase.viewport()->coords = { 0, 0 };
-    application_phase.viewport()->dims   = _config->app.surface.dims;
+    application_phase.viewport()->dims   = _application_resolution;
 
     application_phase
         .clear_bits ( { GL_COLOR_BUFFER_BIT } )
@@ -159,15 +178,13 @@ void renderer::_construct_application_phase()
 
 dims_2f renderer::_calculate_quad_dimensions()
 {
-    auto& app_dims = _config->app.surface.dims;
-    auto& win_dims = _config->app.window.dims;
+    auto& app_dims = _application_resolution;
+    auto& win_dims = _window_dimensions;
 
-    if ( _config->opts.video.aspect_ratio == aspect_ratio::stretch ) {
-        return { 1.0f, 1.0f };
-    } else {
+    if ( _opts.video.aspect_ratio != aspect_ratio::stretch ) {
         float ar_factor = app_dims.wh_ratio() / win_dims.wh_ratio();
 
-        if ( _config->opts.video.aspect_ratio == aspect_ratio::zoom ) {
+        if ( _opts.video.aspect_ratio == aspect_ratio::zoom ) {
             return { ar_factor < 1.0f ?  1.0f : ar_factor,
                      ar_factor < 1.0f ? 1.0f / ar_factor : 1.0f };
         } else {
@@ -175,4 +192,15 @@ dims_2f renderer::_calculate_quad_dimensions()
                      ar_factor > 1.0f ? 1.0f / ar_factor : 1.0f };
         }
     }
+
+    return { 1.0f, 1.0f };
+}
+
+void renderer::_application_resolution_event (
+    const display_resolution_change& event ) {
+    _application_resolution = event.data();
+}
+
+void renderer::_window_dimensions_event ( const window_dims_change& event ) {
+    _window_dimensions = event.data();
 }

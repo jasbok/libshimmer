@@ -2,7 +2,7 @@
 
 namespace shimmer
 {
-display::display( event_exchange& exchange )
+display::display( receiver<event>& exchange )
     : _exchange ( &exchange ),
       _resolution(),
       _depth()

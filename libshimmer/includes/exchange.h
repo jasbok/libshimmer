@@ -31,15 +31,27 @@ public:
         : signature (signature),
           signal(),
           _receiver (&receiver)
-    {
+    {}
+
+    /**
+     * @brief connect Connects the current slot to the receiver.
+     */
+    void connect() {
         signal.Connect (_receiver,&RECEIVER::send);
+    }
+
+    /**
+     * @brief connect Disconnects the current slot from the receiver.
+     */
+    void disconnect() {
+        signal.Disconnect (_receiver,&RECEIVER::send);
     }
 
     virtual ~slot() {
         // signal.Disconnect (receiver,&RECEIVER::send);
     }
 
-    bool operator==(const slot<SIGNATURE,RECEIVER>& comp) const {
+    bool operator==(const slot<S,E>& comp) const {
         return signature == comp.signature && _receiver == comp._receiver;
     }
 
@@ -71,20 +83,38 @@ public:
      */
     exchange& connect (const SIGNATURE& signature,
                        RECEIVER&        receiver) {
-        _slots.push_back ({ signature,receiver });
+        auto slot = SLOT{ signature,receiver };
+
+        slot.connect();
+
+        _slots.push_back (slot);
 
         return *this;
     }
 
     /**
-     * @brief send
-     * @param event
+     * @brief Disconnects a specific signature of a receiver from the exchange.
+     * @param signature The signature to disconnect.
+     * @param receiver The receiver that should have its corresponding signature
+     * disconnected.
+     * @return this
+     */
+    exchange& disconnect (const SIGNATURE& signature,
+                          RECEIVER&        receiver) {
+        auto slot = SLOT{ signature,receiver };
+
+        _slots.erase (std::remove (_slots.begin(),_slots.end(),slot));
+
+        return *this;
+    }
+
+    /**
+     * @brief send Sends the event to slot receivers with matching signatures.
+     * @param event The event to send.
      */
     virtual void send (const EVENT& event) {
         for ( auto& slot : _slots ) {
-            if ( MATCHER (slot.signature,event)) {
-                slot.signal (event);
-            }
+            if ( MATCHER (slot.signature,event) ) slot.signal (event);
         }
     }
 

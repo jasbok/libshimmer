@@ -3,6 +3,9 @@
 #include "debug.h"
 #include "glpp.h"
 
+#include "plog/Appenders/ColorConsoleAppender.h"
+#include "plog/Log.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -12,13 +15,18 @@ using namespace std;
 namespace shimmer
 {
 shimmer::shimmer()
-    : _config ( std::make_shared<config>() ),
+    : _config(),
       _renderer(),
       _exchange(),
       _display ( _exchange ),
       _mouse(),
       _window ( _exchange )
 {
+    static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
+
+    plog::init ( plog::debug, &appender );
+
+    _config = std::make_shared<config>();
     _exchange.connect ( display_resolution_change::type(), _mouse );
     _exchange.connect ( window_dims_change::type(),        _mouse );
 }
@@ -38,12 +46,6 @@ void shimmer::create_window ( coords_2i& coords,
 
     coords = _window.coordinates();
     dims   = _window.dimensions();
-
-    // TODO: Factor out.
-    auto& app = _config->app;
-    app.surface.dims  = _display.resolution();
-    app.window.coords = _window.coordinates();
-    app.window.dims   = _window.dimensions();
 }
 
 void shimmer::create_window ( string&    title,
@@ -58,31 +60,38 @@ void shimmer::set_window_title ( string& title )
 {
     _window.title ( title );
     title += " [shimmer]";
-
-    // TODO: Factor out.
-    _config->app.window.title = _window.title();
 }
 
 dims_2u shimmer::app_surface_dims()
 {
-    // return _config->app.surface.dims;
     return _display.resolution();
 }
 
 void shimmer::init_renderer()
 {
-    _renderer = std::make_shared<renderer>( _config );
+    if ( _renderer ) {
+        _exchange.disconnect ( display_resolution_change::type(),
+                               *static_pointer_cast<renderer>( _renderer ) );
+
+        _exchange.disconnect ( window_dims_change::type(),
+                               *static_pointer_cast<renderer>( _renderer ) );
+    }
+
+    _renderer = std::make_shared<renderer>( _display.resolution(),
+                                            _window.dimensions(),
+                                            _config->opts );
+
+    _exchange.connect ( display_resolution_change::type(),
+                        *static_pointer_cast<renderer>( _renderer ) );
+
+    _exchange.connect ( window_dims_change::type(),
+                        *static_pointer_cast<renderer>( _renderer ) );
 }
 
 void shimmer::resize_window ( dims_2u& dims )
 {
     _window.dimensions ( dims );
     dims = _display.resolution();
-
-    //
-    // TODO: Factor out.
-    //
-    _config->app.window.dims = _window.dimensions();
 
     _renderer->update();
 }
@@ -130,11 +139,5 @@ void shimmer::application_texture_flip_y ( bool flip_y )
 void shimmer::mouse_coords ( coords_2i& coords )
 {
     coords = _mouse.transform ( coords );
-
-    //    const auto& app_dims = _config->app.surface.dims;
-    //    const auto& win_dims = _config->app.window.dims;
-
-    //    coords.x *= app_dims.width / ( float )win_dims.width;
-    //    coords.y *= app_dims.height / ( float )win_dims.height;
 }
 }

@@ -2,11 +2,14 @@
 #define SHIMMER_RENDERER_H
 
 #include "camera.h"
-#include "config.h"
+#include "dims.h"
+#include "event.h"
 #include "framebuffer.h"
 #include "image_reader.h"
+#include "options.h"
 #include "program.h"
 #include "quad.h"
+#include "receiver.h"
 #include "scene.h"
 #include "shader_reader.h"
 #include "texture_unit.h"
@@ -15,37 +18,49 @@
 
 namespace shimmer
 {
-class renderer
+class renderer : public receiver<event>
 {
 public:
-    renderer( const std::shared_ptr<config>& config );
+    renderer( const dims_2u& application_resolution,
+              const dims_2u& window_dimensions,
+              const options& options );
 
     virtual ~renderer() = default;
 
-    void update();
+    /**
+     * @brief Send an event to the renderer.
+     * @param event The event.
+     */
+    virtual void send ( const class event& event );
 
-    void create_application_texture_from_bound();
+    void         update();
 
-    void create_application_framebuffer();
+    void         create_application_texture_from_bound();
 
-    void bind_application_framebuffer();
+    void         create_application_framebuffer();
 
-    void unbind_application_framebuffer();
+    void         bind_application_framebuffer();
 
-    void application_texture_flip_y ( bool flip );
+    void         unbind_application_framebuffer();
 
-    void render();
+    void         application_texture_flip_y ( bool flip );
+
+    void         render();
 
 private:
-    std::shared_ptr<config> _config;
+    shimmer::dims_2u _application_resolution;
+
+    shimmer::dims_2u _window_dimensions;
+
+    options _opts;
 
     image_reader _images;
 
     shader_reader _shaders;
 
-    std::shared_ptr<glpp::framebuffer> _application_framebuffer;
-
     bool _application_texture_flip_y;
+
+    std::shared_ptr<glpp::framebuffer> _application_framebuffer;
 
     std::shared_ptr<glpp::texture_2d> _application_texture;
 
@@ -66,6 +81,13 @@ private:
     void             _construct_application_phase();
 
     shimmer::dims_2f _calculate_quad_dimensions();
+
+
+    void _application_resolution_event (
+        const display_resolution_change& event );
+
+    void _window_dimensions_event (
+        const window_dims_change& event );
 };
 }
 

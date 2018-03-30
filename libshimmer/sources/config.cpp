@@ -2,6 +2,8 @@
 
 #include "file_reader.h"
 
+#include "plog/Log.h"
+
 #include <iostream>
 
 using json = nlohmann::json;
@@ -19,11 +21,13 @@ config::config() {
             json options_json;
             fstream >> options_json;
             opts = options_json;
+
+            LOGI << "Loaded config from file: " << env.config_path();
         }
         else {
-            std::cout << "Unable to find config file: "
-                      << env.config_path()
-                      << "\nCreating default config.\n";
+            LOGW << "Unable to find config file: "
+                 << env.config_path()
+                 << "\nCreating default config.\n";
 
             save();
         }
@@ -31,12 +35,12 @@ config::config() {
         opts.set_env ( env );
     }
     catch ( json::exception ex ) {
-        std::cerr << "Unable to parse config file (" << env.config_path()
-                  << "): " << ex.what() << std::endl;
+        LOGE << "Unable to parse config file (" << env.config_path()
+             << "): " << ex.what() << std::endl;
     }
     catch ( exception ex ) {
-        std::cerr << "Unable to parse config file (" << env.config_path()
-                  << "): " << ex.what() << std::endl;
+        LOGE << "Unable to parse config file (" << env.config_path()
+             << "): " << ex.what() << std::endl;
     }
 }
 
@@ -51,14 +55,14 @@ void config::save() const
             fstream << std::setw ( 4 ) << options_json;
         }
         else {
-            std::cerr << "Could not open config file for writing: "
-                      << env.config_path() << std::endl;
+            LOGE << "Could not open config file for writing: "
+                 << env.config_path() << std::endl;
         }
     }
     catch ( exception ex ) {
-        std::cerr << "Unable to write config to file ("
-                  << env.config_path() << "): "
-                  << ex.what() << std::endl;
+        LOGE << "Unable to write config to file ("
+             << env.config_path() << "): "
+             << ex.what() << std::endl;
     }
 }
 }

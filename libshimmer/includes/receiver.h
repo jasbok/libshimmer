@@ -10,7 +10,7 @@ template<typename T>
 class receiver
 {
 public:
-    virtual ~receiver() {}
+    virtual ~receiver() = default;
 
     /**
      * @brief Send an event to this component.
