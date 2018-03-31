@@ -14,6 +14,12 @@ void process_event ( SDL_Event* event )
         //        case SDL_MOUSEBUTTONDOWN:
         //            break;
 
+        case SDL_MOUSEMOTION:
+            libshimmer->mouse_coords ( event->motion.x, event->motion.y );
+            libshimmer->mouse_coords_relative ( event->motion.xrel,
+                                                event->motion.yrel );
+            break;
+
         case SDL_VIDEORESIZE:
 
             if ( shim.video && ( event->resize.w <= 1920 ) &&
@@ -28,6 +34,9 @@ void process_event ( SDL_Event* event )
 
             // Do not propagate resize event to application
             event->active.type = SDL_NOEVENT;
+            event->resize.w    = libshimmer->app_surface_dims().width;
+            event->resize.h    = libshimmer->app_surface_dims().height;
+
             break;
 
         default:

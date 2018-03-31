@@ -2,6 +2,7 @@
 
 #include "debug.h"
 #include "logger.h"
+#include "logger.h"
 #include "pixels.h"
 
 using namespace shimmer;

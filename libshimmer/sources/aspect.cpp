@@ -9,25 +9,25 @@ aspect::aspect( event_connector& connector )
       _aspect_ratio ( aspect_ratio::original ),
       _transform ( 1.0f, 1.0f )
 {
-    _connector->connect ( aspect_ratio_config::type(),       *this );
     _connector->connect ( display_resolution_change::type(), *this );
+    _connector->connect ( video_options_change::type(),      *this );
     _connector->connect ( window_dims_change::type(),        *this );
 }
 
 aspect::~aspect() {
-    _connector->disconnect ( aspect_ratio_config::type(),       *this );
     _connector->disconnect ( display_resolution_change::type(), *this );
+    _connector->disconnect ( video_options_change::type(),      *this );
     _connector->disconnect ( window_dims_change::type(),        *this );
 }
 
 void aspect::send ( const event& event ) {
     switch ( event.type() ) {
-    case event::type::aspect_ratio_config:
-        _aspect_event ( event );
-        break;
-
     case event::type::display_resolution_change:
         _display_event ( event );
+        break;
+
+    case event::type::video_options_change:
+        _video_options_event ( event );
         break;
 
     case event::type::window_dims_change:
@@ -43,8 +43,8 @@ dims_2f aspect::transform() const {
     return _transform;
 }
 
-void aspect::_aspect_event ( const aspect_ratio_config& event ) {
-    _aspect_ratio = event.data();
+void aspect::_video_options_event ( const video_options_change& event ) {
+    _aspect_ratio = event.data().aspect_ratio;
     _calculate_transform();
 }
 

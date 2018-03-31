@@ -71,6 +71,7 @@ set( HEADERS
         ${INCLUDE_DIR}/event_receiver.h
         ${INCLUDE_DIR}/exchange.h
         ${INCLUDE_DIR}/file_reader.h
+        ${INCLUDE_DIR}/general_options.h
         ${INCLUDE_DIR}/image_reader.h
         ${INCLUDE_DIR}/json.h
         ${INCLUDE_DIR}/limiter.h
@@ -81,10 +82,11 @@ set( HEADERS
         ${INCLUDE_DIR}/pipeline.h
         ${INCLUDE_DIR}/receiver.h
         ${INCLUDE_DIR}/renderer.h
-        ${INCLUDE_DIR}/serialisers.h
+        ${INCLUDE_DIR}/shader_options.h
         ${INCLUDE_DIR}/shader_reader.h
         ${INCLUDE_DIR}/shimmer.h
         ${INCLUDE_DIR}/system.h
+        ${INCLUDE_DIR}/video_options.h
         ${INCLUDE_DIR}/window.h )
 
 
@@ -104,6 +106,7 @@ set( SOURCES
         ${SOURCES_DIR}/event_collector.cpp
         ${SOURCES_DIR}/event_logger.cpp
         ${SOURCES_DIR}/file_reader.cpp
+        ${SOURCES_DIR}/general_options.cpp
         ${SOURCES_DIR}/image_reader.cpp
         ${SOURCES_DIR}/json.cpp
         ${SOURCES_DIR}/limiter.cpp
@@ -112,10 +115,11 @@ set( SOURCES
         ${SOURCES_DIR}/options.cpp
         ${SOURCES_DIR}/pipeline.cpp
         ${SOURCES_DIR}/renderer.cpp
-        ${SOURCES_DIR}/serialisers.cpp
+        ${SOURCES_DIR}/shader_options.cpp
         ${SOURCES_DIR}/shader_reader.cpp
         ${SOURCES_DIR}/shimmer.cpp
         ${SOURCES_DIR}/system.cpp
+        ${SOURCES_DIR}/video_options.cpp
         ${SOURCES_DIR}/window.cpp )
 
 ###############################################################################
@@ -127,10 +131,11 @@ configure_file( ${INCLUDE_DIR}/config_variables.h.in ${INCLUDE_DIR}/config_varia
 ###############################################################################
 #   Build shared library.
 ###############################################################################
-include_directories( ${INCLUDES} ${EXTERNAL_INCLUDES} )
+include_directories( ${INCLUDES})
+include_directories( SYSTEM ${EXTERNAL_INCLUDES} )
 
 add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
-target_include_directories( shimmer PUBLIC ${INCLUDES} ${EXTERNAL_INCLUDES} )
+target_include_directories( shimmer PUBLIC ${INCLUDES} )
 target_link_libraries( shimmer common glpp ${TARGET_LINK_LIBRARIES} )
 
 

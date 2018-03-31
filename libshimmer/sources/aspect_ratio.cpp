@@ -2,6 +2,38 @@
 
 namespace shimmer
 {
+void to_json ( nlohmann::json& json, const aspect_ratio& obj )
+{
+    switch ( obj ) {
+    case aspect_ratio::original:
+        json = "original";
+        break;
+
+    case aspect_ratio::stretch:
+        json = "stretch";
+        break;
+
+    case aspect_ratio::zoom:
+        json = "zoom";
+        break;
+    }
+}
+
+void from_json ( const nlohmann::json& json, aspect_ratio& obj )
+{
+    std::string ar = json;
+
+    if ( ar.compare ( "stretch" ) == 0 ) {
+        obj = aspect_ratio::stretch;
+    }
+    else if ( ar.compare ( "zoom" ) == 0 ) {
+        obj = aspect_ratio::zoom;
+    }
+    else {
+        obj = aspect_ratio::original;
+    }
+}
+
 #define TO_JSON( T ) \
 case aspect_ratio::T: return std::string ( "\""# T "\"" )
 

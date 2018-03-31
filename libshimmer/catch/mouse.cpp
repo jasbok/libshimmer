@@ -27,6 +27,26 @@ TEST_CASE ( "Transform mouse coordinates.", TAGS ) {
     CHECK ( mouse.transform ( coords ) == coords_2i{ 320, 240 } );
 }
 
+TEST_CASE ( "Transform relative mouse coordinates.", TAGS ) {
+    mouse mouse;
+    coords_2i coords { 8, 4 };
+
+    mouse.display ( { 320, 240 } ).window ( { 320, 240 } );
+    CHECK ( mouse.transform_relative ( coords ) == coords_2i{ 8, 4 } );
+
+    mouse.window ( { 640, 480 } );
+    CHECK ( mouse.transform_relative ( coords ) == coords_2i{ 4, 2 } );
+
+    mouse.window ( { 160, 120 } );
+    CHECK ( mouse.transform_relative ( coords ) == coords_2i{ 16, 8 } );
+
+    mouse.display ( { 160, 120 } ).window ( { 320, 240 } );
+    CHECK ( mouse.transform_relative ( coords ) == coords_2i{ 4, 2 } );
+
+    mouse.display ( { 640, 480 } );
+    CHECK ( mouse.transform_relative ( coords ) == coords_2i{ 16, 8 } );
+}
+
 TEST_CASE ( "Send events to mouse system.", TAGS ) {
     mouse mouse;
     coords_2i coords { 160, 120 };

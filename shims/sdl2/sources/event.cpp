@@ -33,7 +33,9 @@ int SDL_PollEvent ( SDL_Event* event )
                 shim.window_dims = shimmer::dims_2u ( event->window.data1,
                                                       event->window.data2 );
                 libshimmer->resize_window ( shim.window_dims );
-                event->type = 0;
+                event->type         = 0;
+                event->window.data1 = libshimmer->app_surface_dims().width;
+                event->window.data2 = libshimmer->app_surface_dims().height;
                 break;
             }
             break;

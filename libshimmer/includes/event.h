@@ -5,6 +5,7 @@
 #include "coords.h"
 #include "dims.h"
 #include "json.h"
+#include "options.h"
 
 #include <iostream>
 
@@ -119,9 +120,10 @@ bool match_on_type ( const enum event::type& type,
 
 enum class event::type {
     aspect_ratio_change,
-    aspect_ratio_config,
     display_depth_change,
     display_resolution_change,
+    general_options_change,
+    video_options_change,
     window_coords_change,
     window_dims_change,
     window_title_change
@@ -130,14 +132,17 @@ enum class event::type {
 typedef event_data<event::type::aspect_ratio_change,
                    dims_2f> aspect_ratio_change;
 
-typedef event_data<event::type::aspect_ratio_config,
-                   aspect_ratio> aspect_ratio_config;
-
 typedef event_data<event::type::display_depth_change,
                    unsigned int> display_depth_change;
 
 typedef event_data<event::type::display_resolution_change,
                    dims_2u> display_resolution_change;
+
+typedef event_data<event::type::general_options_change,
+                   general_options> general_options_change;
+
+typedef event_data<event::type::video_options_change,
+                   video_options> video_options_change;
 
 typedef event_data<event::type::window_coords_change,
                    coords_2i> window_coords_change;

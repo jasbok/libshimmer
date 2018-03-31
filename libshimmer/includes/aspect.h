@@ -41,10 +41,10 @@ private:
     dims_2f _transform;
 
     /**
-     * @brief _aspect_event Receives a window event.
+     * @brief _video_options_event Receives a window event.
      * @param event The event to receive.
      */
-    void _aspect_event ( const aspect_ratio_config& event );
+    void _video_options_event ( const video_options_change& event );
 
     /**
      * @brief _display_event Receives an display event.

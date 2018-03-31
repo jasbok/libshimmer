@@ -57,14 +57,30 @@ public:
 
     void    mouse_coords ( coords_2i& coords );
 
+    void    mouse_coords_relative ( coords_2i& coords );
+
+    template<typename T>
+    void mouse_coords ( T& x,
+                        T& y ) {
+        LOGV << "transforming coordinates: (" << x << "," << y << ")";
+        _mouse.transform ( x, y );
+        LOGV << "transformed coordinates: (" << x << "," << y << ")";
+    }
+
+    template<typename T>
+    void mouse_coords_relative ( T& x,
+                                 T& y ) {
+        LOGV << "transforming relative coordinates: (" << x << "," << y << ")";
+        _mouse.transform_relative ( x, y );
+        LOGV << "transformed relative coordinates: (" << x << "," << y << ")";
+    }
+
 private:
     logger _logger;
 
     event_exchange _exchange;
 
-    std::shared_ptr<config> _config;
-
-    std::shared_ptr<renderer> _renderer;
+    config _config;
 
     aspect _aspect;
 
@@ -73,6 +89,8 @@ private:
     mouse _mouse;
 
     window _window;
+
+    std::shared_ptr<renderer> _renderer;
 };
 }
 

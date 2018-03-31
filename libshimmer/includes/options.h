@@ -3,43 +3,11 @@
 
 #include "aspect_ratio.h"
 #include "environment.h"
-#include "serialisers.h"
-
-#include "json/json.hpp"
+#include "general_options.h"
+#include "video_options.h"
 
 namespace shimmer
 {
-struct general_options
-{
-    std::vector<std::string> font_paths;
-
-    std::vector<std::string> image_paths;
-
-    std::vector<std::string> shader_paths;
-
-    void set_env ( const environment& env );
-};
-
-struct shader_options {
-    std::string vertex = "/glsl1.3/default.vert";
-
-    std::string fragment = "/glsl1.3/default.frag";
-
-    bool linear_filter = false;
-
-    float scale = 1.0f;
-};
-
-struct video_options {
-    shader_options application_shader;
-
-    shader_options background_shader;
-
-    enum aspect_ratio aspect_ratio = aspect_ratio::original;
-
-    class limiter refresh_rate_limiter;
-};
-
 struct options
 {
     struct general_options general;
@@ -49,34 +17,13 @@ struct options
     void set_env ( const environment& env );
 };
 
-void to_json ( nlohmann::json&        json,
-               const general_options& obj );
-
-void from_json ( const nlohmann::json& json,
-                 general_options&      obj );
-
-void to_json ( nlohmann::json&       json,
-               const shader_options& obj );
-
-void from_json ( const nlohmann::json& json,
-                 shader_options&       obj );
-
-void to_json ( nlohmann::json&          json,
-               const enum aspect_ratio& obj );
-
-void from_json ( const nlohmann::json& json,
-                 enum aspect_ratio&    obj );
-
-void to_json ( nlohmann::json&      json,
-               const video_options& obj );
-
-void from_json ( const nlohmann::json& json,
-                 video_options&        obj );
-
 void to_json ( nlohmann::json& json,
                const options&  obj );
 
 void from_json ( const nlohmann::json& json,
                  options&              obj );
+
+std::string to_json ( const options& obj );
 }
+
 #endif // ifndef SHIMMER_OPTIONS_H

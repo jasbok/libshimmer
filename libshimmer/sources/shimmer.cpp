@@ -2,7 +2,6 @@
 
 #include "debug.h"
 #include "glpp.h"
-#include "logger.h"
 
 #include <fstream>
 #include <iostream>
@@ -14,14 +13,14 @@ namespace shimmer
 {
 shimmer::shimmer()
     : _exchange(),
-      _config(),
-      _renderer(),
+      _config ( _exchange ),
       _aspect ( _exchange ),
       _display ( _exchange ),
       _mouse ( _exchange ),
-      _window ( _exchange )
+      _window ( _exchange ),
+      _renderer()
 {
-    _config = std::make_shared<config>();
+    _config.load();
 }
 
 void shimmer::create_window ( coords_2i& coords,
@@ -62,7 +61,7 @@ void shimmer::init_renderer()
     _renderer = std::make_shared<renderer>( _exchange,
                                             _display.resolution(),
                                             _window.dimensions(),
-                                            _config->opts );
+                                            _config.opts );
 }
 
 void shimmer::resize_window ( dims_2u& dims )
@@ -105,7 +104,7 @@ void shimmer::unbind_application_framebuffer()
 
 bool shimmer::limit_refresh_rate()
 {
-    return _config->opts.video.refresh_rate_limiter.check();
+    return _config.opts.video.refresh_rate_limiter.check();
 }
 
 void shimmer::application_texture_flip_y ( bool flip_y )
@@ -116,5 +115,10 @@ void shimmer::application_texture_flip_y ( bool flip_y )
 void shimmer::mouse_coords ( coords_2i& coords )
 {
     coords = _mouse.transform ( coords );
+}
+
+void shimmer::mouse_coords_relative ( coords_2i& coords )
+{
+    coords = _mouse.transform_relative ( coords );
 }
 }

@@ -40,6 +40,8 @@ logger::logger()
     default:
         break;
     }
+
+    LOGI << "Setup logger with level=" << ( int )_level;
 }
 
 enum logger::level logger::level() const {

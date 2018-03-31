@@ -31,3 +31,10 @@ SDL_GrabMode SDL_WM_GrabInput ( SDL_GrabMode mode ) {
 
     return mode;
 }
+
+void SDL_WarpMouse ( Uint16 x, Uint16 y ) {
+    shimmer::coords_2i coords ( x, y );
+    libshimmer->mouse_coords ( coords );
+
+    sym::SDL_WarpMouse ( coords.x, coords.y );
+}

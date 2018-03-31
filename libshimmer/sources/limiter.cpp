@@ -1,8 +1,10 @@
 #include "limiter.h"
+#include "logger.h"
 
-using namespace shimmer;
 using namespace std;
 
+namespace shimmer
+{
 bool limiter::check() {
     using namespace std::chrono;
 
@@ -22,6 +24,7 @@ bool limiter::check() {
 }
 
 void limiter::limit ( float limit ) {
+    LOGD << "limit set to: " << limit;
     _limit = limit;
 
     if ( _limit > 0 ) _r_limit = 1.0f / _limit;
@@ -32,6 +35,7 @@ float limiter::limit() const {
 }
 
 void limiter::samples ( float samples ) {
+    LOGD << "samples set to: " << samples;
     _samples = samples;
 
     if ( _samples > 0 ) _r_samples = 1.0f / _samples;
@@ -39,4 +43,22 @@ void limiter::samples ( float samples ) {
 
 float limiter::samples() const {
     return _samples;
+}
+
+std::string to_json ( const limiter& limiter )
+{
+    return nlohmann::json ( limiter ).dump();
+}
+
+void to_json ( nlohmann::json& json, const limiter& obj )
+{
+    json["limit"]   = obj.limit();
+    json["samples"] = obj.samples();
+}
+
+void from_json ( const nlohmann::json& json, limiter& obj )
+{
+    obj.limit ( json.at ( "limit" ) );
+    obj.samples ( json.at ( "samples" ) );
+}
 }

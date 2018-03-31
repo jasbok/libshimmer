@@ -33,4 +33,6 @@ SHIM ( void,         SDL_Quit,
 SHIM ( SDL_GrabMode, SDL_WM_GrabInput,
        SDL_GrabMode mode );
 
+SHIM ( void,         SDL_WarpMouse, Uint16 x, Uint16 y );
+
 #endif // ifndef SHIMS_SDL_SHIM_H
