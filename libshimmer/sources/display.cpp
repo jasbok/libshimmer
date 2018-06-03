@@ -1,5 +1,7 @@
 #include "display.h"
 
+#include "logger.h"
+
 namespace shimmer
 {
 display::display( event_receiver& exchange )
@@ -12,6 +14,8 @@ display::~display() {}
 
 display& display::resolution ( const dims_2u resolution ) {
     _resolution = resolution;
+    LOGD << "display resolution set to: " << _resolution;
+
     _exchange->send ( display_resolution_change ( resolution ) );
 
     return *this;
@@ -23,6 +27,8 @@ dims_2u display::resolution() const {
 
 display& display::depth ( unsigned int depth ) {
     _depth = depth;
+    LOGD << "display depth set to: " << _resolution;
+
     _exchange->send ( display_depth_change ( depth ) );
 
     return *this;

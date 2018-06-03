@@ -27,6 +27,7 @@ set( CMAKE_MODULE_PATH
 ###############################################################################
 set( ROOT ${CMAKE_SOURCE_DIR} )
 
+set( API_ROOT ${CMAKE_SOURCE_DIR}/api )
 set( COMMON_ROOT ${CMAKE_SOURCE_DIR}/common )
 set( EXTERNAL_ROOT ${CMAKE_SOURCE_DIR}/external )
 set( GLPP_ROOT ${CMAKE_SOURCE_DIR}/glpp )
@@ -38,6 +39,27 @@ set( SHIMS_ROOT ${CMAKE_SOURCE_DIR}/shims )
 #   Set external include directories.
 ###############################################################################
 set( CATCH_INCLUDES ${EXTERNAL_ROOT}/includes/catch )
+
+
+###############################################################################
+#   Set fmt header and source variables
+###############################################################################
+set( FMT_INCLUDE_DIR ${EXTERNAL_ROOT}/includes/fmt )
+set( FMT_INCLUDE_DIRS ${FMT_INCLUDE_DIR})
+set( FMT_HEADERS ${FMT_INCLUDE_DIR}/format.h )
+set( FMT_SOURCES ${FMT_INCLUDE_DIR}/format.cc )
+
+
+###############################################################################
+#   Build API generator
+###############################################################################
+add_subdirectory( apigen )
+
+
+###############################################################################
+#   Build API Tracers
+###############################################################################
+add_subdirectory( api )
 
 
 ###############################################################################

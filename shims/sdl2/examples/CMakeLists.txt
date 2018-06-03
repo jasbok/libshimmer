@@ -50,11 +50,11 @@ include_directories(
 #   SDL2 simple example program.
 ###############################################################################
 add_executable( sdl2_simple sdl2_simple.cpp)
-target_link_libraries( sdl2_simple ${SDL2_LIBRARIES} )
+target_link_libraries( sdl2_simple ${SDL2_LIBRARY} )
 
 
 ###############################################################################
 #   SDL2 OpenGL example program.
 ###############################################################################
 add_executable( sdl2_opengl sdl2_opengl.cpp)
-target_link_libraries( sdl2_opengl shimmer glpp ${SDL2_LIBRARIES} )
+target_link_libraries( sdl2_opengl shimmer glpp ${SDL2_LIBRARY} )

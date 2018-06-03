@@ -26,5 +26,4 @@ void init_shimmer();
 SHIM ( int,  SDL_Init, Uint32 flags );
 SHIM ( void, SDL_Quit, void );
 
-
 #endif // ifndef SHIMS_SDL2_SHIM_H

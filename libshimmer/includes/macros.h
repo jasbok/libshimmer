@@ -10,27 +10,28 @@
                            if ( !dlsym_ptr ) {                           \
                                printf ( "Unable to find function: %s\n", \
                                         # FUNC );                        \
-                               abort();                                  \
                            }                                             \
                            return ( FUNC ## _Handle )( dlsym_ptr );      \
                        } ( );                                            \
     }
 
-#define HANDLE_TYPEDEF( RET, FUNC, \
-                        ... ) typedef RET ( *FUNC ## _Handle )( ... )
+#define HANDLE_TYPEDEF( RET, FUNC, ... ) \
+    typedef RET ( *FUNC ## _Handle )( ... )
 
 #define SHIM( RET, FUNC, ... )         \
     HANDLE_TYPEDEF ( RET, FUNC, ... ); \
     DLSYM ( FUNC );                    \
     RET FUNC ( ... )
 
-#ifdef DEBUG
-# include <chrono>
-# include <fstream>
+// #ifdef DEBUG
+#include <chrono>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 
 static std::ofstream _SHIMMER_LOG_FILE ( "/tmp/shimmer.log" );
 
-# define SHIM_LOG()                                                       \
+#define SHIM_LOG()                                                        \
     using namespace std::chrono;                                          \
     static unsigned int _COUNTER           = 0;                           \
     static steady_clock::time_point _START = steady_clock::now();         \
@@ -63,12 +64,12 @@ static std::ofstream _SHIMMER_LOG_FILE ( "/tmp/shimmer.log" );
         _START     = steady_clock::now();                                 \
     }
 
-#else // ifdef DEBUG
-# define SHIM_LOG()
-#endif  // ifdef DEBUG
+// #else // ifdef DEBUG
+// # define SHIM_LOG()
+// #endif  // ifdef DEBUG
 
 
-        #define FLUENT( CLASS, TYPE, NAME )    \
+#define FLUENT( CLASS, TYPE, NAME )            \
 public:                                        \
     virtual CLASS& NAME ( const TYPE &NAME ) { \
         _ ## NAME = NAME; return *this;        \

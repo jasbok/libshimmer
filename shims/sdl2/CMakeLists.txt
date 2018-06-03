@@ -1,7 +1,7 @@
 ###############################################################################
 #   Find and store SDL2 paths.
 ###############################################################################
-find_package(SDL2 REQUIRED)
+find_package(SDL2 MODULE REQUIRED)
 
 
 ###############################################################################
@@ -21,7 +21,7 @@ file(GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h)
 ###############################################################################
 set( INCLUDES
         ${ROOT}
-        ${SDL2_INCLUDE_DIRS}
+        ${SDL2_INCLUDE_DIR}
         ${SDL2_SHIM_INCLUDE_DIR} )
 
 include_directories(${INCLUDES})

@@ -51,4 +51,17 @@ SHIM ( void, SDL_GetWindowSize,
        int*,
        int* );
 
+SHIM ( void, SDL_GetWindowMaximumSize,
+       SDL_Window * window,
+       int*        w,
+       int*        h );
+
+SHIM ( SDL_Surface*, SDL_GetWindowSurface,
+       SDL_Window * window );
+
+SHIM ( void,         SDL_GL_GetDrawableSize, SDL_Window * window,
+       int*        w,
+       int*        h );
+
+
 #endif // ifndef SHIMS_SDL2_VIDEO_H

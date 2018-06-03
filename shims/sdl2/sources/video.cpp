@@ -56,9 +56,11 @@ SDL_Window* SDL_CreateWindow ( const char* title,
     libshimmer->create_window ( wtitle, coords, dims );
 
     if ( !shim.window ) {
-        flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+        // flags &= ~SDL_WINDOW_RESIZABLE;
+        Uint32 shimmer_flags = flags | SDL_WINDOW_RESIZABLE |
+                               SDL_WINDOW_OPENGL;
 
-        shim.window = sym::SDL_CreateWindow ( wtitle.c_str(),
+        shim.window = sym::SDL_CreateWindow ( title,
                                               coords.x,
                                               coords.y,
                                               dims.width,
@@ -80,8 +82,11 @@ SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
     if (  shim.window == window  ) {
         if ( !shim.renderer ) {
             shim.renderer = sym::SDL_CreateRenderer ( window, -1,
-                                                      SDL_RENDERER_ACCELERATED |
-                                                      SDL_RENDERER_TARGETTEXTURE );
+                                                      SDL_RENDERER_ACCELERATED
+                                                      |
+
+                                                      SDL_RENDERER_TARGETTEXTURE
+                                                      );
 
             init_renderer();
 
@@ -101,7 +106,8 @@ int SDL_CreateWindowAndRenderer ( int            width,
                                   SDL_Renderer** renderer ) {
     SHIM_LOG();
 
-    SDL_CreateWindow ( "SDL2 Application", 0, 0, width, height, window_flags );
+    SDL_CreateWindow ( "SDL2 Application", 0, 0, width, height, window_flags
+                       );
 
     if ( !shim.window ) return -1;
 
@@ -117,6 +123,7 @@ void SDL_RenderPresent ( SDL_Renderer* renderer ) {
         SDL_SetRenderTarget ( shim.renderer, nullptr );
 
         libshimmer->refresh_display();
+
         sym::SDL_RenderPresent ( renderer );
 
         SDL_SetRenderTarget ( shim.renderer, shim.target );
@@ -128,7 +135,8 @@ void SDL_RenderPresent ( SDL_Renderer* renderer ) {
 
 void SDL_GL_SwapWindow ( SDL_Window* window ) {
     SHIM_LOG();
-    sym::SDL_GL_SwapWindow ( window );
+
+    return sym::SDL_GL_SwapWindow ( window );
 }
 
 void SDL_SetWindowTitle ( SDL_Window* window,
@@ -170,4 +178,26 @@ void SDL_GetWindowSize ( SDL_Window* window,
 
     *w = dims.width;
     *h = dims.height;
+}
+
+SDL_Surface* SDL_GetWindowSurface ( SDL_Window* window ) {
+    SHIM_LOG();
+
+    return sym::SDL_GetWindowSurface ( window );
+}
+
+void SDL_GL_GetDrawableSize ( SDL_Window* window,
+                              int*        w,
+                              int*        h ) {
+    SHIM_LOG();
+
+    sym::SDL_GL_GetDrawableSize ( window, w, h );
+}
+
+void SDL_GetWindowMaximumSize ( SDL_Window* window,
+                                int*        w,
+                                int*        h ) {
+    SHIM_LOG();
+
+    sym::SDL_GetWindowMaximumSize ( window, w, h );
 }
