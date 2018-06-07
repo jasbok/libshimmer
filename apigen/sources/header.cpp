@@ -1,5 +1,7 @@
 #include "header.h"
 
+#include "common/str.h"
+
 #include "fmt/format.h"
 #include "fmt/ostream.h"
 
@@ -16,7 +18,7 @@ header::~header() {
     _close_include_guard();
 }
 
-header& header::write ( const function& function ) {
+header& header::write ( const struct function_decl& function ) {
     const static char* templ =
         R"(
 namespace sym{{
@@ -33,15 +35,21 @@ namespace sym{{
 {0} {1} ( {2} );
 )";
 
+    std::vector<std::string> parameters;
+
+    for ( const auto& parm : function.parameters ) {
+        parameters.push_back ( parm.type_name );
+    }
+
     _destination << fmt::format ( templ,
-                                  function.ret().str(),
-                                  function.name(),
-                                  function.parameters_as_string() );
+                                  function.ret.type,
+                                  function.name,
+                                  common::join ( parameters, ", " ) );
 
     return *this;
 }
 
-header& header::operator<<( const function& function ) {
+header& header::operator<<( const struct function_decl& function ) {
     return write ( function );
 }
 

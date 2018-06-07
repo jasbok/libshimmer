@@ -22,6 +22,7 @@ public:
     template<typename T>
     output& operator<<( const T& out ) {
         _header_stream << out;
+
         _source_stream << out;
 
         return *this;

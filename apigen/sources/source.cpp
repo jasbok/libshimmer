@@ -1,5 +1,7 @@
 #include "source.h"
 
+#include "common/str.h"
+
 #include "fmt/format.h"
 #include "fmt/ostream.h"
 
@@ -14,24 +16,33 @@ source::source( const std::string& header, std::ostream& destination )
 
 source::~source() {}
 
-source& source::write ( const function& function ) {
-    _destination << function << "{\n"
-                 << "TRACE();\n"
-                 << "return sym::" << function.name() << "(";
+source& source::write ( const struct function_decl& function ) {
+    const static char* templ =
+        R"(
+{0} {1} ( {2} ) {{
+            TRACE();
+            return sym::{1} ( {3} );
+        }}
+)";
 
-    for ( unsigned int i = 0; i < function.parameters().size(); i++ ) {
-        _destination << function.parameters()[i].name();
+    std::vector<std::string> qual_parameters;
+    std::vector<std::string> parameters;
 
-        if ( i < function.parameters().size() - 1 ) _destination << ", ";
+    for ( const auto& parm : function.parameters ) {
+        qual_parameters.push_back ( parm.type_name );
+        parameters.push_back ( parm.name );
     }
 
-    _destination << ");\n"
-                 << "}\n\n";
+    _destination << fmt::format ( templ,
+                                  function.ret.type,
+                                  function.name,
+                                  common::join ( qual_parameters, ", " ),
+                                  common::join ( parameters,      ", " ) );
 
     return *this;
 }
 
-source& source::operator<<( const function& function ) {
+source& source::operator<<( const struct function_decl& function ) {
     write ( function );
 
     return *this;

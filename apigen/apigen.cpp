@@ -40,11 +40,12 @@ int main ( int argc, const char** argv ) {
     CommonOptionsParser args_parser ( argc, argv, options_category );
 
     std::string in = args_parser.getSourcePathList()[0];
+
     printf ( "Generating API headers and tracers for: %s\n", in.c_str() );
 
     class output out ( in, header_dest.getValue(), source_dest.getValue() );
 
-    std::vector<function> functions;
+    std::vector<struct function_decl> functions;
     functions.reserve ( 256 );
 
     fdecl_matcher matcher ( functions );

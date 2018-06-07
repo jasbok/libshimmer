@@ -3,6 +3,7 @@
 
 #include "function.h"
 #include "output.h"
+#include "decl.h"
 
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 
@@ -17,14 +18,14 @@ public:
 
     const static clang::ast_matchers::DeclarationMatcher MATCHER;
 
-    fdecl_matcher( std::vector<function>& out );
+    fdecl_matcher( std::vector<struct function_decl>& out );
 
     virtual ~fdecl_matcher() = default;
 
     virtual void run ( const match& match );
 
 private:
-    std::vector<function>& _out;
+    std::vector<struct function_decl>& _out;
 };
 }
 

@@ -84,7 +84,7 @@ namespace sym{
 void SDL_GetMemoryFunctions ( SDL_malloc_func * malloc_func, SDL_calloc_func * calloc_func, SDL_realloc_func * realloc_func, SDL_free_func * free_func );
 
 namespace sym{
-    typedef int ( *SDL_SetMemoryFunctions_handle )( SDL_malloc_func, SDL_calloc_func, SDL_realloc_func, SDL_free_func );
+    typedef int ( *SDL_SetMemoryFunctions_handle )( SDL_malloc_func malloc_func, SDL_calloc_func calloc_func, SDL_realloc_func realloc_func, SDL_free_func free_func );
     static auto SDL_SetMemoryFunctions = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetMemoryFunctions" );
         if ( !dlsym_ptr ) {
@@ -94,7 +94,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetMemoryFunctions ( SDL_malloc_func, SDL_calloc_func, SDL_realloc_func, SDL_free_func );
+int SDL_SetMemoryFunctions ( SDL_malloc_func malloc_func, SDL_calloc_func calloc_func, SDL_realloc_func realloc_func, SDL_free_func free_func );
 
 namespace sym{
     typedef int ( *SDL_GetNumAllocations_handle )(  );
@@ -110,7 +110,7 @@ namespace sym{
 int SDL_GetNumAllocations (  );
 
 namespace sym{
-    typedef char * ( *SDL_getenv_handle )( char * name );
+    typedef char * ( *SDL_getenv_handle )( const char * name );
     static auto SDL_getenv = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_getenv" );
         if ( !dlsym_ptr ) {
@@ -120,10 +120,10 @@ namespace sym{
     } ();
 }
 
-char * SDL_getenv ( char * name );
+char * SDL_getenv ( const char * name );
 
 namespace sym{
-    typedef int ( *SDL_setenv_handle )( char * name, char * value, int overwrite );
+    typedef int ( *SDL_setenv_handle )( const char * name, const char * value, int overwrite );
     static auto SDL_setenv = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_setenv" );
         if ( !dlsym_ptr ) {
@@ -133,10 +133,10 @@ namespace sym{
     } ();
 }
 
-int SDL_setenv ( char * name, char * value, int overwrite );
+int SDL_setenv ( const char * name, const char * value, int overwrite );
 
 namespace sym{
-    typedef void ( *SDL_qsort_handle )( void * base, size_t nmemb, size_t size, int (*compare) (const void *, const void *) );
+    typedef void ( *SDL_qsort_handle )( void * base, size_t nmemb, size_t size, int (*compare)(const void *, const void *) );
     static auto SDL_qsort = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_qsort" );
         if ( !dlsym_ptr ) {
@@ -146,7 +146,7 @@ namespace sym{
     } ();
 }
 
-void SDL_qsort ( void * base, size_t nmemb, size_t size, int (*compare) (const void *, const void *) );
+void SDL_qsort ( void * base, size_t nmemb, size_t size, int (*compare)(const void *, const void *) );
 
 namespace sym{
     typedef int ( *SDL_abs_handle )( int x );
@@ -227,7 +227,7 @@ namespace sym{
 void * SDL_memset ( void * dst, int c, size_t len );
 
 namespace sym{
-    typedef void * ( *SDL_memcpy_handle )( void * dst, void * src, size_t len );
+    typedef void * ( *SDL_memcpy_handle )( void * dst, const void * src, size_t len );
     static auto SDL_memcpy = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_memcpy" );
         if ( !dlsym_ptr ) {
@@ -237,10 +237,10 @@ namespace sym{
     } ();
 }
 
-void * SDL_memcpy ( void * dst, void * src, size_t len );
+void * SDL_memcpy ( void * dst, const void * src, size_t len );
 
 namespace sym{
-    typedef void * ( *SDL_memmove_handle )( void * dst, void * src, size_t len );
+    typedef void * ( *SDL_memmove_handle )( void * dst, const void * src, size_t len );
     static auto SDL_memmove = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_memmove" );
         if ( !dlsym_ptr ) {
@@ -250,10 +250,10 @@ namespace sym{
     } ();
 }
 
-void * SDL_memmove ( void * dst, void * src, size_t len );
+void * SDL_memmove ( void * dst, const void * src, size_t len );
 
 namespace sym{
-    typedef int ( *SDL_memcmp_handle )( void * s1, void * s2, size_t len );
+    typedef int ( *SDL_memcmp_handle )( const void * s1, const void * s2, size_t len );
     static auto SDL_memcmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_memcmp" );
         if ( !dlsym_ptr ) {
@@ -263,10 +263,10 @@ namespace sym{
     } ();
 }
 
-int SDL_memcmp ( void * s1, void * s2, size_t len );
+int SDL_memcmp ( const void * s1, const void * s2, size_t len );
 
 namespace sym{
-    typedef size_t ( *SDL_wcslen_handle )( wchar_t * wstr );
+    typedef size_t ( *SDL_wcslen_handle )( const wchar_t * wstr );
     static auto SDL_wcslen = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_wcslen" );
         if ( !dlsym_ptr ) {
@@ -276,10 +276,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_wcslen ( wchar_t * wstr );
+size_t SDL_wcslen ( const wchar_t * wstr );
 
 namespace sym{
-    typedef size_t ( *SDL_wcslcpy_handle )( wchar_t * dst, wchar_t * src, size_t maxlen );
+    typedef size_t ( *SDL_wcslcpy_handle )( wchar_t * dst, const wchar_t * src, size_t maxlen );
     static auto SDL_wcslcpy = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_wcslcpy" );
         if ( !dlsym_ptr ) {
@@ -289,10 +289,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_wcslcpy ( wchar_t * dst, wchar_t * src, size_t maxlen );
+size_t SDL_wcslcpy ( wchar_t * dst, const wchar_t * src, size_t maxlen );
 
 namespace sym{
-    typedef size_t ( *SDL_wcslcat_handle )( wchar_t * dst, wchar_t * src, size_t maxlen );
+    typedef size_t ( *SDL_wcslcat_handle )( wchar_t * dst, const wchar_t * src, size_t maxlen );
     static auto SDL_wcslcat = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_wcslcat" );
         if ( !dlsym_ptr ) {
@@ -302,10 +302,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_wcslcat ( wchar_t * dst, wchar_t * src, size_t maxlen );
+size_t SDL_wcslcat ( wchar_t * dst, const wchar_t * src, size_t maxlen );
 
 namespace sym{
-    typedef int ( *SDL_wcscmp_handle )( wchar_t * str1, wchar_t * str2 );
+    typedef int ( *SDL_wcscmp_handle )( const wchar_t * str1, const wchar_t * str2 );
     static auto SDL_wcscmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_wcscmp" );
         if ( !dlsym_ptr ) {
@@ -315,10 +315,10 @@ namespace sym{
     } ();
 }
 
-int SDL_wcscmp ( wchar_t * str1, wchar_t * str2 );
+int SDL_wcscmp ( const wchar_t * str1, const wchar_t * str2 );
 
 namespace sym{
-    typedef size_t ( *SDL_strlen_handle )( char * str );
+    typedef size_t ( *SDL_strlen_handle )( const char * str );
     static auto SDL_strlen = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strlen" );
         if ( !dlsym_ptr ) {
@@ -328,10 +328,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_strlen ( char * str );
+size_t SDL_strlen ( const char * str );
 
 namespace sym{
-    typedef size_t ( *SDL_strlcpy_handle )( char * dst, char * src, size_t maxlen );
+    typedef size_t ( *SDL_strlcpy_handle )( char * dst, const char * src, size_t maxlen );
     static auto SDL_strlcpy = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strlcpy" );
         if ( !dlsym_ptr ) {
@@ -341,10 +341,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_strlcpy ( char * dst, char * src, size_t maxlen );
+size_t SDL_strlcpy ( char * dst, const char * src, size_t maxlen );
 
 namespace sym{
-    typedef size_t ( *SDL_utf8strlcpy_handle )( char * dst, char * src, size_t dst_bytes );
+    typedef size_t ( *SDL_utf8strlcpy_handle )( char * dst, const char * src, size_t dst_bytes );
     static auto SDL_utf8strlcpy = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_utf8strlcpy" );
         if ( !dlsym_ptr ) {
@@ -354,10 +354,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_utf8strlcpy ( char * dst, char * src, size_t dst_bytes );
+size_t SDL_utf8strlcpy ( char * dst, const char * src, size_t dst_bytes );
 
 namespace sym{
-    typedef size_t ( *SDL_strlcat_handle )( char * dst, char * src, size_t maxlen );
+    typedef size_t ( *SDL_strlcat_handle )( char * dst, const char * src, size_t maxlen );
     static auto SDL_strlcat = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strlcat" );
         if ( !dlsym_ptr ) {
@@ -367,10 +367,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_strlcat ( char * dst, char * src, size_t maxlen );
+size_t SDL_strlcat ( char * dst, const char * src, size_t maxlen );
 
 namespace sym{
-    typedef char * ( *SDL_strdup_handle )( char * str );
+    typedef char * ( *SDL_strdup_handle )( const char * str );
     static auto SDL_strdup = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strdup" );
         if ( !dlsym_ptr ) {
@@ -380,7 +380,7 @@ namespace sym{
     } ();
 }
 
-char * SDL_strdup ( char * str );
+char * SDL_strdup ( const char * str );
 
 namespace sym{
     typedef char * ( *SDL_strrev_handle )( char * str );
@@ -422,7 +422,7 @@ namespace sym{
 char * SDL_strlwr ( char * str );
 
 namespace sym{
-    typedef char * ( *SDL_strchr_handle )( char * str, int c );
+    typedef char * ( *SDL_strchr_handle )( const char * str, int c );
     static auto SDL_strchr = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strchr" );
         if ( !dlsym_ptr ) {
@@ -432,10 +432,10 @@ namespace sym{
     } ();
 }
 
-char * SDL_strchr ( char * str, int c );
+char * SDL_strchr ( const char * str, int c );
 
 namespace sym{
-    typedef char * ( *SDL_strrchr_handle )( char * str, int c );
+    typedef char * ( *SDL_strrchr_handle )( const char * str, int c );
     static auto SDL_strrchr = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strrchr" );
         if ( !dlsym_ptr ) {
@@ -445,10 +445,10 @@ namespace sym{
     } ();
 }
 
-char * SDL_strrchr ( char * str, int c );
+char * SDL_strrchr ( const char * str, int c );
 
 namespace sym{
-    typedef char * ( *SDL_strstr_handle )( char * haystack, char * needle );
+    typedef char * ( *SDL_strstr_handle )( const char * haystack, const char * needle );
     static auto SDL_strstr = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strstr" );
         if ( !dlsym_ptr ) {
@@ -458,10 +458,10 @@ namespace sym{
     } ();
 }
 
-char * SDL_strstr ( char * haystack, char * needle );
+char * SDL_strstr ( const char * haystack, const char * needle );
 
 namespace sym{
-    typedef size_t ( *SDL_utf8strlen_handle )( char * str );
+    typedef size_t ( *SDL_utf8strlen_handle )( const char * str );
     static auto SDL_utf8strlen = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_utf8strlen" );
         if ( !dlsym_ptr ) {
@@ -471,7 +471,7 @@ namespace sym{
     } ();
 }
 
-size_t SDL_utf8strlen ( char * str );
+size_t SDL_utf8strlen ( const char * str );
 
 namespace sym{
     typedef char * ( *SDL_itoa_handle )( int value, char * str, int radix );
@@ -552,7 +552,7 @@ namespace sym{
 char * SDL_ulltoa ( Uint64 value, char * str, int radix );
 
 namespace sym{
-    typedef int ( *SDL_atoi_handle )( char * str );
+    typedef int ( *SDL_atoi_handle )( const char * str );
     static auto SDL_atoi = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_atoi" );
         if ( !dlsym_ptr ) {
@@ -562,10 +562,10 @@ namespace sym{
     } ();
 }
 
-int SDL_atoi ( char * str );
+int SDL_atoi ( const char * str );
 
 namespace sym{
-    typedef double ( *SDL_atof_handle )( char * str );
+    typedef double ( *SDL_atof_handle )( const char * str );
     static auto SDL_atof = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_atof" );
         if ( !dlsym_ptr ) {
@@ -575,10 +575,10 @@ namespace sym{
     } ();
 }
 
-double SDL_atof ( char * str );
+double SDL_atof ( const char * str );
 
 namespace sym{
-    typedef long ( *SDL_strtol_handle )( char * str, char ** endp, int base );
+    typedef long ( *SDL_strtol_handle )( const char * str, char ** endp, int base );
     static auto SDL_strtol = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strtol" );
         if ( !dlsym_ptr ) {
@@ -588,10 +588,10 @@ namespace sym{
     } ();
 }
 
-long SDL_strtol ( char * str, char ** endp, int base );
+long SDL_strtol ( const char * str, char ** endp, int base );
 
 namespace sym{
-    typedef unsigned long ( *SDL_strtoul_handle )( char * str, char ** endp, int base );
+    typedef unsigned long ( *SDL_strtoul_handle )( const char * str, char ** endp, int base );
     static auto SDL_strtoul = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strtoul" );
         if ( !dlsym_ptr ) {
@@ -601,10 +601,10 @@ namespace sym{
     } ();
 }
 
-unsigned long SDL_strtoul ( char * str, char ** endp, int base );
+unsigned long SDL_strtoul ( const char * str, char ** endp, int base );
 
 namespace sym{
-    typedef Sint64 ( *SDL_strtoll_handle )( char * str, char ** endp, int base );
+    typedef Sint64 ( *SDL_strtoll_handle )( const char * str, char ** endp, int base );
     static auto SDL_strtoll = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strtoll" );
         if ( !dlsym_ptr ) {
@@ -614,10 +614,10 @@ namespace sym{
     } ();
 }
 
-Sint64 SDL_strtoll ( char * str, char ** endp, int base );
+Sint64 SDL_strtoll ( const char * str, char ** endp, int base );
 
 namespace sym{
-    typedef Uint64 ( *SDL_strtoull_handle )( char * str, char ** endp, int base );
+    typedef Uint64 ( *SDL_strtoull_handle )( const char * str, char ** endp, int base );
     static auto SDL_strtoull = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strtoull" );
         if ( !dlsym_ptr ) {
@@ -627,10 +627,10 @@ namespace sym{
     } ();
 }
 
-Uint64 SDL_strtoull ( char * str, char ** endp, int base );
+Uint64 SDL_strtoull ( const char * str, char ** endp, int base );
 
 namespace sym{
-    typedef double ( *SDL_strtod_handle )( char * str, char ** endp );
+    typedef double ( *SDL_strtod_handle )( const char * str, char ** endp );
     static auto SDL_strtod = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strtod" );
         if ( !dlsym_ptr ) {
@@ -640,10 +640,10 @@ namespace sym{
     } ();
 }
 
-double SDL_strtod ( char * str, char ** endp );
+double SDL_strtod ( const char * str, char ** endp );
 
 namespace sym{
-    typedef int ( *SDL_strcmp_handle )( char * str1, char * str2 );
+    typedef int ( *SDL_strcmp_handle )( const char * str1, const char * str2 );
     static auto SDL_strcmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strcmp" );
         if ( !dlsym_ptr ) {
@@ -653,10 +653,10 @@ namespace sym{
     } ();
 }
 
-int SDL_strcmp ( char * str1, char * str2 );
+int SDL_strcmp ( const char * str1, const char * str2 );
 
 namespace sym{
-    typedef int ( *SDL_strncmp_handle )( char * str1, char * str2, size_t maxlen );
+    typedef int ( *SDL_strncmp_handle )( const char * str1, const char * str2, size_t maxlen );
     static auto SDL_strncmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strncmp" );
         if ( !dlsym_ptr ) {
@@ -666,10 +666,10 @@ namespace sym{
     } ();
 }
 
-int SDL_strncmp ( char * str1, char * str2, size_t maxlen );
+int SDL_strncmp ( const char * str1, const char * str2, size_t maxlen );
 
 namespace sym{
-    typedef int ( *SDL_strcasecmp_handle )( char * str1, char * str2 );
+    typedef int ( *SDL_strcasecmp_handle )( const char * str1, const char * str2 );
     static auto SDL_strcasecmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strcasecmp" );
         if ( !dlsym_ptr ) {
@@ -679,10 +679,10 @@ namespace sym{
     } ();
 }
 
-int SDL_strcasecmp ( char * str1, char * str2 );
+int SDL_strcasecmp ( const char * str1, const char * str2 );
 
 namespace sym{
-    typedef int ( *SDL_strncasecmp_handle )( char * str1, char * str2, size_t len );
+    typedef int ( *SDL_strncasecmp_handle )( const char * str1, const char * str2, size_t len );
     static auto SDL_strncasecmp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_strncasecmp" );
         if ( !dlsym_ptr ) {
@@ -692,10 +692,10 @@ namespace sym{
     } ();
 }
 
-int SDL_strncasecmp ( char * str1, char * str2, size_t len );
+int SDL_strncasecmp ( const char * str1, const char * str2, size_t len );
 
 namespace sym{
-    typedef int ( *SDL_sscanf_handle )( char * text, char * fmt );
+    typedef int ( *SDL_sscanf_handle )( const char * text, const char * fmt );
     static auto SDL_sscanf = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_sscanf" );
         if ( !dlsym_ptr ) {
@@ -705,10 +705,10 @@ namespace sym{
     } ();
 }
 
-int SDL_sscanf ( char * text, char * fmt );
+int SDL_sscanf ( const char * text, const char * fmt );
 
 namespace sym{
-    typedef int ( *SDL_vsscanf_handle )( char * text, char * fmt, va_list ap );
+    typedef int ( *SDL_vsscanf_handle )( const char * text, const char * fmt, va_list ap );
     static auto SDL_vsscanf = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_vsscanf" );
         if ( !dlsym_ptr ) {
@@ -718,10 +718,10 @@ namespace sym{
     } ();
 }
 
-int SDL_vsscanf ( char * text, char * fmt, va_list ap );
+int SDL_vsscanf ( const char * text, const char * fmt, va_list ap );
 
 namespace sym{
-    typedef int ( *SDL_snprintf_handle )( char * text, size_t maxlen, char * fmt );
+    typedef int ( *SDL_snprintf_handle )( char * text, size_t maxlen, const char * fmt );
     static auto SDL_snprintf = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_snprintf" );
         if ( !dlsym_ptr ) {
@@ -731,10 +731,10 @@ namespace sym{
     } ();
 }
 
-int SDL_snprintf ( char * text, size_t maxlen, char * fmt );
+int SDL_snprintf ( char * text, size_t maxlen, const char * fmt );
 
 namespace sym{
-    typedef int ( *SDL_vsnprintf_handle )( char * text, size_t maxlen, char * fmt, va_list ap );
+    typedef int ( *SDL_vsnprintf_handle )( char * text, size_t maxlen, const char * fmt, va_list ap );
     static auto SDL_vsnprintf = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_vsnprintf" );
         if ( !dlsym_ptr ) {
@@ -744,7 +744,7 @@ namespace sym{
     } ();
 }
 
-int SDL_vsnprintf ( char * text, size_t maxlen, char * fmt, va_list ap );
+int SDL_vsnprintf ( char * text, size_t maxlen, const char * fmt, va_list ap );
 
 namespace sym{
     typedef double ( *SDL_acos_handle )( double x );
@@ -1189,7 +1189,7 @@ namespace sym{
 float SDL_tanf ( float x );
 
 namespace sym{
-    typedef SDL_iconv_t ( *SDL_iconv_open_handle )( char * tocode, char * fromcode );
+    typedef SDL_iconv_t ( *SDL_iconv_open_handle )( const char * tocode, const char * fromcode );
     static auto SDL_iconv_open = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_iconv_open" );
         if ( !dlsym_ptr ) {
@@ -1199,7 +1199,7 @@ namespace sym{
     } ();
 }
 
-SDL_iconv_t SDL_iconv_open ( char * tocode, char * fromcode );
+SDL_iconv_t SDL_iconv_open ( const char * tocode, const char * fromcode );
 
 namespace sym{
     typedef int ( *SDL_iconv_close_handle )( SDL_iconv_t cd );
@@ -1215,7 +1215,7 @@ namespace sym{
 int SDL_iconv_close ( SDL_iconv_t cd );
 
 namespace sym{
-    typedef size_t ( *SDL_iconv_handle )( SDL_iconv_t cd, char ** inbuf, size_t * inbytesleft, char ** outbuf, size_t * outbytesleft );
+    typedef size_t ( *SDL_iconv_handle )( SDL_iconv_t cd, const char ** inbuf, size_t * inbytesleft, char ** outbuf, size_t * outbytesleft );
     static auto SDL_iconv = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_iconv" );
         if ( !dlsym_ptr ) {
@@ -1225,10 +1225,10 @@ namespace sym{
     } ();
 }
 
-size_t SDL_iconv ( SDL_iconv_t cd, char ** inbuf, size_t * inbytesleft, char ** outbuf, size_t * outbytesleft );
+size_t SDL_iconv ( SDL_iconv_t cd, const char ** inbuf, size_t * inbytesleft, char ** outbuf, size_t * outbytesleft );
 
 namespace sym{
-    typedef char * ( *SDL_iconv_string_handle )( char * tocode, char * fromcode, char * inbuf, size_t inbytesleft );
+    typedef char * ( *SDL_iconv_string_handle )( const char * tocode, const char * fromcode, const char * inbuf, size_t inbytesleft );
     static auto SDL_iconv_string = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_iconv_string" );
         if ( !dlsym_ptr ) {
@@ -1238,7 +1238,7 @@ namespace sym{
     } ();
 }
 
-char * SDL_iconv_string ( char * tocode, char * fromcode, char * inbuf, size_t inbytesleft );
+char * SDL_iconv_string ( const char * tocode, const char * fromcode, const char * inbuf, size_t inbytesleft );
 
 namespace sym{
     typedef void ( *SDL_SetMainReady_handle )(  );
@@ -1254,7 +1254,7 @@ namespace sym{
 void SDL_SetMainReady (  );
 
 namespace sym{
-    typedef SDL_AssertState ( *SDL_ReportAssertion_handle )( SDL_AssertData * param0, char * param1, char * param2, int param3 );
+    typedef SDL_AssertState ( *SDL_ReportAssertion_handle )( SDL_AssertData * parm_0, const char * parm_1, const char * parm_2, int parm_3 );
     static auto SDL_ReportAssertion = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_ReportAssertion" );
         if ( !dlsym_ptr ) {
@@ -1264,10 +1264,10 @@ namespace sym{
     } ();
 }
 
-SDL_AssertState SDL_ReportAssertion ( SDL_AssertData * param0, char * param1, char * param2, int param3 );
+SDL_AssertState SDL_ReportAssertion ( SDL_AssertData * parm_0, const char * parm_1, const char * parm_2, int parm_3 );
 
 namespace sym{
-    typedef void ( *SDL_SetAssertionHandler_handle )( SDL_AssertionHandler, void * userdata );
+    typedef void ( *SDL_SetAssertionHandler_handle )( SDL_AssertionHandler handler, void * userdata );
     static auto SDL_SetAssertionHandler = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetAssertionHandler" );
         if ( !dlsym_ptr ) {
@@ -1277,7 +1277,7 @@ namespace sym{
     } ();
 }
 
-void SDL_SetAssertionHandler ( SDL_AssertionHandler, void * userdata );
+void SDL_SetAssertionHandler ( SDL_AssertionHandler handler, void * userdata );
 
 namespace sym{
     typedef SDL_AssertionHandler ( *SDL_GetDefaultAssertionHandler_handle )(  );
@@ -1462,7 +1462,7 @@ namespace sym{
 SDL_bool SDL_AtomicCASPtr ( void ** a, void * oldval, void * newval );
 
 namespace sym{
-    typedef void * ( *SDL_AtomicSetPtr_handle )( void ** a, void* v );
+    typedef void * ( *SDL_AtomicSetPtr_handle )( void ** a, void * v );
     static auto SDL_AtomicSetPtr = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AtomicSetPtr" );
         if ( !dlsym_ptr ) {
@@ -1472,7 +1472,7 @@ namespace sym{
     } ();
 }
 
-void * SDL_AtomicSetPtr ( void ** a, void* v );
+void * SDL_AtomicSetPtr ( void ** a, void * v );
 
 namespace sym{
     typedef void * ( *SDL_AtomicGetPtr_handle )( void ** a );
@@ -1488,7 +1488,7 @@ namespace sym{
 void * SDL_AtomicGetPtr ( void ** a );
 
 namespace sym{
-    typedef int ( *SDL_SetError_handle )( char * fmt );
+    typedef int ( *SDL_SetError_handle )( const char * fmt );
     static auto SDL_SetError = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetError" );
         if ( !dlsym_ptr ) {
@@ -1498,7 +1498,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetError ( char * fmt );
+int SDL_SetError ( const char * fmt );
 
 namespace sym{
     typedef const char * ( *SDL_GetError_handle )(  );
@@ -1774,7 +1774,7 @@ namespace sym{
 int SDL_CondWaitTimeout ( SDL_cond * cond, SDL_mutex * mutex, Uint32 ms );
 
 namespace sym{
-    typedef SDL_Thread * ( *SDL_CreateThread_handle )( SDL_ThreadFunction, char * name, void * data );
+    typedef SDL_Thread * ( *SDL_CreateThread_handle )( SDL_ThreadFunction fn, const char * name, void * data );
     static auto SDL_CreateThread = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_CreateThread" );
         if ( !dlsym_ptr ) {
@@ -1784,7 +1784,7 @@ namespace sym{
     } ();
 }
 
-SDL_Thread * SDL_CreateThread ( SDL_ThreadFunction, char * name, void * data );
+SDL_Thread * SDL_CreateThread ( SDL_ThreadFunction fn, const char * name, void * data );
 
 namespace sym{
     typedef const char * ( *SDL_GetThreadName_handle )( SDL_Thread * thread );
@@ -1891,7 +1891,7 @@ namespace sym{
 void * SDL_TLSGet ( SDL_TLSID id );
 
 namespace sym{
-    typedef int ( *SDL_TLSSet_handle )( SDL_TLSID id, void * value, void (SDLCALL *destructor)(void*) );
+    typedef int ( *SDL_TLSSet_handle )( SDL_TLSID id, const void * value, void (*destructor)(void *) );
     static auto SDL_TLSSet = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_TLSSet" );
         if ( !dlsym_ptr ) {
@@ -1901,10 +1901,10 @@ namespace sym{
     } ();
 }
 
-int SDL_TLSSet ( SDL_TLSID id, void * value, void (SDLCALL *destructor)(void*) );
+int SDL_TLSSet ( SDL_TLSID id, const void * value, void (*destructor)(void *) );
 
 namespace sym{
-    typedef SDL_RWops * ( *SDL_RWFromFile_handle )( char * file, char * mode );
+    typedef SDL_RWops * ( *SDL_RWFromFile_handle )( const char * file, const char * mode );
     static auto SDL_RWFromFile = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RWFromFile" );
         if ( !dlsym_ptr ) {
@@ -1914,7 +1914,7 @@ namespace sym{
     } ();
 }
 
-SDL_RWops * SDL_RWFromFile ( char * file, char * mode );
+SDL_RWops * SDL_RWFromFile ( const char * file, const char * mode );
 
 namespace sym{
     typedef SDL_RWops * ( *SDL_RWFromFP_handle )( FILE * fp, SDL_bool autoclose );
@@ -1943,7 +1943,7 @@ namespace sym{
 SDL_RWops * SDL_RWFromMem ( void * mem, int size );
 
 namespace sym{
-    typedef SDL_RWops * ( *SDL_RWFromConstMem_handle )( void * mem, int size );
+    typedef SDL_RWops * ( *SDL_RWFromConstMem_handle )( const void * mem, int size );
     static auto SDL_RWFromConstMem = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RWFromConstMem" );
         if ( !dlsym_ptr ) {
@@ -1953,7 +1953,7 @@ namespace sym{
     } ();
 }
 
-SDL_RWops * SDL_RWFromConstMem ( void * mem, int size );
+SDL_RWops * SDL_RWFromConstMem ( const void * mem, int size );
 
 namespace sym{
     typedef SDL_RWops * ( *SDL_AllocRW_handle )(  );
@@ -2203,7 +2203,7 @@ namespace sym{
 const char * SDL_GetAudioDriver ( int index );
 
 namespace sym{
-    typedef int ( *SDL_AudioInit_handle )( char * driver_name );
+    typedef int ( *SDL_AudioInit_handle )( const char * driver_name );
     static auto SDL_AudioInit = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AudioInit" );
         if ( !dlsym_ptr ) {
@@ -2213,7 +2213,7 @@ namespace sym{
     } ();
 }
 
-int SDL_AudioInit ( char * driver_name );
+int SDL_AudioInit ( const char * driver_name );
 
 namespace sym{
     typedef void ( *SDL_AudioQuit_handle )(  );
@@ -2281,8 +2281,7 @@ namespace sym{
 const char * SDL_GetAudioDeviceName ( int index, int iscapture );
 
 namespace sym{
-    typedef SDL_AudioDeviceID ( *SDL_OpenAudioDevice_handle )( char
-                                                              * device, int iscapture, SDL_AudioSpec * desired, SDL_AudioSpec * obtained, int allowed_changes );
+    typedef SDL_AudioDeviceID ( *SDL_OpenAudioDevice_handle )( const char * device, int iscapture, const SDL_AudioSpec * desired, SDL_AudioSpec * obtained, int allowed_changes );
     static auto SDL_OpenAudioDevice = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_OpenAudioDevice" );
         if ( !dlsym_ptr ) {
@@ -2292,8 +2291,7 @@ namespace sym{
     } ();
 }
 
-SDL_AudioDeviceID SDL_OpenAudioDevice ( char
-                                                              * device, int iscapture, SDL_AudioSpec * desired, SDL_AudioSpec * obtained, int allowed_changes );
+SDL_AudioDeviceID SDL_OpenAudioDevice ( const char * device, int iscapture, const SDL_AudioSpec * desired, SDL_AudioSpec * obtained, int allowed_changes );
 
 namespace sym{
     typedef SDL_AudioStatus ( *SDL_GetAudioStatus_handle )(  );
@@ -2400,7 +2398,7 @@ namespace sym{
 int SDL_ConvertAudio ( SDL_AudioCVT * cvt );
 
 namespace sym{
-    typedef SDL_AudioStream * ( *SDL_NewAudioStream_handle )( SDL_AudioFormat src_format, Uint8 src_channels, int src_rate, SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate );
+    typedef SDL_AudioStream * ( *SDL_NewAudioStream_handle )( const SDL_AudioFormat src_format, const Uint8 src_channels, const int src_rate, const SDL_AudioFormat dst_format, const Uint8 dst_channels, const int dst_rate );
     static auto SDL_NewAudioStream = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_NewAudioStream" );
         if ( !dlsym_ptr ) {
@@ -2410,10 +2408,10 @@ namespace sym{
     } ();
 }
 
-SDL_AudioStream * SDL_NewAudioStream ( SDL_AudioFormat src_format, Uint8 src_channels, int src_rate, SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate );
+SDL_AudioStream * SDL_NewAudioStream ( const SDL_AudioFormat src_format, const Uint8 src_channels, const int src_rate, const SDL_AudioFormat dst_format, const Uint8 dst_channels, const int dst_rate );
 
 namespace sym{
-    typedef int ( *SDL_AudioStreamPut_handle )( SDL_AudioStream * stream, void * buf, int len );
+    typedef int ( *SDL_AudioStreamPut_handle )( SDL_AudioStream * stream, const void * buf, int len );
     static auto SDL_AudioStreamPut = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AudioStreamPut" );
         if ( !dlsym_ptr ) {
@@ -2423,7 +2421,7 @@ namespace sym{
     } ();
 }
 
-int SDL_AudioStreamPut ( SDL_AudioStream * stream, void * buf, int len );
+int SDL_AudioStreamPut ( SDL_AudioStream * stream, const void * buf, int len );
 
 namespace sym{
     typedef int ( *SDL_AudioStreamGet_handle )( SDL_AudioStream * stream, void * buf, int len );
@@ -2491,7 +2489,7 @@ namespace sym{
 void SDL_FreeAudioStream ( SDL_AudioStream * stream );
 
 namespace sym{
-    typedef void ( *SDL_MixAudio_handle )( Uint8 * dst, Uint8 * src, Uint32 len, int volume );
+    typedef void ( *SDL_MixAudio_handle )( Uint8 * dst, const Uint8 * src, Uint32 len, int volume );
     static auto SDL_MixAudio = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_MixAudio" );
         if ( !dlsym_ptr ) {
@@ -2501,10 +2499,10 @@ namespace sym{
     } ();
 }
 
-void SDL_MixAudio ( Uint8 * dst, Uint8 * src, Uint32 len, int volume );
+void SDL_MixAudio ( Uint8 * dst, const Uint8 * src, Uint32 len, int volume );
 
 namespace sym{
-    typedef void ( *SDL_MixAudioFormat_handle )( Uint8 * dst, Uint8 * src, SDL_AudioFormat format, Uint32 len, int volume );
+    typedef void ( *SDL_MixAudioFormat_handle )( Uint8 * dst, const Uint8 * src, SDL_AudioFormat format, Uint32 len, int volume );
     static auto SDL_MixAudioFormat = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_MixAudioFormat" );
         if ( !dlsym_ptr ) {
@@ -2514,10 +2512,10 @@ namespace sym{
     } ();
 }
 
-void SDL_MixAudioFormat ( Uint8 * dst, Uint8 * src, SDL_AudioFormat format, Uint32 len, int volume );
+void SDL_MixAudioFormat ( Uint8 * dst, const Uint8 * src, SDL_AudioFormat format, Uint32 len, int volume );
 
 namespace sym{
-    typedef int ( *SDL_QueueAudio_handle )( SDL_AudioDeviceID dev, void * data, Uint32 len );
+    typedef int ( *SDL_QueueAudio_handle )( SDL_AudioDeviceID dev, const void * data, Uint32 len );
     static auto SDL_QueueAudio = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_QueueAudio" );
         if ( !dlsym_ptr ) {
@@ -2527,7 +2525,7 @@ namespace sym{
     } ();
 }
 
-int SDL_QueueAudio ( SDL_AudioDeviceID dev, void * data, Uint32 len );
+int SDL_QueueAudio ( SDL_AudioDeviceID dev, const void * data, Uint32 len );
 
 namespace sym{
     typedef Uint32 ( *SDL_DequeueAudio_handle )( SDL_AudioDeviceID dev, void * data, Uint32 len );
@@ -2647,7 +2645,7 @@ namespace sym{
 void SDL_CloseAudioDevice ( SDL_AudioDeviceID dev );
 
 namespace sym{
-    typedef int ( *SDL_SetClipboardText_handle )( char * text );
+    typedef int ( *SDL_SetClipboardText_handle )( const char * text );
     static auto SDL_SetClipboardText = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetClipboardText" );
         if ( !dlsym_ptr ) {
@@ -2657,7 +2655,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetClipboardText ( char * text );
+int SDL_SetClipboardText ( const char * text );
 
 namespace sym{
     typedef char * ( *SDL_GetClipboardText_handle )(  );
@@ -2972,7 +2970,7 @@ namespace sym{
 int SDL_SetPixelFormatPalette ( SDL_PixelFormat * format, SDL_Palette * palette );
 
 namespace sym{
-    typedef int ( *SDL_SetPaletteColors_handle )( SDL_Palette * palette, SDL_Color * colors, int firstcolor, int ncolors );
+    typedef int ( *SDL_SetPaletteColors_handle )( SDL_Palette * palette, const SDL_Color * colors, int firstcolor, int ncolors );
     static auto SDL_SetPaletteColors = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetPaletteColors" );
         if ( !dlsym_ptr ) {
@@ -2982,7 +2980,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetPaletteColors ( SDL_Palette * palette, SDL_Color * colors, int firstcolor, int ncolors );
+int SDL_SetPaletteColors ( SDL_Palette * palette, const SDL_Color * colors, int firstcolor, int ncolors );
 
 namespace sym{
     typedef void ( *SDL_FreePalette_handle )( SDL_Palette * palette );
@@ -2998,7 +2996,7 @@ namespace sym{
 void SDL_FreePalette ( SDL_Palette * palette );
 
 namespace sym{
-    typedef Uint32 ( *SDL_MapRGB_handle )( SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b );
+    typedef Uint32 ( *SDL_MapRGB_handle )( const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b );
     static auto SDL_MapRGB = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_MapRGB" );
         if ( !dlsym_ptr ) {
@@ -3008,10 +3006,10 @@ namespace sym{
     } ();
 }
 
-Uint32 SDL_MapRGB ( SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b );
+Uint32 SDL_MapRGB ( const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b );
 
 namespace sym{
-    typedef Uint32 ( *SDL_MapRGBA_handle )( SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b, Uint8 a );
+    typedef Uint32 ( *SDL_MapRGBA_handle )( const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b, Uint8 a );
     static auto SDL_MapRGBA = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_MapRGBA" );
         if ( !dlsym_ptr ) {
@@ -3021,10 +3019,10 @@ namespace sym{
     } ();
 }
 
-Uint32 SDL_MapRGBA ( SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b, Uint8 a );
+Uint32 SDL_MapRGBA ( const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b, Uint8 a );
 
 namespace sym{
-    typedef void ( *SDL_GetRGB_handle )( Uint32 pixel, SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b );
+    typedef void ( *SDL_GetRGB_handle )( Uint32 pixel, const SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b );
     static auto SDL_GetRGB = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetRGB" );
         if ( !dlsym_ptr ) {
@@ -3034,10 +3032,10 @@ namespace sym{
     } ();
 }
 
-void SDL_GetRGB ( Uint32 pixel, SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b );
+void SDL_GetRGB ( Uint32 pixel, const SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b );
 
 namespace sym{
-    typedef void ( *SDL_GetRGBA_handle )( Uint32 pixel, SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b, Uint8 * a );
+    typedef void ( *SDL_GetRGBA_handle )( Uint32 pixel, const SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b, Uint8 * a );
     static auto SDL_GetRGBA = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetRGBA" );
         if ( !dlsym_ptr ) {
@@ -3047,7 +3045,7 @@ namespace sym{
     } ();
 }
 
-void SDL_GetRGBA ( Uint32 pixel, SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b, Uint8 * a );
+void SDL_GetRGBA ( Uint32 pixel, const SDL_PixelFormat * format, Uint8 * r, Uint8 * g, Uint8 * b, Uint8 * a );
 
 namespace sym{
     typedef void ( *SDL_CalculateGammaRamp_handle )( float gamma, Uint16 * ramp );
@@ -3063,7 +3061,7 @@ namespace sym{
 void SDL_CalculateGammaRamp ( float gamma, Uint16 * ramp );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_HasIntersection_handle )( SDL_Rect * A, SDL_Rect * B );
+    typedef SDL_bool ( *SDL_HasIntersection_handle )( const SDL_Rect * A, const SDL_Rect * B );
     static auto SDL_HasIntersection = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_HasIntersection" );
         if ( !dlsym_ptr ) {
@@ -3073,10 +3071,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_HasIntersection ( SDL_Rect * A, SDL_Rect * B );
+SDL_bool SDL_HasIntersection ( const SDL_Rect * A, const SDL_Rect * B );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_IntersectRect_handle )( SDL_Rect * A, SDL_Rect * B, SDL_Rect * result );
+    typedef SDL_bool ( *SDL_IntersectRect_handle )( const SDL_Rect * A, const SDL_Rect * B, SDL_Rect * result );
     static auto SDL_IntersectRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_IntersectRect" );
         if ( !dlsym_ptr ) {
@@ -3086,10 +3084,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_IntersectRect ( SDL_Rect * A, SDL_Rect * B, SDL_Rect * result );
+SDL_bool SDL_IntersectRect ( const SDL_Rect * A, const SDL_Rect * B, SDL_Rect * result );
 
 namespace sym{
-    typedef void ( *SDL_UnionRect_handle )( SDL_Rect * A, SDL_Rect * B, SDL_Rect * result );
+    typedef void ( *SDL_UnionRect_handle )( const SDL_Rect * A, const SDL_Rect * B, SDL_Rect * result );
     static auto SDL_UnionRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UnionRect" );
         if ( !dlsym_ptr ) {
@@ -3099,10 +3097,10 @@ namespace sym{
     } ();
 }
 
-void SDL_UnionRect ( SDL_Rect * A, SDL_Rect * B, SDL_Rect * result );
+void SDL_UnionRect ( const SDL_Rect * A, const SDL_Rect * B, SDL_Rect * result );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_EnclosePoints_handle )( SDL_Point * points, int count, SDL_Rect * clip, SDL_Rect * result );
+    typedef SDL_bool ( *SDL_EnclosePoints_handle )( const SDL_Point * points, int count, const SDL_Rect * clip, SDL_Rect * result );
     static auto SDL_EnclosePoints = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_EnclosePoints" );
         if ( !dlsym_ptr ) {
@@ -3112,10 +3110,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_EnclosePoints ( SDL_Point * points, int count, SDL_Rect * clip, SDL_Rect * result );
+SDL_bool SDL_EnclosePoints ( const SDL_Point * points, int count, const SDL_Rect * clip, SDL_Rect * result );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_IntersectRectAndLine_handle )( SDL_Rect * rect, int * X1, int * Y1, int * X2, int * Y2 );
+    typedef SDL_bool ( *SDL_IntersectRectAndLine_handle )( const SDL_Rect * rect, int * X1, int * Y1, int * X2, int * Y2 );
     static auto SDL_IntersectRectAndLine = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_IntersectRectAndLine" );
         if ( !dlsym_ptr ) {
@@ -3125,7 +3123,7 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_IntersectRectAndLine ( SDL_Rect * rect, int * X1, int * Y1, int * X2, int * Y2 );
+SDL_bool SDL_IntersectRectAndLine ( const SDL_Rect * rect, int * X1, int * Y1, int * X2, int * Y2 );
 
 namespace sym{
     typedef SDL_BlendMode ( *SDL_ComposeCustomBlendMode_handle )( SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation );
@@ -3388,7 +3386,7 @@ namespace sym{
 int SDL_GetSurfaceBlendMode ( SDL_Surface * surface, SDL_BlendMode * blendMode );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_SetClipRect_handle )( SDL_Surface * surface, SDL_Rect * rect );
+    typedef SDL_bool ( *SDL_SetClipRect_handle )( SDL_Surface * surface, const SDL_Rect * rect );
     static auto SDL_SetClipRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetClipRect" );
         if ( !dlsym_ptr ) {
@@ -3398,7 +3396,7 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_SetClipRect ( SDL_Surface * surface, SDL_Rect * rect );
+SDL_bool SDL_SetClipRect ( SDL_Surface * surface, const SDL_Rect * rect );
 
 namespace sym{
     typedef void ( *SDL_GetClipRect_handle )( SDL_Surface * surface, SDL_Rect * rect );
@@ -3427,7 +3425,7 @@ namespace sym{
 SDL_Surface * SDL_DuplicateSurface ( SDL_Surface * surface );
 
 namespace sym{
-    typedef SDL_Surface * ( *SDL_ConvertSurface_handle )( SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags );
+    typedef SDL_Surface * ( *SDL_ConvertSurface_handle )( SDL_Surface * src, const SDL_PixelFormat * fmt, Uint32 flags );
     static auto SDL_ConvertSurface = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_ConvertSurface" );
         if ( !dlsym_ptr ) {
@@ -3437,7 +3435,7 @@ namespace sym{
     } ();
 }
 
-SDL_Surface * SDL_ConvertSurface ( SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags );
+SDL_Surface * SDL_ConvertSurface ( SDL_Surface * src, const SDL_PixelFormat * fmt, Uint32 flags );
 
 namespace sym{
     typedef SDL_Surface * ( *SDL_ConvertSurfaceFormat_handle )( SDL_Surface * src, Uint32 pixel_format, Uint32 flags );
@@ -3453,7 +3451,7 @@ namespace sym{
 SDL_Surface * SDL_ConvertSurfaceFormat ( SDL_Surface * src, Uint32 pixel_format, Uint32 flags );
 
 namespace sym{
-    typedef int ( *SDL_ConvertPixels_handle )( int width, int height, Uint32 src_format, void * src, int src_pitch, Uint32 dst_format, void * dst, int dst_pitch );
+    typedef int ( *SDL_ConvertPixels_handle )( int width, int height, Uint32 src_format, const void * src, int src_pitch, Uint32 dst_format, void * dst, int dst_pitch );
     static auto SDL_ConvertPixels = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_ConvertPixels" );
         if ( !dlsym_ptr ) {
@@ -3463,10 +3461,10 @@ namespace sym{
     } ();
 }
 
-int SDL_ConvertPixels ( int width, int height, Uint32 src_format, void * src, int src_pitch, Uint32 dst_format, void * dst, int dst_pitch );
+int SDL_ConvertPixels ( int width, int height, Uint32 src_format, const void * src, int src_pitch, Uint32 dst_format, void * dst, int dst_pitch );
 
 namespace sym{
-    typedef int ( *SDL_FillRect_handle )( SDL_Surface * dst, SDL_Rect * rect, Uint32 color );
+    typedef int ( *SDL_FillRect_handle )( SDL_Surface * dst, const SDL_Rect * rect, Uint32 color );
     static auto SDL_FillRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_FillRect" );
         if ( !dlsym_ptr ) {
@@ -3476,10 +3474,10 @@ namespace sym{
     } ();
 }
 
-int SDL_FillRect ( SDL_Surface * dst, SDL_Rect * rect, Uint32 color );
+int SDL_FillRect ( SDL_Surface * dst, const SDL_Rect * rect, Uint32 color );
 
 namespace sym{
-    typedef int ( *SDL_FillRects_handle )( SDL_Surface * dst, SDL_Rect * rects, int count, Uint32 color );
+    typedef int ( *SDL_FillRects_handle )( SDL_Surface * dst, const SDL_Rect * rects, int count, Uint32 color );
     static auto SDL_FillRects = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_FillRects" );
         if ( !dlsym_ptr ) {
@@ -3489,10 +3487,10 @@ namespace sym{
     } ();
 }
 
-int SDL_FillRects ( SDL_Surface * dst, SDL_Rect * rects, int count, Uint32 color );
+int SDL_FillRects ( SDL_Surface * dst, const SDL_Rect * rects, int count, Uint32 color );
 
 namespace sym{
-    typedef int ( *SDL_UpperBlit_handle )( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+    typedef int ( *SDL_UpperBlit_handle )( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
     static auto SDL_UpperBlit = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UpperBlit" );
         if ( !dlsym_ptr ) {
@@ -3502,7 +3500,7 @@ namespace sym{
     } ();
 }
 
-int SDL_UpperBlit ( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+int SDL_UpperBlit ( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
 
 namespace sym{
     typedef int ( *SDL_LowerBlit_handle )( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
@@ -3518,7 +3516,7 @@ namespace sym{
 int SDL_LowerBlit ( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
 
 namespace sym{
-    typedef int ( *SDL_SoftStretch_handle )( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+    typedef int ( *SDL_SoftStretch_handle )( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, const SDL_Rect * dstrect );
     static auto SDL_SoftStretch = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SoftStretch" );
         if ( !dlsym_ptr ) {
@@ -3528,10 +3526,10 @@ namespace sym{
     } ();
 }
 
-int SDL_SoftStretch ( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+int SDL_SoftStretch ( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, const SDL_Rect * dstrect );
 
 namespace sym{
-    typedef int ( *SDL_UpperBlitScaled_handle )( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+    typedef int ( *SDL_UpperBlitScaled_handle )( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
     static auto SDL_UpperBlitScaled = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UpperBlitScaled" );
         if ( !dlsym_ptr ) {
@@ -3541,7 +3539,7 @@ namespace sym{
     } ();
 }
 
-int SDL_UpperBlitScaled ( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
+int SDL_UpperBlitScaled ( SDL_Surface * src, const SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
 
 namespace sym{
     typedef int ( *SDL_LowerBlitScaled_handle )( SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst, SDL_Rect * dstrect );
@@ -3622,7 +3620,7 @@ namespace sym{
 const char * SDL_GetVideoDriver ( int index );
 
 namespace sym{
-    typedef int ( *SDL_VideoInit_handle )( char * driver_name );
+    typedef int ( *SDL_VideoInit_handle )( const char * driver_name );
     static auto SDL_VideoInit = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_VideoInit" );
         if ( !dlsym_ptr ) {
@@ -3632,7 +3630,7 @@ namespace sym{
     } ();
 }
 
-int SDL_VideoInit ( char * driver_name );
+int SDL_VideoInit ( const char * driver_name );
 
 namespace sym{
     typedef void ( *SDL_VideoQuit_handle )(  );
@@ -3778,7 +3776,7 @@ namespace sym{
 int SDL_GetCurrentDisplayMode ( int displayIndex, SDL_DisplayMode * mode );
 
 namespace sym{
-    typedef SDL_DisplayMode * ( *SDL_GetClosestDisplayMode_handle )( int displayIndex, SDL_DisplayMode * mode, SDL_DisplayMode * closest );
+    typedef SDL_DisplayMode * ( *SDL_GetClosestDisplayMode_handle )( int displayIndex, const SDL_DisplayMode * mode, SDL_DisplayMode * closest );
     static auto SDL_GetClosestDisplayMode = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetClosestDisplayMode" );
         if ( !dlsym_ptr ) {
@@ -3788,7 +3786,7 @@ namespace sym{
     } ();
 }
 
-SDL_DisplayMode * SDL_GetClosestDisplayMode ( int displayIndex, SDL_DisplayMode * mode, SDL_DisplayMode * closest );
+SDL_DisplayMode * SDL_GetClosestDisplayMode ( int displayIndex, const SDL_DisplayMode * mode, SDL_DisplayMode * closest );
 
 namespace sym{
     typedef int ( *SDL_GetWindowDisplayIndex_handle )( SDL_Window * window );
@@ -3804,8 +3802,7 @@ namespace sym{
 int SDL_GetWindowDisplayIndex ( SDL_Window * window );
 
 namespace sym{
-    typedef int ( *SDL_SetWindowDisplayMode_handle )( SDL_Window * window, SDL_DisplayMode
-                                                         * mode );
+    typedef int ( *SDL_SetWindowDisplayMode_handle )( SDL_Window * window, const SDL_DisplayMode * mode );
     static auto SDL_SetWindowDisplayMode = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetWindowDisplayMode" );
         if ( !dlsym_ptr ) {
@@ -3815,8 +3812,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetWindowDisplayMode ( SDL_Window * window, SDL_DisplayMode
-                                                         * mode );
+int SDL_SetWindowDisplayMode ( SDL_Window * window, const SDL_DisplayMode * mode );
 
 namespace sym{
     typedef int ( *SDL_GetWindowDisplayMode_handle )( SDL_Window * window, SDL_DisplayMode * mode );
@@ -3845,7 +3841,7 @@ namespace sym{
 Uint32 SDL_GetWindowPixelFormat ( SDL_Window * window );
 
 namespace sym{
-    typedef SDL_Window * ( *SDL_CreateWindow_handle )( char * title, int x, int y, int w, int h, Uint32 flags );
+    typedef SDL_Window * ( *SDL_CreateWindow_handle )( const char * title, int x, int y, int w, int h, Uint32 flags );
     static auto SDL_CreateWindow = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_CreateWindow" );
         if ( !dlsym_ptr ) {
@@ -3855,10 +3851,10 @@ namespace sym{
     } ();
 }
 
-SDL_Window * SDL_CreateWindow ( char * title, int x, int y, int w, int h, Uint32 flags );
+SDL_Window * SDL_CreateWindow ( const char * title, int x, int y, int w, int h, Uint32 flags );
 
 namespace sym{
-    typedef SDL_Window * ( *SDL_CreateWindowFrom_handle )( void * data );
+    typedef SDL_Window * ( *SDL_CreateWindowFrom_handle )( const void * data );
     static auto SDL_CreateWindowFrom = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_CreateWindowFrom" );
         if ( !dlsym_ptr ) {
@@ -3868,7 +3864,7 @@ namespace sym{
     } ();
 }
 
-SDL_Window * SDL_CreateWindowFrom ( void * data );
+SDL_Window * SDL_CreateWindowFrom ( const void * data );
 
 namespace sym{
     typedef Uint32 ( *SDL_GetWindowID_handle )( SDL_Window * window );
@@ -3910,7 +3906,7 @@ namespace sym{
 Uint32 SDL_GetWindowFlags ( SDL_Window * window );
 
 namespace sym{
-    typedef void ( *SDL_SetWindowTitle_handle )( SDL_Window * window, char * title );
+    typedef void ( *SDL_SetWindowTitle_handle )( SDL_Window * window, const char * title );
     static auto SDL_SetWindowTitle = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetWindowTitle" );
         if ( !dlsym_ptr ) {
@@ -3920,7 +3916,7 @@ namespace sym{
     } ();
 }
 
-void SDL_SetWindowTitle ( SDL_Window * window, char * title );
+void SDL_SetWindowTitle ( SDL_Window * window, const char * title );
 
 namespace sym{
     typedef const char * ( *SDL_GetWindowTitle_handle )( SDL_Window * window );
@@ -3949,7 +3945,7 @@ namespace sym{
 void SDL_SetWindowIcon ( SDL_Window * window, SDL_Surface * icon );
 
 namespace sym{
-    typedef void * ( *SDL_SetWindowData_handle )( SDL_Window * window, char * name, void * userdata );
+    typedef void * ( *SDL_SetWindowData_handle )( SDL_Window * window, const char * name, void * userdata );
     static auto SDL_SetWindowData = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetWindowData" );
         if ( !dlsym_ptr ) {
@@ -3959,10 +3955,10 @@ namespace sym{
     } ();
 }
 
-void * SDL_SetWindowData ( SDL_Window * window, char * name, void * userdata );
+void * SDL_SetWindowData ( SDL_Window * window, const char * name, void * userdata );
 
 namespace sym{
-    typedef void * ( *SDL_GetWindowData_handle )( SDL_Window * window, char * name );
+    typedef void * ( *SDL_GetWindowData_handle )( SDL_Window * window, const char * name );
     static auto SDL_GetWindowData = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetWindowData" );
         if ( !dlsym_ptr ) {
@@ -3972,7 +3968,7 @@ namespace sym{
     } ();
 }
 
-void * SDL_GetWindowData ( SDL_Window * window, char * name );
+void * SDL_GetWindowData ( SDL_Window * window, const char * name );
 
 namespace sym{
     typedef void ( *SDL_SetWindowPosition_handle )( SDL_Window * window, int x, int y );
@@ -4235,7 +4231,7 @@ namespace sym{
 int SDL_UpdateWindowSurface ( SDL_Window * window );
 
 namespace sym{
-    typedef int ( *SDL_UpdateWindowSurfaceRects_handle )( SDL_Window * window, SDL_Rect * rects, int numrects );
+    typedef int ( *SDL_UpdateWindowSurfaceRects_handle )( SDL_Window * window, const SDL_Rect * rects, int numrects );
     static auto SDL_UpdateWindowSurfaceRects = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UpdateWindowSurfaceRects" );
         if ( !dlsym_ptr ) {
@@ -4245,7 +4241,7 @@ namespace sym{
     } ();
 }
 
-int SDL_UpdateWindowSurfaceRects ( SDL_Window * window, SDL_Rect * rects, int numrects );
+int SDL_UpdateWindowSurfaceRects ( SDL_Window * window, const SDL_Rect * rects, int numrects );
 
 namespace sym{
     typedef void ( *SDL_SetWindowGrab_handle )( SDL_Window * window, SDL_bool grabbed );
@@ -4365,7 +4361,7 @@ namespace sym{
 int SDL_SetWindowInputFocus ( SDL_Window * window );
 
 namespace sym{
-    typedef int ( *SDL_SetWindowGammaRamp_handle )( SDL_Window * window, Uint16 * red, Uint16 * green, Uint16 * blue );
+    typedef int ( *SDL_SetWindowGammaRamp_handle )( SDL_Window * window, const Uint16 * red, const Uint16 * green, const Uint16 * blue );
     static auto SDL_SetWindowGammaRamp = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetWindowGammaRamp" );
         if ( !dlsym_ptr ) {
@@ -4375,7 +4371,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetWindowGammaRamp ( SDL_Window * window, Uint16 * red, Uint16 * green, Uint16 * blue );
+int SDL_SetWindowGammaRamp ( SDL_Window * window, const Uint16 * red, const Uint16 * green, const Uint16 * blue );
 
 namespace sym{
     typedef int ( *SDL_GetWindowGammaRamp_handle )( SDL_Window * window, Uint16 * red, Uint16 * green, Uint16 * blue );
@@ -4391,7 +4387,7 @@ namespace sym{
 int SDL_GetWindowGammaRamp ( SDL_Window * window, Uint16 * red, Uint16 * green, Uint16 * blue );
 
 namespace sym{
-    typedef int ( *SDL_SetWindowHitTest_handle )( SDL_Window * window, SDL_HitTest, void * callback_data );
+    typedef int ( *SDL_SetWindowHitTest_handle )( SDL_Window * window, SDL_HitTest callback, void * callback_data );
     static auto SDL_SetWindowHitTest = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetWindowHitTest" );
         if ( !dlsym_ptr ) {
@@ -4401,7 +4397,7 @@ namespace sym{
     } ();
 }
 
-int SDL_SetWindowHitTest ( SDL_Window * window, SDL_HitTest, void * callback_data );
+int SDL_SetWindowHitTest ( SDL_Window * window, SDL_HitTest callback, void * callback_data );
 
 namespace sym{
     typedef void ( *SDL_DestroyWindow_handle )( SDL_Window * window );
@@ -4456,7 +4452,7 @@ namespace sym{
 void SDL_DisableScreenSaver (  );
 
 namespace sym{
-    typedef int ( *SDL_GL_LoadLibrary_handle )( char * path );
+    typedef int ( *SDL_GL_LoadLibrary_handle )( const char * path );
     static auto SDL_GL_LoadLibrary = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GL_LoadLibrary" );
         if ( !dlsym_ptr ) {
@@ -4466,10 +4462,10 @@ namespace sym{
     } ();
 }
 
-int SDL_GL_LoadLibrary ( char * path );
+int SDL_GL_LoadLibrary ( const char * path );
 
 namespace sym{
-    typedef void * ( *SDL_GL_GetProcAddress_handle )( char * proc );
+    typedef void * ( *SDL_GL_GetProcAddress_handle )( const char * proc );
     static auto SDL_GL_GetProcAddress = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GL_GetProcAddress" );
         if ( !dlsym_ptr ) {
@@ -4479,7 +4475,7 @@ namespace sym{
     } ();
 }
 
-void * SDL_GL_GetProcAddress ( char * proc );
+void * SDL_GL_GetProcAddress ( const char * proc );
 
 namespace sym{
     typedef void ( *SDL_GL_UnloadLibrary_handle )(  );
@@ -4495,8 +4491,7 @@ namespace sym{
 void SDL_GL_UnloadLibrary (  );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_GL_ExtensionSupported_handle )( char
-                                                           * extension );
+    typedef SDL_bool ( *SDL_GL_ExtensionSupported_handle )( const char * extension );
     static auto SDL_GL_ExtensionSupported = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GL_ExtensionSupported" );
         if ( !dlsym_ptr ) {
@@ -4506,8 +4501,7 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_GL_ExtensionSupported ( char
-                                                           * extension );
+SDL_bool SDL_GL_ExtensionSupported ( const char * extension );
 
 namespace sym{
     typedef void ( *SDL_GL_ResetAttributes_handle )(  );
@@ -4757,7 +4751,7 @@ namespace sym{
 const char * SDL_GetScancodeName ( SDL_Scancode scancode );
 
 namespace sym{
-    typedef SDL_Scancode ( *SDL_GetScancodeFromName_handle )( char * name );
+    typedef SDL_Scancode ( *SDL_GetScancodeFromName_handle )( const char * name );
     static auto SDL_GetScancodeFromName = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetScancodeFromName" );
         if ( !dlsym_ptr ) {
@@ -4767,7 +4761,7 @@ namespace sym{
     } ();
 }
 
-SDL_Scancode SDL_GetScancodeFromName ( char * name );
+SDL_Scancode SDL_GetScancodeFromName ( const char * name );
 
 namespace sym{
     typedef const char * ( *SDL_GetKeyName_handle )( SDL_Keycode key );
@@ -4783,7 +4777,7 @@ namespace sym{
 const char * SDL_GetKeyName ( SDL_Keycode key );
 
 namespace sym{
-    typedef SDL_Keycode ( *SDL_GetKeyFromName_handle )( char * name );
+    typedef SDL_Keycode ( *SDL_GetKeyFromName_handle )( const char * name );
     static auto SDL_GetKeyFromName = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetKeyFromName" );
         if ( !dlsym_ptr ) {
@@ -4793,7 +4787,7 @@ namespace sym{
     } ();
 }
 
-SDL_Keycode SDL_GetKeyFromName ( char * name );
+SDL_Keycode SDL_GetKeyFromName ( const char * name );
 
 namespace sym{
     typedef void ( *SDL_StartTextInput_handle )(  );
@@ -4991,7 +4985,7 @@ namespace sym{
 SDL_bool SDL_GetRelativeMouseMode (  );
 
 namespace sym{
-    typedef SDL_Cursor * ( *SDL_CreateCursor_handle )( Uint8 * data, Uint8 * mask, int w, int h, int hot_x, int hot_y );
+    typedef SDL_Cursor * ( *SDL_CreateCursor_handle )( const Uint8 * data, const Uint8 * mask, int w, int h, int hot_x, int hot_y );
     static auto SDL_CreateCursor = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_CreateCursor" );
         if ( !dlsym_ptr ) {
@@ -5001,7 +4995,7 @@ namespace sym{
     } ();
 }
 
-SDL_Cursor * SDL_CreateCursor ( Uint8 * data, Uint8 * mask, int w, int h, int hot_x, int hot_y );
+SDL_Cursor * SDL_CreateCursor ( const Uint8 * data, const Uint8 * mask, int w, int h, int hot_x, int hot_y );
 
 namespace sym{
     typedef SDL_Cursor * ( *SDL_CreateColorCursor_handle )( SDL_Surface * surface, int hot_x, int hot_y );
@@ -5342,7 +5336,7 @@ namespace sym{
 void SDL_JoystickGetGUIDString ( SDL_JoystickGUID guid, char * pszGUID, int cbGUID );
 
 namespace sym{
-    typedef SDL_JoystickGUID ( *SDL_JoystickGetGUIDFromString_handle )( char * pchGUID );
+    typedef SDL_JoystickGUID ( *SDL_JoystickGetGUIDFromString_handle )( const char * pchGUID );
     static auto SDL_JoystickGetGUIDFromString = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_JoystickGetGUIDFromString" );
         if ( !dlsym_ptr ) {
@@ -5352,7 +5346,7 @@ namespace sym{
     } ();
 }
 
-SDL_JoystickGUID SDL_JoystickGetGUIDFromString ( char * pchGUID );
+SDL_JoystickGUID SDL_JoystickGetGUIDFromString ( const char * pchGUID );
 
 namespace sym{
     typedef SDL_bool ( *SDL_JoystickGetAttached_handle )( SDL_Joystick * joystick );
@@ -5563,7 +5557,7 @@ namespace sym{
 int SDL_GameControllerAddMappingsFromRW ( SDL_RWops * rw, int freerw );
 
 namespace sym{
-    typedef int ( *SDL_GameControllerAddMapping_handle )( char* mappingString );
+    typedef int ( *SDL_GameControllerAddMapping_handle )( const char * mappingString );
     static auto SDL_GameControllerAddMapping = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GameControllerAddMapping" );
         if ( !dlsym_ptr ) {
@@ -5573,7 +5567,7 @@ namespace sym{
     } ();
 }
 
-int SDL_GameControllerAddMapping ( char* mappingString );
+int SDL_GameControllerAddMapping ( const char * mappingString );
 
 namespace sym{
     typedef int ( *SDL_GameControllerNumMappings_handle )(  );
@@ -5784,7 +5778,7 @@ namespace sym{
 void SDL_GameControllerUpdate (  );
 
 namespace sym{
-    typedef SDL_GameControllerAxis ( *SDL_GameControllerGetAxisFromString_handle )( char * pchString );
+    typedef SDL_GameControllerAxis ( *SDL_GameControllerGetAxisFromString_handle )( const char * pchString );
     static auto SDL_GameControllerGetAxisFromString = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GameControllerGetAxisFromString" );
         if ( !dlsym_ptr ) {
@@ -5794,7 +5788,7 @@ namespace sym{
     } ();
 }
 
-SDL_GameControllerAxis SDL_GameControllerGetAxisFromString ( char * pchString );
+SDL_GameControllerAxis SDL_GameControllerGetAxisFromString ( const char * pchString );
 
 namespace sym{
     typedef const char * ( *SDL_GameControllerGetStringForAxis_handle )( SDL_GameControllerAxis axis );
@@ -5836,7 +5830,7 @@ namespace sym{
 Sint16 SDL_GameControllerGetAxis ( SDL_GameController * gamecontroller, SDL_GameControllerAxis axis );
 
 namespace sym{
-    typedef SDL_GameControllerButton ( *SDL_GameControllerGetButtonFromString_handle )( char * pchString );
+    typedef SDL_GameControllerButton ( *SDL_GameControllerGetButtonFromString_handle )( const char * pchString );
     static auto SDL_GameControllerGetButtonFromString = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GameControllerGetButtonFromString" );
         if ( !dlsym_ptr ) {
@@ -5846,7 +5840,7 @@ namespace sym{
     } ();
 }
 
-SDL_GameControllerButton SDL_GameControllerGetButtonFromString ( char * pchString );
+SDL_GameControllerButton SDL_GameControllerGetButtonFromString ( const char * pchString );
 
 namespace sym{
     typedef const char * ( *SDL_GameControllerGetStringForButton_handle )( SDL_GameControllerButton button );
@@ -6135,7 +6129,7 @@ namespace sym{
 int SDL_PushEvent ( SDL_Event * event );
 
 namespace sym{
-    typedef void ( *SDL_SetEventFilter_handle )( SDL_EventFilter, void * userdata );
+    typedef void ( *SDL_SetEventFilter_handle )( SDL_EventFilter filter, void * userdata );
     static auto SDL_SetEventFilter = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetEventFilter" );
         if ( !dlsym_ptr ) {
@@ -6145,7 +6139,7 @@ namespace sym{
     } ();
 }
 
-void SDL_SetEventFilter ( SDL_EventFilter, void * userdata );
+void SDL_SetEventFilter ( SDL_EventFilter filter, void * userdata );
 
 namespace sym{
     typedef SDL_bool ( *SDL_GetEventFilter_handle )( SDL_EventFilter * filter, void ** userdata );
@@ -6161,7 +6155,7 @@ namespace sym{
 SDL_bool SDL_GetEventFilter ( SDL_EventFilter * filter, void ** userdata );
 
 namespace sym{
-    typedef void ( *SDL_AddEventWatch_handle )( SDL_EventFilter, void * userdata );
+    typedef void ( *SDL_AddEventWatch_handle )( SDL_EventFilter filter, void * userdata );
     static auto SDL_AddEventWatch = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AddEventWatch" );
         if ( !dlsym_ptr ) {
@@ -6171,10 +6165,10 @@ namespace sym{
     } ();
 }
 
-void SDL_AddEventWatch ( SDL_EventFilter, void * userdata );
+void SDL_AddEventWatch ( SDL_EventFilter filter, void * userdata );
 
 namespace sym{
-    typedef void ( *SDL_DelEventWatch_handle )( SDL_EventFilter, void * userdata );
+    typedef void ( *SDL_DelEventWatch_handle )( SDL_EventFilter filter, void * userdata );
     static auto SDL_DelEventWatch = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_DelEventWatch" );
         if ( !dlsym_ptr ) {
@@ -6184,10 +6178,10 @@ namespace sym{
     } ();
 }
 
-void SDL_DelEventWatch ( SDL_EventFilter, void * userdata );
+void SDL_DelEventWatch ( SDL_EventFilter filter, void * userdata );
 
 namespace sym{
-    typedef void ( *SDL_FilterEvents_handle )( SDL_EventFilter, void * userdata );
+    typedef void ( *SDL_FilterEvents_handle )( SDL_EventFilter filter, void * userdata );
     static auto SDL_FilterEvents = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_FilterEvents" );
         if ( !dlsym_ptr ) {
@@ -6197,7 +6191,7 @@ namespace sym{
     } ();
 }
 
-void SDL_FilterEvents ( SDL_EventFilter, void * userdata );
+void SDL_FilterEvents ( SDL_EventFilter filter, void * userdata );
 
 namespace sym{
     typedef Uint8 ( *SDL_EventState_handle )( Uint32 type, int state );
@@ -6239,7 +6233,7 @@ namespace sym{
 char * SDL_GetBasePath (  );
 
 namespace sym{
-    typedef char * ( *SDL_GetPrefPath_handle )( char * org, char * app );
+    typedef char * ( *SDL_GetPrefPath_handle )( const char * org, const char * app );
     static auto SDL_GetPrefPath = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetPrefPath" );
         if ( !dlsym_ptr ) {
@@ -6249,7 +6243,7 @@ namespace sym{
     } ();
 }
 
-char * SDL_GetPrefPath ( char * org, char * app );
+char * SDL_GetPrefPath ( const char * org, const char * app );
 
 namespace sym{
     typedef int ( *SDL_NumHaptics_handle )(  );
@@ -6642,7 +6636,7 @@ namespace sym{
 int SDL_HapticRumbleStop ( SDL_Haptic * haptic );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_SetHintWithPriority_handle )( char * name, char * value, SDL_HintPriority priority );
+    typedef SDL_bool ( *SDL_SetHintWithPriority_handle )( const char * name, const char * value, SDL_HintPriority priority );
     static auto SDL_SetHintWithPriority = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetHintWithPriority" );
         if ( !dlsym_ptr ) {
@@ -6652,10 +6646,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_SetHintWithPriority ( char * name, char * value, SDL_HintPriority priority );
+SDL_bool SDL_SetHintWithPriority ( const char * name, const char * value, SDL_HintPriority priority );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_SetHint_handle )( char * name, char * value );
+    typedef SDL_bool ( *SDL_SetHint_handle )( const char * name, const char * value );
     static auto SDL_SetHint = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_SetHint" );
         if ( !dlsym_ptr ) {
@@ -6665,10 +6659,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_SetHint ( char * name, char * value );
+SDL_bool SDL_SetHint ( const char * name, const char * value );
 
 namespace sym{
-    typedef const char * ( *SDL_GetHint_handle )( char * name );
+    typedef const char * ( *SDL_GetHint_handle )( const char * name );
     static auto SDL_GetHint = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetHint" );
         if ( !dlsym_ptr ) {
@@ -6678,10 +6672,10 @@ namespace sym{
     } ();
 }
 
-const char * SDL_GetHint ( char * name );
+const char * SDL_GetHint ( const char * name );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_GetHintBoolean_handle )( char * name, SDL_bool default_value );
+    typedef SDL_bool ( *SDL_GetHintBoolean_handle )( const char * name, SDL_bool default_value );
     static auto SDL_GetHintBoolean = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_GetHintBoolean" );
         if ( !dlsym_ptr ) {
@@ -6691,10 +6685,10 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_GetHintBoolean ( char * name, SDL_bool default_value );
+SDL_bool SDL_GetHintBoolean ( const char * name, SDL_bool default_value );
 
 namespace sym{
-    typedef void ( *SDL_AddHintCallback_handle )( char * name, SDL_HintCallback, void * userdata );
+    typedef void ( *SDL_AddHintCallback_handle )( const char * name, SDL_HintCallback callback, void * userdata );
     static auto SDL_AddHintCallback = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AddHintCallback" );
         if ( !dlsym_ptr ) {
@@ -6704,10 +6698,10 @@ namespace sym{
     } ();
 }
 
-void SDL_AddHintCallback ( char * name, SDL_HintCallback, void * userdata );
+void SDL_AddHintCallback ( const char * name, SDL_HintCallback callback, void * userdata );
 
 namespace sym{
-    typedef void ( *SDL_DelHintCallback_handle )( char * name, SDL_HintCallback, void * userdata );
+    typedef void ( *SDL_DelHintCallback_handle )( const char * name, SDL_HintCallback callback, void * userdata );
     static auto SDL_DelHintCallback = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_DelHintCallback" );
         if ( !dlsym_ptr ) {
@@ -6717,7 +6711,7 @@ namespace sym{
     } ();
 }
 
-void SDL_DelHintCallback ( char * name, SDL_HintCallback, void * userdata );
+void SDL_DelHintCallback ( const char * name, SDL_HintCallback callback, void * userdata );
 
 namespace sym{
     typedef void ( *SDL_ClearHints_handle )(  );
@@ -6733,7 +6727,7 @@ namespace sym{
 void SDL_ClearHints (  );
 
 namespace sym{
-    typedef void * ( *SDL_LoadObject_handle )( char * sofile );
+    typedef void * ( *SDL_LoadObject_handle )( const char * sofile );
     static auto SDL_LoadObject = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LoadObject" );
         if ( !dlsym_ptr ) {
@@ -6743,10 +6737,10 @@ namespace sym{
     } ();
 }
 
-void * SDL_LoadObject ( char * sofile );
+void * SDL_LoadObject ( const char * sofile );
 
 namespace sym{
-    typedef void * ( *SDL_LoadFunction_handle )( void * handle, char * name );
+    typedef void * ( *SDL_LoadFunction_handle )( void * handle, const char * name );
     static auto SDL_LoadFunction = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LoadFunction" );
         if ( !dlsym_ptr ) {
@@ -6756,7 +6750,7 @@ namespace sym{
     } ();
 }
 
-void * SDL_LoadFunction ( void * handle, char * name );
+void * SDL_LoadFunction ( void * handle, const char * name );
 
 namespace sym{
     typedef void ( *SDL_UnloadObject_handle )( void * handle );
@@ -6824,7 +6818,7 @@ namespace sym{
 void SDL_LogResetPriorities (  );
 
 namespace sym{
-    typedef void ( *SDL_Log_handle )( char * fmt );
+    typedef void ( *SDL_Log_handle )( const char * fmt );
     static auto SDL_Log = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_Log" );
         if ( !dlsym_ptr ) {
@@ -6834,10 +6828,10 @@ namespace sym{
     } ();
 }
 
-void SDL_Log ( char * fmt );
+void SDL_Log ( const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogVerbose_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogVerbose_handle )( int category, const char * fmt );
     static auto SDL_LogVerbose = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogVerbose" );
         if ( !dlsym_ptr ) {
@@ -6847,10 +6841,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogVerbose ( int category, char * fmt );
+void SDL_LogVerbose ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogDebug_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogDebug_handle )( int category, const char * fmt );
     static auto SDL_LogDebug = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogDebug" );
         if ( !dlsym_ptr ) {
@@ -6860,10 +6854,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogDebug ( int category, char * fmt );
+void SDL_LogDebug ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogInfo_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogInfo_handle )( int category, const char * fmt );
     static auto SDL_LogInfo = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogInfo" );
         if ( !dlsym_ptr ) {
@@ -6873,10 +6867,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogInfo ( int category, char * fmt );
+void SDL_LogInfo ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogWarn_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogWarn_handle )( int category, const char * fmt );
     static auto SDL_LogWarn = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogWarn" );
         if ( !dlsym_ptr ) {
@@ -6886,10 +6880,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogWarn ( int category, char * fmt );
+void SDL_LogWarn ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogError_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogError_handle )( int category, const char * fmt );
     static auto SDL_LogError = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogError" );
         if ( !dlsym_ptr ) {
@@ -6899,10 +6893,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogError ( int category, char * fmt );
+void SDL_LogError ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogCritical_handle )( int category, char * fmt );
+    typedef void ( *SDL_LogCritical_handle )( int category, const char * fmt );
     static auto SDL_LogCritical = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogCritical" );
         if ( !dlsym_ptr ) {
@@ -6912,10 +6906,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogCritical ( int category, char * fmt );
+void SDL_LogCritical ( int category, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogMessage_handle )( int category, SDL_LogPriority priority, char * fmt );
+    typedef void ( *SDL_LogMessage_handle )( int category, SDL_LogPriority priority, const char * fmt );
     static auto SDL_LogMessage = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogMessage" );
         if ( !dlsym_ptr ) {
@@ -6925,10 +6919,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogMessage ( int category, SDL_LogPriority priority, char * fmt );
+void SDL_LogMessage ( int category, SDL_LogPriority priority, const char * fmt );
 
 namespace sym{
-    typedef void ( *SDL_LogMessageV_handle )( int category, SDL_LogPriority priority, char * fmt, va_list ap );
+    typedef void ( *SDL_LogMessageV_handle )( int category, SDL_LogPriority priority, const char * fmt, va_list ap );
     static auto SDL_LogMessageV = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogMessageV" );
         if ( !dlsym_ptr ) {
@@ -6938,7 +6932,7 @@ namespace sym{
     } ();
 }
 
-void SDL_LogMessageV ( int category, SDL_LogPriority priority, char * fmt, va_list ap );
+void SDL_LogMessageV ( int category, SDL_LogPriority priority, const char * fmt, va_list ap );
 
 namespace sym{
     typedef void ( *SDL_LogGetOutputFunction_handle )( SDL_LogOutputFunction * callback, void ** userdata );
@@ -6954,7 +6948,7 @@ namespace sym{
 void SDL_LogGetOutputFunction ( SDL_LogOutputFunction * callback, void ** userdata );
 
 namespace sym{
-    typedef void ( *SDL_LogSetOutputFunction_handle )( SDL_LogOutputFunction, void * userdata );
+    typedef void ( *SDL_LogSetOutputFunction_handle )( SDL_LogOutputFunction callback, void * userdata );
     static auto SDL_LogSetOutputFunction = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LogSetOutputFunction" );
         if ( !dlsym_ptr ) {
@@ -6964,10 +6958,10 @@ namespace sym{
     } ();
 }
 
-void SDL_LogSetOutputFunction ( SDL_LogOutputFunction, void * userdata );
+void SDL_LogSetOutputFunction ( SDL_LogOutputFunction callback, void * userdata );
 
 namespace sym{
-    typedef int ( *SDL_ShowMessageBox_handle )( SDL_MessageBoxData * messageboxdata, int * buttonid );
+    typedef int ( *SDL_ShowMessageBox_handle )( const SDL_MessageBoxData * messageboxdata, int * buttonid );
     static auto SDL_ShowMessageBox = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_ShowMessageBox" );
         if ( !dlsym_ptr ) {
@@ -6977,10 +6971,10 @@ namespace sym{
     } ();
 }
 
-int SDL_ShowMessageBox ( SDL_MessageBoxData * messageboxdata, int * buttonid );
+int SDL_ShowMessageBox ( const SDL_MessageBoxData * messageboxdata, int * buttonid );
 
 namespace sym{
-    typedef int ( *SDL_ShowSimpleMessageBox_handle )( Uint32 flags, char * title, char * message, SDL_Window * window );
+    typedef int ( *SDL_ShowSimpleMessageBox_handle )( Uint32 flags, const char * title, const char * message, SDL_Window * window );
     static auto SDL_ShowSimpleMessageBox = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_ShowSimpleMessageBox" );
         if ( !dlsym_ptr ) {
@@ -6990,7 +6984,7 @@ namespace sym{
     } ();
 }
 
-int SDL_ShowSimpleMessageBox ( Uint32 flags, char * title, char * message, SDL_Window * window );
+int SDL_ShowSimpleMessageBox ( Uint32 flags, const char * title, const char * message, SDL_Window * window );
 
 namespace sym{
     typedef SDL_PowerState ( *SDL_GetPowerInfo_handle )( int * secs, int * pct );
@@ -7227,7 +7221,7 @@ namespace sym{
 int SDL_GetTextureBlendMode ( SDL_Texture * texture, SDL_BlendMode * blendMode );
 
 namespace sym{
-    typedef int ( *SDL_UpdateTexture_handle )( SDL_Texture * texture, SDL_Rect * rect, void * pixels, int pitch );
+    typedef int ( *SDL_UpdateTexture_handle )( SDL_Texture * texture, const SDL_Rect * rect, const void * pixels, int pitch );
     static auto SDL_UpdateTexture = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UpdateTexture" );
         if ( !dlsym_ptr ) {
@@ -7237,10 +7231,10 @@ namespace sym{
     } ();
 }
 
-int SDL_UpdateTexture ( SDL_Texture * texture, SDL_Rect * rect, void * pixels, int pitch );
+int SDL_UpdateTexture ( SDL_Texture * texture, const SDL_Rect * rect, const void * pixels, int pitch );
 
 namespace sym{
-    typedef int ( *SDL_UpdateYUVTexture_handle )( SDL_Texture * texture, SDL_Rect * rect, Uint8 * Yplane, int Ypitch, Uint8 * Uplane, int Upitch, Uint8 * Vplane, int Vpitch );
+    typedef int ( *SDL_UpdateYUVTexture_handle )( SDL_Texture * texture, const SDL_Rect * rect, const Uint8 * Yplane, int Ypitch, const Uint8 * Uplane, int Upitch, const Uint8 * Vplane, int Vpitch );
     static auto SDL_UpdateYUVTexture = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_UpdateYUVTexture" );
         if ( !dlsym_ptr ) {
@@ -7250,10 +7244,10 @@ namespace sym{
     } ();
 }
 
-int SDL_UpdateYUVTexture ( SDL_Texture * texture, SDL_Rect * rect, Uint8 * Yplane, int Ypitch, Uint8 * Uplane, int Upitch, Uint8 * Vplane, int Vpitch );
+int SDL_UpdateYUVTexture ( SDL_Texture * texture, const SDL_Rect * rect, const Uint8 * Yplane, int Ypitch, const Uint8 * Uplane, int Upitch, const Uint8 * Vplane, int Vpitch );
 
 namespace sym{
-    typedef int ( *SDL_LockTexture_handle )( SDL_Texture * texture, SDL_Rect * rect, void ** pixels, int * pitch );
+    typedef int ( *SDL_LockTexture_handle )( SDL_Texture * texture, const SDL_Rect * rect, void ** pixels, int * pitch );
     static auto SDL_LockTexture = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_LockTexture" );
         if ( !dlsym_ptr ) {
@@ -7263,7 +7257,7 @@ namespace sym{
     } ();
 }
 
-int SDL_LockTexture ( SDL_Texture * texture, SDL_Rect * rect, void ** pixels, int * pitch );
+int SDL_LockTexture ( SDL_Texture * texture, const SDL_Rect * rect, void ** pixels, int * pitch );
 
 namespace sym{
     typedef void ( *SDL_UnlockTexture_handle )( SDL_Texture * texture );
@@ -7370,7 +7364,7 @@ namespace sym{
 SDL_bool SDL_RenderGetIntegerScale ( SDL_Renderer * renderer );
 
 namespace sym{
-    typedef int ( *SDL_RenderSetViewport_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
+    typedef int ( *SDL_RenderSetViewport_handle )( SDL_Renderer * renderer, const SDL_Rect * rect );
     static auto SDL_RenderSetViewport = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderSetViewport" );
         if ( !dlsym_ptr ) {
@@ -7380,7 +7374,7 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderSetViewport ( SDL_Renderer * renderer, SDL_Rect * rect );
+int SDL_RenderSetViewport ( SDL_Renderer * renderer, const SDL_Rect * rect );
 
 namespace sym{
     typedef void ( *SDL_RenderGetViewport_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
@@ -7396,7 +7390,7 @@ namespace sym{
 void SDL_RenderGetViewport ( SDL_Renderer * renderer, SDL_Rect * rect );
 
 namespace sym{
-    typedef int ( *SDL_RenderSetClipRect_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
+    typedef int ( *SDL_RenderSetClipRect_handle )( SDL_Renderer * renderer, const SDL_Rect * rect );
     static auto SDL_RenderSetClipRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderSetClipRect" );
         if ( !dlsym_ptr ) {
@@ -7406,7 +7400,7 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderSetClipRect ( SDL_Renderer * renderer, SDL_Rect * rect );
+int SDL_RenderSetClipRect ( SDL_Renderer * renderer, const SDL_Rect * rect );
 
 namespace sym{
     typedef void ( *SDL_RenderGetClipRect_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
@@ -7539,7 +7533,7 @@ namespace sym{
 int SDL_RenderDrawPoint ( SDL_Renderer * renderer, int x, int y );
 
 namespace sym{
-    typedef int ( *SDL_RenderDrawPoints_handle )( SDL_Renderer * renderer, SDL_Point * points, int count );
+    typedef int ( *SDL_RenderDrawPoints_handle )( SDL_Renderer * renderer, const SDL_Point * points, int count );
     static auto SDL_RenderDrawPoints = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderDrawPoints" );
         if ( !dlsym_ptr ) {
@@ -7549,7 +7543,7 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderDrawPoints ( SDL_Renderer * renderer, SDL_Point * points, int count );
+int SDL_RenderDrawPoints ( SDL_Renderer * renderer, const SDL_Point * points, int count );
 
 namespace sym{
     typedef int ( *SDL_RenderDrawLine_handle )( SDL_Renderer * renderer, int x1, int y1, int x2, int y2 );
@@ -7565,7 +7559,7 @@ namespace sym{
 int SDL_RenderDrawLine ( SDL_Renderer * renderer, int x1, int y1, int x2, int y2 );
 
 namespace sym{
-    typedef int ( *SDL_RenderDrawLines_handle )( SDL_Renderer * renderer, SDL_Point * points, int count );
+    typedef int ( *SDL_RenderDrawLines_handle )( SDL_Renderer * renderer, const SDL_Point * points, int count );
     static auto SDL_RenderDrawLines = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderDrawLines" );
         if ( !dlsym_ptr ) {
@@ -7575,10 +7569,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderDrawLines ( SDL_Renderer * renderer, SDL_Point * points, int count );
+int SDL_RenderDrawLines ( SDL_Renderer * renderer, const SDL_Point * points, int count );
 
 namespace sym{
-    typedef int ( *SDL_RenderDrawRect_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
+    typedef int ( *SDL_RenderDrawRect_handle )( SDL_Renderer * renderer, const SDL_Rect * rect );
     static auto SDL_RenderDrawRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderDrawRect" );
         if ( !dlsym_ptr ) {
@@ -7588,10 +7582,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderDrawRect ( SDL_Renderer * renderer, SDL_Rect * rect );
+int SDL_RenderDrawRect ( SDL_Renderer * renderer, const SDL_Rect * rect );
 
 namespace sym{
-    typedef int ( *SDL_RenderDrawRects_handle )( SDL_Renderer * renderer, SDL_Rect * rects, int count );
+    typedef int ( *SDL_RenderDrawRects_handle )( SDL_Renderer * renderer, const SDL_Rect * rects, int count );
     static auto SDL_RenderDrawRects = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderDrawRects" );
         if ( !dlsym_ptr ) {
@@ -7601,10 +7595,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderDrawRects ( SDL_Renderer * renderer, SDL_Rect * rects, int count );
+int SDL_RenderDrawRects ( SDL_Renderer * renderer, const SDL_Rect * rects, int count );
 
 namespace sym{
-    typedef int ( *SDL_RenderFillRect_handle )( SDL_Renderer * renderer, SDL_Rect * rect );
+    typedef int ( *SDL_RenderFillRect_handle )( SDL_Renderer * renderer, const SDL_Rect * rect );
     static auto SDL_RenderFillRect = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderFillRect" );
         if ( !dlsym_ptr ) {
@@ -7614,10 +7608,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderFillRect ( SDL_Renderer * renderer, SDL_Rect * rect );
+int SDL_RenderFillRect ( SDL_Renderer * renderer, const SDL_Rect * rect );
 
 namespace sym{
-    typedef int ( *SDL_RenderFillRects_handle )( SDL_Renderer * renderer, SDL_Rect * rects, int count );
+    typedef int ( *SDL_RenderFillRects_handle )( SDL_Renderer * renderer, const SDL_Rect * rects, int count );
     static auto SDL_RenderFillRects = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderFillRects" );
         if ( !dlsym_ptr ) {
@@ -7627,10 +7621,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderFillRects ( SDL_Renderer * renderer, SDL_Rect * rects, int count );
+int SDL_RenderFillRects ( SDL_Renderer * renderer, const SDL_Rect * rects, int count );
 
 namespace sym{
-    typedef int ( *SDL_RenderCopy_handle )( SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect * srcrect, SDL_Rect * dstrect );
+    typedef int ( *SDL_RenderCopy_handle )( SDL_Renderer * renderer, SDL_Texture * texture, const SDL_Rect * srcrect, const SDL_Rect * dstrect );
     static auto SDL_RenderCopy = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderCopy" );
         if ( !dlsym_ptr ) {
@@ -7640,10 +7634,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderCopy ( SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect * srcrect, SDL_Rect * dstrect );
+int SDL_RenderCopy ( SDL_Renderer * renderer, SDL_Texture * texture, const SDL_Rect * srcrect, const SDL_Rect * dstrect );
 
 namespace sym{
-    typedef int ( *SDL_RenderCopyEx_handle )( SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect * srcrect, SDL_Rect * dstrect, double angle, SDL_Point * center, SDL_RendererFlip flip );
+    typedef int ( *SDL_RenderCopyEx_handle )( SDL_Renderer * renderer, SDL_Texture * texture, const SDL_Rect * srcrect, const SDL_Rect * dstrect, const double angle, const SDL_Point * center, const SDL_RendererFlip flip );
     static auto SDL_RenderCopyEx = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderCopyEx" );
         if ( !dlsym_ptr ) {
@@ -7653,10 +7647,10 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderCopyEx ( SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect * srcrect, SDL_Rect * dstrect, double angle, SDL_Point * center, SDL_RendererFlip flip );
+int SDL_RenderCopyEx ( SDL_Renderer * renderer, SDL_Texture * texture, const SDL_Rect * srcrect, const SDL_Rect * dstrect, const double angle, const SDL_Point * center, const SDL_RendererFlip flip );
 
 namespace sym{
-    typedef int ( *SDL_RenderReadPixels_handle )( SDL_Renderer * renderer, SDL_Rect * rect, Uint32 format, void * pixels, int pitch );
+    typedef int ( *SDL_RenderReadPixels_handle )( SDL_Renderer * renderer, const SDL_Rect * rect, Uint32 format, void * pixels, int pitch );
     static auto SDL_RenderReadPixels = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_RenderReadPixels" );
         if ( !dlsym_ptr ) {
@@ -7666,7 +7660,7 @@ namespace sym{
     } ();
 }
 
-int SDL_RenderReadPixels ( SDL_Renderer * renderer, SDL_Rect * rect, Uint32 format, void * pixels, int pitch );
+int SDL_RenderReadPixels ( SDL_Renderer * renderer, const SDL_Rect * rect, Uint32 format, void * pixels, int pitch );
 
 namespace sym{
     typedef void ( *SDL_RenderPresent_handle )( SDL_Renderer * renderer );
@@ -7760,7 +7754,7 @@ namespace sym{
 void * SDL_RenderGetMetalCommandEncoder ( SDL_Renderer * renderer );
 
 namespace sym{
-    typedef SDL_Window * ( *SDL_CreateShapedWindow_handle )( char * title, unsigned int x, unsigned int y, unsigned int w, unsigned int h, Uint32 flags );
+    typedef SDL_Window * ( *SDL_CreateShapedWindow_handle )( const char * title, unsigned int x, unsigned int y, unsigned int w, unsigned int h, Uint32 flags );
     static auto SDL_CreateShapedWindow = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_CreateShapedWindow" );
         if ( !dlsym_ptr ) {
@@ -7770,10 +7764,10 @@ namespace sym{
     } ();
 }
 
-SDL_Window * SDL_CreateShapedWindow ( char * title, unsigned int x, unsigned int y, unsigned int w, unsigned int h, Uint32 flags );
+SDL_Window * SDL_CreateShapedWindow ( const char * title, unsigned int x, unsigned int y, unsigned int w, unsigned int h, Uint32 flags );
 
 namespace sym{
-    typedef SDL_bool ( *SDL_IsShapedWindow_handle )( SDL_Window * window );
+    typedef SDL_bool ( *SDL_IsShapedWindow_handle )( const SDL_Window * window );
     static auto SDL_IsShapedWindow = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_IsShapedWindow" );
         if ( !dlsym_ptr ) {
@@ -7783,7 +7777,7 @@ namespace sym{
     } ();
 }
 
-SDL_bool SDL_IsShapedWindow ( SDL_Window * window );
+SDL_bool SDL_IsShapedWindow ( const SDL_Window * window );
 
 namespace sym{
     typedef int ( *SDL_SetWindowShape_handle )( SDL_Window * window, SDL_Surface * shape, SDL_WindowShapeMode * shape_mode );
@@ -7864,7 +7858,7 @@ namespace sym{
 void SDL_Delay ( Uint32 ms );
 
 namespace sym{
-    typedef SDL_TimerID ( *SDL_AddTimer_handle )( Uint32 interval, SDL_TimerCallback, void * param );
+    typedef SDL_TimerID ( *SDL_AddTimer_handle )( Uint32 interval, SDL_TimerCallback callback, void * param );
     static auto SDL_AddTimer = [] () {
         auto dlsym_ptr = dlsym ( RTLD_NEXT, "SDL_AddTimer" );
         if ( !dlsym_ptr ) {
@@ -7874,7 +7868,7 @@ namespace sym{
     } ();
 }
 
-SDL_TimerID SDL_AddTimer ( Uint32 interval, SDL_TimerCallback, void * param );
+SDL_TimerID SDL_AddTimer ( Uint32 interval, SDL_TimerCallback callback, void * param );
 
 namespace sym{
     typedef SDL_bool ( *SDL_RemoveTimer_handle )( SDL_TimerID id );

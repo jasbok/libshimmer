@@ -1,7 +1,7 @@
 #ifndef SHIMMER_GENERATOR_SOURCE_H
 #define SHIMMER_GENERATOR_SOURCE_H
 
-#include "function.h"
+#include "decl.h"
 
 #include <string>
 
@@ -19,9 +19,9 @@ public:
 
     virtual ~source();
 
-    source& write ( const function& function );
+    source& write ( const struct function_decl& function );
 
-    source& operator<<( const function& function );
+    source& operator<<( const struct function_decl& function );
 
 private:
     path _header;

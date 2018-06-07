@@ -2,6 +2,10 @@
 
 #include "common.h"
 
+#include "common/str.h"
+
+#include "fmt/format.h"
+
 #include <iostream>
 #include <vector>
 
@@ -16,7 +20,7 @@ const DeclarationMatcher fdecl_matcher::MATCHER =
                            hasAttr ( clang::attr::Kind::Visibility ) ) )
         .bind ( fdecl_matcher::BINDING );
 
-fdecl_matcher::fdecl_matcher( std::vector<function>& out )
+fdecl_matcher::fdecl_matcher( std::vector<struct function_decl>& out )
     : _out ( out )
 {}
 
@@ -24,7 +28,48 @@ void fdecl_matcher::run ( const match& match ) {
     const auto& decl = match.Nodes.getNodeAs<clang::FunctionDecl>( BINDING );
 
     if ( decl ) {
-        _out.push_back ( { match.Context->getSourceManager(), decl } );
+        struct function_decl func;
+
+        auto ret = decl->getReturnType();
+        func.ret.type = ret.getAsString();
+
+        func.name = decl->getNameAsString();
+
+        for ( unsigned int i = 0; i < decl->getNumParams(); i++ ) {
+            auto parm_decl = decl->getParamDecl ( i );
+
+            struct parameter_decl parm;
+            parm.type.type = parm_decl->getOriginalType().getAsString();
+            parm.name      = parm_decl->getNameAsString();
+
+            if ( parm.name.empty() ) {
+                parm.name = "parm_" + std::to_string ( i );
+            }
+
+            if ( common::contains ( parm.type.type,
+                                    "\\(\\s*\\*\\s*\\)" ) ) {
+                parm.type_name = common::replace ( parm.type.type,
+                                                   "\\(\\s*\\*\\s*\\)",
+                                                   "(*" + parm.name + ")" );
+            }
+            else {
+                parm.type_name = parm.type.type + " " + parm.name;
+            }
+
+            func.parameters.emplace_back ( parm );
+        }
+
+        //        fmt::print("function ret: {}\n", func.ret.type);
+        //        fmt::print("function name: {}\n", func.name);
+        //        for(const auto& parm : func.parameters){
+        //          fmt::print("parm type: {}\n", parm.type.type);
+        //          fmt::print("parm name: {}\n", parm.name);
+        //        }
+        //        fmt::print("\n");
+
+        _out.emplace_back ( func );
+
+        // _out.push_back ( { match.Context->getSourceManager(), decl } );
 
         // decl->dump();
     }

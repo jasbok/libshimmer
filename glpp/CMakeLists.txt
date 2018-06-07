@@ -3,6 +3,8 @@
 ###############################################################################
 find_package( GLEW )
 find_package( glm )
+
+set( OpenGL_GL_PREFERENCE GLVND )
 find_package( OpenGL )
 
 set( OPENGL_INCLUDES

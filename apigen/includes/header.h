@@ -1,7 +1,7 @@
 #ifndef SHIMMER_GENERATOR_HEADER_H
 #define SHIMMER_GENERATOR_HEADER_H
 
-#include "function.h"
+#include "decl.h"
 
 #include <fstream>
 
@@ -19,9 +19,9 @@ public:
 
     virtual ~header();
 
-    header& write ( const function& function );
+    header& write ( const function_decl& function );
 
-    header& operator<<( const function& function );
+    header& operator<<( const function_decl& function );
 
 private:
     path _source;

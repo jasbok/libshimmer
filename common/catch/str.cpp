@@ -70,3 +70,34 @@ TEST_CASE ( "Split strings using a regex, filtering out empty segments.",
     REQUIRE ( split_e.size() == 1 );
     CHECK ( split_e == vector<string>{ "/a/b/c/d/e" } );
 }
+
+TEST_CASE (
+    "Join a list of strings into a composite string using the specified separator",
+    TAGS ) {
+    using namespace std;
+
+    const vector<string> vec_none;
+    const vector<string> vec_one   = { "a" };
+    const vector<string> vec_two   = { "a", "b" };
+    const vector<string> vec_three = { "a", "b", "c" };
+
+    const string sep_empty;
+    const string sep_char = ",";
+    const string sep_str  = " and ";
+
+    CHECK ( common::join ( vec_none, sep_empty ) == "" );
+    CHECK ( common::join ( vec_none, sep_char ) == "" );
+    CHECK ( common::join ( vec_none, sep_str ) == "" );
+
+    CHECK ( common::join ( vec_one, sep_empty ) == "a" );
+    CHECK ( common::join ( vec_one, sep_char ) == "a" );
+    CHECK ( common::join ( vec_one, sep_str ) == "a" );
+
+    CHECK ( common::join ( vec_two, sep_empty ) == "ab" );
+    CHECK ( common::join ( vec_two, sep_char ) == "a,b" );
+    CHECK ( common::join ( vec_two, sep_str ) == "a and b" );
+
+    CHECK ( common::join ( vec_three, sep_empty ) == "abc" );
+    CHECK ( common::join ( vec_three, sep_char ) == "a,b,c" );
+    CHECK ( common::join ( vec_three, sep_str ) == "a and b and c" );
+}

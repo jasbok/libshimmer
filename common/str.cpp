@@ -1,5 +1,7 @@
 #include "str.h"
 
+#include <sstream>
+
 namespace common
 {
 std::vector<std::string> split ( const std::string& str,
@@ -41,5 +43,32 @@ std::vector<std::string> split_ignore_empty ( const std::string& str,
     }
 
     return split;
+}
+
+std::string replace ( const std::string& src,
+                      const std::string& match,
+                      const std::string& repl )
+{
+    return std::regex_replace ( src, std::regex ( match ), repl );
+}
+
+bool contains ( const std::string& src, const std::string& match )
+{
+    return std::regex_search ( src, std::regex ( match ) );
+}
+
+std::string join ( const std::vector<std::string> strings,
+                   const std::string              separator )
+{
+    std::stringstream ss;
+
+    if ( !strings.empty() ) {
+        for ( unsigned int i = 0; i < strings.size() - 1; i++ ) {
+            ss << strings[i] << separator;
+        }
+        ss << strings.back();
+    }
+
+    return ss.str();
 }
 }

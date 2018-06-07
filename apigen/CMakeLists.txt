@@ -11,15 +11,19 @@ find_package( Filesystem MODULE )
 ###############################################################################
 set( APIGEN_INCLUDES
         includes/common.h
+        includes/decl.h
         includes/fdecl_matcher.h
         includes/function.h
+        includes/decl.h
         includes/header.h
         includes/output.h
         includes/parameter.h
         includes/source.h
         includes/type.h )
 
-include_directories( includes ${EXTERNAL_ROOT}/includes )
+include_directories( includes
+    ${ROOT}
+    ${EXTERNAL_ROOT}/includes )
 
 
 ###############################################################################
@@ -41,6 +45,7 @@ set( APIGEN_SOURCES apigen.cpp
 #   Set apigen link libraries.
 ###############################################################################
 set( APIGEN_LIBRARIES
+        common
         ${CLANG_LIBRARIES}
         ${LLVM_LIBRARIES}
         ${FILESYSTEM_LIBRARIES} )
