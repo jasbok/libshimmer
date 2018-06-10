@@ -7,12 +7,6 @@
 
 namespace glpp
 {
-struct buffer_data
-{
-    void*  ptr;
-    size_t size;
-};
-
 template<GLenum TARGET, typename THIS>
 class _mbuffer : public _buffer<TARGET, THIS>
 {

@@ -38,10 +38,11 @@ public:
 
     std::string info_log ( size_t size = 1024 ) const;
 
+    program&    link_and_throw ( size_t log_size = 1024 );
 
-    program& use();
+    program&    use();
 
-    program& unbind();
+    static void unbind();
 
 
     GLint attribute_location ( const std::string& name ) const;
@@ -131,6 +132,13 @@ public:
     program& uniform ( const std::string& name,
                        const glm::mat4&   value,
                        bool               transpose = false );
+
+
+    struct link_exception : public std::runtime_error {
+        link_exception( const std::string& log );
+
+        virtual ~link_exception();
+    };
 
 private:
     GLuint _handle;

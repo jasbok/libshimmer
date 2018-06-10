@@ -71,3 +71,47 @@ string shader::info_log ( size_t size ) const {
 
     return string ( &buffer[0] );
 }
+
+shader& shader::compile_and_throw ( size_t log_size ) {
+    if ( compile().compile_status() ) return *this;
+
+    throw compile_exception ( _source, info_log ( log_size ) );
+}
+
+shader::builder shader::create() {
+    return builder();
+}
+
+shader shader::builder::compute ( const string& source ) {
+    return shader ( type::compute, source );
+}
+
+shader shader::builder::fragment ( const string& source ) {
+    return shader ( type::fragment, source );
+}
+
+shader shader::builder::geometry ( const string& source ) {
+    return shader ( type::geometry, source );
+}
+
+shader shader::builder::tess_control ( const string& source ) {
+    return shader ( type::tess_control, source );
+}
+
+shader shader::builder::tess_evaluation ( const string& source ) {
+    return shader ( type::tess_evaluation, source );
+}
+
+shader shader::builder::vertex ( const string& source ) {
+    return shader ( type::vertex, source );
+}
+
+shader::compile_exception::compile_exception( const string& source,
+                                              const string& log )
+    : runtime_error (
+          std::string ( "Failed to compile shader." )
+          + std::string ( "\nSource: " ) + source
+          + std::string ( "\nLog: " ) + log )
+{}
+
+shader::compile_exception::~compile_exception() {}

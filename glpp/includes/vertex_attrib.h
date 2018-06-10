@@ -10,12 +10,6 @@
 
 namespace glpp
 {
-struct attrib {
-    std::string name;
-    GLuint      size;
-    GLint       location = -1;
-};
-
 class vertex_attrib
 {
 public:
@@ -25,15 +19,7 @@ public:
                             GLuint             offset,
                             GLenum             type,
                             bool               normalised,
-                            GLint              location = -1 )
-        : _name ( name ),
-          _size ( size ),
-          _stride ( stride ),
-          _offset ( offset ),
-          _type ( type ),
-          _normalised ( normalised ),
-          _location ( location )
-    {}
+                            GLint              location = -1 );
 
     vertex_attrib( vertex_attrib&& move ) = default;
 
@@ -46,52 +32,19 @@ public:
     vertex_attrib& operator=( const vertex_attrib& copy ) = default;
 
 
-    std::string name() {
-        return _name;
-    }
+    std::string    name();
 
-    GLint size() {
-        return _size;
-    }
+    GLuint         size();
 
-    GLint location() {
-        return _location;
-    }
+    GLint          location();
 
-    vertex_attrib& location ( GLint location ) {
-        _location = location;
+    vertex_attrib& location ( GLint location );
 
-        return *this;
-    }
+    vertex_attrib& define_pointer();
 
-    vertex_attrib& define_pointer() {
-        if ( _location == -1 ) {
-            std::cerr << _name << ": Attribute location not set." << std::endl;
+    vertex_attrib& enable_array();
 
-            return *this;
-        }
-
-        glVertexAttribPointer ( _location,
-                                _size,
-                                _type,
-                                _normalised,
-                                _stride,
-                                reinterpret_cast<void*>( _offset ) );
-
-        return *this;
-    }
-
-    vertex_attrib& enable_array() {
-        glEnableVertexAttribArray ( _location );
-
-        return *this;
-    }
-
-    vertex_attrib& disable_array() {
-        glDisableVertexAttribArray ( _location );
-
-        return *this;
-    }
+    vertex_attrib& disable_array();
 
 private:
     std::string _name;
@@ -109,6 +62,12 @@ private:
     GLint _location;
 };
 
+struct attrib {
+    std::string name;
+    GLuint      size;
+    GLint       location = -1;
+};
+
 template<typename T,
          size_t T_SIZE = sizeof( T ),
          GLenum T_ENUM = to_glenum<T>( )>
@@ -124,7 +83,7 @@ public:
           _normalised ( false )
     {}
 
-    vertex_attrib_builder& stride ( GLuint stride )       {
+    vertex_attrib_builder& stride ( GLuint stride ) {
         _stride = stride;
 
         return *this;

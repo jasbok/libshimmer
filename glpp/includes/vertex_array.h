@@ -31,7 +31,7 @@ public:
 
     vertex_array& bind();
 
-    void          unbind();
+    static void   unbind();
 
 
     vertex_array& enable_attribute_arrays (
@@ -43,6 +43,8 @@ public:
 private:
     GLuint _handle;
 };
+
+typedef vertex_array vao;
 }
 
 #endif // ifndef GLPP_VERTEX_ARRAY_H

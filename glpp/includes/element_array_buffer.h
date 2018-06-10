@@ -29,6 +29,8 @@ public:
     element_array_buffer& data ( const std::vector<GLuint>& vec,
                                  enum usage                 usage );
 };
+
+typedef element_array_buffer ebo;
 }
 
 #endif // ifndef GLPP_ELEMENT_ARRAY_BUFFER_H

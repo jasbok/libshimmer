@@ -94,7 +94,7 @@ public:
         return static_cast<THIS&>( *this );
     }
 
-    void unbind() {
+    static void unbind() {
         glBindBuffer ( static_cast<GLenum>( TARGET ), 0 );
     }
 

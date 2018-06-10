@@ -132,7 +132,8 @@ set( SOURCES
         ${SOURCES_DIR}/texture_unit.cpp
         ${SOURCES_DIR}/texture_units.cpp
         ${SOURCES_DIR}/uniform.cpp
-        ${SOURCES_DIR}/vertex_array.cpp)
+        ${SOURCES_DIR}/vertex_array.cpp
+        ${SOURCES_DIR}/vertex_attrib.cpp )
 
 
 ###############################################################################

@@ -62,16 +62,20 @@ string program::info_log ( size_t size ) const {
     return string ( &buffer[0] );
 }
 
+program& program::link_and_throw ( size_t log_size ) {
+    if ( link().link_status() ) return *this;
+
+    throw link_exception ( info_log ( log_size ) );
+}
+
 program& program::use() {
     glUseProgram ( _handle );
 
     return *this;
 }
 
-program& program::unbind() {
+void program::unbind() {
     glUseProgram ( 0 );
-
-    return *this;
 }
 
 GLint program::attribute_location ( const string& name ) const {
@@ -391,3 +395,11 @@ program& program::uniform ( const std::string& name,
 
     return *this;
 }
+
+program::link_exception::link_exception( const string& log )
+    : runtime_error (
+          std::string ( "Failed to link program." )
+          + std::string ( "Log: " ) + log )
+{}
+
+program::link_exception::~link_exception() {}
