@@ -20,6 +20,8 @@ public:
 
     virtual ~shimmer() = default;
 
+    void create_window ( dims_2u& dims );
+
     void create_window ( coords_2i& coords,
                          dims_2u&   dims );
 

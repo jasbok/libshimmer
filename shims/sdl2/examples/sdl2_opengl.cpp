@@ -104,6 +104,7 @@ void poll_events() {
 
 void update_camera() {
     glm::ivec2 previous_mouse_coords = mouse_coords;
+
     SDL_GetMouseState ( &mouse_coords.x, &mouse_coords.y );
 
     if ( mouse_left_down ) {
@@ -128,6 +129,7 @@ void update_cursor ( const std::shared_ptr<glpp::entity>& cursor ) {
 
 int sdl_error ( const std::string& err, bool do_quit = true ) {
     std::cerr << err << SDL_GetError() << std::endl;
+
     cleanup();
 
     if ( do_quit ) SDL_Quit();
@@ -413,6 +415,8 @@ int main ( int argc, char** argv ) {
         SDL_GL_SwapWindow ( WINDOW );
 
         poll_events();
+
+        SDL_Delay ( 10 );
     }
 
     cleanup();

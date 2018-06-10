@@ -1,38 +1,47 @@
 #ifndef SHIMS_SDL_SHIM_H
 #define SHIMS_SDL_SHIM_H
 
-#include "limiter.h"
-#include "shimmer.h"
+#include "events.h"
+#include "input.h"
+#include "video.h"
+#include "window.h"
 
-#include <SDL.h>
+#include "api/sym/SDL_sym.h"
 
 #include <memory>
 
-struct shim {
-    SDL_Surface* video;
-    bool         do_resize = false;
+class events;
 
-    shimmer::dims_2u   window_dims;
-    shimmer::coords_2i window_coords;
-    std::string        window_title;
-    shimmer::coords_2i mouse_coords;
+class shim
+{
+    class shimmer::shimmer _lib;
+
+    //
+    // Main
+    //
+    Uint32 _flags;
+
+public:
+    shim();
+
+    virtual ~shim();
+
+    class events events;
+
+    class input input;
+
+    class video video;
+
+    class window window;
+
+    //
+    // Main
+    //
+    int  init ( Uint32 flags );
+
+    void quit();
 };
 
-extern struct shim shim;
-
-extern std::shared_ptr<class ::shimmer::shimmer> libshimmer;
-
-void init_shimmer();
-
-SHIM ( int,          SDL_Init,
-       Uint32 flags );
-
-SHIM ( void,         SDL_Quit,
-       void );
-
-SHIM ( SDL_GrabMode, SDL_WM_GrabInput,
-       SDL_GrabMode mode );
-
-SHIM ( void,         SDL_WarpMouse, Uint16 x, Uint16 y );
+extern class shim shim;
 
 #endif // ifndef SHIMS_SDL_SHIM_H

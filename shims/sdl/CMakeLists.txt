@@ -11,7 +11,7 @@ set( SDL_SHIM_INCLUDE_DIR ${SHIMS_ROOT}/sdl/includes )
 
 
 ###############################################################################
-#   Find all header files for SDL2 shim.
+#   Find all header files for SDL shim.
 ###############################################################################
 file(GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h)
 
@@ -20,7 +20,6 @@ file(GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h)
 #   Set include directories.
 ###############################################################################
 set( INCLUDES
-        ${ROOT}
         ${SDL_INCLUDE_DIR}
         ${SDL_SHIM_INCLUDE_DIR} )
 
@@ -31,10 +30,12 @@ include_directories(${INCLUDES})
 #   Set sources.
 ###############################################################################
 set( SOURCES
-        sources/event.cpp
-        sources/mouse.cpp
+        sources/events.cpp
+        sources/input.cpp
+        sources/sdl.cpp
         sources/shim.cpp
-        sources/video.cpp)
+        sources/video.cpp
+        sources/window.cpp )
 
 
 ###############################################################################

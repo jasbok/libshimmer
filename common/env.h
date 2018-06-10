@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace common
+namespace common::env
 {
 /**
  * @brief evar Reads an environment variable.

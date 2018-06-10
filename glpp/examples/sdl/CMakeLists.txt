@@ -1,37 +1,28 @@
 ###############################################################################
-#   List common headers.
+#   Find and store SDL paths.
 ###############################################################################
-set( HEADERS
-        common.h
-        coords.h
-        dims.h
-        env.h
-        file.h
-        str.h )
+find_package( SDL )
 
 
 ###############################################################################
-#   List common sources.
+#   Set include directories.
+###############################################################################
+set( INCLUDES
+        ${SDL_INCLUDE_DIR}
+        ${GLPP_ROOT}/includes )
+
+include_directories( ${INCLUDES} )
+
+
+###############################################################################
+#   Set sources.
 ###############################################################################
 set( SOURCES
-        ${COMMON_ROOT}/env.cpp
-        ${COMMON_ROOT}/file.cpp
-        ${COMMON_ROOT}/str.cpp )
+        sdl_example.cpp )
 
 
 ###############################################################################
-#   Build common shared library.
+#   Build shim library.
 ###############################################################################
-add_library( common SHARED ${HEADERS} ${SOURCES} )
-
-
-###############################################################################
-#   Install libs and shaders
-###############################################################################
-install( TARGETS common DESTINATION lib )
-
-
-###############################################################################
-#   Build catch tests.
-###############################################################################
-add_subdirectory( catch )
+add_executable( glpp_sdl_example ${SOURCES} ${HEADERS} )
+target_link_libraries( glpp_sdl_example glpp ${SDL_LIBRARY} ${ALL_OPENGL_LIBRARIES} )

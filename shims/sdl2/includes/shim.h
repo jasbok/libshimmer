@@ -3,7 +3,7 @@
 
 #include "shimmer.h"
 
-#include <SDL.h>
+#include "api/sym/SDL2_sym.h"
 
 #include <memory>
 
@@ -22,8 +22,5 @@ struct shim {
 extern struct shim shim;
 
 void init_shimmer();
-
-SHIM ( int,  SDL_Init, Uint32 flags );
-SHIM ( void, SDL_Quit, void );
 
 #endif // ifndef SHIMS_SDL2_SHIM_H

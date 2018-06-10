@@ -1,5 +1,7 @@
 #include "event.h"
 
+#include "shim.h"
+
 void process_event ( SDL_Event* event ) {
     switch ( event->type ) {
     case SDL_MOUSEBUTTONDOWN:
@@ -38,8 +40,6 @@ void process_event ( SDL_Event* event ) {
 
 int SDL_PollEvent ( SDL_Event* event )
 {
-    SHIM_LOG();
-
     auto available = sym::SDL_PollEvent ( event );
 
     if ( available ) {
@@ -50,8 +50,6 @@ int SDL_PollEvent ( SDL_Event* event )
 }
 
 void SDL_PumpEvents() {
-    SHIM_LOG();
-
     return sym::SDL_PumpEvents();
 }
 
@@ -61,8 +59,6 @@ int SDL_PeepEvents (
     SDL_eventaction action,
     Uint32          minType,
     Uint32          maxType ) {
-    SHIM_LOG();
-
     int ret =
         sym::SDL_PeepEvents ( events, numevents, action, minType, maxType );
 

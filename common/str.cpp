@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-namespace common
+namespace common::str
 {
 std::vector<std::string> split ( const std::string& str,
                                  const std::regex&  reg )

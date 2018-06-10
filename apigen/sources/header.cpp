@@ -44,7 +44,7 @@ namespace sym{{
     _destination << fmt::format ( templ,
                                   function.ret.type,
                                   function.name,
-                                  common::join ( parameters, ", " ) );
+                                  common::str::join ( parameters, ", " ) );
 
     return *this;
 }
@@ -58,14 +58,14 @@ void header::_open_include_guard_and_includes() {
         R"(#ifndef APIGEN_{0}_H
 #define APIGEN_{0}_H
 
-#include {1}
+#include "{1}"
 
 #include <dlfcn.h>
 )";
 
     _destination << fmt::format ( templ,
                                   _source.stem().c_str(),
-                                  _source.filename() );
+                                  _source.filename().c_str() );
 }
 
 void header::_close_include_guard() {

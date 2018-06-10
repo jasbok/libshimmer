@@ -46,11 +46,12 @@ void fdecl_matcher::run ( const match& match ) {
                 parm.name = "parm_" + std::to_string ( i );
             }
 
-            if ( common::contains ( parm.type.type,
-                                    "\\(\\s*\\*\\s*\\)" ) ) {
-                parm.type_name = common::replace ( parm.type.type,
-                                                   "\\(\\s*\\*\\s*\\)",
-                                                   "(*" + parm.name + ")" );
+            if ( common::str::contains ( parm.type.type,
+                                         "\\(\\s*\\*\\s*\\)" ) ) {
+                parm.type_name = common::str::replace ( parm.type.type,
+                                                        "\\(\\s*\\*\\s*\\)",
+                                                        "(*" + parm.name +
+                                                        ")" );
             }
             else {
                 parm.type_name = parm.type.type + " " + parm.name;
@@ -59,19 +60,7 @@ void fdecl_matcher::run ( const match& match ) {
             func.parameters.emplace_back ( parm );
         }
 
-        //        fmt::print("function ret: {}\n", func.ret.type);
-        //        fmt::print("function name: {}\n", func.name);
-        //        for(const auto& parm : func.parameters){
-        //          fmt::print("parm type: {}\n", parm.type.type);
-        //          fmt::print("parm name: {}\n", parm.name);
-        //        }
-        //        fmt::print("\n");
-
         _out.emplace_back ( func );
-
-        // _out.push_back ( { match.Context->getSourceManager(), decl } );
-
-        // decl->dump();
     }
 }
 }

@@ -41,24 +41,24 @@ const static string home_regex = "~|$HOME";
 
 
 environment::environment()
-    : _working_directory ( common::evar ( working_directory_evar, "." ) ),
+    : _working_directory ( common::env::evar ( working_directory_evar, "." ) ),
 
-      _home ( common::evar ( home_evar, _working_directory ) ),
+      _home ( common::env::evar ( home_evar, _working_directory ) ),
 
-      _cache_home ( common::evar ( cache_home_evar, _home + "/.cache" ) ),
+      _cache_home ( common::env::evar ( cache_home_evar, _home + "/.cache" ) ),
 
-      _config_home ( common::evar ( config_home_evar,
-              _home + "/.config" ) ),
+      _config_home ( common::env::evar ( config_home_evar,
+          _home + "/.config" ) ),
 
-      _data_home ( common::evar ( config_home_evar,
-              _home + "/.local/share" ) ),
+      _data_home ( common::env::evar ( config_home_evar,
+          _home + "/.local/share" ) ),
 
       _pictures_directory (
-          common::evar ( pictures_dir_evar, _home + "/Pictures" ) ),
+          common::env::evar ( pictures_dir_evar, _home + "/Pictures" ) ),
 
 
-      _config_path ( common::evar ( config_path_evar,
-              _config_home + "/shimmer.config" ) ),
+      _config_path ( common::env::evar ( config_path_evar,
+          _config_home + "/shimmer.config" ) ),
 
       _font_paths (
           _read_evar_paths ( font_paths_evar,
@@ -67,14 +67,14 @@ environment::environment()
 
       _image_paths (
           _read_evar_paths ( image_paths_evar,
-                             { _data_home + shimmer_directory + "/images",
-                               _pictures_directory,
-                               SHIMMER_INSTALL_IMAGES } ) ),
+              { _data_home + shimmer_directory + "/images",
+                _pictures_directory,
+                SHIMMER_INSTALL_IMAGES } ) ),
 
       _shader_paths (
           _read_evar_paths ( shader_paths_evar,
-                             { _data_home + shimmer_directory + "/shaders",
-                               SHIMMER_INSTALL_SHADERS } ) )
+              { _data_home + shimmer_directory + "/shaders",
+                SHIMMER_INSTALL_SHADERS } ) )
 {}
 
 string environment::working_directory() const
@@ -126,8 +126,8 @@ std::vector<string> environment::_read_evar_paths (
     const string&                   evar,
     const std::vector<std::string>& defaultt ) const
 {
-    auto val   = common::evar ( evar, "" );
-    auto paths = common::split ( val, regex ( paths_split_regex ) );
+    auto val   = common::env::evar ( evar, "" );
+    auto paths = common::str::split ( val, regex ( paths_split_regex ) );
 
     paths.insert ( paths.end(), defaultt.begin(), defaultt.end() );
 

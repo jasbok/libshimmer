@@ -1,40 +1,22 @@
 #include "shim.h"
 
-std::shared_ptr<class ::shimmer::shimmer> libshimmer = nullptr;
+class shim shim;
 
-struct shim shim;
+shim::shim()
+    : _lib(),
+      events ( this ),
+      input ( &_lib ),
+      video ( &_lib ),
+      window ( &_lib )
+{}
 
-void init_shimmer() {
-    SHIM_LOG();
+shim::~shim()
+{}
 
-    if ( !libshimmer ) {
-        libshimmer = std::make_shared<class shimmer::shimmer>();
-    }
-}
-
-int SDL_Init ( Uint32 flags ) {
-    SHIM_LOG();
-
-    init_shimmer();
+int shim::init ( Uint32 flags ) {
+    _flags = flags;
 
     return sym::SDL_Init ( flags );
 }
 
-void SDL_Quit ( void ) {
-    SHIM_LOG();
-}
-
-SDL_GrabMode SDL_WM_GrabInput ( SDL_GrabMode mode ) {
-    SHIM_LOG();
-
-    sym::SDL_WM_GrabInput ( SDL_GRAB_OFF );
-
-    return mode;
-}
-
-void SDL_WarpMouse ( Uint16 x, Uint16 y ) {
-    shimmer::coords_2i coords ( x, y );
-    libshimmer->mouse_coords ( coords );
-
-    sym::SDL_WarpMouse ( coords.x, coords.y );
-}
+void shim::quit() {}

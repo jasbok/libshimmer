@@ -1,0 +1,7 @@
+This is a multiline file.
+This is another line.
+  This line has two starting spaces.
+
+The previous line is empty.
+
+This is the last line.

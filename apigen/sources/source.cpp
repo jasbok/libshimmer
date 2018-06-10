@@ -36,8 +36,8 @@ source& source::write ( const struct function_decl& function ) {
     _destination << fmt::format ( templ,
                                   function.ret.type,
                                   function.name,
-                                  common::join ( qual_parameters, ", " ),
-                                  common::join ( parameters,      ", " ) );
+                                  common::str::join ( qual_parameters, ", " ),
+                                  common::str::join ( parameters,      ", " ) );
 
     return *this;
 }
@@ -50,7 +50,7 @@ source& source::operator<<( const struct function_decl& function ) {
 
 void source::_include_header() {
     const static char* header =
-        R"(#include {0}
+        R"(#include "api/sym/{0}"
 #include <chrono>
 #include <fstream>
 #include <iomanip>
@@ -86,6 +86,6 @@ void source::_include_header() {
 
 )";
 
-    _destination << fmt::format ( header, _header.filename() );
+    _destination << fmt::format ( header, _header.filename().c_str() );
 }
 }

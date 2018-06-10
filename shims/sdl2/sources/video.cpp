@@ -1,6 +1,6 @@
 #include "video.h"
 
-#include "SDL_render.h"
+#include "shim.h"
 
 void capture_application_target() {
     SDL_GL_BindTexture ( shim.target, nullptr, nullptr );
@@ -44,8 +44,6 @@ SDL_Window* SDL_CreateWindow ( const char* title,
                                int         w,
                                int         h,
                                Uint32      flags ) {
-    SHIM_LOG();
-
     if ( !libshimmer ) {
         init_shimmer();
     }
@@ -77,8 +75,6 @@ SDL_Window* SDL_CreateWindow ( const char* title,
 SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
                                    int         index,
                                    Uint32      flags ) {
-    SHIM_LOG();
-
     if (  shim.window == window  ) {
         if ( !shim.renderer ) {
             shim.renderer = sym::SDL_CreateRenderer ( window, -1,
@@ -104,8 +100,6 @@ int SDL_CreateWindowAndRenderer ( int            width,
                                   Uint32         window_flags,
                                   SDL_Window**   window,
                                   SDL_Renderer** renderer ) {
-    SHIM_LOG();
-
     SDL_CreateWindow ( "SDL2 Application", 0, 0, width, height, window_flags
                        );
 
@@ -117,8 +111,6 @@ int SDL_CreateWindowAndRenderer ( int            width,
 }
 
 void SDL_RenderPresent ( SDL_Renderer* renderer ) {
-    SHIM_LOG();
-
     if ( shim.renderer == renderer ) {
         SDL_SetRenderTarget ( shim.renderer, nullptr );
 
@@ -134,36 +126,29 @@ void SDL_RenderPresent ( SDL_Renderer* renderer ) {
 }
 
 void SDL_GL_SwapWindow ( SDL_Window* window ) {
-    SHIM_LOG();
-
     return sym::SDL_GL_SwapWindow ( window );
 }
 
 void SDL_SetWindowTitle ( SDL_Window* window,
                           const char* title ) {
     std::string wtitle = title;
+
     libshimmer->set_window_title ( wtitle );
     sym::SDL_SetWindowTitle ( window, wtitle.c_str() );
 }
 
 int SDL_SetWindowDisplayMode ( SDL_Window*            window,
                                const SDL_DisplayMode* mode ) {
-    SHIM_LOG();
-
     return sym::SDL_SetWindowDisplayMode ( window, mode );
 }
 
 void SDL_DestroyWindow ( SDL_Window* window ) {
-    SHIM_LOG();
-
     if ( shim.window != window ) {
         sym::SDL_DestroyWindow ( window );
     }
 }
 
 void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
-    SHIM_LOG();
-
     if ( shim.renderer != renderer ) {
         sym::SDL_DestroyRenderer ( renderer );
     }
@@ -172,8 +157,6 @@ void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
 void SDL_GetWindowSize ( SDL_Window* window,
                          int*        w,
                          int*        h ) {
-    SHIM_LOG();
-
     auto dims = libshimmer->app_surface_dims();
 
     *w = dims.width;
@@ -181,23 +164,17 @@ void SDL_GetWindowSize ( SDL_Window* window,
 }
 
 SDL_Surface* SDL_GetWindowSurface ( SDL_Window* window ) {
-    SHIM_LOG();
-
     return sym::SDL_GetWindowSurface ( window );
 }
 
 void SDL_GL_GetDrawableSize ( SDL_Window* window,
                               int*        w,
                               int*        h ) {
-    SHIM_LOG();
-
     sym::SDL_GL_GetDrawableSize ( window, w, h );
 }
 
 void SDL_GetWindowMaximumSize ( SDL_Window* window,
                                 int*        w,
                                 int*        h ) {
-    SHIM_LOG();
-
     sym::SDL_GetWindowMaximumSize ( window, w, h );
 }

@@ -23,6 +23,17 @@ shimmer::shimmer()
     _config.load();
 }
 
+void shimmer::create_window ( dims_2u& dims )
+{
+    _display.resolution ( dims );
+
+    if ( _window.dimensions().area() == 0 ) {
+        _window.dimensions ( dims );
+    }
+
+    dims = _window.dimensions();
+}
+
 void shimmer::create_window ( coords_2i& coords,
                               dims_2u&   dims )
 {

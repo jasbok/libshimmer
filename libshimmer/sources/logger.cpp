@@ -57,7 +57,8 @@ enum logger::type logger::type() const {
 
 enum logger::level logger::_env_level()
 {
-    std::string env_level = common::evar ( "SHIMMER_LOG_LEVEL", "warning" );
+    std::string env_level =
+        common::env::evar ( "SHIMMER_LOG_LEVEL", "warning" );
 
     RET_LEVEL_IF ( trace );
     RET_LEVEL_IF ( debug );
@@ -75,7 +76,7 @@ enum logger::level logger::_env_level()
 
 enum logger::type logger::_env_type()
 {
-    std::string env_type = common::evar ( "SHIMMER_LOG_TYPE", "console" );
+    std::string env_type = common::env::evar ( "SHIMMER_LOG_TYPE", "console" );
 
     RET_TYPE_IF ( console );
     RET_TYPE_IF ( file );

@@ -1,4 +1,4 @@
-#include "SDL_apigen.h"
+#include "api/sym/SDL_sym.h"
 #include <chrono>
 #include <fstream>
 #include <iomanip>

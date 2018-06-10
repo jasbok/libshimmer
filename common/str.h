@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace common
+namespace common::str
 {
 /**
  * @brief split Splits a string using the given regex.
