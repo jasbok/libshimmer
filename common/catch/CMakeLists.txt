@@ -10,11 +10,14 @@ configure_file(${DATA_SRC}/file_b.txt ${DATA_DEST}/file_b.txt COPYONLY)
 configure_file(${DATA_SRC}/file_c ${DATA_DEST}/file_c COPYONLY)
 configure_file(${DATA_SRC}/file_multiline.txt ${DATA_DEST}/file_multiline.txt COPYONLY)
 
+configure_file(${DATA_SRC}/test.png ${DATA_DEST}/test.png COPYONLY)
+
 ###############################################################################
 #   Configure include directories.
 ###############################################################################
 include_directories(
     ${ROOT}
+    ${EXTERNAL_ROOT}/includes
     ${CATCH_INCLUDES} )
 
 
@@ -25,6 +28,7 @@ set ( CATCH_TESTS
         coords.cpp
         dims.cpp
         file.cpp
+        img.cpp
         str.cpp)
 
 
@@ -33,4 +37,4 @@ set ( CATCH_TESTS
 ###############################################################################
 add_executable( catch_common catch.cpp ${SOURCES} ${CATCH_TESTS} )
 #target_link_libraries( catch_common common )
-set_target_properties(catch_common PROPERTIES OUTPUT_NAME "catch" )
+set_target_properties( catch_common PROPERTIES OUTPUT_NAME "catch" )

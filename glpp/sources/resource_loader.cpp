@@ -3,13 +3,13 @@
 #include "pixels.h"
 #include "shader.h"
 
-#include "stb/stb_image.h"
-
-using namespace glpp;
-using namespace std;
+#include "common/img.h"
 
 #include <fstream>
 #include <iostream>
+
+using namespace glpp;
+using namespace std;
 
 resource_loader::resource_loader()
     : _search_paths { "", "." }
@@ -115,27 +115,23 @@ std::shared_ptr<class program> resource_loader::shared_program (
 
 pixels resource_loader::image ( const string& path ) const
 {
-    int width, height, channels;
-
     for ( const auto& search_path : _search_paths ) {
         std::string file_path = search_path + "/" + path;
-        uint8_t*    data      = stbi_load ( file_path.c_str(),
-                                            &width,
-                                            &height,
-                                            &channels,
-                                            0 );
 
-        if ( data ) {
-            auto format = channels == 3
+        try {
+            auto image = common::img::read ( file_path );
+
+            auto format = image.channels == 3
                           ? glpp::pixels::format::rgb
                           : glpp::pixels::format::rgba;
 
-            return glpp::pixels ( std::unique_ptr<uint8_t>( data ),
-                                  { static_cast<GLuint>( width ),
-                                    static_cast<GLuint>( height ) },
+            return glpp::pixels ( std::move ( image.data ),
+                                  { static_cast<GLuint>( image.width ),
+                                    static_cast<GLuint>( image.height ) },
                                   format,
                                   glpp::pixels::type::gl_unsigned_byte );
         }
+        catch ( exception ex ) {}
     }
 
     std::cerr << "Could not read image file: " << path << std::endl;

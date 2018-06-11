@@ -7,6 +7,7 @@ set( HEADERS
         dims.h
         env.h
         file.h
+        img.h
         str.h )
 
 
@@ -16,6 +17,7 @@ set( HEADERS
 set( SOURCES
         ${COMMON_ROOT}/env.cpp
         ${COMMON_ROOT}/file.cpp
+        ${COMMON_ROOT}/img.cpp
         ${COMMON_ROOT}/str.cpp )
 
 
@@ -23,7 +25,8 @@ set( SOURCES
 #   Build common shared library.
 ###############################################################################
 add_library( common SHARED ${HEADERS} ${SOURCES} )
-
+target_include_directories( common
+    PRIVATE "${EXTERNAL_ROOT}/includes" )
 
 ###############################################################################
 #   Install libs and shaders

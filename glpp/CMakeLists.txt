@@ -125,7 +125,6 @@ set( SOURCES
         ${SOURCES_DIR}/scene.cpp
         ${SOURCES_DIR}/scene_phase.cpp
         ${SOURCES_DIR}/shader.cpp
-        ${SOURCES_DIR}/stb_image.cpp
         ${SOURCES_DIR}/text.cpp
         ${SOURCES_DIR}/texture.cpp
         ${SOURCES_DIR}/texture_2d.cpp

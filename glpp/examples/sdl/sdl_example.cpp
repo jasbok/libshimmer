@@ -46,8 +46,8 @@ void setup_video() {
         exit ( 1 );
     }
 
-    VIDEO = SDL_SetVideoMode ( 640, // VIDEO_INFO->current_w,
-                               480, // VIDEO_INFO->current_h,
+    VIDEO = SDL_SetVideoMode ( VIDEO_INFO->current_w,
+                               VIDEO_INFO->current_h,
                                VIDEO_INFO->vfmt->BitsPerPixel,
                                SDL_OPENGL );
 
@@ -163,7 +163,7 @@ void setup_quad() {
     glpp::vertex_buffer::unbind();
     glpp::element_array_buffer::unbind();
 
-    // OR use abbreviation typedefs
+    // OR use provided abbreviation typedefs ->
     // glpp::vao::unbind();
     // glpp::vbo::unbind();
     // glpp::ebo::unbind();
