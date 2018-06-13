@@ -22,7 +22,7 @@ public:
         tex_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
     };
 
-    enum class internal_format : GLenum {
+    enum class internal_format : GLint {
         depth_component = GL_DEPTH_COMPONENT,
         depth_stencil   = GL_DEPTH_STENCIL,
         red             = GL_RED,
@@ -31,12 +31,7 @@ public:
         rgba            = GL_RGBA
     };
 
-    texture( enum target          target,
-             enum internal_format internal_format );
-
-    texture( enum target          target,
-             enum internal_format internal_format,
-             GLuint               handle );
+    texture( enum target target );
 
     texture( texture&& move );
 
@@ -49,26 +44,18 @@ public:
     texture& operator=( const texture& copy ) = delete;
 
 
-    GLuint               handle() const;
+    GLuint      handle() const;
 
-    enum target          target() const;
+    enum target target() const;
 
-    enum internal_format internal_format() const;
+    texture&    bind();
 
-    texture&             bind();
-
-    void                 unbind();
-
-    bool                 owning();
+    void        unbind();
 
 private:
     GLuint _handle;
 
     enum target _target;
-
-    enum internal_format _internal_format;
-
-    bool _owning;
 };
 }
 

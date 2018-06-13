@@ -1,6 +1,6 @@
-#include "catch.hpp"
+#include "catch/catch.hpp"
 
-#include "common/coords.h"
+#include "coords.h"
 
 typedef common::coords_2<int> coords_2i;
 typedef common::coords_3<int> coords_3i;

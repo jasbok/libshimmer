@@ -135,7 +135,7 @@ include_directories( ${INCLUDES})
 include_directories( SYSTEM ${EXTERNAL_INCLUDES} )
 
 add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
-target_include_directories( shimmer PUBLIC ${INCLUDES} )
+target_include_directories( shimmer PUBLIC ${INCLUDES} ${ALL_INCLUDE_DIRECTORIES} )
 target_link_libraries( shimmer common glpp ${TARGET_LINK_LIBRARIES} )
 
 

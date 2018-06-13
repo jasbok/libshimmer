@@ -1,6 +1,8 @@
 #ifndef COMMON_IMG_H
 #define COMMON_IMG_H
 
+#include "dims.h"
+
 #include "stb/stb_image.h"
 
 #include <memory>
@@ -9,16 +11,9 @@
 
 namespace common::img
 {
-struct read_exception : public std::runtime_error {
-    read_exception( const std::string& path );
-
-    virtual ~read_exception();
-};
-
 struct image {
     std::unique_ptr<uint8_t> data;
-    unsigned int             width;
-    unsigned int             height;
+    dims_2<unsigned int>     dims;
     unsigned short           channels;
 };
 
@@ -30,6 +25,12 @@ struct image {
  * @throws read_excception if the image could not be read from the given path.
  */
 image read ( const std::string& path );
+
+struct read_exception : public std::runtime_error {
+    read_exception( const std::string& path );
+
+    virtual ~read_exception();
+};
 }
 
 #endif // ifndef COMMON_IMG_H

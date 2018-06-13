@@ -5,20 +5,26 @@
 #include <algorithm>
 #include <iostream>
 
-using namespace glpp;
 using namespace std;
 
-texture_2d::texture_2d( enum internal_format internal_format )
-    : texture ( texture::target::tex_2d, internal_format ),
-      _dims()
+namespace glpp
+{
+texture_2d::texture_2d()
+    : texture ( texture::target::tex_2d )
 {}
 
-texture_2d::texture_2d( GLuint               handle,
-                        dims_2u              dims,
-                        enum internal_format internal_format  )
-    : texture ( texture::target::tex_2d, internal_format, handle ),
-      _dims ( dims )
-{}
+
+texture_2d::texture_2d( internal_format internal_format,
+                        const dims_2u&  dims )
+    : texture ( texture::target::tex_2d ) {
+    image ( internal_format, dims );
+}
+
+texture_2d::texture_2d( internal_format           internal_format,
+                        const common::img::image& img )
+    : texture ( texture::target::tex_2d ) {
+    image ( internal_format, img );
+}
 
 texture_2d::texture_2d( texture_2d&& move )
     : texture ( std::move ( move ) ),
@@ -34,92 +40,75 @@ texture_2d& texture_2d::operator=( texture_2d&& move ) {
     return *this;
 }
 
-std::shared_ptr<texture_2d> texture_2d::make_shared (
-    enum texture::internal_format internal_format ) {
-    return std::make_shared<texture_2d>( internal_format );
-}
-
-std::shared_ptr<texture_2d> texture_2d::make_shared (
-    GLuint                        handle,
-    dims_2u                       dims,
-    enum texture::internal_format internal_format ) {
-    return std::make_shared<texture_2d>( handle, dims, internal_format );
-}
-
-std::shared_ptr<texture_2d> texture_2d::make_shared (
-    dims_2u                       dims,
-    enum texture::internal_format internal_format,
-    enum pixels::format           format,
-    enum pixels::type             type ) {
-    auto texture = std::make_shared<texture_2d>( internal_format );
-
-    texture->bind();
-    texture->image ( { nullptr,
-                       dims,
-                       format,
-                       type } );
-
-    return texture;
-}
-
 dims_2u texture_2d::dims() const {
     return _dims;
 }
 
-texture_2d& texture_2d::image ( const pixels& pixels,
-                                GLint         level ) {
-    if ( owning() ) {
-        _dims = pixels.dims();
+texture_2d& texture_2d::image ( internal_format internal_format,
+                                const dims_2u&  dims ) {
+    _dims = dims;
 
-        if ( _dims.area() == 0 ) throw texture_2d_area_zero_exception();
-
-        glTexImage2D ( static_cast<GLenum>( target() ),
-                       level,
-                       static_cast<GLenum>( internal_format() ),
-                       _dims.width,
-                       _dims.height,
-                       0,
-                       static_cast<GLenum>( pixels.format() ),
-                       static_cast<GLenum>( pixels.type() ),
-                       pixels.data() );
-    }
-    else {
-        std::cerr << "Tried to draw to a non-owning texture.\n";
-    }
+    glTexImage2D ( GL_TEXTURE_2D,
+                   0,
+                   static_cast<GLint>( internal_format ),
+                   static_cast<GLsizei>( dims.width ),
+                   static_cast<GLsizei>( dims.height ),
+                   0,
+                   0,
+                   0,
+                   nullptr );
 
     return *this;
 }
 
-texture_2d& texture_2d::sub_image ( const coords_2i& offset,
-                                    const pixels&    pixels,
-                                    GLint            level ) {
-    if ( owning() ) {
-        glTexSubImage2D ( static_cast<GLenum>( target() ),
-                          level,
-                          offset.x,
-                          offset.y,
-                          pixels.dims().width,
-                          pixels.dims().height,
-                          static_cast<GLenum>( pixels.format() ),
-                          static_cast<GLenum>( pixels.type() ),
-                          pixels.data() );
-    }
-    else {
-        std::cerr << "Tried to draw to a non-owning texture.\n";
-    }
+texture_2d& texture_2d::image ( internal_format           internal_format,
+                                const common::img::image& image ) {
+    _dims = image.dims;
+
+    glTexImage2D ( GL_TEXTURE_2D,
+                   0,
+                   static_cast<GLint>( internal_format ),
+                   static_cast<GLsizei>( image.dims.width ),
+                   static_cast<GLsizei>( image.dims.height ),
+                   0,
+                   _format_from ( image ),
+                   GL_UNSIGNED_BYTE,
+                   image.data.get() );
+
+    return *this;
+}
+
+texture_2d& texture_2d::sub_image ( const common::img::image& image ) {
+    glTexSubImage2D ( GL_TEXTURE_2D,
+                      0,
+                      0,
+                      0,
+                      static_cast<GLsizei>( image.dims.width ),
+                      static_cast<GLsizei>( image.dims.height ),
+                      _format_from ( image ),
+                      GL_UNSIGNED_BYTE,
+                      image.data.get() );
+
+    return *this;
+}
+
+texture_2d& texture_2d::sub_image ( const coords_2i&          offset,
+                                    const common::img::image& image ) {
+    glTexSubImage2D ( GL_TEXTURE_2D,
+                      0,
+                      offset.x,
+                      offset.y,
+                      static_cast<GLsizei>( image.dims.width ),
+                      static_cast<GLsizei>( image.dims.height ),
+                      _format_from ( image ),
+                      GL_UNSIGNED_BYTE,
+                      image.data.get() );
 
     return *this;
 }
 
 texture_2d& texture_2d::generate_mipmaps() {
-    glGenerateMipmap ( static_cast<GLenum>( target() ) );
-
-    return *this;
-}
-
-texture_2d& texture_2d::bind_texture_unit ( unsigned int unit ) {
-    glActiveTexture ( GL_TEXTURE0 + unit );
-    bind();
+    glGenerateMipmap ( GL_TEXTURE_2D );
 
     return *this;
 }
@@ -133,17 +122,17 @@ texture_2d& texture_2d::filters ( texture_2d::filter filter )
 }
 
 texture_2d& texture_2d::min_filter ( enum min_filter filter ) {
-    glTexParameteri ( static_cast<GLenum>( target() ),
+    glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_MIN_FILTER,
-                      static_cast<GLenum>( filter ) );
+                      static_cast<GLint>( filter ) );
 
     return *this;
 }
 
 texture_2d& texture_2d::mag_filter ( enum mag_filter filter ) {
-    glTexParameteri ( static_cast<GLenum>( target() ),
+    glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_MAG_FILTER,
-                      static_cast<GLenum>( filter ) );
+                      static_cast<GLint>( filter ) );
 
     return *this;
 }
@@ -158,14 +147,14 @@ void texture_2d::set_min_filter ( enum texture_2d::min_filter filter )
 {
     glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_MIN_FILTER,
-                      static_cast<GLenum>( filter ) );
+                      static_cast<GLint>( filter ) );
 }
 
 void texture_2d::set_mag_filter ( enum texture_2d::mag_filter filter )
 {
     glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_MAG_FILTER,
-                      static_cast<GLenum>( filter ) );
+                      static_cast<GLint>( filter ) );
 }
 
 texture_2d& texture_2d::wrap ( texture_2d::texture_wrap wrap )
@@ -177,17 +166,32 @@ texture_2d& texture_2d::wrap ( texture_2d::texture_wrap wrap )
 }
 
 texture_2d& texture_2d::wrap_s ( enum texture_wrap wrap ) {
-    glTexParameteri ( static_cast<GLenum>( target() ),
+    glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_WRAP_S,
-                      static_cast<GLenum>( wrap ) );
+                      static_cast<GLint>( wrap ) );
 
     return *this;
 }
 
 texture_2d& texture_2d::wrap_t ( enum texture_wrap wrap ) {
-    glTexParameteri ( static_cast<GLenum>( target() ),
+    glTexParameteri ( GL_TEXTURE_2D,
                       GL_TEXTURE_WRAP_T,
-                      static_cast<GLenum>( wrap ) );
+                      static_cast<GLint>( wrap ) );
 
     return *this;
+}
+
+GLenum texture_2d::_format_from ( const common::img::image& image ) {
+    switch ( image.channels ) {
+    case 1: return GL_RED;
+
+    case 2: return GL_RG;
+
+    case 3: return GL_RGB;
+
+    case 4: return GL_RGBA;
+
+    default: return GL_RGB;
+    }
+}
 }

@@ -21,10 +21,6 @@ set( APIGEN_INCLUDES
         includes/source.h
         includes/type.h )
 
-include_directories( includes
-    ${ROOT}
-    ${EXTERNAL_ROOT}/includes )
-
 
 ###############################################################################
 #   Set apigen sources.
@@ -57,3 +53,7 @@ set( APIGEN_LIBRARIES
 add_executable( apigen ${APIGEN_SOURCES} ${APIGEN_INCLUDES} )
 
 target_link_libraries( apigen ${APIGEN_LIBRARIES} )
+target_include_directories( apigen PRIVATE
+    includes
+    ${ROOT}
+    ${EXTERNAL_INCLUDE_DIR} )

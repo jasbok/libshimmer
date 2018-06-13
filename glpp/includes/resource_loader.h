@@ -37,31 +37,24 @@ public:
         const std::string& vertex_shader_path,
         const std::string& fragment_shader_path ) const;
 
-    pixels           image ( const std::string& path ) const;
-
-    class texture_2d texture_2d (
-            const std::string&               path,
-            enum texture_2d::internal_format internal_format =
-                texture_2d::internal_format::rgb ) const;
-
 private:
     std::vector<std::string> _search_paths;
 };
 
 struct file_read_exception : public std::exception {
-    const char* what() const throw( ) {
+    const char* what() {
         return "Could not read file.";
     }
 };
 
 struct shader_compile_exception : public std::exception {
-    const char* what() const throw( ) {
+    const char* what() {
         return "Could not compile shader.";
     }
 };
 
 struct program_link_exception : public std::exception {
-    const char* what() const throw( ) {
+    const char* what() {
         return "Could not link program.";
     }
 };

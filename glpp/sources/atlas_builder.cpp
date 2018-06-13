@@ -26,7 +26,7 @@ void atlas_coords::normalise ( float factor ) {
 }
 
 atlas::atlas( vector<atlas_coords>&& coords,
-              texture_2d&&           texture )
+              common::img::image&&   texture )
     : coords ( std::move ( coords ) ),
       texture ( std::move ( texture ) )
 {}
@@ -69,7 +69,8 @@ unsigned int atlas_builder::_calculate_atlas_size (
         optimal_area += ( bitmap.dims + space_adjustment ).area();
     }
 
-    return _correct_texture_size ( sqrt ( optimal_area ) );
+    return _correct_texture_size ( static_cast<unsigned int>( sqrt (
+                                                                  optimal_area ) ) );
 }
 
 std::pair<unsigned int, std::vector<atlas_coords>>
@@ -101,7 +102,7 @@ atlas_builder::_design_atlas ( const vector<bitmap>& bitmaps,
     return std::pair{ size, coords };
 }
 
-texture_2d
+common::img::image
 atlas_builder::_draw_atlas ( unsigned int                size,
                              const vector<bitmap>&       bitmaps,
                              const vector<atlas_coords>& atlas_coords )
@@ -120,30 +121,25 @@ atlas_builder::_draw_atlas ( unsigned int                size,
         const auto& coords = atlas_coords[i].tl;
 
         for ( unsigned int y = 0; y < dims.height; y++ ) {
-            unsigned int j     = coords.y + y;
+            unsigned int j     = static_cast<unsigned int>( coords.y + y );
             unsigned int ystep = y * dims.width;
             unsigned int jstep = j * size;
 
             for ( unsigned int x = 0; x < dims.width; x++ ) {
-                unsigned int i = coords.x + x;
+                unsigned int i = static_cast<unsigned int>( coords.x + x );
                 atlas_data.get()[jstep + i] = data[ystep + x];
             }
         }
     }
 
-    texture_2d texture ( glpp::texture_2d::internal_format::red );
-    texture.bind();
-    texture.image ( pixels ( std::move ( atlas_data ),
-                             { size, size },
-                             pixels::format::red,
-                             pixels::type::gl_unsigned_byte ) );
-
-    return texture;
+    return common::img::image { std::move ( atlas_data ),
+                                { size, size },
+                                1 };
 }
 
 inline unsigned int atlas_builder::_resize ( unsigned int size,
                                              float        rate ) {
-    return _correct_texture_size ( size * rate );
+    return _correct_texture_size ( static_cast<unsigned int>( size * rate ) );
 }
 
 unsigned int atlas_builder::_correct_texture_size ( unsigned int size )

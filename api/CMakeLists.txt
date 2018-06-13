@@ -1,4 +1,5 @@
-find_package(SDL2 MODULE REQUIRED)
+find_package( SDL )
+find_package( SDL2 MODULE REQUIRED )
 
 ###############################################################################
 # Generate SDL sym and tracer files.
@@ -18,10 +19,8 @@ message( "SDL apigen output: '${APIGEN_OUT}'" )
 # Build and install SDL tracer.
 ###############################################################################
 add_library( trace_sdl SHARED tracers/SDL_tracer.cpp )
-
 target_include_directories( trace_sdl
     PRIVATE ${ROOT} ${SDL_INCLUDE_DIR} ${SDL_INCLUDE_DIRS} )
-
 target_link_libraries( trace_sdl ${SDL_LIBRARIES} )
 
 install( TARGETS trace_sdl DESTINATION lib )

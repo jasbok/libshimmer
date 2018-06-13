@@ -83,10 +83,10 @@ void renderer::create_application_texture_from_bound()
 
     glGetIntegerv ( GL_TEXTURE_BINDING_2D, &texture_handle );
 
-    *_application_texture =
-        glpp::texture_2d ( static_cast<GLuint>( texture_handle ),
-                           _application_resolution,
-                           glpp::texture::internal_format::rgba );
+    //    *_application_texture =
+    //        glpp::texture_2d ( static_cast<GLuint>( texture_handle ),
+    //                           _application_resolution,
+    //                           glpp::texture::internal_format::rgba );
 
     if ( !_opts.video.application_shader.linear_filter ) {
         _application_texture->filters ( glpp::texture_2d::filter::nearest );
@@ -146,7 +146,9 @@ void renderer::_construct_application_surface()
     application_program->use().uniform ( "application", 0 );
 
     _application_texture =
-        glpp::texture_2d::make_shared ( _application_resolution );
+        std::make_shared<glpp::texture_2d>(
+            glpp::texture_2d::internal_format::rgb,
+            _application_resolution );
     _application_texture->bind();
     _application_texture->generate_mipmaps();
 

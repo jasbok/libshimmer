@@ -1,7 +1,7 @@
 ###############################################################################
 #   List common headers.
 ###############################################################################
-set( HEADERS
+set( COMMON_HEADERS
         common.h
         coords.h
         dims.h
@@ -14,19 +14,19 @@ set( HEADERS
 ###############################################################################
 #   List common sources.
 ###############################################################################
-set( SOURCES
-        ${COMMON_ROOT}/env.cpp
-        ${COMMON_ROOT}/file.cpp
-        ${COMMON_ROOT}/img.cpp
-        ${COMMON_ROOT}/str.cpp )
+set( COMMON_SOURCES
+        env.cpp
+        file.cpp
+        img.cpp
+        str.cpp )
 
 
 ###############################################################################
 #   Build common shared library.
 ###############################################################################
-add_library( common SHARED ${HEADERS} ${SOURCES} )
-target_include_directories( common
-    PRIVATE "${EXTERNAL_ROOT}/includes" )
+add_library( common SHARED ${COMMON_HEADERS} ${COMMON_SOURCES} )
+target_include_directories( common PRIVATE ${EXTERNAL_INCLUDE_DIR} )
+target_link_libraries( common stdc++fs )
 
 ###############################################################################
 #   Install libs and shaders

@@ -2,8 +2,9 @@
 #define SHIMMER_IMAGE_READER_H
 
 #include "file_reader.h"
-#include "pixels.h"
 #include "texture_2d.h"
+
+#include "common/img.h"
 
 namespace shimmer
 {
@@ -14,7 +15,7 @@ public:
 
     virtual ~image_reader() = default;
 
-    glpp::pixels           image ( const std::string& path ) const;
+    common::img::image     image ( const std::string& path ) const;
 
     class glpp::texture_2d texture_2d (
             const std::string&                     path,

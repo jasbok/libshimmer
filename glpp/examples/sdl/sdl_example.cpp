@@ -1,10 +1,12 @@
 #define DEBUG
 
 #include "common/file.h"
+#include "common/img.h"
 #include "glpp/includes/debug.h"
 #include "glpp/includes/element_array_buffer.h"
 #include "glpp/includes/program.h"
 #include "glpp/includes/shader.h"
+#include "glpp/includes/texture.h"
 #include "glpp/includes/vertex_array.h"
 #include "glpp/includes/vertex_attrib.h"
 #include "glpp/includes/vertex_buffer.h"
@@ -19,6 +21,7 @@ static SDL_Surface* VIDEO              = nullptr;
 static bool RUNNING = true;
 
 static std::unique_ptr<glpp::program> PROGRAM;
+static std::unique_ptr<glpp::texture> TEXTURE;
 static std::unique_ptr<glpp::vertex_buffer> VBO;
 static std::unique_ptr<glpp::element_array_buffer> EBO;
 static std::unique_ptr<glpp::vertex_array> VAO;
@@ -95,6 +98,12 @@ void setup_shaders() {
         .detach ( fs );
 
     GLPP_CHECK_ERROR ( "Shader setup." );
+}
+
+void setup_textures() {
+    printf ( "[INFO] Configuring textures...\n" );
+
+    auto image = common::img::read ( "monster-bash.png" );
 }
 
 void setup_buffers() {
@@ -180,6 +189,13 @@ void setup_opengl() {
         setup_shaders();
     } catch ( std::runtime_error ex ) {
         printf ( "[SEVERE] Failed to setup shaders => %s\n", ex.what() );
+        exit ( 1 );
+    }
+
+    try {
+        setup_textures();
+    } catch ( std::runtime_error ex ) {
+        printf ( "[SEVERE] Failed to setup textures => %s\n", ex.what() );
         exit ( 1 );
     }
 

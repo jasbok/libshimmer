@@ -1,9 +1,10 @@
 #ifndef GLPP_TEXTURE_2D_H
 #define GLPP_TEXTURE_2D_H
 
-#include "pixels.h"
 #include "specs.h"
 #include "texture.h"
+
+#include "common/img.h"
 
 #include <memory>
 #include <vector>
@@ -13,7 +14,7 @@ namespace glpp
 class texture_2d : public texture
 {
 public:
-    enum class min_filter : GLenum {
+    enum class min_filter : GLint {
         nearest                = GL_NEAREST,
         linear                 = GL_LINEAR,
         nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST,
@@ -22,27 +23,44 @@ public:
         linear_mipmap_linear   = GL_LINEAR_MIPMAP_LINEAR,
     };
 
-    enum class mag_filter : GLenum {
+    enum class mag_filter : GLint {
         nearest = GL_NEAREST,
         linear  = GL_LINEAR
     };
 
-    enum class filter : GLenum {
+    enum class filter : GLint {
         nearest = GL_NEAREST,
         linear  = GL_LINEAR
     };
 
-    enum class texture_wrap : GLenum {
+    enum class texture_wrap : GLint {
         clamp_to_edge   = GL_CLAMP_TO_EDGE,
         mirrored_repeat = GL_MIRRORED_REPEAT,
         repeat          = GL_REPEAT
     };
 
-    explicit texture_2d( enum internal_format internal_format );
+    /**
+     * @brief texture_2d Generate a 2d texture.
+     */
+    explicit texture_2d();
 
-    explicit texture_2d( GLuint               handle,
-                         dims_2u              dims,
-                         enum internal_format internal_format );
+    /**
+     * @brief texture_2d Generate a 2d texture with the given internal format
+     * and dimensions.
+     * @param internal_format The internal format of the texture.
+     * @param dims The dimensions of the texture.
+     */
+    explicit texture_2d( internal_format internal_format,
+                         const dims_2u&  dims );
+
+    /**
+     * @brief texture_2d Generate a 2d texture with the given internal format
+     * and load the given image data into the texture.
+     * @param internal_format The internal format of the texture.
+     * @param image The image data to load in the texture.
+     */
+    explicit texture_2d( internal_format           internal_format,
+                         const common::img::image& image );
 
     texture_2d( texture_2d&& move );
 
@@ -54,40 +72,78 @@ public:
 
     texture_2d& operator=( const texture_2d& copy ) = delete;
 
+    /**
+     * @brief dims Get the current dimensions of the texture.
+     * @return The current dimensions of the current texture. Returns 0x0 if the
+     * texture has not been initialised.
+     */
+    dims_2u dims() const;
 
-    static std::shared_ptr<texture_2d> make_shared (
-        enum internal_format internal_format );
+    /**
+     * @brief image Initialise the texture with the given format and dimensions.
+     * @param internal_format The internal format of the texture.
+     * @param dims The dimensions of the texture.
+     * @return this
+     */
+    texture_2d& image ( internal_format internal_format,
+                        const dims_2u&  dims );
 
-    static std::shared_ptr<texture_2d> make_shared (
-        GLuint               handle,
-        dims_2u              dims,
-        enum internal_format internal_format  );
+    /**
+     * @brief image Initialise the texture with the given format and image data.
+     * @param internal_format The internal format of the texture.
+     * @param image The image data to load into the texture
+     * @return this
+     */
+    texture_2d& image ( internal_format           internal_format,
+                        const common::img::image& image );
 
-    static std::shared_ptr<texture_2d> make_shared (
-        dims_2u              dims,
-        enum internal_format internal_format = internal_format::rgb,
-        enum pixels::format  format          = pixels::format::rgb,
-        enum pixels::type    type            = pixels::type::gl_unsigned_byte );
+    /**
+     * @brief sub_image Loads the given image data into the texture at with an
+     * offset of (0, 0).
+     * @param image The image data to load in.
+     * @return this
+     */
+    texture_2d& sub_image ( const common::img::image& image );
 
-    dims_2u     dims() const;
+    /**
+     * @brief sub_image Loads the given image data into the texture at the given
+     * offset.
+     * @param offset The offset to use when inserting the image data.
+     * @param image The image data to load in.
+     * @return this
+     */
+    texture_2d& sub_image ( const coords_2i&          offset,
+                            const common::img::image& image );
 
-    texture_2d& image ( const pixels& pixels,
-                        GLint         level = 0 );
 
-    texture_2d& sub_image ( const coords_2i& offset,
-                            const pixels&    pixels,
-                            GLint            level = 0 );
-
+    /**
+     * @brief generate_mipmaps Generate the mipmaps for the texture.
+     * @return this
+     */
     texture_2d& generate_mipmaps();
 
-    texture_2d& bind_texture_unit ( unsigned int unit );
 
-
+    /**
+     * @brief filters Sets the min and mag filters of this texture.
+     * @param filter The filter value.
+     * @return this
+     */
     texture_2d& filters ( enum filter filter );
 
+    /**
+     * @brief min_filter Sets the min filter of this texture to the given value.
+     * @param filter The filter value.
+     * @return this
+     */
     texture_2d& min_filter ( enum min_filter filter );
 
+    /**
+     * @brief mag_filter Sets the mag filter of this texture to the given value.
+     * @param filter The filter value.
+     * @return this
+     */
     texture_2d& mag_filter ( enum mag_filter filter );
+
 
     static void set_filters ( enum filter filter );
 
@@ -104,12 +160,8 @@ public:
 
 private:
     dims_2u _dims;
-};
 
-struct texture_2d_area_zero_exception : public std::exception {
-    const char* what() const throw( ) {
-        return "The area of the specified texture image is zero.";
-    }
+    GLenum _format_from ( const common::img::image& image );
 };
 }
 

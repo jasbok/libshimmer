@@ -20,8 +20,9 @@ image read ( const std::string& path )
 
     if ( data ) {
         return image { std::unique_ptr<uint8_t>( data ),
-                       static_cast<unsigned int>( width ),
-                       static_cast<unsigned int>( height ),
+                       dims_2<unsigned int>( static_cast<unsigned int>( width ),
+                                             static_cast<unsigned int>( height )
+                                             ),
                        static_cast<unsigned short>( channels ) };
     }
 

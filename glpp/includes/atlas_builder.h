@@ -2,7 +2,8 @@
 #define GLPP_ATLAS_BUILDER_H
 
 #include "bitmap.h"
-#include "texture_2d.h"
+
+#include "common/img.h"
 
 namespace glpp
 {
@@ -19,7 +20,7 @@ struct atlas_coords {
 
 struct atlas {
     atlas( std::vector<atlas_coords>&& coords,
-           texture_2d&&                texture );
+           common::img::image&&        texture );
 
     atlas( atlas&& move ) = default;
 
@@ -34,7 +35,7 @@ struct atlas {
 
     std::vector<atlas_coords> coords;
 
-    texture_2d texture;
+    common::img::image texture;
 };
 
 class atlas_builder
@@ -44,7 +45,7 @@ public:
 
     atlas build ( const std::vector<bitmap>& bitmaps,
                   unsigned int               spacing     = 7,
-                  float                      resize_rate = 1.05 );
+                  float                      resize_rate = 1.05f );
 
 
     void sort ( std::vector<bitmap>& bitmaps );
@@ -59,9 +60,9 @@ private:
                     unsigned int               spacing,
                     float                      resize_rate );
 
-    texture_2d _draw_atlas ( unsigned int                     size,
-                             const std::vector<bitmap>&       bitmaps,
-                             const std::vector<atlas_coords>& coords );
+    common::img::image _draw_atlas ( unsigned int                     size,
+                                     const std::vector<bitmap>&       bitmaps,
+                                     const std::vector<atlas_coords>& coords );
 
 
     inline unsigned int _resize ( unsigned int size,

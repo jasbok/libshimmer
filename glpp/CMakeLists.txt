@@ -1,20 +1,10 @@
 ###############################################################################
 #   Find and store OpenGL, GLEW and GLM paths.
 ###############################################################################
-find_package( GLEW )
-find_package( glm )
-
 set( OpenGL_GL_PREFERENCE GLVND )
 find_package( OpenGL )
-
-set( OPENGL_INCLUDES
-        ${GLEW_INCLUDE_DIRS}
-        ${GLM_INCLUDE_DIRS}
-        ${OPENGL_INCLUDE_DIR} )
-
-set( OPENGL_LIBRARIES
-        ${GLEW_LIBRARIES}
-        ${OPENGL_LIBRARIES} )
+find_package( GLEW )
+find_package( glm )
 
 
 ###############################################################################
@@ -22,125 +12,104 @@ set( OPENGL_LIBRARIES
 ###############################################################################
 find_package( Freetype )
 
-set( FREETYPE_INCLUDES ${FREETYPE_INCLUDE_DIRS} )
-set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} )
-
-
-###############################################################################
-#   Configure external include directories.
-###############################################################################
-set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
-
-set ( EXTERNAL_INCLUDES
-        ${EXTERNAL_INCLUDE_DIR}
-        ${FREETYPE_INCLUDES}
-        ${OPENGL_INCLUDES} )
-
-
-###############################################################################
-#   List external target link libraries
-###############################################################################
-set( TARGET_LINK_LIBRARIES
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${FREETYPE_LIBRARIES}
-        ${OPENGL_LIBRARIES} )
-
-
-###############################################################################
-#   Configure GLPP include directories.
-###############################################################################
-set( INCLUDE_DIR ${GLPP_ROOT}/includes )
-
-set( INCLUDES
-        ${ROOT}
-        ${INCLUDE_DIR} )
-
 
 ###############################################################################
 #   List all headers, required by some IDEs.
 ###############################################################################
-set( HEADERS
+set( GLPP_HEADERS
         ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
-        ${INCLUDE_DIR}/atlas_builder.h
-        ${INCLUDE_DIR}/attribute.h
-        ${INCLUDE_DIR}/bitmap.h
-        ${INCLUDE_DIR}/buffer.h
-        ${INCLUDE_DIR}/camera.h
-        ${INCLUDE_DIR}/cube.h
-        ${INCLUDE_DIR}/element_array_buffer.h
-        ${INCLUDE_DIR}/entity.h
-        ${INCLUDE_DIR}/enums.h
-        ${INCLUDE_DIR}/font_loader.h
-        ${INCLUDE_DIR}/font_spec.h
-        ${INCLUDE_DIR}/framebuffer.h
-        ${INCLUDE_DIR}/ft_wrapper.h
-        ${INCLUDE_DIR}/ft_wrapper_impl.h
-        ${INCLUDE_DIR}/glpp.h
-        ${INCLUDE_DIR}/glyph.h
-        ${INCLUDE_DIR}/material.h
-        ${INCLUDE_DIR}/mbuffer.h
-        ${INCLUDE_DIR}/mesh.h
-        ${INCLUDE_DIR}/pixels.h
-        ${INCLUDE_DIR}/program.h
-        ${INCLUDE_DIR}/quad.h
-        ${INCLUDE_DIR}/resource_loader.h
-        ${INCLUDE_DIR}/scene.h
-        ${INCLUDE_DIR}/scene_phase.h
-        ${INCLUDE_DIR}/shader.h
-        ${INCLUDE_DIR}/specs.h
-        ${INCLUDE_DIR}/text.h
-        ${INCLUDE_DIR}/texture.h
-        ${INCLUDE_DIR}/texture_2d.h
-        ${INCLUDE_DIR}/texture_unit.h
-        ${INCLUDE_DIR}/texture_units.h
-        ${INCLUDE_DIR}/uniform.h
-        ${INCLUDE_DIR}/vertex_array.h
-        ${INCLUDE_DIR}/vertex_attrib.h
-        ${INCLUDE_DIR}/vertex_buffer.h)
+        includes/atlas_builder.h
+        includes/attribute.h
+        includes/bitmap.h
+        includes/buffer.h
+        includes/camera.h
+        includes/cube.h
+        includes/element_array_buffer.h
+        includes/entity.h
+        includes/enums.h
+        includes/font_loader.h
+        includes/font_spec.h
+        includes/framebuffer.h
+        includes/ft_wrapper.h
+        includes/ft_wrapper_impl.h
+        includes/glpp.h
+        includes/glyph.h
+        includes/material.h
+        includes/mbuffer.h
+        includes/mesh.h
+        includes/pixels.h
+        includes/program.h
+        includes/quad.h
+        includes/resource_loader.h
+        includes/scene.h
+        includes/scene_phase.h
+        includes/shader.h
+        includes/specs.h
+        includes/text.h
+        includes/texture.h
+        includes/texture_2d.h
+        includes/texture_unit.h
+        includes/texture_units.h
+        includes/uniform.h
+        includes/vertex_array.h
+        includes/vertex_attrib.h
+        includes/vertex_buffer.h)
 
 
 ###############################################################################
 #   List GLPP sources.
 ###############################################################################
-set( SOURCES_DIR ${GLPP_ROOT}/sources )
-
-set( SOURCES
-        ${SOURCES_DIR}/attribute.cpp
-        ${SOURCES_DIR}/atlas_builder.cpp
-        ${SOURCES_DIR}/bitmap.cpp
-        ${SOURCES_DIR}/camera.cpp
-        ${SOURCES_DIR}/debug.cpp
-        ${SOURCES_DIR}/element_array_buffer.cpp
-        ${SOURCES_DIR}/entity.cpp
-        ${SOURCES_DIR}/font_loader.cpp
-        ${SOURCES_DIR}/font_spec.cpp
-        ${SOURCES_DIR}/framebuffer.cpp
-        ${SOURCES_DIR}/ft_wrapper.cpp
-        ${SOURCES_DIR}/ft_wrapper_impl.cpp
-        ${SOURCES_DIR}/glyph.cpp
-        ${SOURCES_DIR}/material.cpp
-        ${SOURCES_DIR}/pixels.cpp
-        ${SOURCES_DIR}/program.cpp
-        ${SOURCES_DIR}/resource_loader.cpp
-        ${SOURCES_DIR}/scene.cpp
-        ${SOURCES_DIR}/scene_phase.cpp
-        ${SOURCES_DIR}/shader.cpp
-        ${SOURCES_DIR}/text.cpp
-        ${SOURCES_DIR}/texture.cpp
-        ${SOURCES_DIR}/texture_2d.cpp
-        ${SOURCES_DIR}/texture_unit.cpp
-        ${SOURCES_DIR}/texture_units.cpp
-        ${SOURCES_DIR}/uniform.cpp
-        ${SOURCES_DIR}/vertex_array.cpp
-        ${SOURCES_DIR}/vertex_attrib.cpp )
+set( GLPP_SOURCES
+        sources/attribute.cpp
+        sources/atlas_builder.cpp
+        sources/bitmap.cpp
+        sources/camera.cpp
+        sources/debug.cpp
+        sources/element_array_buffer.cpp
+        sources/entity.cpp
+        sources/font_loader.cpp
+        sources/font_spec.cpp
+        sources/framebuffer.cpp
+        sources/ft_wrapper.cpp
+        sources/ft_wrapper_impl.cpp
+        sources/glyph.cpp
+        sources/material.cpp
+        sources/pixels.cpp
+        sources/program.cpp
+        sources/resource_loader.cpp
+        sources/scene.cpp
+        sources/scene_phase.cpp
+        sources/shader.cpp
+        sources/text.cpp
+        sources/texture.cpp
+        sources/texture_2d.cpp
+        sources/texture_unit.cpp
+        sources/texture_units.cpp
+        sources/uniform.cpp
+        sources/vertex_array.cpp
+        sources/vertex_attrib.cpp )
 
 
 ###############################################################################
 #   Build GLPP shared library.
 ###############################################################################
-add_library( glpp SHARED ${HEADERS} ${SOURCES} )
-target_include_directories( glpp PUBLIC ${INCLUDES} ${EXTERNAL_INCLUDES} )
-target_link_libraries( glpp ${TARGET_LINK_LIBRARIES} )
+add_library( glpp SHARED ${GLPP_HEADERS} ${GLPP_SOURCES} )
+
+target_include_directories( glpp PRIVATE
+    includes
+    ${ROOT}
+    ${EXTERNAL_INCLUDE_DIR}
+    ${FREETYPE_INCLUDES}
+    ${GLEW_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIRS}
+    ${OPENGL_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIRS} )
+
+target_link_libraries( glpp PRIVATE
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${FREETYPE_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    ${OPENGL_LIBRARIES} )
 
 
 ###############################################################################

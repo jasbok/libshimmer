@@ -21,11 +21,9 @@ file(GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h)
 ###############################################################################
 set( INCLUDES
         ${ROOT}
+        ${LIB_SHIMMER_ROOT}/includes
         ${SDL2_INCLUDE_DIR}
         ${SDL2_SHIM_INCLUDE_DIR} )
-
-include_directories(${INCLUDES})
-
 
 ###############################################################################
 #   Set sources.
@@ -42,7 +40,7 @@ set( SOURCES
 ###############################################################################
 add_library(shimmer_sdl2 SHARED ${SOURCES} ${HEADERS})
 target_link_libraries(shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES})
-
+target_include_directories(shimmer_sdl PUBLIC ${ALL_INCLUDE_DIRECTORIES})
 
 ###############################################################################
 #   Build example programs.
