@@ -196,7 +196,7 @@ int init_opengl() {
 }
 
 std::shared_ptr<glpp::texture_2d> load_texture ( const std::string& path ) {
-    auto img_path = common::file::find_and_throw ( path, { "data/img" } )[0];
+    auto img_path = common::file::find ( path, { "data/img" } );
     auto img      = common::img::read ( img_path );
 
     auto tex = std::make_shared<glpp::texture_2d>();
@@ -337,13 +337,13 @@ int main ( int argc, char** argv ) {
         common::unicodes::latin_1_supplement,
     };
 
-    auto mode7_path =
-        common::file::find_one ( "MODES___.TTF", { "data/fonts" } );
+    auto mode7_path = common::file::find ( "MODES___.TTF", { "data/fonts" } );
 
-    auto xol_reg_path = common::file::find_one ( "Xolonium-Regular.ttf",
-                                                 { "data/fonts" } );
-    auto xol_bold_path = common::file::find_one ( "Xolonium-Bold.ttf",
-                                                  { "data/fonts" } );
+    auto xol_reg_path = common::file::find ( "Xolonium-Regular.ttf",
+                                             { "data/fonts" } );
+
+    auto xol_bold_path = common::file::find ( "Xolonium-Bold.ttf",
+                                              { "data/fonts" } );
 
     auto glyphs = common::fonts::load ( {
         { "mode_seven_13", mode7_path, 13, unicodes },

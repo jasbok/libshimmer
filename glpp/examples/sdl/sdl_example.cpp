@@ -77,8 +77,8 @@ void init_glew() {
 void setup_shaders() {
     printf ( "[INFO] Configuring shaders...\n" );
 
-    auto vs_source = common::file::read_all ( "example.vert" );
-    auto fs_source = common::file::read_all ( "example.frag" );
+    auto vs_source = common::file::read_all ( "data/example.vert" );
+    auto fs_source = common::file::read_all ( "data/example.frag" );
 
     auto vs = glpp::shader::create().vertex ( vs_source );
     auto fs = glpp::shader::create().fragment ( fs_source );
@@ -103,7 +103,7 @@ void setup_textures() {
 
     common::img::flip_vertically_on_read ( true );
 
-    auto image = common::img::read ( "monster-bash.png" );
+    auto image = common::img::read ( "data/monster-bash.png" );
     TEXTURE = std::make_unique<glpp::texture_2d>();
 
     glpp::texture::active_texture ( 0 );

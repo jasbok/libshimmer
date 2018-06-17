@@ -116,7 +116,5 @@ std::shared_ptr<class program> resource_loader::shared_program (
 
 common::img::image resource_loader::image ( const string& path ) const
 {
-    auto file_paths = common::file::find_and_throw ( path, _search_paths );
-
-    return common::img::read ( file_paths[0] );
+    return common::img::read ( common::file::find ( path, _search_paths ) );
 }

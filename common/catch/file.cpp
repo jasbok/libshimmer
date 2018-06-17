@@ -68,40 +68,82 @@ TEST_CASE ( "Read the lines of various files into vectors.", TAGS ) {
                         Catch::Matchers::Contains ( "does_not_exist.txt" ) );
 }
 
-TEST_CASE ( "Find files in search paths.", TAGS ) {
+TEST_CASE ( "Find the first file matching path in given search paths.", TAGS ) {
+    using namespace common::file;
     using namespace std;
+
     vector<string> search_paths = { "data", "data/text", "data/image" };
 
-    CHECK ( common::file::find ( "test.png", search_paths ) == vector<string>{
-        "data/image/test.png"
-    } );
+    CHECK ( find ( "test.png", search_paths ) == "data/image/test.png" );
 
-    CHECK ( common::file::find ( "test.jpg", search_paths ) == vector<string>{
-        "data/image/test.jpg"
-    } );
+    CHECK ( find ( "test.jpg", search_paths ) == "data/image/test.jpg" );
 
-    CHECK ( common::file::find ( "file_a.txt", search_paths ) == vector<string>{
-        "data/text/file_a.txt"
-    } );
+    CHECK ( find ( "file_a.txt", search_paths ) == "data/text/file_a.txt" );
 
-    CHECK ( common::file::find ( "file_b.txt", search_paths ) == vector<string>{
-        "data/text/file_b.txt"
-    } );
+    CHECK ( find ( "file_b.txt", search_paths ) == "data/text/file_b.txt" );
 
-    CHECK ( common::file::find ( "file_c", search_paths ) == vector<string>{
-        "data/text/file_c"
-    } );
+    CHECK ( find ( "file_c", search_paths ) == "data/text/file_c" );
 
-    CHECK ( common::file::find ( "file_multiline.txt", search_paths )
+    CHECK ( find ( "file_multiline.txt", search_paths )
+            == "data/text/file_multiline.txt" );
+
+    CHECK ( find ( "search_test_a", search_paths ) == "data/search_test_a" );
+
+    CHECK ( find ( "search_test_b", search_paths ) == "data/search_test_b" );
+
+    CHECK ( find ( "search_test_c",
+                   search_paths ) == "data/text/search_test_c" );
+
+    CHECK_THROWS_AS ( find ( "does_not_exist.txt", search_paths ),
+                      not_found_exception );
+
+    CHECK_THROWS_WITH ( find ( "does_not_exist.txt", search_paths ),
+                        Catch::Matchers::Contains ( "does_not_exist.txt" ) );
+
+    CHECK_THROWS_WITH ( find ( "does_not_exist.txt", search_paths ),
+                        Catch::Matchers::Contains ( "data" ) );
+
+    CHECK_THROWS_WITH ( find ( "does_not_exist.txt", search_paths ),
+                        Catch::Matchers::Contains ( "data/text" ) );
+
+    CHECK_THROWS_WITH ( find ( "does_not_exist.txt", search_paths ),
+                        Catch::Matchers::Contains ( "data/image" ) );
+}
+
+TEST_CASE ( "Find all files matching path in given search paths.", TAGS ) {
+    using namespace common::file;
+    using namespace std;
+
+    vector<string> search_paths = { "data", "data/text", "data/image" };
+
+    CHECK ( find_all ( "test.png", search_paths )
+            == vector<string>{ "data/image/test.png" } );
+
+    CHECK ( find_all ( "test.jpg", search_paths )
+            == vector<string>{ "data/image/test.jpg" } );
+
+    CHECK ( find_all ( "file_a.txt", search_paths )
+            == vector<string>{ "data/text/file_a.txt" } );
+
+    CHECK ( find_all ( "file_b.txt", search_paths )
+            == vector<string>{ "data/text/file_b.txt" } );
+
+    CHECK ( find_all ( "file_c", search_paths )
+            == vector<string>{ "data/text/file_c" } );
+
+    CHECK ( find_all ( "file_multiline.txt", search_paths )
             == vector<string>{ "data/text/file_multiline.txt" } );
 
-    CHECK ( common::file::find ( "search_test_a", search_paths )
+    CHECK ( find_all ( "search_test_a", search_paths )
             == vector<string>{ "data/search_test_a",
                                "data/text/search_test_a" } );
 
-    CHECK ( common::file::find ( "search_test_b", search_paths )
+    CHECK ( find_all ( "search_test_b", search_paths )
             == vector<string>{ "data/search_test_b" } );
 
-    CHECK ( common::file::find ( "search_test_c", search_paths )
+    CHECK ( find_all ( "search_test_c", search_paths )
             == vector<string>{ "data/text/search_test_c" } );
+
+    CHECK ( find_all ( "does_not_exist.txt", search_paths )
+            == vector<string>{} );
 }
