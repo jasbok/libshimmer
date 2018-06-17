@@ -1,8 +1,8 @@
-#include "catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "aspect.h"
-#include "event_collector.h"
-#include "event_exchange.h"
+#include "libshimmer/aspect.h"
+#include "libshimmer/event_collector.h"
+#include "libshimmer/event_exchange.h"
 
 static const char* TAGS = "[aspect]";
 

@@ -1,30 +1,14 @@
 ###############################################################################
-#   Configure include directories.
+#   List sources
 ###############################################################################
-include_directories(
-    ${CATCH_INCLUDES}
-    ${LIB_SHIMMER_ROOT} )
-
-
-###############################################################################
-#   Collect all test files.
-###############################################################################
-set ( CATCH_TESTS
+set( CATCH_SOURCES
         aspect.cpp
         display.cpp
         event_collector.cpp
         event_exchange.cpp
         mouse.cpp
         pipeline.cpp
-        window.cpp )
-
-
-###############################################################################
-#   List sources
-###############################################################################
-set( CATCH_SOURCES
-        ${SOURCES}
-        ${CATCH_TESTS}
+        window.cpp
         catch.cpp )
 
 
@@ -32,7 +16,13 @@ set( CATCH_SOURCES
 #   Build catch executable
 ###############################################################################
 add_executable( catch catch.cpp ${CATCH_TESTS} )
-target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES})
+
+target_include_directories( catch PRIVATE
+    .
+    ${ROOT}
+    ${ROOT}/external )
+
+target_link_libraries( catch shimmer ${TARGET_LINK_LIBRARIES} )
 
 
 ###############################################################################

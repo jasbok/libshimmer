@@ -1,6 +1,6 @@
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "pipeline.h"
+#include "libshimmer/pipeline.h"
 
 const static char* TAGS = "[pipeline]";
 

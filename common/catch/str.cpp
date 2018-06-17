@@ -1,6 +1,6 @@
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "str.h"
+#include "common/str.h"
 
 static const char* TAGS = "[string]";
 

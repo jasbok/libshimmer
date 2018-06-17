@@ -10,7 +10,13 @@ namespace common::file
 struct read_exception : public std::runtime_error {
     read_exception( const std::string& path );
 
-    virtual ~read_exception();
+    virtual ~read_exception() = default;
+};
+
+struct not_found_exception : public std::runtime_error {
+    not_found_exception( const std::string& path );
+
+    virtual ~not_found_exception() = default;
 };
 
 /**
@@ -36,6 +42,27 @@ std::vector<std::string> read_lines ( const std::string& path );
  */
 std::vector<std::string> find ( const std::string&              path,
                                 const std::vector<std::string>& search_paths );
+
+/**
+ * @brief find Tries to find the file in the provided search paths.
+ * @param path The relative path of the file.
+ * @param search_paths The search paths to look for the file.
+ * @return The first file matching the path found in the search paths.
+ * @throws If no file was found.
+ */
+std::string find_one ( const std::string&              path,
+                       const std::vector<std::string>& search_paths );
+
+/**
+ * @brief find_and_throw Tries to find the file in the provided search paths,
+ * throwing an exception if none could be found.
+ * @param path The relative path of the file.
+ * @param search_paths The search paths to look for the file.
+ * @return A list of existing files found in the search paths.
+ * @throws not_found_exception if none is found.
+ */
+std::vector<std::string> find_and_throw ( const std::string&              path,
+                                          const std::vector<std::string>& search_paths );
 }
 
 #endif // ifndef COMMON_FILE_H

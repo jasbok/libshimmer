@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_RUNNER
 
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "plog/Appenders/ConsoleAppender.h"
-#include "plog/Log.h"
+#include "external/plog/Appenders/ConsoleAppender.h"
+#include "external/plog/Log.h"
 
 int main ( int argc, char* argv[] )
 {

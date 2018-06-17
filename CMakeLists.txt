@@ -44,7 +44,7 @@ set( CATCH_INCLUDES ${EXTERNAL_ROOT}/includes/catch )
 ###############################################################################
 #   Set fmt header and source variables
 ###############################################################################
-set( FMT_INCLUDE_DIR ${ROOT}/external/includes/fmt )
+set( FMT_INCLUDE_DIR ${ROOT}/external/fmt )
 set( FMT_INCLUDE_DIRS ${FMT_INCLUDE_DIR})
 set( FMT_HEADERS ${FMT_INCLUDE_DIR}/format.h )
 set( FMT_SOURCES ${FMT_INCLUDE_DIR}/format.cc )
@@ -76,14 +76,14 @@ add_subdirectory( glpp )
 ###############################################################################
 #   Build libshimmer
 ###############################################################################
-# add_subdirectory( libshimmer )
+add_subdirectory( libshimmer )
 
 
 ###############################################################################
 #   Build individual shims
 ###############################################################################
-# add_subdirectory( shims )
-
+add_subdirectory( shims/sdl )
+add_subdirectory( shims/sdl2 )
 
 ###############################################################################
 #   Install shaders

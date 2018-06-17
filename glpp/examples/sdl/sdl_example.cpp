@@ -1,15 +1,13 @@
-#define DEBUG
-
 #include "common/file.h"
 #include "common/img.h"
-#include "glpp/includes/debug.h"
-#include "glpp/includes/element_array_buffer.h"
-#include "glpp/includes/program.h"
-#include "glpp/includes/shader.h"
-#include "glpp/includes/texture.h"
-#include "glpp/includes/vertex_array.h"
-#include "glpp/includes/vertex_attrib.h"
-#include "glpp/includes/vertex_buffer.h"
+#include "glpp/debug.h"
+#include "glpp/element_array_buffer.h"
+#include "glpp/program.h"
+#include "glpp/shader.h"
+#include "glpp/texture_2d.h"
+#include "glpp/vertex_array.h"
+#include "glpp/vertex_attrib.h"
+#include "glpp/vertex_buffer.h"
 
 #include "SDL.h"
 
@@ -21,7 +19,7 @@ static SDL_Surface* VIDEO              = nullptr;
 static bool RUNNING = true;
 
 static std::unique_ptr<glpp::program> PROGRAM;
-static std::unique_ptr<glpp::texture> TEXTURE;
+static std::unique_ptr<glpp::texture_2d> TEXTURE;
 static std::unique_ptr<glpp::vertex_buffer> VBO;
 static std::unique_ptr<glpp::element_array_buffer> EBO;
 static std::unique_ptr<glpp::vertex_array> VAO;
@@ -49,8 +47,8 @@ void setup_video() {
         exit ( 1 );
     }
 
-    VIDEO = SDL_SetVideoMode ( VIDEO_INFO->current_w,
-                               VIDEO_INFO->current_h,
+    VIDEO = SDL_SetVideoMode ( 800, // VIDEO_INFO->current_w,
+                               600, // VIDEO_INFO->current_h,
                                VIDEO_INFO->vfmt->BitsPerPixel,
                                SDL_OPENGL );
 
@@ -103,18 +101,35 @@ void setup_shaders() {
 void setup_textures() {
     printf ( "[INFO] Configuring textures...\n" );
 
+    common::img::flip_vertically_on_read ( true );
+
     auto image = common::img::read ( "monster-bash.png" );
+    TEXTURE = std::make_unique<glpp::texture_2d>();
+
+    glpp::texture::active_texture ( 0 );
+    TEXTURE->bind();
+    TEXTURE->image ( image )
+        .filters ( glpp::texture_2d::filter::nearest )
+        .generate_mipmaps();
+
+    printf ( "[INFO] The maximum number of texture units: %i\n",
+             glpp::texture::max_texture_image_units() );
+
+    PROGRAM->use();
+    PROGRAM->uniform ( "tex_2d", 0 );
+
+    GLPP_CHECK_ERROR ( "Texture setup." );
 }
 
 void setup_buffers() {
     printf ( "[INFO] Configuring buffers...\n" );
 
     std::vector<GLfloat> vertices = {
-        // position (2)     // colour (3)
-        0.5f,   0.5f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 1.0f, 0.0f, 1.0f,
-        0.5f,  -0.5f, 1.0f, 1.0f, 1.0f
+        // position (2)     // colour (3)   // texcoord (2)
+        0.75f,   0.75f, 1.0f, 0.0f, 0.0f, 1.0, 1.0, // Top Right
+        -0.75f,  0.75f, 0.0f, 1.0f, 0.0f, 0.0, 1.0, // Top Left
+        -0.75f, -0.75f, 1.0f, 0.0f, 1.0f, 0.0, 0.0, // Bottom Left
+        0.75f,  -0.75f, 1.0f, 1.0f, 1.0f, 1.0, 0.0  // Bottom Right
     };
 
     VBO = std::make_unique<glpp::vertex_buffer>();
@@ -147,24 +162,32 @@ void setup_quad() {
     PROGRAM->use();
     auto position_location = PROGRAM->attribute_location ( "position" );
     auto colour_location   = PROGRAM->attribute_location ( "colour" );
+    auto texcoord_location = PROGRAM->attribute_location ( "texcoord" );
 
     printf ( "[DEBUG] Position attrib location: %i\n", position_location );
     printf ( "[DEBUG] Colour attrib location: %i\n",   colour_location );
+    printf ( "[DEBUG] Texcoord attrib location: %i\n", texcoord_location );
 
     auto vertex_attrib_arrays =
         glpp::vertex_attrib_builder<GLfloat>::sequential ( {
         { "position", 2, position_location },
-        { "colour", 3, colour_location }
+        { "colour", 3, colour_location },
+        { "texcoord", 2, texcoord_location }
     } );
 
     auto& position_attrib_array = vertex_attrib_arrays[0];
     auto& colour_attrib_array   = vertex_attrib_arrays[1];
+    auto& texcoord_attrib_array = vertex_attrib_arrays[2];
 
     position_attrib_array
         .define_pointer()
         .enable_array();
 
     colour_attrib_array
+        .define_pointer()
+        .enable_array();
+
+    texcoord_attrib_array
         .define_pointer()
         .enable_array();
 
@@ -187,14 +210,14 @@ void setup_opengl() {
 
     try {
         setup_shaders();
-    } catch ( std::runtime_error ex ) {
+    } catch ( const std::runtime_error& ex ) {
         printf ( "[SEVERE] Failed to setup shaders => %s\n", ex.what() );
         exit ( 1 );
     }
 
     try {
         setup_textures();
-    } catch ( std::runtime_error ex ) {
+    } catch ( const std::runtime_error& ex ) {
         printf ( "[SEVERE] Failed to setup textures => %s\n", ex.what() );
         exit ( 1 );
     }
@@ -238,6 +261,10 @@ void input() {
 }
 
 int main ( int argc, char* argv[] ) {
+#ifdef DEBUG
+    printf ( "======== DEBUG BUILD ========\n" );
+#endif // ifdef DEBUG
+
     printf ( "[INFO] Starting GLPP SDL example.\n" );
     init_sdl();
     setup_video();

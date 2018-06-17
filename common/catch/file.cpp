@@ -1,6 +1,6 @@
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "file.h"
+#include "common/file.h"
 
 static const char* TAGS = "[file]";
 

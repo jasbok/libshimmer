@@ -1,6 +1,6 @@
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "dims.h"
+#include "common/dims.h"
 
 typedef common::dims_2<unsigned int> dims_2u;
 typedef common::dims_3<unsigned int> dims_3u;

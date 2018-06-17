@@ -1,4 +1,4 @@
-#include "api/sym/SDL2_sym.h"
+#include "api/SDL2_sym.h"
 #include <chrono>
 #include <fstream>
 #include <iomanip>

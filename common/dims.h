@@ -197,5 +197,8 @@ std::ostream& operator<<( std::ostream& os, const dims_3<T>& value ) {
 
     return os;
 }
+
+typedef dims_2<unsigned int> dims_2u;
+typedef dims_3<unsigned int> dims_3u;
 }
 #endif // ifndef COMMON_DIMS_H

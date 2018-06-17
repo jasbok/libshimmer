@@ -7,7 +7,7 @@ find_package( SDL2 MODULE REQUIRED )
 execute_process(
   COMMAND ${CMAKE_BINARY_DIR}/apigen/apigen
   ${SDL_INCLUDE_DIR}/SDL.h
-  -header "${ROOT}/api/sym/SDL_sym.h"
+  -header "${ROOT}/api/SDL_sym.h"
   -source "${ROOT}/api/tracers/SDL_tracer.cpp"
   -- -I /usr/lib/clang/6.0.0/include/
   OUTPUT_VARIABLE APIGEN_OUT )
@@ -32,7 +32,7 @@ install( TARGETS trace_sdl DESTINATION lib )
 execute_process(
   COMMAND ${CMAKE_BINARY_DIR}/apigen/apigen
   ${SDL2_INCLUDE_DIR}/SDL.h
-  -header "${ROOT}/api/sym/SDL2_sym.h"
+  -header "${ROOT}/api/SDL2_sym.h"
   -source "${ROOT}/api/tracers/SDL2_tracer.cpp"
   -- -I /usr/lib/clang/6.0.0/include/
   OUTPUT_VARIABLE APIGEN_OUT )
@@ -45,8 +45,10 @@ message( "SDL2 apigen output: '${APIGEN_OUT}'" )
 ###############################################################################
 add_library( trace_sdl2 SHARED tracers/SDL2_tracer.cpp )
 
-target_include_directories( trace_sdl2
-    PRIVATE ${ROOT} ${SDL2_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS} )
+target_include_directories( trace_sdl2 PRIVATE
+    ${ROOT}
+    ${SDL2_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIRS} )
 
 target_link_libraries( trace_sdl2 ${SDL2_LIBRARIES} )
 

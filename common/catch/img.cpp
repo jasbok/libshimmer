@@ -1,6 +1,6 @@
-#include "catch/catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "img.h"
+#include "common/img.h"
 
 static const char* TAGS = "[img]";
 
@@ -11,19 +11,19 @@ TEST_CASE ( "Read the contents of a png file into an image data structure.",
 
     auto image = read ( "data/image/test.png" );
 
-    REQUIRE ( image.data != nullptr );
-    REQUIRE ( image.dims.width == 32 );
-    REQUIRE ( image.dims.height == 30 );
-    REQUIRE ( image.channels == 4 );
+    REQUIRE ( image.data() != nullptr );
+    REQUIRE ( image.dims().width == 32 );
+    REQUIRE ( image.dims().height == 30 );
+    REQUIRE ( image.channels() == 4 );
 
-    for ( unsigned int j = 0; j < image.dims.height; j++ ) {
-        unsigned int row = j * image.dims.width  * image.channels;
+    for ( unsigned int j = 0; j < image.dims().height; j++ ) {
+        unsigned int row = j * image.dims().width  * image.channels();
 
-        for ( unsigned int i = 0; i < image.dims.width; i++ ) {
-            unsigned int column = i * image.channels;
+        for ( unsigned int i = 0; i < image.dims().width; i++ ) {
+            unsigned int column = i * image.channels();
 
-            for ( unsigned int c = 0; c < image.channels; c++ ) {
-                const auto& value = image.data.get()[row + column + c];
+            for ( unsigned int c = 0; c < image.channels(); c++ ) {
+                const auto& value = image.data()[row + column + c];
 
                 if ( c == 3 ) {
                     // Alpha is always opaque.
@@ -56,20 +56,20 @@ TEST_CASE ( "Read the contents of a jpg file into an image data structure.",
 
     auto image = read ( "data/image/test.jpg" );
 
-    REQUIRE ( image.data != nullptr );
-    REQUIRE ( image.dims.width == 32 );
-    REQUIRE ( image.dims.height == 30 );
-    REQUIRE ( image.channels == 3 );
+    REQUIRE ( image.data() != nullptr );
+    REQUIRE ( image.dims().width == 32 );
+    REQUIRE ( image.dims().height == 30 );
+    REQUIRE ( image.channels() == 3 );
 
     // Note compression slightly changes original values.
-    for ( unsigned int j = 0; j < image.dims.height; j++ ) {
-        unsigned int row = j * image.dims.width  * image.channels;
+    for ( unsigned int j = 0; j < image.dims().height; j++ ) {
+        unsigned int row = j * image.dims().width  * image.channels();
 
-        for ( unsigned int i = 0; i < image.dims.width; i++ ) {
-            unsigned int column = i * image.channels;
+        for ( unsigned int i = 0; i < image.dims().width; i++ ) {
+            unsigned int column = i * image.channels();
 
-            for ( unsigned int c = 0; c < image.channels; c++ ) {
-                const auto& value = image.data.get()[row + column + c];
+            for ( unsigned int c = 0; c < image.channels(); c++ ) {
+                const auto& value = image.data()[row + column + c];
 
                 if ( i < 30 ) {
                     auto rgb_index = ( i / 2 ) % 3;

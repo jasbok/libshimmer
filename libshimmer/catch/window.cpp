@@ -1,8 +1,8 @@
-#include "catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "event_collector.h"
-#include "event_exchange.h"
-#include "window.h"
+#include "libshimmer/event_collector.h"
+#include "libshimmer/event_exchange.h"
+#include "libshimmer/window.h"
 
 using namespace shimmer;
 

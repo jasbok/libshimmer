@@ -10,16 +10,16 @@ find_package( Filesystem MODULE )
 #   Set apigen includes.
 ###############################################################################
 set( APIGEN_INCLUDES
-        includes/common.h
-        includes/decl.h
-        includes/fdecl_matcher.h
-        includes/function.h
-        includes/decl.h
-        includes/header.h
-        includes/output.h
-        includes/parameter.h
-        includes/source.h
-        includes/type.h )
+        common.h
+        decl.h
+        fdecl_matcher.h
+        function.h
+        decl.h
+        header.h
+        output.h
+        parameter.h
+        source.h
+        type.h )
 
 
 ###############################################################################
@@ -27,14 +27,14 @@ set( APIGEN_INCLUDES
 ###############################################################################
 set( APIGEN_SOURCES apigen.cpp
         ${FMT_SOURCES}
-        sources/common.cpp
-        sources/fdecl_matcher.cpp
-        sources/function.cpp
-        sources/header.cpp
-        sources/output.cpp
-        sources/parameter.cpp
-        sources/source.cpp
-        sources/type.cpp )
+        src/common.cpp
+        src/fdecl_matcher.cpp
+        src/function.cpp
+        src/header.cpp
+        src/output.cpp
+        src/parameter.cpp
+        src/source.cpp
+        src/type.cpp )
 
 
 ###############################################################################
@@ -52,8 +52,10 @@ set( APIGEN_LIBRARIES
 ###############################################################################
 add_executable( apigen ${APIGEN_SOURCES} ${APIGEN_INCLUDES} )
 
-target_link_libraries( apigen ${APIGEN_LIBRARIES} )
 target_include_directories( apigen PRIVATE
-    includes
+    .
     ${ROOT}
     ${EXTERNAL_INCLUDE_DIR} )
+
+target_link_libraries( apigen ${APIGEN_LIBRARIES} )
+

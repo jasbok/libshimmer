@@ -33,6 +33,5 @@ set ( CATCH_TESTS
 ###############################################################################
 add_executable( catch_common catch.cpp ${CATCH_TESTS} )
 target_link_libraries( catch_common common )
-target_include_directories(catch_common
-    PRIVATE ${COMMON_INCLUDE_DIR} ${EXTERNAL_INCLUDE_DIR})
+target_include_directories(catch_common PRIVATE ${ROOT})
 set_target_properties( catch_common PROPERTIES OUTPUT_NAME "catch" )

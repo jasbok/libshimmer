@@ -35,6 +35,6 @@ target_link_libraries( glpp_sdl_example
 
 target_include_directories( glpp_sdl_example PRIVATE
     ${ROOT}
-    ${EXTERNAL_INCLUDE_DIR}
+    ${ROOT}/external
     ${GLPP_INCLUDE_DIR}
     ${SDL_INCLUDE_DIR} )

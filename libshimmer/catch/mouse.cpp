@@ -1,7 +1,7 @@
-#include "catch.hpp"
+#include "external/catch/catch.hpp"
 
-#include "event_exchange.h"
-#include "mouse.h"
+#include "libshimmer/event_exchange.h"
+#include "libshimmer/mouse.h"
 
 using namespace shimmer;
 

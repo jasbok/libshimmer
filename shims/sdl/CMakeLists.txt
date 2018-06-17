@@ -1,7 +1,7 @@
 ###############################################################################
 #   Find and store SDL paths.
 ###############################################################################
-find_package(SDL)
+find_package( SDL )
 
 
 ###############################################################################
@@ -13,39 +13,32 @@ set( SDL_SHIM_INCLUDE_DIR ${SHIMS_ROOT}/sdl/includes )
 ###############################################################################
 #   Find all header files for SDL shim.
 ###############################################################################
-file(GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h)
-
-
-###############################################################################
-#   Set include directories.
-###############################################################################
-set( INCLUDES
-        ${ROOT}
-        ${LIB_SHIMMER_ROOT}/includes
-        ${SDL_INCLUDE_DIR}
-        ${SDL_SHIM_INCLUDE_DIR} )
-
-include_directories( ${INCLUDES} ${ROOT}/external/includes)
+file( GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h )
 
 
 ###############################################################################
 #   Set sources.
 ###############################################################################
 set( SOURCES
-        sources/events.cpp
-        sources/input.cpp
-        sources/sdl.cpp
-        sources/shim.cpp
-        sources/video.cpp
-        sources/window.cpp )
+        src/events.cpp
+        src/input.cpp
+        src/sdl.cpp
+        src/shim.cpp
+        src/video.cpp
+        src/window.cpp )
 
 
 ###############################################################################
 #   Build shim library.
 ###############################################################################
-add_library(shimmer_sdl SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(shimmer_sdl shimmer ${ALL_OPENGL_LIBRARIES})
-target_include_directories(shimmer_sdl PUBLIC ${ALL_INCLUDE_DIRECTORIES})
+add_library( shimmer_sdl SHARED ${SOURCES} ${HEADERS} )
+
+target_include_directories( shimmer_sdl PRIVATE .
+    ${ROOT}
+    ${ROOT}/external
+    ${SDL_INCLUDE_DIR} )
+
+target_link_libraries( shimmer_sdl shimmer ${ALL_OPENGL_LIBRARIES} )
 
 
 ###############################################################################

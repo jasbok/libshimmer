@@ -1,13 +1,4 @@
 ###############################################################################
-#   Build Variables
-###############################################################################
-set(INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-set(INSTALL_DATA ${INSTALL_PREFIX}/share)
-set(INSTALL_FONTS ${INSTALL_DATA}/fonts)
-set(INSTALL_IMAGES ${INSTALL_DATA}/images)
-set(INSTALL_SHADERS ${INSTALL_DATA}/shaders)
-
-###############################################################################
 #   Copy default files.
 ###############################################################################
 set(DATA_GLSL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl)
@@ -18,76 +9,44 @@ configure_file(${DATA_GLSL_SRC}/default.frag ${DATA_GLSL_DEST}/default.frag COPY
 
 
 ###############################################################################
-#   Configure external include directories.
-###############################################################################
-set( EXTERNAL_INCLUDE_DIR ${EXTERNAL_ROOT}/includes )
-
-set ( EXTERNAL_INCLUDES
-        ${EXTERNAL_INCLUDE_DIR} )
-
-###############################################################################
-#   List external target link libraries
-###############################################################################
-set( TARGET_LINK_LIBRARIES
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${FREETYPE_LIBRARIES}
-        ${PNG_LIBRARIES}
-        ${OPENGL_LIBRARIES} )
-
-
-###############################################################################
-#   Configure project include directories.
-###############################################################################
-set( INCLUDE_DIR ${LIB_SHIMMER_ROOT}/includes )
-
-set( INCLUDES
-        ${GLPP_ROOT}/includes
-        ${INCLUDE_DIR}
-        ${INCLUDE_DIR}/macros)
-
-
-###############################################################################
 #   List all headers, required by some IDEs.
 ###############################################################################
-#file( GLOB_RECURSE HEADERS ${INCLUDE_DIR}/*.h* ${EXTERNAL_INCLUDE_DIR}/*.h* )
-
 set( HEADERS
-        ${EXTERNAL_INCLUDE_DIR}/catch/catch.hpp
-        ${INCLUDE_DIR}/application.h
-        ${INCLUDE_DIR}/aspect.h
-        ${INCLUDE_DIR}/aspect_ratio.h
-        ${INCLUDE_DIR}/config.h
-        ${INCLUDE_DIR}/config_variables.h.in
-        ${INCLUDE_DIR}/connector.h
-        ${INCLUDE_DIR}/coords.h
-        ${INCLUDE_DIR}/dims.h
-        ${INCLUDE_DIR}/display.h
-        ${INCLUDE_DIR}/environment.h
-        ${INCLUDE_DIR}/event.h
-        ${INCLUDE_DIR}/event_collector.h
-        ${INCLUDE_DIR}/event_connector.h
-        ${INCLUDE_DIR}/event_exchange.h
-        ${INCLUDE_DIR}/event_logger.h
-        ${INCLUDE_DIR}/event_receiver.h
-        ${INCLUDE_DIR}/exchange.h
-        ${INCLUDE_DIR}/file_reader.h
-        ${INCLUDE_DIR}/general_options.h
-        ${INCLUDE_DIR}/image_reader.h
-        ${INCLUDE_DIR}/json.h
-        ${INCLUDE_DIR}/limiter.h
-        ${INCLUDE_DIR}/logger.h
-        ${INCLUDE_DIR}/macros.h
-        ${INCLUDE_DIR}/mouse.h
-        ${INCLUDE_DIR}/options.h
-        ${INCLUDE_DIR}/pipeline.h
-        ${INCLUDE_DIR}/receiver.h
-        ${INCLUDE_DIR}/renderer.h
-        ${INCLUDE_DIR}/shader_options.h
-        ${INCLUDE_DIR}/shader_reader.h
-        ${INCLUDE_DIR}/shimmer.h
-        ${INCLUDE_DIR}/system.h
-        ${INCLUDE_DIR}/video_options.h
-        ${INCLUDE_DIR}/window.h )
+        application.h
+        aspect.h
+        aspect_ratio.h
+        config.h
+        config_variables.h.in
+        connector.h
+        coords.h
+        dims.h
+        display.h
+        environment.h
+        event.h
+        event_collector.h
+        event_connector.h
+        event_exchange.h
+        event_logger.h
+        event_receiver.h
+        exchange.h
+        file_reader.h
+        general_options.h
+        image_reader.h
+        json.h
+        limiter.h
+        logger.h
+        macros.h
+        mouse.h
+        options.h
+        pipeline.h
+        receiver.h
+        renderer.h
+        shader_options.h
+        shader_reader.h
+        shimmer.h
+        system.h
+        video_options.h
+        window.h )
 
 
 ###############################################################################
@@ -96,47 +55,54 @@ set( HEADERS
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
-        ${SOURCES_DIR}/aspect.cpp
-        ${SOURCES_DIR}/aspect_ratio.cpp
-        ${SOURCES_DIR}/config.cpp
-        ${SOURCES_DIR}/dims.cpp
-        ${SOURCES_DIR}/display.cpp
-        ${SOURCES_DIR}/environment.cpp
-        ${SOURCES_DIR}/event.cpp
-        ${SOURCES_DIR}/event_collector.cpp
-        ${SOURCES_DIR}/event_logger.cpp
-        ${SOURCES_DIR}/file_reader.cpp
-        ${SOURCES_DIR}/general_options.cpp
-        ${SOURCES_DIR}/image_reader.cpp
-        ${SOURCES_DIR}/json.cpp
-        ${SOURCES_DIR}/limiter.cpp
-        ${SOURCES_DIR}/logger.cpp
-        ${SOURCES_DIR}/mouse.cpp
-        ${SOURCES_DIR}/options.cpp
-        ${SOURCES_DIR}/pipeline.cpp
-        ${SOURCES_DIR}/renderer.cpp
-        ${SOURCES_DIR}/shader_options.cpp
-        ${SOURCES_DIR}/shader_reader.cpp
-        ${SOURCES_DIR}/shimmer.cpp
-        ${SOURCES_DIR}/system.cpp
-        ${SOURCES_DIR}/video_options.cpp
-        ${SOURCES_DIR}/window.cpp )
+        src/aspect.cpp
+        src/aspect_ratio.cpp
+        src/config.cpp
+        src/dims.cpp
+        src/display.cpp
+        src/environment.cpp
+        src/event.cpp
+        src/event_collector.cpp
+        src/event_logger.cpp
+        src/file_reader.cpp
+        src/general_options.cpp
+        src/image_reader.cpp
+        src/json.cpp
+        src/limiter.cpp
+        src/logger.cpp
+        src/mouse.cpp
+        src/options.cpp
+        src/pipeline.cpp
+        src/renderer.cpp
+        src/shader_options.cpp
+        src/shader_reader.cpp
+        src/shimmer.cpp
+        src/system.cpp
+        src/video_options.cpp
+        src/window.cpp )
 
 ###############################################################################
 #   Replace build variables.
 ###############################################################################
-configure_file( ${INCLUDE_DIR}/config_variables.h.in ${INCLUDE_DIR}/config_variables.h )
+configure_file( config_variables.h.in config_variables.h )
 
 
 ###############################################################################
 #   Build shared library.
 ###############################################################################
-include_directories( ${INCLUDES})
-include_directories( SYSTEM ${EXTERNAL_INCLUDES} )
-
 add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
-target_include_directories( shimmer PUBLIC ${INCLUDES} ${ALL_INCLUDE_DIRECTORIES} )
-target_link_libraries( shimmer common glpp ${TARGET_LINK_LIBRARIES} )
+
+target_include_directories( shimmer PRIVATE .
+    ${ROOT}
+    ${ROOT}/external )
+
+target_link_libraries( shimmer
+    common
+    glpp
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${FREETYPE_LIBRARIES}
+    ${PNG_LIBRARIES}
+    ${OPENGL_LIBRARIES} )
 
 
 ###############################################################################
@@ -148,6 +114,12 @@ add_subdirectory( catch )
 ###############################################################################
 #   Install libs and shaders
 ###############################################################################
+set( INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+set( INSTALL_DATA ${INSTALL_PREFIX}/share )
+set( INSTALL_FONTS ${INSTALL_DATA}/fonts )
+set( INSTALL_IMAGES ${INSTALL_DATA}/images )
+set( INSTALL_SHADERS ${INSTALL_DATA}/shaders )
+
 set_target_properties( shimmer PROPERTIES
                             INSTALL_RPATH_USE_LINK_PATH TRUE
                             INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib )

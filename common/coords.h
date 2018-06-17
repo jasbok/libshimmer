@@ -177,5 +177,14 @@ std::ostream& operator<<( std::ostream& os, const coords_3<T>& value ) {
 
     return os;
 }
+
+typedef coords_2<int> coords_2i;
+typedef coords_3<int> coords_3i;
+
+typedef coords_2<unsigned int> coords_2u;
+typedef coords_3<unsigned int> coords_3u;
+
+typedef coords_2<float> coords_2f;
+typedef coords_3<float> coords_3f;
 }
 #endif // ifndef COMMON_COORDS_H

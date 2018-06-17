@@ -1,7 +1,7 @@
 ###############################################################################
 #   Find and store SDL2 paths.
 ###############################################################################
-find_package(SDL2 MODULE REQUIRED)
+find_package( SDL2 MODULE REQUIRED )
 
 
 ###############################################################################
@@ -13,39 +13,30 @@ set( SDL2_SHIM_INCLUDE_DIR ${SHIMS_ROOT}/sdl2/includes )
 ###############################################################################
 #   Find all header files for SDL2 shim.
 ###############################################################################
-file(GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h)
+file( GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h )
 
-
-###############################################################################
-#   Set include directories.
-###############################################################################
-set( INCLUDES
-        ${ROOT}
-        ${LIB_SHIMMER_ROOT}/includes
-        ${SDL2_INCLUDE_DIR}
-        ${SDL2_SHIM_INCLUDE_DIR} )
 
 ###############################################################################
 #   Set sources.
 ###############################################################################
 set( SOURCES
-        sources/event.cpp
-        sources/mouse.cpp
-        sources/shim.cpp
-        sources/video.cpp)
+        src/event.cpp
+        src/mouse.cpp
+        src/shim.cpp
+        src/video.cpp)
 
 
 ###############################################################################
 #   Build shim library.
 ###############################################################################
 add_library(shimmer_sdl2 SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES})
-target_include_directories(shimmer_sdl PUBLIC ${ALL_INCLUDE_DIRECTORIES})
 
-###############################################################################
-#   Build example programs.
-###############################################################################
-add_subdirectory( examples )
+target_include_directories( shimmer_sdl2 PRIVATE .
+    ${ROOT}
+    ${ROOT}/external
+    ${SDL2_INCLUDE_DIR} )
+
+target_link_libraries( shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES} )
 
 
 ###############################################################################
