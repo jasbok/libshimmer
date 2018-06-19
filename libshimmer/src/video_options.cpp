@@ -23,3 +23,22 @@ std::string to_json ( const video_options& options )
     return nlohmann::json ( options ).dump();
 }
 }
+
+namespace common {
+std::string to_json ( const common::limiter& limiter )
+{
+    return nlohmann::json ( limiter ).dump();
+}
+
+void to_json ( nlohmann::json& json, const common::limiter& obj )
+{
+    json["limit"]   = obj.limit();
+    json["samples"] = obj.samples();
+}
+
+void from_json ( const nlohmann::json& json, common::limiter& obj )
+{
+    obj.limit ( json.at ( "limit" ) );
+    obj.samples ( json.at ( "samples" ) );
+}
+}

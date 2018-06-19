@@ -1,13 +1,9 @@
-#ifndef SHIMMER_LIMITER_H
-#define SHIMMER_LIMITER_H
-
-#include "external/json/json.hpp"
+#ifndef COMMON_LIMITER_H
+#define COMMON_LIMITER_H
 
 #include <chrono>
-#include <string>
 
-namespace shimmer
-{
+namespace common {
 class limiter
 {
 public:
@@ -38,14 +34,6 @@ private:
 
     float _average;
 };
-
-std::string to_json ( const limiter& limiter );
-
-void        to_json ( nlohmann::json& json,
-                      const limiter&  obj );
-
-void from_json ( const nlohmann::json& json,
-                 limiter&              obj );
 }
 
-#endif // ifndef SHIMMER_LIMITER_H
+#endif

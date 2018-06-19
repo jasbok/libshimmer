@@ -33,7 +33,6 @@ set( HEADERS
         general_options.h
         image_reader.h
         json.h
-        limiter.h
         logger.h
         macros.h
         mouse.h
@@ -68,7 +67,6 @@ set( SOURCES
         src/general_options.cpp
         src/image_reader.cpp
         src/json.cpp
-        src/limiter.cpp
         src/logger.cpp
         src/mouse.cpp
         src/options.cpp

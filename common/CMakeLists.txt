@@ -17,8 +17,8 @@ set( COMMON_HEADERS
         fonts.h
         file.h
         freetype.h
-        gfx.h
         img.h
+        limiter.h
         range.h
         str.h
         unicodes.h )
@@ -35,6 +35,7 @@ set( COMMON_SOURCES
         src/fonts.cpp
         src/freetype.cpp
         src/img.cpp
+        src/limiter.cpp
         src/str.cpp )
 
 
