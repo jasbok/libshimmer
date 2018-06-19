@@ -19,13 +19,11 @@ find_package( Freetype )
 set( GLPP_HEADERS
         attribute.h
         buffer.h
-        camera.h
         cube.h
         element_array_buffer.h
         entity.h
         enums.h
         framebuffer.h
-        material.h
         mbuffer.h
         mesh.h
         pixels.h
@@ -36,7 +34,6 @@ set( GLPP_HEADERS
         scene_phase.h
         shader.h
         specs.h
-        text.h
         texture.h
         texture_2d.h
         texture_unit.h
@@ -52,19 +49,16 @@ set( GLPP_HEADERS
 ###############################################################################
 set( GLPP_SOURCES
         src/attribute.cpp
-        src/camera.cpp
         src/debug.cpp
         src/element_array_buffer.cpp
         src/entity.cpp
         src/framebuffer.cpp
-        src/material.cpp
         src/pixels.cpp
         src/program.cpp
         src/resource_loader.cpp
         src/scene.cpp
         src/scene_phase.cpp
         src/shader.cpp
-        src/text.cpp
         src/texture.cpp
         src/texture_2d.cpp
         src/texture_unit.cpp

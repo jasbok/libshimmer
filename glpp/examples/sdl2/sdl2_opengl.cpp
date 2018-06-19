@@ -1,8 +1,8 @@
 #include "common/atlas.h"
+#include "common/camera.h"
 #include "common/file.h"
 #include "common/fonts.h"
 
-#include "glpp/camera.h"
 #include "glpp/cube.h"
 #include "glpp/entity.h"
 #include "glpp/framebuffer.h"
@@ -22,8 +22,8 @@ SDL_GLContext GL_CONTEXT;
 static const glpp::dims_2u SCREEN_DIMS     = { 1600, 900 };
 static const glpp::dims_2u FBO_RENDER_DIMS = { 320, 240 };
 
-auto camera               = std::make_shared<glpp::camera>();
-auto render_target_camera = std::make_shared<glpp::camera>();
+auto camera               = std::make_shared<common::camera>();
+auto render_target_camera = std::make_shared<common::camera>();
 
 glm::vec3 move;
 glm::vec3 rotate;

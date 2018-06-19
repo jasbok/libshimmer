@@ -1,12 +1,12 @@
-#ifndef GLPP_CAMERA_H
-#define GLPP_CAMERA_H
+#ifndef COMMON_CAMERA_H
+#define COMMON_CAMERA_H
 
-#include "specs.h"
+#include "dims.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace glpp
+namespace common
 {
 class camera
 {
@@ -89,4 +89,4 @@ private:
 };
 }
 
-#endif // ifndef GLPP_CAMERA_H
+#endif

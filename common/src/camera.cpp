@@ -1,8 +1,10 @@
 #include "camera.h"
 
+namespace common {
+
 static const glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };
 
-glpp::camera::camera()
+camera::camera()
     : _position ( 0, 0, 0 ),
       _rotation ( 0, 0, 0 ),
       _projection ( glm::mat4 ( 1.0f ) ),
@@ -11,7 +13,7 @@ glpp::camera::camera()
     update();
 }
 
-glpp::camera::camera( const glm::vec3& position,
+camera::camera( const glm::vec3& position,
                       const glm::vec3& rotation,
                       const glm::mat4& projection )
     : _position ( position ),
@@ -22,7 +24,7 @@ glpp::camera::camera( const glm::vec3& position,
     update();
 }
 
-glpp::camera& glpp::camera::move ( const glm::vec3& position )
+camera& camera::move ( const glm::vec3& position )
 {
     _position += position.x * _right
                  + position.y * _up
@@ -33,7 +35,7 @@ glpp::camera& glpp::camera::move ( const glm::vec3& position )
     return *this;
 }
 
-glpp::camera& glpp::camera::position ( const glm::vec3& position )
+camera& camera::position ( const glm::vec3& position )
 {
     _position       = position;
     _require_update = true;
@@ -41,12 +43,12 @@ glpp::camera& glpp::camera::position ( const glm::vec3& position )
     return *this;
 }
 
-glm::vec3 glpp::camera::position() const
+glm::vec3 camera::position() const
 {
     return _position;
 }
 
-glpp::camera& glpp::camera::rotate ( const glm::vec3& rotation )
+camera& camera::rotate ( const glm::vec3& rotation )
 {
     _rotation      -= rotation;
     _require_update = true;
@@ -56,7 +58,7 @@ glpp::camera& glpp::camera::rotate ( const glm::vec3& rotation )
     return *this;
 }
 
-glpp::camera& glpp::camera::rotation ( const glm::vec3& rotation )
+camera& camera::rotation ( const glm::vec3& rotation )
 {
     _rotation       = rotation;
     _require_update = true;
@@ -66,21 +68,21 @@ glpp::camera& glpp::camera::rotation ( const glm::vec3& rotation )
     return *this;
 }
 
-glm::vec3 glpp::camera::rotation() const
+glm::vec3 camera::rotation() const
 {
     return _rotation;
 }
 
-glpp::camera& glpp::camera::update()
+camera& camera::update()
 {
     glm::vec3 front;
-    front.z = cos ( glm::radians ( _rotation.x ) ) *
-              cos ( glm::radians ( _rotation.y ) );
+    front.z = cosf ( glm::radians ( _rotation.x ) ) *
+              cosf ( glm::radians ( _rotation.y ) );
 
-    front.y = sin ( glm::radians ( _rotation.x ) );
+    front.y = sinf ( glm::radians ( _rotation.x ) );
 
-    front.x = cos ( glm::radians ( _rotation.x ) ) *
-              sin ( glm::radians ( _rotation.y ) );
+    front.x = cosf ( glm::radians ( _rotation.x ) ) *
+              sinf ( glm::radians ( _rotation.y ) );
 
     _direction = glm::normalize ( front );
 
@@ -92,7 +94,7 @@ glpp::camera& glpp::camera::update()
     return *this;
 }
 
-glm::mat4 glpp::camera::view()
+glm::mat4 camera::view()
 {
     if ( _require_update ) {
         update();
@@ -101,7 +103,7 @@ glm::mat4 glpp::camera::view()
     return _view;
 }
 
-glpp::camera& glpp::camera::perspective ( float fov,
+camera& camera::perspective ( float fov,
                                           float aspect,
                                           float near,
                                           float far ) {
@@ -113,7 +115,7 @@ glpp::camera& glpp::camera::perspective ( float fov,
     return *this;
 }
 
-glpp::camera& glpp::camera::ortho ( float left,
+camera& camera::ortho ( float left,
                                     float right,
                                     float bottom,
                                     float top ) {
@@ -125,7 +127,7 @@ glpp::camera& glpp::camera::ortho ( float left,
     return *this;
 }
 
-glpp::camera& glpp::camera::ortho ( float left,
+camera& camera::ortho ( float left,
                                     float right,
                                     float bottom,
                                     float top,
@@ -141,23 +143,24 @@ glpp::camera& glpp::camera::ortho ( float left,
     return *this;
 }
 
-glpp::camera& glpp::camera::screen ( const glpp::dims_2u& dims )
+camera& camera::screen ( const dims_2u& dims )
 {
     return ortho ( 0, dims.width, dims.height, 0 );
 }
 
-glpp::camera& glpp::camera::projection ( const glm::mat4& projection ) {
+camera& camera::projection ( const glm::mat4& projection ) {
     _projection = projection;
 
     return *this;
 }
 
-glm::mat4 glpp::camera::projection() {
+glm::mat4 camera::projection() {
     return _projection;
 }
 
-void glpp::camera::_clip_rotation()
+void camera::_clip_rotation()
 {
     _rotation.x = _rotation.x > 89.9f ? 89.9f : _rotation.x;
     _rotation.x = _rotation.x < -89.9f ? -89.9f : _rotation.x;
+}
 }

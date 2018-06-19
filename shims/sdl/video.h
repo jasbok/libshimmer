@@ -1,5 +1,5 @@
 #ifndef SHIMS_SDL_VIDEO_H
-#define SHIMs_SDL_VIDEO_H
+#define SHIMS_SDL_VIDEO_H
 
 #include "api/SDL_sym.h"
 #include "libshimmer/shimmer.h"

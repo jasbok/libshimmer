@@ -3,10 +3,10 @@
 ###############################################################################
 set( DEST ${CMAKE_CURRENT_BINARY_DIR} )
 
-configure_file( data/example.frag ${DEST}/data/example.frag COPYONLY )
-configure_file( data/example.vert ${DEST}/data/example.vert COPYONLY )
+configure_file( ../data/glsl/sdl_example.frag ${DEST}/data/glsl/sdl_example.frag COPYONLY )
+configure_file( ../data/glsl/sdl_example.vert ${DEST}/data/glsl/sdl_example.vert COPYONLY )
 
-configure_file( data/monster-bash.png ${DEST}/data/monster-bash.png COPYONLY )
+configure_file( ../data/img/mbash.png ${DEST}/data/img/mbash.png COPYONLY )
 
 ###############################################################################
 #   Find and store SDL paths.

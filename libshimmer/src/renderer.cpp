@@ -170,7 +170,7 @@ void renderer::_construct_surface_phase()
 {
     glpp::scene_phase surface_phase (
         "surface",
-        std::make_shared<glpp::camera>(),
+        std::make_shared<common::camera>(),
         std::make_shared<glpp::viewport_int>() );
 
     surface_phase.viewport()->coords = { 0, 0 };
@@ -191,7 +191,7 @@ void renderer::_construct_application_phase()
 {
     glpp::scene_phase application_phase (
         "application",
-        std::make_shared<glpp::camera>(),
+        std::make_shared<common::camera>(),
         std::make_shared<glpp::viewport_int>(),
         std::make_shared<glpp::framebuffer>() );
 

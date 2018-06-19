@@ -9,6 +9,7 @@ find_package( Freetype )
 ###############################################################################
 set( COMMON_HEADERS
         atlas.h
+        camera.h
         common.h
         coords.h
         dims.h
@@ -16,6 +17,7 @@ set( COMMON_HEADERS
         fonts.h
         file.h
         freetype.h
+        gfx.h
         img.h
         range.h
         str.h
@@ -27,6 +29,7 @@ set( COMMON_HEADERS
 ###############################################################################
 set( COMMON_SOURCES
         src/atlas.cpp
+        src/camera.cpp
         src/env.cpp
         src/file.cpp
         src/fonts.cpp

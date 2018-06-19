@@ -9,14 +9,14 @@ using namespace std;
 
 scene_phase::scene_phase( const string id )
     : _id ( id ),
-      _camera ( std::make_shared<class camera>() ),
+      _camera ( std::make_shared<common::camera>() ),
       _viewport(),
       _fbo(),
       _entities()
 {}
 
 scene_phase::scene_phase( const string                              id,
-                          const std::shared_ptr<class camera>&      camera,
+                          const std::shared_ptr<common::camera>&      camera,
                           const std::shared_ptr<viewport_int>&      viewport,
                           const std::shared_ptr<class framebuffer>& fbo )
     : _id ( id ),
@@ -30,7 +30,7 @@ string scene_phase::id() const {
     return _id;
 }
 
-shared_ptr<class camera> scene_phase::camera() const {
+shared_ptr<common::camera> scene_phase::camera() const {
     return _camera;
 }
 

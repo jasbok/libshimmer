@@ -9,7 +9,6 @@
 #include "receiver.h"
 #include "shader_reader.h"
 
-#include "glpp/camera.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
 #include "glpp/quad.h"

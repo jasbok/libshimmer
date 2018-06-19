@@ -1,16 +1,16 @@
 ###############################################################################
 #   Copy data files to binary directory.
 ###############################################################################
-set(DATA_IMG_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/img)
+set(DATA_IMG_SRC ../data/img)
 set(DATA_IMG_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/img)
 
-set(DATA_GLSL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl)
+set(DATA_GLSL_SRC ../data/glsl)
 set(DATA_GLSL_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/glsl)
 
-set(DATA_GLSL_2_1_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/glsl2.1)
+set(DATA_GLSL_2_1_SRC ../data/glsl2.1)
 set(DATA_GLSL_2_1_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/glsl2.1)
 
-set(DATA_FONTS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/data/fonts)
+set(DATA_FONTS_SRC ../data/fonts)
 set(DATA_FONTS_DEST ${CMAKE_CURRENT_BINARY_DIR}/data/fonts)
 
 configure_file(${DATA_IMG_SRC}/ck4.bmp ${DATA_IMG_DEST}/ck4.bmp COPYONLY)

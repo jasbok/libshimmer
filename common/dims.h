@@ -200,5 +200,8 @@ std::ostream& operator<<( std::ostream& os, const dims_3<T>& value ) {
 
 typedef dims_2<unsigned int> dims_2u;
 typedef dims_3<unsigned int> dims_3u;
+
+typedef dims_2<float> dims_2f;
+typedef dims_3<float> dims_3f;
 }
 #endif // ifndef COMMON_DIMS_H

@@ -1,10 +1,11 @@
 #ifndef GLPP_SCENE_PHASE_H
 #define GLPP_SCENE_PHASE_H
 
-#include "camera.h"
 #include "entity.h"
 #include "framebuffer.h"
 #include "specs.h"
+
+#include "common/camera.h"
 
 #include <algorithm>
 #include <memory>
@@ -21,7 +22,7 @@ public:
     scene_phase( const std::string id );
 
     scene_phase( const std::string                    id,
-                 const std::shared_ptr<camera>&       camera,
+                 const std::shared_ptr<common::camera>&       camera,
                  const std::shared_ptr<viewport_int>& viewport,
                  const std::shared_ptr<framebuffer>&  fbo = 0 );
 
@@ -38,7 +39,7 @@ public:
 
     std::string                        id() const;
 
-    std::shared_ptr<class camera>      camera() const;
+    std::shared_ptr<common::camera>      camera() const;
 
     std::shared_ptr<viewport_int>      viewport() const;
 
@@ -65,7 +66,7 @@ public:
 private:
     std::string _id;
 
-    std::shared_ptr<class camera> _camera;
+    std::shared_ptr<common::camera> _camera;
 
     std::shared_ptr<viewport_int> _viewport;
 
