@@ -8,18 +8,18 @@
 namespace common::file
 {
 read_exception::read_exception( const std::string& path )
-    : std::runtime_error ( "Could not read file: " + path )
+    : std::runtime_error ( "Could not read file: '" + path + "'" )
 {}
 
 not_found_exception::not_found_exception( const std::string&              path,
                                           const std::vector<std::string>& search_paths )
-    : runtime_error ( "File not found: " + path + ", search paths: ["
+    : runtime_error ( "File not found: '" + path + "', search paths: ["
           + common::str::join ( search_paths, ", " ) + "]" )
 {}
 
 std::string read_all ( const std::string& path )
 {
-    std::ifstream fstream ( path );
+    std::ifstream fstream ( path, std::fstream::in );
 
     if ( fstream.is_open() ) {
         return std::string ( std::istreambuf_iterator<char>( fstream ), {} );
@@ -29,7 +29,7 @@ std::string read_all ( const std::string& path )
 }
 
 std::vector<std::string> read_lines ( const std::string& path ) {
-    std::ifstream fstream ( path );
+    std::ifstream fstream ( path, std::fstream::in );
 
     if ( fstream.is_open() ) {
         std::vector<std::string> lines;
@@ -54,7 +54,7 @@ std::string find ( const std::string&              path,
         //            results.push_back ( result );
         //        }
 
-        std::fstream file ( result );
+        std::fstream file ( result, std::fstream::in );
 
         if ( file.is_open() ) {
             return result;
@@ -77,7 +77,7 @@ std::vector<std::string> find_all ( const std::string&              path,
         //            results.push_back ( result );
         //        }
 
-        std::fstream file ( result );
+        std::fstream file ( result, std::fstream::in );
 
         if ( file.is_open() ) {
             results.push_back ( result );

@@ -14,8 +14,6 @@ class events;
 
 class shim
 {
-    class shimmer::shimmer _lib;
-
     //
     // Main
     //

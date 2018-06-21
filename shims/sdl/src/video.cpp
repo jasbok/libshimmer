@@ -1,10 +1,23 @@
 #include "video.h"
 
-video::video( class shimmer::shimmer* lib )
-    : _lib ( lib )
-{}
+#include "shim.h"
+
+#include <GL/glew.h>
+
+video::video( class shim* shim )
+    : _shim ( shim )
+{
+    _limiter.limit ( 0 );
+    _limiter.samples ( 3 );
+}
+
+common::dims_2u video::resolution() {
+    return _resolution;
+}
 
 SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
+    if ( ( w == 0 ) || ( h == 0 ) ) return nullptr;
+
     _resolution = { static_cast<unsigned int>( w ),
                     static_cast<unsigned int>( h ) };
 
@@ -12,26 +25,30 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
 
     _flags = flags;
 
-    _lib->create_window ( _resolution );
-
     if ( !_surface ) {
-        _surface = sym::SDL_SetVideoMode (
-            1920, 1080,
+        resize ( w, h );
+        _shim->window.dims ( _resolution );
 
-            //            static_cast<int>( _resolution.width ),
-            //            static_cast<int>( _resolution.height ),
-            32,
-            SDL_HWSURFACE | SDL_OPENGL |
-            SDL_RESIZABLE | SDL_DOUBLEBUF );
+        if ( _renderer == nullptr ) renderer::init();
+
+        _renderer = std::make_unique<renderer>( _shim );
+        _renderer->internal_resolution ( _resolution );
+
+        _renderer->capture();
+    }
+    else {
+        _renderer->internal_resolution ( _resolution );
     }
 
-    init_renderer();
-
-    _lib->application_texture_flip_y ( true );
-
-    _lib->create_application_framebuffer();
-
     return _surface;
+}
+
+void video::resize ( unsigned int w, unsigned int h )
+{
+    _surface = sym::SDL_SetVideoMode (
+        w, h, 32,
+        SDL_HWSURFACE | SDL_OPENGL |
+        SDL_RESIZABLE | SDL_DOUBLEBUF );
 }
 
 SDL_Surface* video::surface() {
@@ -40,33 +57,21 @@ SDL_Surface* video::surface() {
 
 int video::refresh ( SDL_Surface* screen )
 {
-    if ( _lib->limit_refresh_rate() ) return 0;
+    _renderer->render();
 
-    _lib->refresh_display();
+    auto ret = sym::SDL_Flip ( screen );
 
-    return sym::SDL_Flip ( screen );
+    _renderer->capture();
+
+    return ret;
 }
 
 void video::swap_buffers() {
-    if ( _lib->limit_refresh_rate() ) return;
+    if ( _limiter.check() ) return;
 
-    _lib->unbind_application_framebuffer();
-
-    _lib->refresh_display();
+    _renderer->render();
 
     sym::SDL_GL_SwapBuffers();
 
-    _lib->bind_application_framebuffer();
-}
-
-void video::init_renderer() {
-    glewExperimental = GL_TRUE;
-    GLenum glew_err = glewInit();
-
-    if ( glew_err ) {
-        std::cerr << "Error) Unable to initialise GLEW: "
-                  << glewGetErrorString ( glew_err ) << std::endl;
-    }
-
-    _lib->init_renderer();
+    _renderer->capture();
 }

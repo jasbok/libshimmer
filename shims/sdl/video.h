@@ -2,31 +2,42 @@
 #define SHIMS_SDL_VIDEO_H
 
 #include "api/SDL_sym.h"
-#include "libshimmer/shimmer.h"
+
+#include "renderer.h"
+
+#include "common/dims.h"
+#include "common/limiter.h"
 
 class video
 {
-    class shimmer::shimmer* _lib;
+    class shim* _shim;
 
     SDL_Surface* _surface;
-
-    shimmer::dims_2u _resolution;
 
     int _bpp;
 
     Uint32 _flags;
 
+    common::dims_2u _resolution;
+
+    std::unique_ptr<renderer> _renderer;
+
+    common::limiter _limiter;
+
 public:
-    video( class shimmer::shimmer* lib );
+    video( class shim* shim );
 
     virtual ~video() = default;
 
-    void         init_renderer ( void );
+    common::dims_2u resolution();
 
-    SDL_Surface* setup ( int    w,
-                         int    h,
-                         int    bpp,
-                         Uint32 flags );
+    SDL_Surface*    setup ( int    w,
+                            int    h,
+                            int    bpp,
+                            Uint32 flags );
+
+    void resize ( unsigned int w,
+                  unsigned int h );
 
     SDL_Surface* surface();
 

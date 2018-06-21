@@ -1,7 +1,7 @@
 #include "input.h"
 
-input::input( shimmer::shimmer* lib )
-    : _lib ( lib )
+input::input( class shim* shim )
+    : _shim ( shim )
 {}
 
 SDL_GrabMode input::grab ( SDL_GrabMode mode ) {
@@ -12,12 +12,12 @@ SDL_GrabMode input::grab ( SDL_GrabMode mode ) {
 
 void input::mouse_motion_absolute ( Uint16& x, Uint16& y )
 {
-    _lib->mouse_coords ( x, y );
+    // _lib->mouse_coords ( x, y );
 }
 
 void input::mouse_motion_relative ( Sint16& xrel, Sint16& yrel )
 {
-    _lib->mouse_coords_relative ( xrel, yrel );
+    // _lib->mouse_coords_relative ( xrel, yrel );
 }
 
 void input::mouse_warp ( Uint16 x, Uint16 y ) {

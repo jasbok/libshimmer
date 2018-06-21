@@ -83,7 +83,7 @@ add_subdirectory( libshimmer )
 #   Build individual shims
 ###############################################################################
 add_subdirectory( shims/sdl )
-add_subdirectory( shims/sdl2 )
+# add_subdirectory( shims/sdl2 )
 
 ###############################################################################
 #   Install shaders

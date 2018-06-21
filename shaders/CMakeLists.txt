@@ -4,6 +4,7 @@ set(DATA_GLSL_DEST ${CMAKE_CURRENT_BINARY_DIR}/glsl)
 set(DATA_GLSL_1_3_SRC ${CMAKE_CURRENT_SOURCE_DIR}/glsl1.3)
 set(DATA_GLSL_1_3_DEST ${CMAKE_CURRENT_BINARY_DIR}/glsl1.3)
 
+configure_file(${DATA_GLSL_1_3_SRC}/basic.vert ${DATA_GLSL_1_3_DEST}/basic.vert COPYONLY)
 configure_file(${DATA_GLSL_1_3_SRC}/default.vert ${DATA_GLSL_1_3_DEST}/default.vert COPYONLY)
 configure_file(${DATA_GLSL_1_3_SRC}/default.frag ${DATA_GLSL_1_3_DEST}/default.frag COPYONLY)
 configure_file(${DATA_GLSL_1_3_SRC}/xbrz3x.frag ${DATA_GLSL_1_3_DEST}/xbrz3x.frag COPYONLY)

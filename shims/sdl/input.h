@@ -3,13 +3,12 @@
 
 #include "api/SDL_sym.h"
 
-#include "libshimmer/shimmer.h"
-
-class input {
-    class shimmer::shimmer* _lib;
+class input
+{
+    class shim* _shim;
 
 public:
-    input(class shimmer::shimmer* lib);
+    input( class shim* shim );
 
     virtual ~input() = default;
 
@@ -25,4 +24,4 @@ public:
                       Uint16 y );
 };
 
-#endif
+#endif // ifndef SHIMS_SDL_INPUT_H

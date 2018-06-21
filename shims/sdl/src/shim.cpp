@@ -3,11 +3,10 @@
 class shim shim;
 
 shim::shim()
-    : _lib(),
-      events ( this ),
-      input ( &_lib ),
-      video ( &_lib ),
-      window ( &_lib )
+    : events ( this ),
+      input ( this ),
+      video ( this ),
+      window ( this )
 {}
 
 shim::~shim()

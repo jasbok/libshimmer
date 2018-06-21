@@ -3,7 +3,6 @@
 ###############################################################################
 find_package( SDL )
 
-
 ###############################################################################
 #   Set SDL2 shim include directory.
 ###############################################################################
@@ -22,6 +21,7 @@ file( GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h )
 set( SOURCES
         src/events.cpp
         src/input.cpp
+        src/renderer.cpp
         src/sdl.cpp
         src/shim.cpp
         src/video.cpp
@@ -38,7 +38,9 @@ target_include_directories( shimmer_sdl PRIVATE .
     ${ROOT}/external
     ${SDL_INCLUDE_DIR} )
 
-target_link_libraries( shimmer_sdl shimmer ${ALL_OPENGL_LIBRARIES} )
+target_link_libraries( shimmer_sdl
+    common
+    glpp )
 
 
 ###############################################################################

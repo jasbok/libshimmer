@@ -398,7 +398,7 @@ program& program::uniform ( const std::string& name,
 
 program::link_exception::link_exception( const string& log )
     : runtime_error (
-          std::string ( "Failed to link program." )
+          std::string ( "Failed to link program. " )
           + std::string ( "Log: " ) + log )
 {}
 

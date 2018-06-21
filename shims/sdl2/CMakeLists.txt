@@ -36,7 +36,7 @@ target_include_directories( shimmer_sdl2 PRIVATE .
     ${ROOT}/external
     ${SDL2_INCLUDE_DIR} )
 
-target_link_libraries( shimmer_sdl2 shimmer ${ALL_OPENGL_LIBRARIES} )
+target_link_libraries( shimmer_sdl2  )
 
 
 ###############################################################################

@@ -20,11 +20,16 @@ int events::poll ( SDL_Event* event )
             break;
 
         case SDL_VIDEORESIZE:
-            _shim->window.resize ( event->resize.w, event->resize.h );
 
-            // Do not propagate resize event to application
-            event->active.type = SDL_NOEVENT;
-            result             = 0;
+            if ( ( event->resize.w > 0 ) && ( event->resize.h > 0 ) &&
+                 ( event->resize.w <= 1920 ) && ( event->resize.h <= 1080 ) ) {
+                _shim->video.resize ( event->resize.w, event->resize.h );
+                _shim->window.resize ( event->resize.w, event->resize.h );
+
+                // Do not propagate resize event to application
+                event->active.type = SDL_NOEVENT;
+                result             = 0;
+            }
 
             break;
 

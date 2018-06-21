@@ -2,26 +2,31 @@
 #define SHIMS_SDL_WINDOW_H
 
 #include "api/SDL_sym.h"
-#include "libshimmer/shimmer.h"
+
+#include "common/dims.h"
+
+#include <string>
 
 class window
 {
-    class shimmer::shimmer* _lib;
+    class shim* _shim;
 
-    shimmer::dims_2u _dims;
-
-    shimmer::coords_2i _coords;
+    common::dims_2u _dims;
 
     std::string _window_title;
 
 public:
-    window( class shimmer::shimmer* lib );
+    window( class shim* shim );
 
     virtual ~window() = default;
 
 
-    void resize ( int& w,
-                  int& h );
+    void            dims ( const common::dims_2u& dims );
+
+    common::dims_2u dims();
+
+    void            resize ( int& w,
+                             int& h );
 
     void title ( const char* title,
                  const char* icon );
