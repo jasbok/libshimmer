@@ -58,6 +58,20 @@ bool contains ( const std::string& src,
  */
 std::string join ( const std::vector<std::string> strings,
                    const std::string              separator );
+
+/**
+ * @brief upper Converts the string to uppercase.
+ * @param str The string to convert.
+ * @return The new uppercase string.
+ */
+std::string upper ( const std::string& str );
+
+/**
+ * @brief lower Converts the string to lowercase.
+ * @param str The string to convert.
+ * @return The new lowercase string.
+ */
+std::string lower ( const std::string& str );
 }
 
 #endif // ifndef COMMON_STRING_H

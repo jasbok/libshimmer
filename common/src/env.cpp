@@ -1,5 +1,7 @@
 #include "env.h"
 
+#include "str.h"
+
 namespace common::env
 {
 std::string evar ( const std::string& evar, const std::string& defaultt ) {
@@ -14,6 +16,11 @@ std::string evar ( const std::string& evar ) {
     if ( val ) return std::string ( val );
 
     throw evar_not_found_exception ( evar );
+}
+
+std::string evar_upper_snake ( const std::vector<std::string>& path )
+{
+    return evar ( str::upper ( str::join ( path, "_" ) ) );
 }
 
 evar_not_found_exception::evar_not_found_exception( const std::string& evar )

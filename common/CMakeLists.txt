@@ -18,6 +18,7 @@ set( COMMON_HEADERS
         file.h
         freetype.h
         img.h
+        json.h
         limiter.h
         range.h
         str.h
@@ -35,6 +36,7 @@ set( COMMON_SOURCES
         src/fonts.cpp
         src/freetype.cpp
         src/img.cpp
+        src/json.cpp
         src/limiter.cpp
         src/str.cpp )
 

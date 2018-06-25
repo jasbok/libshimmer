@@ -25,6 +25,7 @@ set ( CATCH_TESTS
         dims.cpp
         file.cpp
         img.cpp
+        json.cpp
         str.cpp)
 
 

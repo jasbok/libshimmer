@@ -71,4 +71,22 @@ std::string join ( const std::vector<std::string> strings,
 
     return ss.str();
 }
+
+std::string upper ( const std::string& str ) {
+    std::string upper;
+
+    upper.resize ( str.length() );
+    std::transform ( str.begin(), str.end(), upper.begin(), ::toupper );
+
+    return upper;
+}
+
+std::string lower ( const std::string& str ) {
+    std::string lower;
+
+    lower.resize ( str.length() );
+    std::transform ( str.begin(), str.end(), lower.begin(), ::tolower );
+
+    return lower;
+}
 }

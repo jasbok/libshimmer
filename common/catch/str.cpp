@@ -104,3 +104,15 @@ TEST_CASE (
     CHECK ( join ( vec_three, sep_char ) == "a,b,c" );
     CHECK ( join ( vec_three, sep_str ) == "a and b and c" );
 }
+
+TEST_CASE ( "Convert string to different cases", TAGS ) {
+    using namespace common::str;
+
+    CHECK ( lower ( "a lower case string" ) == "a lower case string" );
+    CHECK ( lower ( "A LOWER CASE STRING" ) == "a lower case string" );
+    CHECK ( lower ( "" ) == "" );
+
+    CHECK ( upper ( "AN UPPER CASE STRING" ) == "AN UPPER CASE STRING" );
+    CHECK ( upper ( "an upper case string" ) == "AN UPPER CASE STRING" );
+    CHECK ( upper ( "" ) == "" );
+}
