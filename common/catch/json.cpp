@@ -172,3 +172,15 @@ TEST_CASE ( "Get value of json field using path. (json raw string constructor)",
 
     perform_checks ( j );
 }
+
+TEST_CASE ( "Convert string vector to json array.", TAGS ) {
+    std::vector<std::string> empty;
+    std::vector<std::string> one   = { "one" };
+    std::vector<std::string> two   = { "one", "two" };
+    std::vector<std::string> three = { "one", "two", "three" };
+
+    CHECK ( common::json::to_json ( empty ) == "[]" );
+    CHECK ( common::json::to_json ( one ) == R"(["one"])" );
+    CHECK ( common::json::to_json ( two ) == R"(["one","two"])" );
+    CHECK ( common::json::to_json ( three ) == R"(["one","two","three"])" );
+}

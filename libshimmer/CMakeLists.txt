@@ -16,6 +16,7 @@ set( HEADERS
         aspect.h
         aspect_ratio.h
         config.h
+        configuration.h
         config_variables.h.in
         connector.h
         coords.h
@@ -78,6 +79,7 @@ set( SOURCES
         src/system.cpp
         src/video_options.cpp
         src/window.cpp )
+
 
 ###############################################################################
 #   Replace build variables.

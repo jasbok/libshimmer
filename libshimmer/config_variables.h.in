@@ -1,6 +1,34 @@
 #ifndef SHIMMER_CONFIG_VARIABLES_H
 #define SHIMMER_CONFIG_VARIABLES_H
 
+#include "common/str.h"
+
+#include <regex>
+
+namespace shimmer::system {
+    const std::string install_prefix = "${CMAKE_INSTALL_PREFIX}/shimmer";
+
+    const std::vector < std::string > config_dirs
+        = common::str::split ( install_prefix + ":${SHIMMER_CONFIG_DIRS}",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > data_dirs
+        = common::str::split ( install_prefix + ":${SHIMMER_DATA_DIRS}",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > font_dirs
+        = common::str::split ( install_prefix + ":${SHIMMER_FONT_DIRS}",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > image_dirs
+        = common::str::split ( install_prefix + ":${SHIMMER_IMAGE_DIRS}",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > shader_dirs
+        = common::str::split ( install_prefix + ":${SHIMMER_SHADER_DIRS}",
+                               std::regex ( ":" ) );
+}
+
 #define SHIMMER_INSTALL_PREFIX "@INSTALL_PREFIX@"
 
 #define SHIMMER_INSTALL_DATA "@INSTALL_DATA@"

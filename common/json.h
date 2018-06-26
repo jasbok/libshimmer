@@ -15,6 +15,29 @@ namespace common::json
 std::string as_string ( const nlohmann::json&           obj,
                         const std::vector<std::string>& path );
 
+/**
+ * @brief to_json Converts the given string vector to the corresponding json
+ * array.
+ * @param vec The vector to convert.
+ * @return The json array corresponding to vec.
+ */
+std::string to_json ( const std::vector<std::string>& vec );
+
+/**
+ * @brief to_json Converts a string to the corresponding json string.
+ * @param str The string to convert.
+ * @return The json array corresponding to vec.
+ * @note Simply wraps the string in double quotes.
+ */
+std::string to_json ( const std::string& str );
+
+/**
+ * @brief to_json Converts a boolean value to a json boolean.
+ * @param val The boolean to convert.
+ * @return The json boolean value.
+ */
+std::string to_json ( bool val );
+
 struct field_absent_exception : public std::runtime_error {
     field_absent_exception( const std::vector<std::string>& path );
 

@@ -2,6 +2,8 @@
 
 #include "str.h"
 
+#include <sstream>
+
 namespace common::json
 {
 auto _find ( const nlohmann::json&           obj,
@@ -28,6 +30,31 @@ auto _find ( const nlohmann::json&           obj,
         throw field_absent_exception ( path, ex2.what() );
     }
     return json;
+}
+
+std::string to_json ( const std::vector<std::string>& vec ) {
+    std::stringstream ss;
+
+    ss << "[";
+
+    if ( vec.size() > 0 ) {
+        for ( unsigned int i = 0; i < vec.size() - 1; i++ ) {
+            ss << "\"" << vec[i] << "\",";
+        }
+        ss << "\"" << vec[vec.size() - 1] << "\"";
+    }
+
+    ss << "]";
+
+    return ss.str();
+}
+
+std::string to_json ( const std::string& str ) {
+    return "\"" + str + "\"";
+}
+
+std::string to_json ( bool val ) {
+    return val ? "true" : "false";
 }
 
 std::string as_string ( const nlohmann::json&           obj,
