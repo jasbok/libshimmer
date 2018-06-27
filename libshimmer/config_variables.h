@@ -1,3 +1,6 @@
+/*
+ *  This file is generated from config_variables.h.in, do not modify directly.
+ */
 #ifndef SHIMMER_CONFIG_VARIABLES_H
 #define SHIMMER_CONFIG_VARIABLES_H
 
@@ -5,29 +8,43 @@
 
 #include <regex>
 
-namespace shimmer::system
-{
-const std::string install_prefix;
+namespace shimmer::system {
+    const std::string install_prefix = "/usr/local";
 
-const std::vector<std::string> config_dirs;
+    const std::string install_shimmer = install_prefix + "/shimmer";
 
-const std::vector<std::string> data_dirs;
+    const std::string install_shaders = install_shimmer + "/shaders";
 
-const std::vector<std::string> font_dirs;
+    const std::vector < std::string > config_dirs
+        = common::str::split ( install_shimmer + ":$HOME/.config:/usr/share/shimmer",
+                               std::regex ( ":" ) );
 
-const std::vector<std::string> image_dirs;
+    const std::vector < std::string > data_dirs
+        = common::str::split ( install_shimmer + ":$HOME/.local/share:/usr/share/shimmer",
+                               std::regex ( ":" ) );
 
-const std::vector<std::string> shader_dirs;
+    const std::vector < std::string > font_dirs
+        = common::str::split ( install_shimmer + ":/usr/share/shimmer/fonts",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > image_dirs
+        = common::str::split ( install_shimmer + ":/usr/share/shimmer/images",
+                               std::regex ( ":" ) );
+
+    const std::vector < std::string > shader_dirs
+        = common::str::split ( install_shimmer + ":" + install_shaders
+                               + ":/usr/share/shimmer/shaders",
+                               std::regex ( ":" ) );
 }
 
-#define SHIMMER_INSTALL_PREFIX "/usr/local"
+#define SHIMMER_INSTALL_PREFIX ""
 
-#define SHIMMER_INSTALL_DATA "/usr/local/share"
+#define SHIMMER_INSTALL_DATA ""
 
-#define SHIMMER_INSTALL_FONTS "/usr/local/share/fonts"
+#define SHIMMER_INSTALL_FONTS ""
 
-#define SHIMMER_INSTALL_IMAGES "/usr/local/share/images"
+#define SHIMMER_INSTALL_IMAGES ""
 
-#define SHIMMER_INSTALL_SHADERS "/usr/local/share/shaders"
+#define SHIMMER_INSTALL_SHADERS ""
 
 #endif /* ifndef SHIMMER_CONFIG_VARIABLES_H */

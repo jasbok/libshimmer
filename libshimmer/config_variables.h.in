@@ -1,3 +1,6 @@
+/*
+ *  This file is generated from config_variables.h.in, do not modify directly.
+ */
 #ifndef SHIMMER_CONFIG_VARIABLES_H
 #define SHIMMER_CONFIG_VARIABLES_H
 
@@ -6,26 +9,31 @@
 #include <regex>
 
 namespace shimmer::system {
-    const std::string install_prefix = "${CMAKE_INSTALL_PREFIX}/shimmer";
+    const std::string install_prefix = "${CMAKE_INSTALL_PREFIX}";
+
+    const std::string install_shimmer = install_prefix + "/shimmer";
+
+    const std::string install_shaders = install_shimmer + "/shaders";
 
     const std::vector < std::string > config_dirs
-        = common::str::split ( install_prefix + ":${SHIMMER_CONFIG_DIRS}",
+        = common::str::split ( install_shimmer + ":${SHIMMER_CONFIG_DIRS}",
                                std::regex ( ":" ) );
 
     const std::vector < std::string > data_dirs
-        = common::str::split ( install_prefix + ":${SHIMMER_DATA_DIRS}",
+        = common::str::split ( install_shimmer + ":${SHIMMER_DATA_DIRS}",
                                std::regex ( ":" ) );
 
     const std::vector < std::string > font_dirs
-        = common::str::split ( install_prefix + ":${SHIMMER_FONT_DIRS}",
+        = common::str::split ( install_shimmer + ":${SHIMMER_FONT_DIRS}",
                                std::regex ( ":" ) );
 
     const std::vector < std::string > image_dirs
-        = common::str::split ( install_prefix + ":${SHIMMER_IMAGE_DIRS}",
+        = common::str::split ( install_shimmer + ":${SHIMMER_IMAGE_DIRS}",
                                std::regex ( ":" ) );
 
     const std::vector < std::string > shader_dirs
-        = common::str::split ( install_prefix + ":${SHIMMER_SHADER_DIRS}",
+        = common::str::split ( install_shimmer + ":" + install_shaders
+                               + ":${SHIMMER_SHADER_DIRS}",
                                std::regex ( ":" ) );
 }
 

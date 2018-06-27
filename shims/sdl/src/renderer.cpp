@@ -42,8 +42,8 @@ void renderer::render() {
 
     glViewport ( 0,
                  0,
-                 _shim->window.dims().width,
-                 _shim->window.dims().height );
+                 static_cast<GLint>( _shim->window.dims().width ),
+                 static_cast<GLint>( _shim->window.dims().height ) );
 
     _prog.use();
     _vao.bind();
@@ -70,12 +70,14 @@ void renderer::capture() {
 void renderer::_create_program() {
     printf ( "[DEBUG] Creating program...\n" );
 
-    auto shader_paths = common::str::split_ignore_empty (
-        common::env::evar ( "SHIMMER_SHADER_PATHS" ),
-        std::regex ( ":" ) );
+    shimmer::config_mapper mapper ( &_shim->config );
+    printf ( "[config] %s\n", mapper.to_json().c_str() );
 
-    auto vs_file = common::file::find ( "basic.vert", shader_paths );
-    auto fs_file = common::file::find ( "default.frag", shader_paths );
+    const auto& shader      = _shim->config.video.shader;
+    const auto& shader_dirs = _shim->config.general.shader_dirs;
+
+    auto vs_file = common::file::find ( shader.vertex, shader_dirs );
+    auto fs_file = common::file::find ( shader.fragment, shader_dirs  );
 
     auto vs_source = common::file::read_all ( vs_file );
     auto fs_source = common::file::read_all ( fs_file );

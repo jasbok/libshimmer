@@ -8,6 +8,8 @@
 
 #include "api/SDL_sym.h"
 
+#include "libshimmer/configuration.h"
+
 #include <memory>
 
 class events;
@@ -23,6 +25,8 @@ public:
     shim();
 
     virtual ~shim();
+
+    struct shimmer::config config;
 
     class events events;
 

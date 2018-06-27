@@ -58,6 +58,7 @@ set( SOURCES
         src/aspect.cpp
         src/aspect_ratio.cpp
         src/config.cpp
+        src/configuration.cpp
         src/dims.cpp
         src/display.cpp
         src/environment.cpp
@@ -84,7 +85,7 @@ set( SOURCES
 ###############################################################################
 #   Replace build variables.
 ###############################################################################
-configure_file( config_variables.h.in config_variables.h )
+configure_file( config_variables.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config_variables.h )
 
 
 ###############################################################################

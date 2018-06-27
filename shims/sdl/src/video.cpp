@@ -43,7 +43,7 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
     return _surface;
 }
 
-void video::resize ( unsigned int w, unsigned int h )
+void video::resize ( int w, int h )
 {
     _surface = sym::SDL_SetVideoMode (
         w, h, 32,

@@ -40,7 +40,8 @@ target_include_directories( shimmer_sdl PRIVATE .
 
 target_link_libraries( shimmer_sdl
     common
-    glpp )
+    glpp
+    shimmer )
 
 
 ###############################################################################

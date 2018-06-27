@@ -36,8 +36,8 @@ public:
                             int    bpp,
                             Uint32 flags );
 
-    void resize ( unsigned int w,
-                  unsigned int h );
+    void resize ( int w,
+                  int h );
 
     SDL_Surface* surface();
 
