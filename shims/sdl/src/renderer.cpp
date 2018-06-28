@@ -70,9 +70,6 @@ void renderer::capture() {
 void renderer::_create_program() {
     printf ( "[DEBUG] Creating program...\n" );
 
-    shimmer::config_mapper mapper ( &_shim->config );
-    printf ( "[config] %s\n", mapper.to_json().c_str() );
-
     const auto& shader      = _shim->config.video.shader;
     const auto& shader_dirs = _shim->config.general.shader_dirs;
 

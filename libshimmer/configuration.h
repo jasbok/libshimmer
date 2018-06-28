@@ -5,8 +5,6 @@
 
 #include "common/dims.h"
 
-#include <sstream>
-#include <unordered_map>
 #include <vector>
 
 namespace shimmer
@@ -18,28 +16,6 @@ struct config {
         std::vector<std::string> font_dirs   = shimmer::system::font_dirs;
         std::vector<std::string> image_dirs  = shimmer::system::image_dirs;
         std::vector<std::string> shader_dirs = shimmer::system::shader_dirs;
-
-        struct logging {
-            enum class level {
-                trace,
-                debug,
-                info,
-                warning,
-                error,
-                fatal,
-                off
-            };
-            enum level level = level::warning;
-
-            enum class output {
-                console,
-                file
-            };
-            enum output output = output::console;
-
-            std::string file = "";
-        };
-        struct logging logging;
     };
     struct general general;
 
@@ -47,6 +23,28 @@ struct config {
         bool grab = false;
     };
     struct input input;
+
+    struct logging {
+        enum class level {
+            trace,
+            debug,
+            info,
+            warning,
+            error,
+            fatal,
+            off
+        };
+        enum level level = level::warning;
+
+        enum class output {
+            console,
+            file
+        };
+        enum output output = output::console;
+
+        std::string file = "";
+    };
+    struct logging logging;
 
     struct video {
         std::string font = "";
@@ -80,81 +78,39 @@ struct config {
         struct limiter limiter;
     };
     struct video video;
-};
 
-class config_mapper
-{
-public:
-    typedef std::unordered_map<std::string, std::string> map_t;
-
-    config_mapper( config* conf );
-
-    virtual ~config_mapper() = default;
-
-    std::string to_json ( const struct config::general::logging& logging );
-
-    std::string to_json ( const struct config::general& general );
-
-    std::string to_json ( const struct config::input& input );
-
-    std::string to_json ( const struct config::video::shader& shader );
-
-    std::string to_json ( const struct config::video::limiter& limiter );
-
-    std::string to_json ( const struct config::video& video );
-
-    std::string to_json ( const struct config& config );
-
-    void        apply ( const map_t& map );
-
-    std::string to_json();
+    void set_property ( const std::pair<std::string, std::string>& property );
 
     struct mapping_exception : public std::runtime_error {
-        mapping_exception( const std::string&              value,
-                           const std::vector<std::string>& path,
-                           const std::string&              expected );
+        mapping_exception( const std::pair<std::string, std::string>& prop,
+                           const std::string&                         expected );
 
-        mapping_exception( const std::string&              value,
-                           const std::vector<std::string>& path,
-                           const std::vector<std::string>& expected );
+        mapping_exception( const std::pair<std::string, std::string>& prop,
+                           const std::vector<std::string>&            expected );
 
         virtual ~mapping_exception() = default;
     };
-
-private:
-    config* _conf;
-
-    typedef enum config::general::logging::level  log_level;
-    typedef enum config::general::logging::output log_output;
-    typedef enum config::video::filter            tex_filter;
-    typedef enum config::video::aspect            vid_aspect;
-
-    std::string _to_string ( const log_level& level );
-
-    log_level   _to_log_level ( const std::string& level );
-
-    std::string _to_string ( const log_output& output );
-
-    log_output  _to_log_output ( const std::string& output );
-
-    std::string _to_string ( const tex_filter& filter );
-
-    tex_filter  _to_tex_filter ( const std::string& filter );
-
-    std::string _to_string ( const vid_aspect& aspect );
-
-    vid_aspect  _to_vid_aspect ( const std::string& aspect );
-
-    void        _insert ( map_t&                          map,
-                          const std::vector<std::string>& path,
-                          const std::string&              value );
-
-    void _insert_all ( map_t&                          map,
-                       const std::vector<std::string>& path,
-                       const std::vector<std::string>& values );
-
-    void _set_property ( const std::pair<std::string, std::string>& property );
 };
+
+std::string to_json ( const struct config::logging& logging );
+std::string to_json ( const struct config::general& general );
+std::string to_json ( const struct config::input& input );
+std::string to_json ( const struct config::video::shader& shader );
+std::string to_json ( const struct config::video::limiter& limiter );
+std::string to_json ( const struct config::video& video );
+std::string to_json ( const struct config& config );
+
+
+std::string to_string ( const enum config::logging::level& level );
+std::string to_string ( const enum config::logging::output& output );
+std::string to_string ( const enum config::video::filter& filter );
+std::string to_string ( const enum config::video::aspect& aspect );
+
+
+enum config::logging::level  to_log_level ( const std::string& level );
+enum config::logging::output to_log_output ( const std::string& output );
+enum config::video::filter   to_tex_filter ( const std::string& filter );
+enum config::video::aspect   to_vid_aspect ( const std::string& aspect );
 }
 
 #endif // ifndef LIBSHIMMER_CONFIGURATION_H

@@ -184,3 +184,105 @@ TEST_CASE ( "Convert string vector to json array.", TAGS ) {
     CHECK ( common::json::to_json ( two ) == R"(["one","two"])" );
     CHECK ( common::json::to_json ( three ) == R"(["one","two","three"])" );
 }
+
+TEST_CASE ( "Convert a json object to a string properties map.", TAGS ) {
+    using namespace nlohmann;
+
+    // *INDENT-OFF*
+    json j = {
+        {"field_a", 1},
+        {"field_b", "value_b"},
+        {"field_c", {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}},
+        {"field_d", {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}},
+        {"field_e", {
+             {"field_ea", 2},
+             {"field_eb", "value_eb"},
+             {"field_ec", {10, 11, 12, 13, 14, 15, 16, 17, 18, 19}},
+             {"field_ed", {"10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}}
+         }},
+        {"field_f", {
+            {"obj_a", 123},
+            {"obj_b", "456"},
+            {"obj_c", { 20, 21, 22, 23, 24 }},
+            {"obj_d", { "str a", "str b", "str c" }},
+            {"obj_e", {{ "field", "value" }} }
+        }},
+        {"field_bool_true", true},
+        {"field_bool_false", false},
+        {"field_int_12", 12},
+        {"field_int_neg_13", -13}
+    };
+ // *INDENT-ON*
+
+    const auto properties = common::json::as_properties ( j );
+
+    const std::unordered_map<std::string, std::string> expected = {
+        { "field_a",             "1"        },
+        { "field_b",             "value_b"  },
+        { "field_c.0",           "0"        },
+        { "field_c.1",           "1"        },
+        { "field_c.2",           "2"        },
+        { "field_c.3",           "3"        },
+        { "field_c.4",           "4"        },
+        { "field_c.5",           "5"        },
+        { "field_c.6",           "6"        },
+        { "field_c.7",           "7"        },
+        { "field_c.8",           "8"        },
+        { "field_c.9",           "9"        },
+        { "field_c.9",           "9"        },
+        { "field_d.0",           "0"        },
+        { "field_d.1",           "1"        },
+        { "field_d.2",           "2"        },
+        { "field_d.3",           "3"        },
+        { "field_d.4",           "4"        },
+        { "field_d.5",           "5"        },
+        { "field_d.6",           "6"        },
+        { "field_d.7",           "7"        },
+        { "field_d.8",           "8"        },
+        { "field_d.9",           "9"        },
+        { "field_d.9",           "9"        },
+        { "field_e.field_ea",    "2"        },
+        { "field_e.field_eb",    "value_eb" },
+        { "field_e.field_ec.0",  "10"       },
+        { "field_e.field_ec.1",  "11"       },
+        { "field_e.field_ec.2",  "12"       },
+        { "field_e.field_ec.3",  "13"       },
+        { "field_e.field_ec.4",  "14"       },
+        { "field_e.field_ec.5",  "15"       },
+        { "field_e.field_ec.6",  "16"       },
+        { "field_e.field_ec.7",  "17"       },
+        { "field_e.field_ec.8",  "18"       },
+        { "field_e.field_ec.9",  "19"       },
+        { "field_e.field_ed.0",  "10"       },
+        { "field_e.field_ed.1",  "11"       },
+        { "field_e.field_ed.2",  "12"       },
+        { "field_e.field_ed.3",  "13"       },
+        { "field_e.field_ed.4",  "14"       },
+        { "field_e.field_ed.5",  "15"       },
+        { "field_e.field_ed.6",  "16"       },
+        { "field_e.field_ed.7",  "17"       },
+        { "field_e.field_ed.8",  "18"       },
+        { "field_e.field_ed.9",  "19"       },
+        { "field_f.obj_a",       "123"      },
+        { "field_f.obj_b",       "456"      },
+        { "field_f.obj_c.0",     "20"       },
+        { "field_f.obj_c.1",     "21"       },
+        { "field_f.obj_c.2",     "22"       },
+        { "field_f.obj_c.3",     "23"       },
+        { "field_f.obj_c.4",     "24"       },
+        { "field_f.obj_d.0",     "str a"    },
+        { "field_f.obj_d.1",     "str b"    },
+        { "field_f.obj_d.2",     "str c"    },
+        { "field_f.obj_e.field", "value"    },
+        { "field_bool_true",     "1"        },
+        { "field_bool_false",    "0"        },
+        { "field_int_12",        "12"       },
+        { "field_int_neg_13",    "-13"      },
+    };
+
+    for ( const auto& pair : expected ) {
+        const auto& prop = properties.find ( pair.first );
+        REQUIRE ( prop != properties.end() );
+        CHECK ( pair.second == prop->second );
+    }
+}

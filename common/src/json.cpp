@@ -57,6 +57,43 @@ std::string to_json ( bool val ) {
     return val ? "true" : "false";
 }
 
+std::string as_string ( const nlohmann::json& json )  {
+    using namespace nlohmann::detail;
+
+    switch ( json.type() ) {
+    case  value_t::number_float:
+
+        return std::to_string ( json.get<float>() );
+
+    case  value_t::number_integer:
+    case  value_t::number_unsigned:
+
+        return std::to_string ( json.get<int>() );
+
+    case  value_t::string:
+
+        return json.get<std::string>();
+
+    case  value_t::boolean:
+
+        return std::to_string ( json.get<bool>() );
+
+    case value_t::array:
+        throw could_not_parse_exception ( "array", "string" );
+
+    case value_t::discarded:
+        throw could_not_parse_exception ( "discarded", "string" );
+
+    case value_t::null:
+        throw could_not_parse_exception ( "null", "string" );
+
+    case value_t::object:
+        throw could_not_parse_exception ( "object", "string" );
+    }
+
+    throw could_not_parse_exception ( "unknown", "string" );
+}
+
 std::string as_string ( const nlohmann::json&           obj,
                         const std::vector<std::string>& path ) {
     auto json = _find ( obj, path );
@@ -94,6 +131,26 @@ std::string as_string ( const nlohmann::json&           obj,
     }
 }
 
+std::unordered_map<std::string, std::string> as_properties (
+    const nlohmann::json& obj ) {
+    std::unordered_map<std::string, std::string> properties;
+
+    auto flat = obj.flatten();
+
+    for ( auto& prop : flat.items() ) {
+        std::string key =
+            common::str::replace ( prop.key().substr ( 1, prop.key().length() ),
+                                   "/",
+                                   "." );
+
+        std::string value = as_string ( prop.value() );
+
+        properties.insert ( { key, value } );
+    }
+
+    return properties;
+}
+
 field_absent_exception::field_absent_exception(
     const std::vector<std::string>& path )
     : runtime_error ( "JSON field absent: " + str::join ( path, "." ) )
@@ -104,6 +161,12 @@ field_absent_exception::field_absent_exception(
     const std::string&              inner )
     : runtime_error ( "JSON field absent: " + str::join ( path, "." )
           + "\n" + inner )
+{}
+
+could_not_parse_exception::could_not_parse_exception(
+    const std::string& type,
+    const std::string& expected )
+    : runtime_error ( "Could not parse" + type + " as a " + expected + "." )
 {}
 
 could_not_parse_exception::could_not_parse_exception(

@@ -6,14 +6,30 @@
 namespace common::json
 {
 /**
+ * @brief as_string Gets the value of the json primitive as a string.
+ * @param json The json primitive to convert to a string.
+ * @return The value of the primitive as a string.
+ * @throws std::exception if the obj is not a primitive.
+ */
+std::string as_string ( const nlohmann::json& json );
+
+/**
  * @brief as_string Gets the value of the field at the given path as a string.
- * @param obj The json object to get the value from.
+ * @param json The json object to get the value from.
  * @param path A vector representing the path to the field.
  * @return The value of the field as a string.
  * @throws field_absent_exception if the field does not exist.
  */
-std::string as_string ( const nlohmann::json&           obj,
+std::string as_string ( const nlohmann::json&           json,
                         const std::vector<std::string>& path );
+
+/**
+ * @brief as_properties Converts the json object to a map of string properties.
+ * @param obj The json object to convert.
+ * @return The string properties map.
+ */
+std::unordered_map<std::string, std::string>
+as_properties ( const nlohmann::json& obj );
 
 /**
  * @brief to_json Converts the given string vector to the corresponding json
@@ -38,6 +54,7 @@ std::string to_json ( const std::string& str );
  */
 std::string to_json ( bool val );
 
+
 struct field_absent_exception : public std::runtime_error {
     field_absent_exception( const std::vector<std::string>& path );
 
@@ -48,6 +65,9 @@ struct field_absent_exception : public std::runtime_error {
 };
 
 struct could_not_parse_exception : public std::runtime_error {
+    could_not_parse_exception( const std::string& type,
+                               const std::string& expected );
+
     could_not_parse_exception( const std::vector<std::string>& path,
                                const std::string&              type );
 
