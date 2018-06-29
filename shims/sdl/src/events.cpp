@@ -23,10 +23,14 @@ int events::poll ( SDL_Event* event )
 
             if ( ( event->resize.w > 0 ) && ( event->resize.h > 0 ) &&
                  ( event->resize.w <= 1920 ) && ( event->resize.h <= 1080 ) ) {
-                _shim->video.resize ( event->resize.w, event->resize.h );
                 _shim->window.resize ( event->resize.w, event->resize.h );
+                _shim->video.resize ( event->resize.w, event->resize.h );
 
                 // Do not propagate resize event to application
+                event->resize.w =
+                    static_cast<int>( _shim->video.resolution().width );
+                event->resize.h =
+                    static_cast<int>( _shim->video.resolution().height );
                 event->active.type = SDL_NOEVENT;
                 result             = 0;
             }

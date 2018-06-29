@@ -10,6 +10,8 @@
 #include "glpp/shader.h"
 #include "glpp/vertex_attrib.h"
 
+#include "libshimmer/video.h"
+
 void renderer::init() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
@@ -27,6 +29,13 @@ renderer::renderer( class shim* shim )
     _create_vbo();
     _create_ebo();
     _create_vao();
+
+    if ( shim->config.video.filter == shimmer::config::video::filter::linear ) {
+        _texture_filter = glpp::texture_2d::filter::linear;
+    }
+    else {
+        _texture_filter = glpp::texture_2d::filter::nearest;
+    }
 }
 
 void renderer::internal_resolution ( const common::dims_2u& dims ) {
@@ -48,6 +57,7 @@ void renderer::render() {
     _prog.use();
     _vao.bind();
 
+    glClear ( GL_COLOR_BUFFER_BIT );
     glDrawElements ( GL_TRIANGLES,
                      static_cast<GLint>( _ebo.elements() ),
                      GL_UNSIGNED_INT,
@@ -65,6 +75,23 @@ void renderer::capture() {
     glViewport ( 0, 0,
                  static_cast<GLsizei>( _tex.dims().width ),
                  static_cast<GLsizei>( _tex.dims().height ) );
+}
+
+void renderer::resize() {
+    auto aspect = shimmer::video::aspect_transform (
+        _shim->video.resolution(),
+        _shim->window.dims(),
+        _shim->config );
+
+    _vbo.bind()
+        .data<float>( {
+        // position   // texcoords // colour
+        aspect.width, aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
+        -aspect.width, aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
+        -aspect.width, -aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
+        aspect.width, -aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
+    } )
+        .unbind();
 }
 
 void renderer::_create_program() {
@@ -101,13 +128,17 @@ void renderer::_create_program() {
 void renderer::_create_vbo() {
     printf ( "[DEBUG] Creating vbo...\n" );
 
+    auto aspect = shimmer::video::aspect_transform ( _shim->video.resolution(),
+                                                     _shim->window.dims(),
+                                                     _shim->config );
+
     _vbo.bind()
         .data<float>( {
         // position   // texcoords // colour
-        1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
-        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
+        aspect.width, aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
+        -aspect.width, aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
+        -aspect.width, -aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
+        aspect.width, -aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
     } )
         .unbind();
 
@@ -181,7 +212,7 @@ void renderer::_create_texture ( const common::dims_2u& dims ) {
     _tex.image ( glpp::texture_2d::internal_format::rgb, dims )
         .generate_mipmaps()
         .wrap ( glpp::texture_2d::texture_wrap::clamp_to_edge )
-        .filters ( glpp::texture_2d::filter::nearest );
+        .filters ( _texture_filter );
 
     glpp::texture::active_texture ( 0 );
 

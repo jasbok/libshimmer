@@ -51,6 +51,14 @@ struct dims_2 {
         return { width / op.width, height / op.height };
     }
 
+    dims_2 operator*( const T& op ) const {
+        return { width* op, height* op };
+    }
+
+    dims_2 operator/( const T& op ) const {
+        return { width / op, height / op };
+    }
+
     dims_2& operator+=( const dims_2& op ) {
         width  += op.width;
         height += op.height;
@@ -147,6 +155,18 @@ struct dims_3 {
 
     dims_3 operator*( const dims_3& op ) const {
         return { width* op.width, height* op.height, depth* op.depth };
+    }
+
+    dims_3 operator/( const dims_3& op ) const {
+        return { width / op.width, height / op.height, depth / op.depth };
+    }
+
+    dims_3 operator*( const T& op ) const {
+        return { width* op, height* op, depth* op };
+    }
+
+    dims_3 operator/( const T& op ) const {
+        return { width / op, height / op, depth / op };
     }
 
     dims_3& operator+=( const dims_3& op ) {

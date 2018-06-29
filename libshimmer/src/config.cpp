@@ -36,11 +36,11 @@ void config::load()
         general ( opts.general );
         video ( opts.video );
     }
-    catch ( json::exception ex ) {
+    catch ( const json::exception& ex ) {
         LOGE << "Unable to parse config file (" << env.config_path() << "): "
              << ex.what();
     }
-    catch ( std::exception ex ) {
+    catch ( const std::exception& ex ) {
         LOGE << "Unable to parse config file (" << env.config_path() << "): "
              << ex.what();
     }
@@ -61,7 +61,7 @@ void config::save() const
                  << env.config_path();
         }
     }
-    catch ( std::exception ex ) {
+    catch ( const std::exception& ex ) {
         LOGE << "Unable to write config to file (" << env.config_path() << "): "
              << ex.what();
     }

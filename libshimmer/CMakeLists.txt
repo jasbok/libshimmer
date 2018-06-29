@@ -45,6 +45,7 @@ set( HEADERS
         shader_reader.h
         shimmer.h
         system.h
+        video.h
         video_options.h
         window.h )
 
@@ -78,6 +79,7 @@ set( SOURCES
         src/shader_reader.cpp
         src/shimmer.cpp
         src/system.cpp
+        src/video.cpp
         src/video_options.cpp
         src/window.cpp )
 

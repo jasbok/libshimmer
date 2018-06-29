@@ -40,6 +40,8 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
         _renderer->internal_resolution ( _resolution );
     }
 
+    _renderer->resize();
+
     return _surface;
 }
 
@@ -49,6 +51,8 @@ void video::resize ( int w, int h )
         w, h, 32,
         SDL_HWSURFACE | SDL_OPENGL |
         SDL_RESIZABLE | SDL_DOUBLEBUF );
+
+    if ( _renderer ) _renderer->resize();
 }
 
 SDL_Surface* video::surface() {

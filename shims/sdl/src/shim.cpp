@@ -3,7 +3,8 @@
 class shim shim;
 
 shim::shim()
-    : events ( this ),
+    : config ( shimmer::config::create() ),
+      events ( this ),
       input ( this ),
       video ( this ),
       window ( this )

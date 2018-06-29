@@ -18,10 +18,6 @@ void window::resize ( int& w, int& h )
 {
     _dims = { static_cast<unsigned int>( w ),
               static_cast<unsigned int>( h ) };
-
-    // Do not propagate resize event to application
-    w = static_cast<int>( _shim->video.resolution().width );
-    h = static_cast<int>( _shim->video.resolution().height );
 }
 
 void window::title ( const char* title, const char* icon ) {

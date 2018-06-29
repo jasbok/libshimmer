@@ -5,11 +5,15 @@
 
 #include "common/dims.h"
 
+#include <unordered_map>
 #include <vector>
 
 namespace shimmer
 {
 struct config {
+    typedef std::pair<std::string, std::string>          property;
+    typedef std::unordered_map<std::string, std::string> properties;
+
     struct general {
         std::vector<std::string> config_dirs = shimmer::system::config_dirs;
         std::vector<std::string> data_dirs   = shimmer::system::data_dirs;
@@ -79,17 +83,41 @@ struct config {
     };
     struct video video;
 
-    void set_property ( const std::pair<std::string, std::string>& property );
+    config& set_property ( const property& prop );
+
+    config& set_properties ( const properties& props );
 
     struct mapping_exception : public std::runtime_error {
-        mapping_exception( const std::pair<std::string, std::string>& prop,
-                           const std::string&                         expected );
+        mapping_exception( const property&    prop,
+                           const std::string& expected );
 
-        mapping_exception( const std::pair<std::string, std::string>& prop,
-                           const std::vector<std::string>&            expected );
+        mapping_exception( const property&                 prop,
+                           const std::vector<std::string>& expected );
 
         virtual ~mapping_exception() = default;
     };
+
+    /**
+     * @brief from_environment Loads all config properties set through
+     * environment variables.
+     * @return A map of all properties set through the environment.
+     */
+    static properties from_environment();
+
+    /**
+     * @brief from_file Loads all config properties set through the given config
+     * file.
+     * @param path Path to the config file to load.
+     * @return A map of all properties set through in the config file.
+     */
+    static properties from_file ( const std::string& path );
+
+    /**
+     * @brief create Creates a new config by merging the default config with
+     * properties set in the environment and through a config file.
+     * @return The merged config.
+     */
+    static config create();
 };
 
 std::string to_json ( const struct config::logging& logging );
@@ -99,7 +127,6 @@ std::string to_json ( const struct config::video::shader& shader );
 std::string to_json ( const struct config::video::limiter& limiter );
 std::string to_json ( const struct config::video& video );
 std::string to_json ( const struct config& config );
-
 
 std::string to_string ( const enum config::logging::level& level );
 std::string to_string ( const enum config::logging::output& output );

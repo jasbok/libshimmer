@@ -23,6 +23,7 @@ configure_file( ${DATA_SRC}/text/search_test_c ${DATA_DEST}/text/search_test_c C
 set ( CATCH_TESTS
         coords.cpp
         dims.cpp
+        env.cpp
         file.cpp
         img.cpp
         json.cpp

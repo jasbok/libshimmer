@@ -1,20 +1,20 @@
 #include "configuration.h"
 
+#include "common/env.h"
+#include "common/file.h"
 #include "common/json.h"
 
 #include <sstream>
 
 namespace shimmer
 {
-typedef std::pair<std::string, std::string> property;
-
-std::vector<std::string> as_file_vector ( const property& prop ) {
+std::vector<std::string> as_file_vector ( const config::property& prop ) {
     static std::regex file_sep ( ":" );
 
     return common::str::split ( prop.second, file_sep );
 }
 
-bool as_bool ( const property& prop ) {
+bool as_bool ( const config::property& prop ) {
     std::string val = common::str::lower ( prop.second );
 
     if ( val.compare ( "true" ) == 0 ) return true;
@@ -23,7 +23,7 @@ bool as_bool ( const property& prop ) {
     throw config::mapping_exception ( prop, "boolean" );
 }
 
-enum config::logging::level as_logging_level ( const property& prop ) {
+enum config::logging::level as_logging_level ( const config::property& prop ) {
     try {
         return to_log_level ( prop.second );
     }
@@ -38,7 +38,8 @@ enum config::logging::level as_logging_level ( const property& prop ) {
     }
 }
 
-enum config::logging::output as_logging_output ( const property& prop ) {
+enum config::logging::output as_logging_output ( const config::property& prop )
+{
     try {
         return to_log_output ( prop.second );
     }
@@ -49,7 +50,7 @@ enum config::logging::output as_logging_output ( const property& prop ) {
     }
 }
 
-enum config::video::filter as_texture_filter ( const property& prop ) {
+enum config::video::filter as_texture_filter ( const config::property& prop ) {
     try {
         return to_tex_filter ( prop.second );
     }
@@ -60,7 +61,7 @@ enum config::video::filter as_texture_filter ( const property& prop ) {
     }
 }
 
-enum config::video::aspect as_video_aspect ( const property& prop ) {
+enum config::video::aspect as_video_aspect ( const config::property& prop ) {
     try {
         return to_vid_aspect ( prop.second );
     }
@@ -72,7 +73,7 @@ enum config::video::aspect as_video_aspect ( const property& prop ) {
     }
 }
 
-unsigned int as_uint ( const property& prop ) {
+unsigned int as_uint ( const config::property& prop ) {
     try {
         return static_cast<unsigned int>( std::stoi ( prop.second ) );
     }
@@ -81,8 +82,7 @@ unsigned int as_uint ( const property& prop ) {
     }
 }
 
-void config::set_property ( const std::pair<std::string,
-                                            std::string>& prop )
+config& config::set_property ( const property& prop )
 {
     if ( prop.first.compare ( "general.config.dirs" ) == 0 ) {
         general.config_dirs = as_file_vector ( prop );
@@ -132,23 +132,43 @@ void config::set_property ( const std::pair<std::string,
     else if ( prop.first.compare ( "video.custom_aspect.height" ) == 0 ) {
         video.custom_aspect.height = as_uint ( prop );
     }
+    else if ( prop.first.compare ( "video.custom.aspect.width" ) == 0 ) {
+        video.custom_aspect.width = as_uint ( prop );
+    }
+    else if ( prop.first.compare ( "video.custom.aspect.height" ) == 0 ) {
+        video.custom_aspect.height = as_uint ( prop );
+    }
     else if ( prop.first.compare ( "video.limiter.rate" ) == 0 ) {
         video.limiter.rate = as_uint ( prop );
     }
     else if ( prop.first.compare ( "video.limiter.samples" ) == 0 ) {
         video.limiter.samples = as_uint ( prop );
     }
+    else {
+        printf ( "[WARN] Unknown config property: %s\n", prop.first.c_str() );
+    }
+
+    return *this;
+}
+
+config& config::set_properties ( const config::properties& props )
+{
+    for ( const auto& prop: props ) {
+        set_property ( prop );
+    }
+
+    return *this;
 }
 
 config::mapping_exception::mapping_exception(
-    const std::pair<std::string, std::string>& prop,
-    const std::string&              expected )
+    const property&    prop,
+    const std::string& expected )
     : runtime_error ( "Could not map value to configuration: '"
           + prop.second + "' => '" + prop.first
           + "'; expected '" + expected + "'." ) {}
 
 config::mapping_exception::mapping_exception(
-    const std::pair<std::string, std::string>& prop,
+    const property&                 prop,
     const std::vector<std::string>& expected )
     : runtime_error ( "Could not map value to configuration: '"
           + prop.second + "' => '" + prop.first
@@ -382,5 +402,57 @@ enum config::video::aspect to_vid_aspect (
     if ( aspect.compare ( "zoom" ) == 0 ) return config::video::aspect::zoom;
 
     throw std::exception();
+}
+
+config::properties config::from_environment()
+{
+    config::properties props;
+    auto evars = common::env::find_all ( std::regex ( "^SHIMMER_.*" ) );
+
+    for ( auto& evar : evars ) {
+        std::string key = evar.first.substr ( 8, evar.first.length() );
+        key = common::str::lower ( common::str::replace ( key, "_", "." ) );
+        props.insert ( { key, evar.second } );
+    }
+
+    return props;
+}
+
+config::properties config::from_file ( const std::string& path )
+{
+    auto config = common::file::read_all ( path );
+    auto json   = nlohmann::json ( config );
+
+    return common::json::as_properties ( json );
+}
+
+config config::create()
+{
+    config conf;
+
+    config::properties environment_props = from_environment();
+    config::properties file_props;
+
+    auto environment_configs = environment_props.find ( "general.config_dirs" );
+
+    if ( environment_configs != environment_props.end() ) {
+        conf.set_property ( *environment_configs );
+    }
+
+    if ( !conf.general.config_dirs.empty() ) {
+        try {
+            file_props = from_file (
+                common::file::find ( "shimmer.conf",
+                                     conf.general.config_dirs ) );
+        }
+        catch ( const std::exception& ex ) {
+            printf ( "[WARN] Failed to load config file: %s\n", ex.what() );
+        }
+    }
+
+    conf.set_properties ( file_props )
+        .set_properties ( environment_props );
+
+    return conf;
 }
 }

@@ -20,7 +20,7 @@ common::img::image image_reader::image ( const string& path ) const
 
             return common::img::read ( file_path );
         }
-        catch ( exception ex ) {}
+        catch ( const exception& ) {}
     }
 
     throw file_read_exception ( "Could not find file in search path: " + path );
