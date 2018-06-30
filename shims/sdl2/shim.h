@@ -1,7 +1,7 @@
 #ifndef SHIMS_SDL2_SHIM_H
 #define SHIMS_SDL2_SHIM_H
 
-#include "libshimmer/shimmer.h"
+#include "shimmer/shimmer.h"
 
 #include "api/SDL2_sym.h"
 

@@ -1,7 +1,5 @@
 #include "uniform.h"
 
-#include "external/gsl/gsl"
-
 using namespace glpp;
 using namespace std;
 
@@ -104,8 +102,6 @@ void uniform::set ( GLuint v0,
 }
 
 void uniform::set ( const std::vector<GLfloat>& value ) {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1fv ( _location, value.size(), &value[0] );
@@ -126,8 +122,6 @@ void uniform::set ( const std::vector<GLfloat>& value ) {
 }
 
 void uniform::set ( const std::vector<GLint>& value )  {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1iv ( _location, value.size(), &value[0] );
@@ -148,8 +142,6 @@ void uniform::set ( const std::vector<GLint>& value )  {
 }
 
 void uniform::set ( const std::vector<GLuint>& value ) {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1uiv ( _location, value.size(), &value[0] );
@@ -173,10 +165,6 @@ void uniform::set ( const std::vector<GLfloat>& value,
                     unsigned int                cols,
                     bool                        transpose
                     ) {
-    Expects ( 2 <= cols && cols <= 4 );
-    Expects ( 2 <= value.size() / cols && value.size() / cols <= 4 );
-    Expects ( value.size() % cols == 0 );
-
     unsigned int rows = value.size() / cols;
 
     switch ( cols ) {

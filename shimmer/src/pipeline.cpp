@@ -118,12 +118,12 @@ void shimmer::pipeline::load ( const std::string& path )
             cout << "Unable to find pipeline file: " << path;
         }
     }
-    catch ( json::exception ex ) {
+    catch ( const json::exception& ex ) {
         std::cerr << "Unable to parse pipeline file (" << path << "): "
                   << ex.what() << "\n"
                   << std::setw ( 2 ) << pipeline_json << std::endl;
     }
-    catch ( exception ex ) {
+    catch ( const exception& ex ) {
         std::cerr << "Unable to parse pipeline file (" << path << "): "
                   << ex.what() << std::endl;
     }

@@ -54,8 +54,7 @@ add_executable( apigen ${APIGEN_SOURCES} ${APIGEN_INCLUDES} )
 
 target_include_directories( apigen PRIVATE
     .
-    ${ROOT}
-    ${EXTERNAL_INCLUDE_DIR} )
+    ${ROOT} )
 
 target_link_libraries( apigen ${APIGEN_LIBRARIES} )
 

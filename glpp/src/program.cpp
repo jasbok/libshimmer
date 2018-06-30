@@ -1,8 +1,6 @@
 #include "program.h"
 #include "shader.h"
 
-#include "external/gsl/gsl"
-
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace glpp;
@@ -196,8 +194,6 @@ program& program::uniform ( const string& name, GLuint v0,
 
 program& program::uniform ( const string&          name,
                             const vector<GLfloat>& value ) {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1fv ( uniform_location ( name ), value.size(), &value[0] );
@@ -221,8 +217,6 @@ program& program::uniform ( const string&          name,
 
 program& program::uniform ( const string&        name,
                             const vector<GLint>& value )  {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1iv ( uniform_location ( name ), value.size(), &value[0] );
@@ -246,8 +240,6 @@ program& program::uniform ( const string&        name,
 
 program& program::uniform ( const string&         name,
                             const vector<GLuint>& value ) {
-    Expects ( 1 <= value.size() && value.size() <= 4 );
-
     switch ( value.size() ) {
     case 1:
         glUniform1uiv ( uniform_location ( name ), value.size(), &value[0] );
@@ -274,11 +266,7 @@ program& program::uniform ( const string&          name,
                             unsigned int           cols,
                             bool                   transpose
                             ) {
-    Expects ( 2 <= cols && cols <= 4 );
-    Expects ( 2 <= value.size() / cols && value.size() / cols <= 4 );
-    Expects ( value.size() % cols == 0 );
-
-    unsigned int rows = value.size() / cols;
+    unsigned int rows = static_cast<unsigned int>( value.size() / cols );
 
     switch ( cols ) {
     case 2:

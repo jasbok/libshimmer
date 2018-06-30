@@ -49,8 +49,10 @@ find_package(SDL2 MODULE REQUIRED)
 ###############################################################################
 add_executable( sdl2_simple sdl2_simple.cpp)
 
-target_include_directories(sdl2_simple
-    PRIVATE ${EXTERNAL_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS} )
+target_include_directories(sdl2_simple PRIVATE
+    .
+    ${ROOT}
+    ${SDL2_INCLUDE_DIRS} )
 
 target_link_libraries( sdl2_simple ${SDL2_LIBRARY} )
 
@@ -63,9 +65,6 @@ add_executable( sdl2_opengl sdl2_opengl.cpp)
 target_include_directories(sdl2_opengl PRIVATE
     .
     ${ROOT}
-    ${ROOT}/external
-    ${GLPP_INCLUDE_DIR}
-    ${EXTERNAL_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIRS} )
 
 target_link_libraries( sdl2_opengl

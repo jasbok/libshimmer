@@ -9,6 +9,7 @@ find_package( Freetype )
 ###############################################################################
 set( COMMON_HEADERS
         atlas.h
+        buffer.h
         camera.h
         common.h
         coords.h

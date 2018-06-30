@@ -14,6 +14,8 @@ class video
 
     SDL_Surface* _surface;
 
+    SDL_Surface* _software;
+
     enum mode {
         software,
         opengl

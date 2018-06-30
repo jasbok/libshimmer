@@ -2,7 +2,7 @@
 
 #include "shim.h"
 
-#include "libshimmer/input.h"
+#include "shimmer/input.h"
 
 input::input( class shim* shim )
     : _shim ( shim )

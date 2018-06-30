@@ -3,8 +3,6 @@
 
 #include "mbuffer.h"
 
-#include "external/gsl/gsl"
-
 namespace glpp
 {
 typedef mbuffer<GL_ARRAY_BUFFER> vertex_buffer;

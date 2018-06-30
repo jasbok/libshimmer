@@ -2,8 +2,8 @@
 
 #include "shim.h"
 
-#include "libshimmer/input.h"
-#include "libshimmer/video.h"
+#include "shimmer/input.h"
+#include "shimmer/video.h"
 
 #include <GL/glew.h>
 
@@ -91,11 +91,20 @@ SDL_Surface* video::surface() {
 
 int video::refresh ( SDL_Surface* screen )
 {
-    _renderer->render();
+    int ret = 0;
 
-    auto ret = sym::SDL_Flip ( screen );
+    if ( screen == _surface ) {
+        _renderer->render();
 
-    _renderer->capture();
+        sym::SDL_GL_SwapBuffers();
+
+        // ret = sym::SDL_Flip ( screen );
+
+        _renderer->capture();
+    }
+    else {
+        ret = sym::SDL_Flip ( screen );
+    }
 
     return ret;
 }

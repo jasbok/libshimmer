@@ -8,7 +8,7 @@
 
 #include "api/SDL_sym.h"
 
-#include "libshimmer/configuration.h"
+#include "shimmer/configuration.h"
 
 #include <memory>
 

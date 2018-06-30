@@ -97,7 +97,8 @@ configure_file( config_variables.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config_variabl
 ###############################################################################
 add_library( shimmer SHARED ${HEADERS} ${SOURCES} )
 
-target_include_directories( shimmer PRIVATE .
+target_include_directories( shimmer PRIVATE
+    .
     ${ROOT}
     ${ROOT}/external )
 
