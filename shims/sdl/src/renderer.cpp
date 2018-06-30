@@ -10,8 +10,6 @@
 #include "glpp/shader.h"
 #include "glpp/vertex_attrib.h"
 
-#include "libshimmer/video.h"
-
 void renderer::init() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
@@ -78,10 +76,7 @@ void renderer::capture() {
 }
 
 void renderer::resize() {
-    auto aspect = shimmer::video::aspect_transform (
-        _shim->video.resolution(),
-        _shim->window.dims(),
-        _shim->config );
+    const auto& aspect = _shim->video.aspect();
 
     _vbo.bind()
         .data<float>( {
@@ -128,9 +123,7 @@ void renderer::_create_program() {
 void renderer::_create_vbo() {
     printf ( "[DEBUG] Creating vbo...\n" );
 
-    auto aspect = shimmer::video::aspect_transform ( _shim->video.resolution(),
-                                                     _shim->window.dims(),
-                                                     _shim->config );
+    const auto& aspect = _shim->video.aspect();
 
     _vbo.bind()
         .data<float>( {

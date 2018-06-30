@@ -33,6 +33,7 @@ set( HEADERS
         file_reader.h
         general_options.h
         image_reader.h
+        input.h
         json.h
         logger.h
         macros.h
@@ -69,6 +70,7 @@ set( SOURCES
         src/file_reader.cpp
         src/general_options.cpp
         src/image_reader.cpp
+        src/input.cpp
         src/json.cpp
         src/logger.cpp
         src/mouse.cpp
