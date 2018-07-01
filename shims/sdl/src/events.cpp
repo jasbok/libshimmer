@@ -6,6 +6,7 @@ events::events( class shim* shim )
     : _shim ( shim )
 {}
 
+
 int events::poll ( SDL_Event* event )
 {
     int result = sym::SDL_PollEvent ( event );
@@ -21,19 +22,15 @@ int events::poll ( SDL_Event* event )
 
         case SDL_VIDEORESIZE:
 
-            if ( ( event->resize.w > 0 ) && ( event->resize.h > 0 ) &&
-                 ( event->resize.w <= 1920 ) && ( event->resize.h <= 1080 ) ) {
-                _shim->window.resize ( event->resize.w, event->resize.h );
-                _shim->video.resize ( event->resize.w, event->resize.h );
-
-                // Do not propagate resize event to application
-                event->resize.w =
-                    static_cast<int>( _shim->video.resolution().width );
-                event->resize.h =
-                    static_cast<int>( _shim->video.resolution().height );
-                event->active.type = SDL_NOEVENT;
-                result             = 0;
+            if ( _is_valid_resize ( event->resize.w, event->resize.h ) ) {
+                _shim->target_resolution ( _resize_dims ( event ) );
             }
+
+            // Do not propagate resize event to application
+            event->resize.w    = static_cast<int>( _source_resolution.width );
+            event->resize.h    = static_cast<int>( _source_resolution.height );
+            event->active.type = SDL_NOEVENT;
+            result             = 0;
 
             break;
 
@@ -43,4 +40,26 @@ int events::poll ( SDL_Event* event )
     }
 
     return result;
+}
+
+void events::source_resolution ( const common::dims_2u& dims )
+{
+    _source_resolution = dims;
+}
+
+void events::target_resolution ( const common::dims_2u& dims )
+{
+    _target_resolution = dims;
+}
+
+bool events::_is_valid_resize ( int w, int h )
+{
+    return ( w > 0 ) && ( h > 0 ) &&
+           ( w <= 1920 ) && ( h <= 1080 );
+}
+
+common::dims_2u events::_resize_dims ( SDL_Event* event )
+{
+    return { static_cast<unsigned int>( event->resize.w ),
+             static_cast<unsigned int>( event->resize.h ) };
 }

@@ -12,9 +12,9 @@ class video
 {
     class shim* _shim;
 
-    SDL_Surface* _surface;
+    SDL_Surface* _source;
 
-    SDL_Surface* _software;
+    SDL_Surface* _target;
 
     enum mode {
         software,
@@ -26,13 +26,10 @@ class video
 
     Uint32 _flags;
 
-    common::dims_2u _resolution;
+    common::dims_2u _source_resolution;
 
-    common::dims_2f _aspect;
+    common::dims_2u _target_resolution;
 
-    common::dims_2f _absolute_transform;
-
-    common::dims_2f _relative_transform;
 
     std::unique_ptr<renderer> _renderer;
 
@@ -43,29 +40,28 @@ public:
 
     virtual ~video() = default;
 
-    common::dims_2u resolution();
 
-    common::dims_2f aspect();
+    void         source_resolution ( const common::dims_2u& dims );
 
-    common::dims_2f absolute_transform();
+    void         target_resolution ( const common::dims_2u& dims );
 
-    common::dims_2f relative_transform();
+    SDL_Surface* setup ( int    w,
+                         int    h,
+                         int    bpp,
+                         Uint32 flags );
 
-    SDL_Surface*    setup ( int    w,
-                            int    h,
-                            int    bpp,
-                            Uint32 flags );
+    SDL_Surface*              surface();
 
-    void resize ( int w,
-                  int h );
+    int                       refresh ( SDL_Surface* screen );
 
-    SDL_Surface* surface();
+    void                      swap_buffers();
 
-    int          refresh ( SDL_Surface* screen );
+    SDL_Surface*              _source_surface ( const common::dims_2u& dims );
 
-    void         swap_buffers();
+    SDL_Surface*              _target_surface ( const common::dims_2u& dims );
 
-    void         _calculate_transforms();
+    std::unique_ptr<renderer> _create_renderer ( const common::dims_2u& source,
+                                                 const common::dims_2u& target );
 };
 
 #endif // ifndef SHIMS_SDL_VIDEO_H

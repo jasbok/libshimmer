@@ -14,25 +14,6 @@ video::video( class shim* shim )
     _limiter.samples ( 3 );
 }
 
-common::dims_2u video::resolution() {
-    return _resolution;
-}
-
-common::dims_2f video::aspect()
-{
-    return _aspect;
-}
-
-common::dims_2f video::absolute_transform()
-{
-    return _absolute_transform;
-}
-
-common::dims_2f video::relative_transform()
-{
-    return _relative_transform;
-}
-
 SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
     if ( ( w == 0 ) || ( h == 0 ) ) return nullptr;
 
@@ -45,55 +26,51 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
         _mode = mode::software;
     }
 
-    _resolution = { static_cast<unsigned int>( w ),
-                    static_cast<unsigned int>( h ) };
-
-    _bpp = bpp;
-
+    _bpp   = bpp;
     _flags = flags;
 
-    if ( !_surface ) {
-        resize ( w, h );
-        _shim->window.dims ( _resolution );
+    source_resolution ( { static_cast<unsigned int>( w ),
+                          static_cast<unsigned int>( h ) } );
 
-        if ( _renderer == nullptr ) renderer::init();
-
-        _renderer = std::make_unique<renderer>( _shim );
-        _renderer->internal_resolution ( _resolution );
-        _renderer->capture();
-    }
-    else {
-        _renderer->internal_resolution ( _resolution );
-    }
-
-    _calculate_transforms();
-
-    _renderer->resize();
-
-    return _surface;
+    return _source;
 }
 
-void video::resize ( int w, int h )
+void video::source_resolution ( const common::dims_2u& dims )
 {
-    _surface = sym::SDL_SetVideoMode (
-        w, h, 32,
-        SDL_HWSURFACE | SDL_OPENGL |
-        SDL_RESIZABLE | SDL_DOUBLEBUF );
+    _source_resolution = dims;
 
-    _calculate_transforms();
+    if ( !_target ) {
+        _target_resolution = _source_resolution;
+        _target            = _target_surface ( _target_resolution );
+        _source            = _target;
+        _renderer          = _create_renderer ( _source_resolution,
+                                                _target_resolution );
+    }
+    else {
+        _renderer->source_resolution ( _source_resolution );
+    }
+}
 
-    if ( _renderer ) _renderer->resize();
+void video::target_resolution ( const common::dims_2u& dims )
+{
+    _target_resolution = dims;
+    _target            = _target_surface ( _target_resolution );
+    _source            = _target;
+
+    if ( _renderer ) {
+        _renderer->target_resolution ( _target_resolution );
+    }
 }
 
 SDL_Surface* video::surface() {
-    return _surface;
+    return _source;
 }
 
 int video::refresh ( SDL_Surface* screen )
 {
     int ret = 0;
 
-    if ( screen == _surface ) {
+    if ( screen == _source ) {
         _renderer->render();
 
         sym::SDL_GL_SwapBuffers();
@@ -119,16 +96,36 @@ void video::swap_buffers() {
     _renderer->capture();
 }
 
-void video::_calculate_transforms()
+SDL_Surface* video::_source_surface ( const common::dims_2u& dims )
 {
-    _aspect = shimmer::video::aspect_transform ( _resolution,
-                                                 _shim->window.dims(),
-                                                 _shim->config );
+    return sym::SDL_SetVideoMode (
+        static_cast<int>( dims.width ),
+        static_cast<int>( dims.height ),
+        32,
+        SDL_HWSURFACE | SDL_OPENGL |
+        SDL_RESIZABLE | SDL_DOUBLEBUF );
+}
 
-    _absolute_transform = shimmer::input::absolute_transform ( _resolution,
-                                                               _shim->window.dims(),
-                                                               _aspect );
+SDL_Surface* video::_target_surface ( const common::dims_2u& dims )
+{
+    return sym::SDL_SetVideoMode (
+        static_cast<int>( dims.width ),
+        static_cast<int>( dims.height ),
+        32,
+        SDL_HWSURFACE | SDL_OPENGL |
+        SDL_RESIZABLE | SDL_DOUBLEBUF );
+}
 
-    _relative_transform = shimmer::input::relative_transform ( _resolution,
-                                                               _shim->window.dims() );
+std::unique_ptr<renderer> video::_create_renderer (
+    const common::dims_2u& source,
+    const common::dims_2u& target )
+{
+    if ( _renderer == nullptr ) renderer::init();
+
+    auto renderer = std::make_unique<::renderer>( _shim );
+
+    renderer->source_resolution ( source );
+    renderer->target_resolution ( target );
+
+    return renderer;
 }

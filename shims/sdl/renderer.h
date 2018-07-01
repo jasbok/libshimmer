@@ -26,6 +26,12 @@ class renderer
 
     glpp::texture_2d::filter _texture_filter;
 
+    common::dims_2u _source_resolution;
+
+    common::dims_2u _target_resolution;
+
+    common::dims_2f _aspect;
+
 public:
     static void init();
 
@@ -33,13 +39,13 @@ public:
 
     virtual ~renderer() = default;
 
-    void internal_resolution ( const common::dims_2u& dims );
+    void source_resolution ( const common::dims_2u& dims );
+
+    void target_resolution ( const common::dims_2u& dims );
 
     void render();
 
     void capture();
-
-    void resize();
 
 private:
     void _create_program();
@@ -53,6 +59,8 @@ private:
     void _create_fbo();
 
     void _create_texture ( const common::dims_2u& dims );
+
+    void _calculate_aspect();
 };
 
 #endif // ifndef SHIMS_SDL_RENDERER_H

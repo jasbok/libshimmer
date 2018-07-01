@@ -42,6 +42,10 @@ public:
     int  init ( Uint32 flags );
 
     void quit();
+
+    void source_resolution ( const common::dims_2u& dims );
+
+    void target_resolution ( const common::dims_2u& dims );
 };
 
 extern class shim shim;

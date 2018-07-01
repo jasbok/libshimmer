@@ -11,22 +11,14 @@ class window
 {
     class shim* _shim;
 
-    common::dims_2u _dims;
+    std::string _title;
 
-    std::string _window_title;
+    std::string _icon;
 
 public:
     window( class shim* shim );
 
     virtual ~window() = default;
-
-
-    void            dims ( const common::dims_2u& dims );
-
-    common::dims_2u dims();
-
-    void            resize ( int& w,
-                             int& h );
 
     void title ( const char* title,
                  const char* icon );

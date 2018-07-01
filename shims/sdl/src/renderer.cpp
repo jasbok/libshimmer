@@ -10,6 +10,8 @@
 #include "glpp/shader.h"
 #include "glpp/vertex_attrib.h"
 
+#include "shimmer/video.h"
+
 void renderer::init() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
@@ -36,9 +38,20 @@ renderer::renderer( class shim* shim )
     }
 }
 
-void renderer::internal_resolution ( const common::dims_2u& dims ) {
-    _create_texture ( dims );
+void renderer::source_resolution ( const common::dims_2u& dims ) {
+    _source_resolution = dims;
+    _calculate_aspect();
+    _create_vbo();
+
+    _create_texture ( _source_resolution );
     _create_fbo();
+}
+
+void renderer::target_resolution ( const common::dims_2u& dims )
+{
+    _target_resolution = dims;
+    _calculate_aspect();
+    _create_vbo();
 }
 
 void renderer::render() {
@@ -49,8 +62,8 @@ void renderer::render() {
 
     glViewport ( 0,
                  0,
-                 static_cast<GLint>( _shim->window.dims().width ),
-                 static_cast<GLint>( _shim->window.dims().height ) );
+                 static_cast<GLint>( _target_resolution.width ),
+                 static_cast<GLint>( _target_resolution.height ) );
 
     _prog.use();
     _vao.bind();
@@ -73,20 +86,6 @@ void renderer::capture() {
     glViewport ( 0, 0,
                  static_cast<GLsizei>( _tex.dims().width ),
                  static_cast<GLsizei>( _tex.dims().height ) );
-}
-
-void renderer::resize() {
-    const auto& aspect = _shim->video.aspect();
-
-    _vbo.bind()
-        .data<float>( {
-        // position   // texcoords // colour
-        aspect.width, aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        -aspect.width, aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
-        -aspect.width, -aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        aspect.width, -aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
-    } )
-        .unbind();
 }
 
 void renderer::_create_program() {
@@ -123,15 +122,13 @@ void renderer::_create_program() {
 void renderer::_create_vbo() {
     printf ( "[DEBUG] Creating vbo...\n" );
 
-    const auto& aspect = _shim->video.aspect();
-
     _vbo.bind()
         .data<float>( {
         // position   // texcoords // colour
-        aspect.width, aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        -aspect.width, aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
-        -aspect.width, -aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        aspect.width, -aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
+        _aspect.width, _aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
+        -_aspect.width, _aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
+        -_aspect.width, -_aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
+        _aspect.width, -_aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
     } )
         .unbind();
 
@@ -210,4 +207,11 @@ void renderer::_create_texture ( const common::dims_2u& dims ) {
     glpp::texture::active_texture ( 0 );
 
     GLPP_CHECK_ERROR ( "Created TEXTURE" );
+}
+
+void renderer::_calculate_aspect()
+{
+    _aspect = shimmer::video::aspect_transform ( _source_resolution,
+                                                 _target_resolution,
+                                                 _shim->config );
 }
