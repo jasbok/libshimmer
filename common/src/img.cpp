@@ -2,13 +2,6 @@
 
 namespace common::img
 {
-read_exception::read_exception( const std::string& path )
-    : std::runtime_error ( "Could not read image: " + path )
-{}
-
-read_exception::~read_exception() {}
-
-
 image read ( const std::string& path )
 {
     int width, height, channels;
@@ -60,6 +53,12 @@ dims_2u image::dims() const {
 unsigned int image::channels() const {
     return _channels;
 }
+
+read_exception::read_exception( const std::string& path )
+    : std::runtime_error ( "Could not read image: " + path )
+{}
+
+read_exception::~read_exception() {}
 }
 
 //

@@ -88,12 +88,24 @@ public:
                         const common::img::image& image );
 
     /**
-     * @brief sub_image Loads the given image data into the texture at with an
+     * @brief sub_image Loads the given image data into the texture with an
      * offset of (0, 0).
      * @param image The image data to load in.
      * @return this
      */
     texture_2d& sub_image ( const common::img::image& image );
+
+    /**
+     * @brief sub_image Loads the given image data into the texture with an
+     * offset of (0, 0).
+     * @param data The image data to load in.
+     * @param dims The dimensions of the image data.
+     * @param data The number of channels in the image data.
+     * @return this
+     */
+    texture_2d& sub_image ( uint8_t*               data,
+                            const common::dims_2u& dims,
+                            unsigned int           channels );
 
     /**
      * @brief sub_image Loads the given image data into the texture at the given
@@ -154,6 +166,8 @@ private:
     internal_format _internal_format_from ( const common::img::image& image );
 
     GLenum          _gl_format_from ( const common::img::image& image );
+
+    GLenum          _gl_format_from_channels ( unsigned int channels );
 };
 }
 

@@ -23,7 +23,8 @@ void renderer::init() {
 }
 
 renderer::renderer( class shim* shim )
-    : _shim ( shim )
+    : _shim ( shim ),
+      _flip_target ( false )
 {
     _create_program();
     _create_vbo();
@@ -58,10 +59,7 @@ void renderer::render() {
     GLPP_CHECK_ERROR ( "PRE RENDER" );
     GLPP_CHECK_FRAMEBUFFER ( "PRE RENDER" );
 
-    _fbo.unbind();
-
-    glViewport ( 0,
-                 0,
+    glViewport ( 0, 0,
                  static_cast<GLint>( _target_resolution.width ),
                  static_cast<GLint>( _target_resolution.height ) );
 
@@ -80,12 +78,40 @@ void renderer::render() {
     GLPP_CHECK_FRAMEBUFFER ( "POST RENDER" );
 }
 
-void renderer::capture() {
+void renderer::capture_fbo() {
     _fbo.bind();
 
     glViewport ( 0, 0,
                  static_cast<GLsizei>( _tex.dims().width ),
                  static_cast<GLsizei>( _tex.dims().height ) );
+}
+
+void renderer::reset_fbo() {
+    _fbo.unbind();
+
+    glViewport ( 0, 0,
+                 static_cast<GLint>( _target_resolution.width ),
+                 static_cast<GLint>( _target_resolution.height ) );
+}
+
+void renderer::setup_viewport()
+{
+    glViewport ( 0, 0,
+                 static_cast<GLint>( _target_resolution.width ),
+                 static_cast<GLint>( _target_resolution.height ) );
+}
+
+void renderer::copy_source ( uint8_t*               data,
+                             const common::dims_2u& dims,
+                             unsigned int           channels )
+{
+    _tex.bind();
+    _tex.sub_image ( data, dims, channels );
+}
+
+void renderer::flip_target ( bool flip )
+{
+    _flip_target = flip;
 }
 
 void renderer::_create_program() {
@@ -122,13 +148,20 @@ void renderer::_create_program() {
 void renderer::_create_vbo() {
     printf ( "[DEBUG] Creating vbo...\n" );
 
+    int flip = _flip_target ? -1 : 1;
+
+    const float right  = static_cast<float>( _aspect.width );
+    const float left   = -1 * right;
+    const float top    = static_cast<float>( flip * _aspect.height );
+    const float bottom = -1 * top;
+
     _vbo.bind()
         .data<float>( {
         // position   // texcoords // colour
-        _aspect.width, _aspect.height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        -_aspect.width, _aspect.height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,  // TL
-        -_aspect.width, -_aspect.height, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        _aspect.width, -_aspect.height, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f   // BR
+        right, top, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
+        left, top, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,    // TL
+        left, bottom, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
+        right, bottom, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f // BR
     } )
         .unbind();
 

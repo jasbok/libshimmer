@@ -19,6 +19,13 @@ int SDL_PollEvent ( SDL_Event* event )
     return shim.events.poll ( event );
 }
 
+int SDL_PeepEvents ( SDL_Event*      events,
+                     int             numevents,
+                     SDL_eventaction action,
+                     Uint32          mask ) {
+    return shim.events.peep ( events, numevents, action, mask );
+}
+
 //
 // Input
 //
@@ -46,6 +53,20 @@ SDL_Surface* SDL_GetVideoSurface ( void ) {
 
 int SDL_Flip ( SDL_Surface* screen ) {
     return shim.video.refresh ( screen );
+}
+
+void SDL_UpdateRect ( SDL_Surface* screen,
+                      Sint32       x,
+                      Sint32       y,
+                      Uint32       w,
+                      Uint32       h ) {
+    shim.video.refresh ( screen, x, y, w, h );
+}
+
+void SDL_UpdateRects ( SDL_Surface* screen,
+                       int          numrects,
+                       SDL_Rect*    rects ) {
+    shim.video.refresh ( screen, numrects, rects );
 }
 
 void SDL_GL_SwapBuffers ( void ) {

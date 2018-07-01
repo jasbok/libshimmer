@@ -19,7 +19,12 @@ public:
 
     virtual ~events() = default;
 
-    int  poll ( SDL_Event* event );
+    int poll ( SDL_Event* event );
+
+    int peep ( SDL_Event*      events,
+               int             numevents,
+               SDL_eventaction action,
+               Uint32          mask );
 
     void source_resolution ( const common::dims_2u& dims );
 
@@ -30,6 +35,10 @@ private:
                             int h );
 
     common::dims_2u _resize_dims ( SDL_Event* event );
+
+    void            _process ( SDL_Event* event );
+    void            _process_mouse ( SDL_Event* event );
+    void            _process_resize ( SDL_Event* event );
 };
 
 #endif // ifndef SHIMS_SDL_EVENTS_H

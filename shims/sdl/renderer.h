@@ -32,6 +32,8 @@ class renderer
 
     common::dims_2f _aspect;
 
+    bool _flip_target;
+
 public:
     static void init();
 
@@ -45,7 +47,17 @@ public:
 
     void render();
 
-    void capture();
+    void capture_fbo();
+
+    void reset_fbo();
+
+    void setup_viewport();
+
+    void copy_source ( uint8_t*               data,
+                       const common::dims_2u& dims,
+                       unsigned int           channels );
+
+    void flip_target ( bool flip );
 
 private:
     void _create_program();

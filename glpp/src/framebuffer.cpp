@@ -7,7 +7,6 @@ framebuffer::framebuffer()
     : _handle()
 {
     glGenFramebuffers  ( 1, &_handle );
-    printf ( "Framebuffer handle: %i\n", _handle );
 }
 
 framebuffer::framebuffer( framebuffer&& move )

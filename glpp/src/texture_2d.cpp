@@ -84,6 +84,23 @@ texture_2d& texture_2d::sub_image ( const common::img::image& image ) {
     return *this;
 }
 
+texture_2d& texture_2d::sub_image ( uint8_t*               data,
+                                    const common::dims_2u& dims,
+                                    unsigned int           channels )
+{
+    glTexSubImage2D ( GL_TEXTURE_2D,
+                      0,
+                      0,
+                      0,
+                      static_cast<GLsizei>( dims.width ),
+                      static_cast<GLsizei>( dims.height ),
+                      _gl_format_from_channels ( channels ),
+                      GL_UNSIGNED_BYTE,
+                      data );
+
+    return *this;
+}
+
 texture_2d& texture_2d::sub_image ( const coords_2i&          offset,
                                     const common::img::image& image ) {
     glTexSubImage2D ( GL_TEXTURE_2D,
@@ -191,6 +208,20 @@ texture::internal_format texture_2d::_internal_format_from (
 
 GLenum texture_2d::_gl_format_from ( const common::img::image& image ) {
     switch ( image.channels() ) {
+    case 1: return GL_RED;
+
+    case 2: return GL_RG;
+
+    case 3: return GL_RGB;
+
+    case 4: return GL_RGBA;
+
+    default: return GL_RGB;
+    }
+}
+
+GLenum texture_2d::_gl_format_from_channels ( unsigned int channels ) {
+    switch ( channels ) {
     case 1: return GL_RED;
 
     case 2: return GL_RG;

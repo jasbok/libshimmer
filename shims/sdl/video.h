@@ -38,7 +38,7 @@ class video
 public:
     video( class shim* shim );
 
-    virtual ~video() = default;
+    virtual ~video();
 
 
     void         source_resolution ( const common::dims_2u& dims );
@@ -50,15 +50,29 @@ public:
                          int    bpp,
                          Uint32 flags );
 
-    SDL_Surface*              surface();
+    SDL_Surface* surface();
 
-    int                       refresh ( SDL_Surface* screen );
+    void         refresh();
+
+    int          refresh ( SDL_Surface* screen );
+
+    void         refresh ( SDL_Surface* screen,
+                           Sint32       x,
+                           Sint32       y,
+                           Uint32       w,
+                           Uint32       h );
+
+    void refresh ( SDL_Surface* screen,
+                   int          numrects,
+                   SDL_Rect*    rects );
 
     void                      swap_buffers();
 
-    SDL_Surface*              _source_surface ( const common::dims_2u& dims );
+    SDL_Surface*              _create_surface();
 
-    SDL_Surface*              _target_surface ( const common::dims_2u& dims );
+    SDL_Surface*              _software_surface ( const common::dims_2u& dims );
+
+    SDL_Surface*              _hardware_surface ( const common::dims_2u& dims );
 
     std::unique_ptr<renderer> _create_renderer ( const common::dims_2u& source,
                                                  const common::dims_2u& target );
