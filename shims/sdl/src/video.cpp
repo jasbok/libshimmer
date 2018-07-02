@@ -13,7 +13,7 @@ video::video( class shim* shim )
       _target ( nullptr ),
       _renderer ( nullptr )
 {
-    _limiter.limit ( 25 );
+    _limiter.limit ( 0 );
     _limiter.samples ( 3 );
 }
 
@@ -67,6 +67,7 @@ void video::target_resolution ( const common::dims_2u& dims )
     _target            = _hardware_surface ( _target_resolution );
 
     if ( _renderer ) {
+        _renderer->setup_viewport();
         _renderer->target_resolution ( _target_resolution );
     }
 
@@ -92,7 +93,7 @@ int video::refresh ( SDL_Surface* screen )
 {
     int ret = 0;
 
-    if ( ( screen == _source ) ) {
+    if ( screen == _source  ) {
         if ( _limiter.check() ) return ret;
 
         _renderer->copy_source ( static_cast<uint8_t*>( _source->pixels ),
@@ -150,17 +151,11 @@ SDL_Surface* video::_create_surface()
 {
     _target = _hardware_surface ( _target_resolution );
 
-    if ( _mode == mode::software ) {
-        if ( _source ) {
-            sym::SDL_FreeSurface ( _source );
-        }
-        _source = _software_surface ( _source_resolution );
-    }
-    else {
-        _source = _target;
+    if ( _source ) {
+        sym::SDL_FreeSurface ( _source );
     }
 
-    return _source;
+    return _software_surface ( _source_resolution );
 }
 
 SDL_Surface* video::_software_surface ( const common::dims_2u& dims )

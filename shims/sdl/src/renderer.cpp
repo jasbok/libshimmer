@@ -82,8 +82,8 @@ void renderer::capture_fbo() {
     _fbo.bind();
 
     glViewport ( 0, 0,
-                 static_cast<GLsizei>( _tex.dims().width ),
-                 static_cast<GLsizei>( _tex.dims().height ) );
+                 static_cast<GLsizei>( _source_resolution.width ),
+                 static_cast<GLsizei>( _source_resolution.height ) );
 }
 
 void renderer::reset_fbo() {
