@@ -39,13 +39,11 @@ void input::mouse_motion_absolute ( Uint16& x, Uint16& y )
 
 void input::mouse_motion_relative ( Sint16& xrel, Sint16& yrel )
 {
-    //    shimmer::input::transform ( xrel, yrel,
-    //                                _shim->video.relative_transform() );
+    shimmer::input::transform_relative ( xrel, yrel, _relative_transform );
 }
 
 void input::mouse_warp ( Uint16 x, Uint16 y ) {
     mouse_motion_absolute ( x, y );
-
     sym::SDL_WarpMouse ( x, y );
 }
 
@@ -56,11 +54,11 @@ void input::_calculate_transforms()
                                                      _shim->config );
 
     _absolute_transform = shimmer::input::absolute_transform (
-        _target_resolution,
         _source_resolution,
+        _target_resolution,
         aspect );
 
     _relative_transform = shimmer::input::relative_transform (
-        _target_resolution,
-        _source_resolution );
+        _source_resolution,
+        _target_resolution );
 }

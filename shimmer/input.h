@@ -39,24 +39,24 @@ void transform_relative ( T&                     x,
 /**
  * @brief absolute_transform Calculates the absolute coordinates transform for
  * the given display, window and aspect dimensions.
- * @param display The display dimensions.
- * @param window The window dimensions.
+ * @param source The source dimensions.
+ * @param target The target dimensions.
  * @param aspect The aspect dimensions.
  * @return The coordinate transform.
  */
-common::dims_2f absolute_transform ( const common::dims_2f& display,
-                                     const common::dims_2f& window,
+common::dims_2f absolute_transform ( const common::dims_2f& source,
+                                     const common::dims_2f& target,
                                      const common::dims_2f& aspect );
 
 /**
  * @brief relative_transform Calculates the relative coordinates transform for
  * the given display and window dimensions.
- * @param display The display dimensions.
- * @param window The window dimensions.
+ * @param source The source dimensions.
+ * @param target The target dimensions.
  * @return The coordinate transform.
  */
-common::dims_2f relative_transform ( const common::dims_2f& display,
-                                     const common::dims_2f& window );
+common::dims_2f relative_transform ( const common::dims_2f& source,
+                                     const common::dims_2f& target );
 }
 
 #endif // ifndef SHIMMER_INPUT_H

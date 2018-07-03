@@ -23,7 +23,18 @@ video::~video()
 }
 
 SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
-    if ( ( w == 0 ) || ( h == 0 ) ) return nullptr;
+    if ( ( w == 0 ) || ( h == 0 ) ) {
+        printf ( "[WARNING] Unsupported resolution: %ix%i\n", w, h );
+
+        return nullptr;
+    }
+
+    common::dims_2u requested_resolution = { static_cast<unsigned int>( w ),
+                                             static_cast<unsigned int>( h ) };
+
+    _bpp   = bpp;
+    _flags = flags;
+
 
     if ( flags & SDL_OPENGL ) {
         printf ( "[DEBUG] Software requested OpenGL renderer.\n" );
@@ -34,44 +45,45 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
         _mode = mode::software;
     }
 
-    _bpp   = bpp;
-    _flags = flags;
+    if ( _renderer == nullptr ) {
+        _shim->target_resolution ( requested_resolution );
+        _shim->source_resolution ( requested_resolution );
 
-    source_resolution ( { static_cast<unsigned int>( w ),
-                          static_cast<unsigned int>( h ) } );
+        renderer::init();
+        _renderer = _create_renderer ( requested_resolution,
+                                       requested_resolution );
+    }
+    else {
+        _shim->source_resolution ( requested_resolution );
+    }
 
     return _source;
 }
 
 void video::source_resolution ( const common::dims_2u& dims )
 {
+    printf ( "[DEBUG] Setting source resolution: %s\n",
+             dims.to_json().c_str() );
     _source_resolution = dims;
+    _source            = _software_surface ( _source_resolution );
 
-    if ( !_target ) {
-        _target_resolution = _source_resolution;
-
-        _create_surface();
-
-        _renderer = _create_renderer ( _source_resolution,
-                                       _target_resolution );
-    }
-    else {
-        _source = _software_surface ( _source_resolution );
+    if ( _renderer ) {
         _renderer->source_resolution ( _source_resolution );
     }
 }
 
 void video::target_resolution ( const common::dims_2u& dims )
 {
+    printf ( "[DEBUG] Setting target resolution: %s\n",
+             dims.to_json().c_str() );
     _target_resolution = dims;
     _target            = _hardware_surface ( _target_resolution );
 
     if ( _renderer ) {
-        _renderer->setup_viewport();
         _renderer->target_resolution ( _target_resolution );
+        _renderer->setup_viewport();
+        refresh();
     }
-
-    refresh();
 }
 
 SDL_Surface* video::surface() {
@@ -155,7 +167,9 @@ SDL_Surface* video::_create_surface()
         sym::SDL_FreeSurface ( _source );
     }
 
-    return _software_surface ( _source_resolution );
+    _source = _software_surface ( _source_resolution );
+
+    return _source;
 }
 
 SDL_Surface* video::_software_surface ( const common::dims_2u& dims )
@@ -196,8 +210,6 @@ std::unique_ptr<renderer> video::_create_renderer (
     const common::dims_2u& source,
     const common::dims_2u& target )
 {
-    if ( _renderer == nullptr ) renderer::init();
-
     auto renderer = std::make_unique<::renderer>( _shim );
 
     if ( _mode == mode::software ) renderer->flip_target ( true );

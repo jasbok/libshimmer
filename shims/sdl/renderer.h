@@ -12,21 +12,33 @@ class renderer
 {
     class shim* _shim;
 
-    glpp::program _prog;
+    glpp::program _source_prog;
 
-    glpp::texture_2d _tex;
+    glpp::texture_2d _source_tex;
 
-    glpp::framebuffer _fbo;
+    glpp::framebuffer _source_fbo;
+
+    glpp::program _target_prog;
+
+    glpp::texture_2d _target_tex;
+
+    glpp::framebuffer _target_fbo;
 
     glpp::vbo _vbo;
+
+    glpp::vbo _target_vbo;
 
     glpp::ebo _ebo;
 
     glpp::vao _vao;
 
+    glpp::vao _target_vao;
+
     glpp::texture_2d::filter _texture_filter;
 
     common::dims_2u _source_resolution;
+
+    common::dims_2u _intermediate_resolution;
 
     common::dims_2u _target_resolution;
 
@@ -60,17 +72,27 @@ public:
     void flip_target ( bool flip );
 
 private:
-    void _create_program();
+    void _create_source_program();
+
+    void _create_target_program();
 
     void _create_vbo();
+
+    void _create_target_vbo();
 
     void _create_ebo();
 
     void _create_vao();
 
+    void _create_target_vao();
+
     void _create_fbo();
 
+    void _create_target_fbo();
+
     void _create_texture ( const common::dims_2u& dims );
+
+    void _create_target_texture ( const common::dims_2u& dims );
 
     void _calculate_aspect();
 };

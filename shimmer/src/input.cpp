@@ -2,14 +2,14 @@
 
 namespace shimmer::input
 {
-common::dims_2f absolute_transform ( const common::dims_2f& display,
-                                     const common::dims_2f& window,
+common::dims_2f absolute_transform ( const common::dims_2f& source,
+                                     const common::dims_2f& target,
                                      const common::dims_2f& aspect ) {
-    return display / window * aspect;
+    return source / target * aspect;
 }
 
-common::dims_2f relative_transform ( const common::dims_2f& display,
-                                     const common::dims_2f& window ) {
-    return display / window;
+common::dims_2f relative_transform ( const common::dims_2f& source,
+                                     const common::dims_2f& target ) {
+    return source / target;
 }
 }

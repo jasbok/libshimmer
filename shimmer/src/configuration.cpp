@@ -120,6 +120,9 @@ config& config::set_property ( const property& prop )
     else if ( prop.first.compare ( "video.shader.fragment" ) == 0 ) {
         video.shader.fragment = prop.second;
     }
+    else if ( prop.first.compare ( "video.shader.scale" ) == 0 ) {
+        video.shader.scale = as_uint ( prop );
+    }
     else if ( prop.first.compare ( "video.filter" ) == 0 ) {
         video.filter = as_texture_filter ( prop );
     }
@@ -231,6 +234,8 @@ std::string to_json ( const struct config::video::shader& shader )
        << common::json::to_json ( shader.vertex );
     ss << ",\"fragment\":"
        << common::json::to_json ( shader.fragment );
+    ss << ",\"scale\":"
+       << common::json::to_json ( shader.scale );
     ss << "}";
 
     return ss.str();

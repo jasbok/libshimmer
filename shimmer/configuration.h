@@ -54,8 +54,9 @@ struct config {
         std::string font = "";
 
         struct shader {
-            std::string vertex   = "default.vert";
-            std::string fragment = "default.frag";
+            std::string  vertex   = "default.vert";
+            std::string  fragment = "default.frag";
+            unsigned int scale    = 0;
         };
         struct shader shader;
 
