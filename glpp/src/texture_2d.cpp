@@ -27,7 +27,7 @@ texture_2d& texture_2d::operator=( texture_2d&& move ) {
     return *this;
 }
 
-dims_2u texture_2d::dims() const {
+common::dims_2u texture_2d::dims() const {
     return _dims;
 }
 
@@ -36,8 +36,8 @@ texture_2d& texture_2d::image ( const common::img::image& img )
     return image ( _internal_format_from ( img ), img );
 }
 
-texture_2d& texture_2d::image ( internal_format internal_format,
-                                const dims_2u&  dims ) {
+texture_2d& texture_2d::image ( internal_format        internal_format,
+                                const common::dims_2u& dims ) {
     _dims = dims;
 
     glTexImage2D ( GL_TEXTURE_2D,

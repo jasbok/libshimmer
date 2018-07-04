@@ -56,7 +56,7 @@ struct config {
         struct shader {
             std::string  vertex   = "default.vert";
             std::string  fragment = "default.frag";
-            unsigned int scale    = 0;
+            unsigned int scale    = 1;
         };
         struct shader shader;
 

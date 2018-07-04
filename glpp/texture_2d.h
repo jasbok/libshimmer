@@ -1,9 +1,9 @@
 #ifndef GLPP_TEXTURE_2D_H
 #define GLPP_TEXTURE_2D_H
 
-#include "specs.h"
 #include "texture.h"
 
+#include "common/coords.h"
 #include "common/img.h"
 
 #include <memory>
@@ -59,7 +59,7 @@ public:
      * @return The current dimensions of the current texture. Returns 0x0 if the
      * texture has not been initialised.
      */
-    dims_2u dims() const;
+    common::dims_2u dims() const;
 
     /**
      * @brief image Initialise the texture with the given format and dimensions.
@@ -67,8 +67,8 @@ public:
      * @param dims The dimensions of the texture.
      * @return this
      */
-    texture_2d& image ( internal_format internal_format,
-                        const dims_2u&  dims );
+    texture_2d& image ( internal_format        internal_format,
+                        const common::dims_2u& dims );
 
     /**
      * @brief image Initialise the texture with the given image data, deriving
@@ -114,7 +114,7 @@ public:
      * @param image The image data to load in.
      * @return this
      */
-    texture_2d& sub_image ( const coords_2i&          offset,
+    texture_2d& sub_image ( const common::coords_2i&  offset,
                             const common::img::image& image );
 
 
@@ -161,7 +161,7 @@ public:
     texture_2d& wrap_t ( enum texture_wrap wrap );
 
 private:
-    dims_2u _dims;
+    common::dims_2u _dims;
 
     internal_format _internal_format_from ( const common::img::image& image );
 

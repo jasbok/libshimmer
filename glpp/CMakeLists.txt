@@ -33,6 +33,7 @@ set( GLPP_HEADERS
         scene.h
         scene_phase.h
         shader.h
+        shapes.h
         specs.h
         texture.h
         texture_2d.h
@@ -41,7 +42,8 @@ set( GLPP_HEADERS
         uniform.h
         vertex_array.h
         vertex_attrib.h
-        vertex_buffer.h)
+        vertex_buffer.h
+        viewport.h )
 
 
 ###############################################################################
@@ -59,13 +61,15 @@ set( GLPP_SOURCES
         src/scene.cpp
         src/scene_phase.cpp
         src/shader.cpp
+        src/shapes.cpp
         src/texture.cpp
         src/texture_2d.cpp
         src/texture_unit.cpp
         src/texture_units.cpp
         src/uniform.cpp
         src/vertex_array.cpp
-        src/vertex_attrib.cpp )
+        src/vertex_attrib.cpp
+        src/viewport.cpp )
 
 
 ###############################################################################

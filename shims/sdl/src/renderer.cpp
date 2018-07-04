@@ -8,7 +8,9 @@
 
 #include "glpp/debug.h"
 #include "glpp/shader.h"
+#include "glpp/shapes.h"
 #include "glpp/vertex_attrib.h"
+#include "glpp/viewport.h"
 
 #include "shimmer/video.h"
 
@@ -26,13 +28,31 @@ renderer::renderer( class shim* shim )
     : _shim ( shim ),
       _flip_target ( false )
 {
-    _create_source_program();
-    _create_target_program();
-    _create_vbo();
-    _create_target_vbo();
-    _create_ebo();
-    _create_vao();
-    _create_target_vao();
+    _define_program ( _source_program,
+                      _shim->config.video.shader.vertex,
+                      _shim->config.video.shader.fragment,
+                      1 );
+
+    _define_program ( _target_program,
+                      "default.vert",
+                      "default.frag",
+                      2 );
+
+    _define_vbo ( _source_vbo, _aspect );
+
+    _define_vbo ( _target_vbo, { 1.0f, 1.0f }, _flip_target );
+
+    _define_ebo();
+
+    _define_vao ( _source_vao,
+                  _source_vbo,
+                  _ebo,
+                  _source_program );
+
+    _define_vao ( _target_vao,
+                  _target_vbo,
+                  _ebo,
+                  _target_program );
 
     if ( shim->config.video.filter == shimmer::config::video::filter::linear ) {
         _texture_filter = glpp::texture_2d::filter::linear;
@@ -47,44 +67,27 @@ void renderer::source_resolution ( const common::dims_2u& dims ) {
     _intermediate_resolution = dims * _shim->config.video.shader.scale;
 
     _calculate_aspect();
-    _create_vbo();
+    _define_vbo ( _source_vbo, _aspect );
 
-    _create_texture ( _source_resolution );
-    _create_fbo();
+    _define_texture ( _source_tex,
+                      _source_resolution,
+                      glpp::texture_2d::filter::nearest,
+                      1 );
+    _source_fbo.bind().attach_color ( _source_tex );
 
-    _create_target_texture ( _intermediate_resolution );
-    _create_target_fbo();
+    _define_texture ( _target_tex,
+                      _intermediate_resolution,
+                      _texture_filter,
+                      2 );
+    _target_fbo.bind().attach_color ( _target_tex ).unbind();
 }
 
 void renderer::target_resolution ( const common::dims_2u& dims )
 {
     _target_resolution = dims;
     _calculate_aspect();
-    _create_vbo();
+    _define_vbo ( _source_vbo, _aspect );
 }
-
-// void renderer::render() {
-//    GLPP_CHECK_ERROR ( "PRE RENDER" );
-//    GLPP_CHECK_FRAMEBUFFER ( "PRE RENDER" );
-
-//    glViewport ( 0, 0,
-//                 static_cast<GLint>( _target_resolution.width ),
-//                 static_cast<GLint>( _target_resolution.height ) );
-
-//    _source_prog.use();
-//    _vao.bind();
-
-//    glClear ( GL_COLOR_BUFFER_BIT );
-//    glDrawElements ( GL_TRIANGLES,
-//                     static_cast<GLint>( _ebo.elements() ),
-//                     GL_UNSIGNED_INT,
-//                     nullptr );
-
-//    _source_prog.unbind();
-
-//    GLPP_CHECK_ERROR ( "POST RENDER" );
-//    GLPP_CHECK_FRAMEBUFFER ( "POST RENDER" );
-// }
 
 void renderer::render() {
     GLPP_CHECK_ERROR ( "PRE RENDER" );
@@ -92,12 +95,10 @@ void renderer::render() {
 
     _target_fbo.bind();
 
-    glViewport ( 0, 0,
-                 static_cast<GLint>( _intermediate_resolution.width ),
-                 static_cast<GLint>( _intermediate_resolution.height ) );
+    glpp::viewport ( _intermediate_resolution );
 
-    _source_prog.use();
-    _vao.bind();
+    _source_program.use();
+    _source_vao.bind();
 
     glClear ( GL_COLOR_BUFFER_BIT );
     glDrawElements ( GL_TRIANGLES,
@@ -107,11 +108,9 @@ void renderer::render() {
 
     _target_fbo.unbind();
 
-    glViewport ( 0, 0,
-                 static_cast<GLint>( _target_resolution.width ),
-                 static_cast<GLint>( _target_resolution.height ) );
+    glpp::viewport ( _target_resolution );
 
-    _target_prog.use();
+    _target_program.use();
     _target_vao.bind();
 
     glClear ( GL_COLOR_BUFFER_BIT );
@@ -120,7 +119,7 @@ void renderer::render() {
                      GL_UNSIGNED_INT,
                      nullptr );
 
-    _target_prog.unbind();
+    _target_program.unbind();
 
     GLPP_CHECK_ERROR ( "POST RENDER" );
     GLPP_CHECK_FRAMEBUFFER ( "POST RENDER" );
@@ -128,25 +127,17 @@ void renderer::render() {
 
 void renderer::capture_fbo() {
     _source_fbo.bind();
-
-    glViewport ( 0, 0,
-                 static_cast<GLsizei>( _source_resolution.width ),
-                 static_cast<GLsizei>( _source_resolution.height ) );
+    glpp::viewport ( _source_resolution );
 }
 
 void renderer::reset_fbo() {
     _source_fbo.unbind();
-
-    glViewport ( 0, 0,
-                 static_cast<GLint>( _target_resolution.width ),
-                 static_cast<GLint>( _target_resolution.height ) );
+    glpp::viewport ( _target_resolution );
 }
 
 void renderer::setup_viewport()
 {
-    glViewport ( 0, 0,
-                 static_cast<GLint>( _target_resolution.width ),
-                 static_cast<GLint>( _target_resolution.height ) );
+    glpp::viewport ( _target_resolution );
 }
 
 void renderer::copy_source ( uint8_t*               data,
@@ -160,16 +151,19 @@ void renderer::copy_source ( uint8_t*               data,
 void renderer::flip_target ( bool flip )
 {
     _flip_target = flip;
+    _define_vbo ( _target_vbo, { 1.0f, 1.0f }, _flip_target );
 }
 
-void renderer::_create_source_program() {
+void renderer::_define_program ( glpp::program&     program,
+                                 const std::string& vertex,
+                                 const std::string& fragment,
+                                 int                texture_unit ) {
     printf ( "[DEBUG] Creating program...\n" );
 
-    const auto& shader      = _shim->config.video.shader;
     const auto& shader_dirs = _shim->config.general.shader_dirs;
 
-    auto vs_file = common::file::find ( shader.vertex, shader_dirs );
-    auto fs_file = common::file::find ( shader.fragment, shader_dirs  );
+    auto vs_file = common::file::find ( vertex, shader_dirs );
+    auto fs_file = common::file::find ( fragment, shader_dirs  );
 
     auto vs_source = common::file::read_all ( vs_file );
     auto fs_source = common::file::read_all ( fs_file );
@@ -180,228 +174,120 @@ void renderer::_create_source_program() {
     vs.compile_and_throw();
     fs.compile_and_throw();
 
-    _source_prog.attach ( vs )
+    program.attach ( vs )
         .attach ( fs )
         .link_and_throw()
         .detach ( vs )
         .detach ( fs );
 
-    _source_prog.use()
-        .uniform ( "application", 1 )
+    program.use()
+        .uniform ( "application", texture_unit )
         .unbind();
 
     GLPP_CHECK_ERROR ( "Created Program" );
 }
 
-void renderer::_create_target_program() {
-    printf ( "[DEBUG] Creating target program...\n" );
+void renderer::_define_vbo ( glpp::vbo&             vbo,
+                             const common::dims_2f& aspect,
+                             bool                   flip_y ) {
+    printf ( "[DEBUG] Creating VBO...\n" );
 
-    const auto& shader_dirs = _shim->config.general.shader_dirs;
-
-    auto vs_file = common::file::find ( "default.vert", shader_dirs );
-    auto fs_file = common::file::find ( "default.frag", shader_dirs  );
-
-    auto vs_source = common::file::read_all ( vs_file );
-    auto fs_source = common::file::read_all ( fs_file );
-
-    auto vs = glpp::shader::create().vertex ( vs_source );
-    auto fs = glpp::shader::create().fragment ( fs_source );
-
-    vs.compile_and_throw();
-    fs.compile_and_throw();
-
-    _target_prog.attach ( vs )
-        .attach ( fs )
-        .link_and_throw()
-        .detach ( vs )
-        .detach ( fs );
-
-    _target_prog.use()
-        .uniform ( "application", 2 )
-        .unbind();
-
-    GLPP_CHECK_ERROR ( "Created Target Program" );
-}
-
-void renderer::_create_vbo() {
-    printf ( "[DEBUG] Creating vbo...\n" );
-
-    int flip = _flip_target ? -1 : 1;
-
-    const float right  = static_cast<float>( _aspect.width );
-    const float left   = -1 * right;
-    const float top    = static_cast<float>( flip * _aspect.height );
-    const float bottom = -1 * top;
-
-    _vbo.bind()
-        .data<float>( {
-        // position   // texcoords // colour
-        right, top, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        left, top, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,    // TL
-        left, bottom, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        right, bottom, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f // BR
-    } )
+    vbo.bind()
+        .data ( glpp::quad()
+                    .flip_y ( flip_y )
+                    .aspect ( aspect )
+                    .position_texcoord() )
         .unbind();
 
     GLPP_CHECK_ERROR ( "Created VBO" );
 }
 
-void renderer::_create_target_vbo() {
-    printf ( "[DEBUG] Creating target vbo...\n" );
+// void renderer::_create_source_vbo() {
+//    printf ( "[DEBUG] Creating VBO...\n" );
 
-    int flip = _flip_target ? -1 : 1;
+//    _source_vbo.bind()
+//        .data ( glpp::quad()
+//                    .flip_y ( _flip_target )
+//                    .aspect ( _aspect )
+//                    .position_texcoord() )
+//        .unbind();
 
-    const float right  = 1.0f;
-    const float left   = -1 * right;
-    const float top    = flip * 1.0f;
-    const float bottom = -1 * top;
+//    GLPP_CHECK_ERROR ( "Created VBO" );
+// }
 
-    _target_vbo.bind()
-        .data<float>( {
-        // position   // texcoords // colour
-        right, top, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,   // TR
-        left, top, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,    // TL
-        left, bottom, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // BL
-        right, bottom, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f // BR
-    } )
-        .unbind();
+// void renderer::_create_target_vbo() {
+//    printf ( "[DEBUG] Creating target VBO...\n" );
 
-    GLPP_CHECK_ERROR ( "Created target VBO" );
-}
+//    _target_vbo.bind()
+//        .data ( glpp::quad()
+//                    .flip_y ( _flip_target )
+//                    .position_texcoord() )
+//        .unbind();
 
-void renderer::_create_ebo() {
+//    GLPP_CHECK_ERROR ( "Created target VBO" );
+// }
+
+void renderer::_define_ebo() {
     printf ( "[DEBUG] Creating ebo...\n" );
 
     _ebo.bind()
-        .data ( {
-        0, 1, 2,
-        2, 3, 0
-    } )
+        .data ( glpp::quad::indices )
         .unbind();
 
     GLPP_CHECK_ERROR ( "Created EBO" );
 }
 
-void renderer::_create_vao()
+void renderer::_define_vao ( glpp::vao&     vao,
+                             glpp::vbo&     vbo,
+                             glpp::ebo&     ebo,
+                             glpp::program& program )
 {
-    printf ( "[DEBUG] Creating vao...\n" );
+    printf ( "[DEBUG] Defining VAO...\n" );
 
-    _vao.bind();
-    _vbo.bind();
-    _ebo.bind();
+    vao.bind();
+    vbo.bind();
+    ebo.bind();
 
-    _source_prog.use();
-    auto position_location = _source_prog.attribute_location ( "position" );
-    auto texcoord_location = _source_prog.attribute_location ( "texcoord" );
-    auto colour_location   = _source_prog.attribute_location ( "colour" );
+    program.use();
+    auto position_location = program.attribute_location ( "position" );
+    auto texcoord_location = program.attribute_location ( "texcoord" );
 
     printf ( "[DEBUG] position location: %i\n", position_location );
     printf ( "[DEBUG] texcoord location: %i\n", texcoord_location );
-    printf ( "[DEBUG] colour location: %i\n",   colour_location );
 
     auto attribs = glpp::vertex_attrib_builder<float>::sequential ( {
         { "position", 2, position_location },
-        { "texcoord", 2, texcoord_location },
-        { "colour", 3, colour_location }
+        { "texcoord", 2, texcoord_location }
     } );
 
     attribs[0].define_pointer().enable_array();
     attribs[1].define_pointer().enable_array();
-    attribs[2].define_pointer().enable_array();
 
-    _source_prog.unbind();
-    _vao.unbind();
-    _vbo.unbind();
-    _ebo.unbind();
+    program.unbind();
+    vao.unbind();
+    vbo.unbind();
+    ebo.unbind();
 
-    GLPP_CHECK_ERROR ( "Created VAO" );
+    GLPP_CHECK_ERROR ( "Defined VAO" );
 }
 
-void renderer::_create_target_vao()
-{
-    printf ( "[DEBUG] Creating target vao...\n" );
-
-    _target_vao.bind();
-    _target_vbo.bind();
-    _ebo.bind();
-
-    _target_prog.use();
-    auto position_location = _target_prog.attribute_location ( "position" );
-    auto texcoord_location = _target_prog.attribute_location ( "texcoord" );
-    auto colour_location   = _target_prog.attribute_location ( "colour" );
-
-    printf ( "[DEBUG] position location: %i\n", position_location );
-    printf ( "[DEBUG] texcoord location: %i\n", texcoord_location );
-    printf ( "[DEBUG] colour location: %i\n",   colour_location );
-
-    auto attribs = glpp::vertex_attrib_builder<float>::sequential ( {
-        { "position", 2, position_location },
-        { "texcoord", 2, texcoord_location },
-        { "colour", 3, colour_location }
-    } );
-
-    attribs[0].define_pointer().enable_array();
-    attribs[1].define_pointer().enable_array();
-    attribs[2].define_pointer().enable_array();
-
-    _target_prog.unbind();
-    _target_vao.unbind();
-    _target_vbo.unbind();
-    _ebo.unbind();
-
-    GLPP_CHECK_ERROR ( "Created target VAO" );
-}
-
-void renderer::_create_fbo() {
-    printf ( "[DEBUG] Creating fbo...\n" );
-
-    _source_fbo.bind()
-        .attach_color ( _source_tex )
-        .unbind();
-
-    GLPP_CHECK_ERROR ( "Created FBO" );
-}
-
-void renderer::_create_target_fbo() {
-    printf ( "[DEBUG] Creating target fbo...\n" );
-
-    _target_fbo.bind()
-        .attach_color ( _target_tex )
-        .unbind();
-
-    GLPP_CHECK_ERROR ( "Created target FBO" );
-}
-
-void renderer::_create_texture ( const common::dims_2u& dims ) {
+void renderer::_define_texture ( glpp::texture_2d&        tex,
+                                 const common::dims_2u&   dims,
+                                 glpp::texture_2d::filter filter,
+                                 unsigned int             texture_unit ) {
     printf ( "[DEBUG] Creating texture...\n" );
     printf ( "[DEBUG] Texture size: %s\n", dims.to_json().c_str() );
 
-    glpp::texture::active_texture ( 1 );
-    _source_tex.bind();
-    _source_tex.image ( glpp::texture_2d::internal_format::rgb, dims )
+    glpp::texture::active_texture ( texture_unit );
+    tex.bind();
+    tex.image ( glpp::texture_2d::internal_format::rgb, dims )
         .generate_mipmaps()
         .wrap ( glpp::texture_2d::texture_wrap::clamp_to_edge )
-        .filters ( glpp::texture_2d::filter::nearest );
+        .filters ( filter );
 
     glpp::texture::active_texture ( 0 );
 
     GLPP_CHECK_ERROR ( "Created TEXTURE" );
-}
-
-void renderer::_create_target_texture ( const common::dims_2u& dims ) {
-    printf ( "[DEBUG] Creating target texture...\n" );
-    printf ( "[DEBUG] Target texture size: %s\n", dims.to_json().c_str() );
-
-    glpp::texture::active_texture ( 2 );
-    _target_tex.bind();
-    _target_tex.image ( glpp::texture_2d::internal_format::rgb, dims )
-        .generate_mipmaps()
-        .wrap ( glpp::texture_2d::texture_wrap::clamp_to_edge )
-        .filters ( _texture_filter );
-
-    glpp::texture::active_texture ( 0 );
-
-    GLPP_CHECK_ERROR ( "Created target TEXTURE" );
 }
 
 void renderer::_calculate_aspect()

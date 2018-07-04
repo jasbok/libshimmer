@@ -12,25 +12,25 @@ class renderer
 {
     class shim* _shim;
 
-    glpp::program _source_prog;
+    glpp::program _source_program;
 
     glpp::texture_2d _source_tex;
 
     glpp::framebuffer _source_fbo;
 
-    glpp::program _target_prog;
+    glpp::program _target_program;
 
     glpp::texture_2d _target_tex;
 
     glpp::framebuffer _target_fbo;
 
-    glpp::vbo _vbo;
+    glpp::vbo _source_vbo;
 
     glpp::vbo _target_vbo;
 
     glpp::ebo _ebo;
 
-    glpp::vao _vao;
+    glpp::vao _source_vao;
 
     glpp::vao _target_vao;
 
@@ -72,27 +72,26 @@ public:
     void flip_target ( bool flip );
 
 private:
-    void _create_source_program();
+    void _define_program ( glpp::program&     program,
+                           const std::string& vertex,
+                           const std::string& fragment,
+                           int                texture_unit );
 
-    void _create_target_program();
+    void _define_vbo ( glpp::vbo&             vbo,
+                       const common::dims_2f& aspect,
+                       bool                   flip_y = false );
 
-    void _create_vbo();
+    void _define_ebo();
 
-    void _create_target_vbo();
+    void _define_vao ( glpp::vao&     vao,
+                       glpp::vbo&     vbo,
+                       glpp::ebo&     ebo,
+                       glpp::program& program );
 
-    void _create_ebo();
-
-    void _create_vao();
-
-    void _create_target_vao();
-
-    void _create_fbo();
-
-    void _create_target_fbo();
-
-    void _create_texture ( const common::dims_2u& dims );
-
-    void _create_target_texture ( const common::dims_2u& dims );
+    void _define_texture ( glpp::texture_2d&        tex,
+                           const common::dims_2u&   dims,
+                           glpp::texture_2d::filter filter,
+                           unsigned int             texture_unit );
 
     void _calculate_aspect();
 };
