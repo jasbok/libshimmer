@@ -14,6 +14,7 @@ set( COMMON_HEADERS
         common.h
         coords.h
         dims.h
+        ellipse.h
         env.h
         fonts.h
         file.h
@@ -22,7 +23,9 @@ set( COMMON_HEADERS
         json.h
         limiter.h
         range.h
+        rectangle.h
         str.h
+        series.h
         unicodes.h )
 
 
@@ -32,6 +35,7 @@ set( COMMON_HEADERS
 set( COMMON_SOURCES
         src/atlas.cpp
         src/camera.cpp
+        src/ellipse.cpp
         src/env.cpp
         src/file.cpp
         src/fonts.cpp
@@ -39,6 +43,7 @@ set( COMMON_SOURCES
         src/img.cpp
         src/json.cpp
         src/limiter.cpp
+        src/rectangle.cpp
         src/str.cpp )
 
 

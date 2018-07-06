@@ -65,11 +65,19 @@ struct coords_2 {
         return *this;
     }
 
-    coords_2& operator*=( float factor ) {
+    coords_2& operator*=( T factor ) {
         x *= factor;
         y *= factor;
 
         return *this;
+    }
+
+    coords_2 operator+( T value ) const {
+        return { x + value, y + value };
+    }
+
+    coords_2 operator*( T factor ) const {
+        return { x* factor, y* factor };
     }
 
     template<typename S>
@@ -149,12 +157,20 @@ struct coords_3 {
         return *this;
     }
 
-    coords_3& operator*=( float factor ) {
+    coords_3& operator*=( T factor ) {
         x *= factor;
         y *= factor;
         z *= factor;
 
         return *this;
+    }
+
+    coords_3 operator+( T value ) const {
+        return { x + value, y + value, z + value };
+    }
+
+    coords_3 operator*( T factor ) const {
+        return { x* factor, y* factor, z* factor };
     }
 
     template<typename S>

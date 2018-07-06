@@ -4,6 +4,7 @@
 #include "glpp/element_array_buffer.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
+#include "glpp/shapes.h"
 #include "glpp/texture_2d.h"
 #include "glpp/vertex_array.h"
 #include "glpp/vertex_buffer.h"
@@ -28,7 +29,9 @@ class renderer
 
     glpp::vbo _target_vbo;
 
-    glpp::ebo _ebo;
+    glpp::ebo _source_ebo;
+
+    glpp::ebo _target_ebo;
 
     glpp::vao _source_vao;
 
@@ -77,11 +80,11 @@ private:
                            const std::string& fragment,
                            int                texture_unit );
 
-    void _define_vbo ( glpp::vbo&             vbo,
-                       const common::dims_2f& aspect,
-                       bool                   flip_y = false );
+    void _define_vbo ( glpp::vbo&                vbo,
+                       const std::vector<float>& data );
 
-    void _define_ebo();
+    void _define_ebo ( glpp::ebo&                      ebo,
+                       const std::vector<unsigned int> indices );
 
     void _define_vao ( glpp::vao&     vao,
                        glpp::vbo&     vbo,

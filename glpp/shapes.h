@@ -32,7 +32,15 @@ public:
 
     std::vector<float> position_texcoord();
 
-    static std::vector<unsigned int> indices;
+    std::vector<float> position_texcoord_lens_distortion (
+        unsigned int detail );
+
+    static std::vector<unsigned int> triangles_indices;
+
+    static std::vector<unsigned int> triangle_fan_indices;
+
+    static std::vector<unsigned int> position_texcoord_lens_distortion_indices (
+        unsigned int detail );
 };
 }
 

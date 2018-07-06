@@ -47,8 +47,8 @@ void setup_video() {
         exit ( 1 );
     }
 
-    VIDEO = SDL_SetVideoMode ( 800, // VIDEO_INFO->current_w,
-                               600, // VIDEO_INFO->current_h,
+    VIDEO = SDL_SetVideoMode ( 320, // VIDEO_INFO->current_w,
+                               200, // VIDEO_INFO->current_h,
                                VIDEO_INFO->vfmt->BitsPerPixel,
                                SDL_OPENGL );
 
@@ -126,10 +126,10 @@ void setup_buffers() {
 
     std::vector<GLfloat> vertices = {
         // position (2)     // colour (3)   // texcoord (2)
-        0.75f,   0.75f, 1.0f, 0.0f, 0.0f, 1.0, 1.0, // Top Right
-        -0.75f,  0.75f, 0.0f, 1.0f, 0.0f, 0.0, 1.0, // Top Left
-        -0.75f, -0.75f, 1.0f, 0.0f, 1.0f, 0.0, 0.0, // Bottom Left
-        0.75f,  -0.75f, 1.0f, 1.0f, 1.0f, 1.0, 0.0  // Bottom Right
+        1.00f,   1.00f, 1.0f, 0.0f, 0.0f, 1.0, 1.0, // Top Right
+        -1.00f,  1.00f, 0.0f, 1.0f, 0.0f, 0.0, 1.0, // Top Left
+        -1.00f, -1.00f, 1.0f, 0.0f, 1.0f, 0.0, 0.0, // Bottom Left
+        1.00f,  -1.00f, 1.0f, 1.0f, 1.0f, 1.0, 0.0  // Bottom Right
     };
 
     VBO = std::make_unique<glpp::vertex_buffer>();
@@ -210,14 +210,16 @@ void setup_opengl() {
 
     try {
         setup_shaders();
-    } catch ( const std::runtime_error& ex ) {
+    }
+    catch ( const std::runtime_error& ex ) {
         printf ( "[SEVERE] Failed to setup shaders => %s\n", ex.what() );
         exit ( 1 );
     }
 
     try {
         setup_textures();
-    } catch ( const std::runtime_error& ex ) {
+    }
+    catch ( const std::runtime_error& ex ) {
         printf ( "[SEVERE] Failed to setup textures => %s\n", ex.what() );
         exit ( 1 );
     }
@@ -227,7 +229,7 @@ void setup_opengl() {
 }
 
 void draw_quad() {
-    printf ( "[DEBUG] Drawing quad...\n" );
+    // printf ( "[DEBUG] Drawing quad...\n" );
     PROGRAM->use();
     VAO->bind();
 
@@ -254,7 +256,8 @@ void input() {
     while ( SDL_PollEvent ( &event ) ) {
         switch ( event.type ) {
         case SDL_KEYUP:
-            RUNNING = false;
+
+            if ( event.key.keysym.sym == SDLK_q ) RUNNING = false;
             break;
         }
     }
@@ -280,7 +283,7 @@ int main ( int argc, char* argv[] ) {
         draw_quad();
 
         SDL_GL_SwapBuffers();
-        SDL_Delay ( 200 );
+        SDL_Delay ( 10 );
     }
 
     cleanup();

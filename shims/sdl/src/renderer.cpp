@@ -8,11 +8,12 @@
 
 #include "glpp/debug.h"
 #include "glpp/shader.h"
-#include "glpp/shapes.h"
 #include "glpp/vertex_attrib.h"
 #include "glpp/viewport.h"
 
 #include "shimmer/video.h"
+
+#define SHIMMER_DETAIL 64
 
 void renderer::init() {
     glewExperimental = GL_TRUE;
@@ -38,20 +39,35 @@ renderer::renderer( class shim* shim )
                       "default.frag",
                       2 );
 
-    _define_vbo ( _source_vbo, _aspect );
+    _define_vbo ( _source_vbo,
+                  glpp::quad().aspect ( _aspect )
+                      .flip_y ( _flip_target )
+                      .position_texcoord() );
 
-    _define_vbo ( _target_vbo, { 1.0f, 1.0f }, _flip_target );
+    //    _define_vbo ( _target_vbo,
+    //                  glpp::quad().flip_y ( _flip_target ).position_texcoord()
+    // );
 
-    _define_ebo();
+    _define_vbo ( _target_vbo,
+                  glpp::quad().position_texcoord_lens_distortion (
+                      SHIMMER_DETAIL ) );
+
+    _define_ebo ( _source_ebo, glpp::quad::triangle_fan_indices );
+
+    //    _define_ebo ( _target_ebo, glpp::quad::triangle_fan_indices );
+
+    _define_ebo ( _target_ebo,
+                  glpp::quad::position_texcoord_lens_distortion_indices (
+                      SHIMMER_DETAIL ) );
 
     _define_vao ( _source_vao,
                   _source_vbo,
-                  _ebo,
+                  _source_ebo,
                   _source_program );
 
     _define_vao ( _target_vao,
                   _target_vbo,
-                  _ebo,
+                  _target_ebo,
                   _target_program );
 
     if ( shim->config.video.filter == shimmer::config::video::filter::linear ) {
@@ -67,7 +83,10 @@ void renderer::source_resolution ( const common::dims_2u& dims ) {
     _intermediate_resolution = dims * _shim->config.video.shader.scale;
 
     _calculate_aspect();
-    _define_vbo ( _source_vbo, _aspect );
+    _define_vbo ( _source_vbo,
+                  glpp::quad().aspect ( _aspect )
+                      .flip_y ( _flip_target )
+                      .position_texcoord() );
 
     _define_texture ( _source_tex,
                       _source_resolution,
@@ -86,7 +105,10 @@ void renderer::target_resolution ( const common::dims_2u& dims )
 {
     _target_resolution = dims;
     _calculate_aspect();
-    _define_vbo ( _source_vbo, _aspect );
+    _define_vbo ( _source_vbo,
+                  glpp::quad().aspect ( _aspect )
+                      .flip_y ( _flip_target )
+                      .position_texcoord() );
 }
 
 void renderer::render() {
@@ -101,8 +123,8 @@ void renderer::render() {
     _source_vao.bind();
 
     glClear ( GL_COLOR_BUFFER_BIT );
-    glDrawElements ( GL_TRIANGLES,
-                     static_cast<GLint>( _ebo.elements() ),
+    glDrawElements ( GL_TRIANGLE_FAN,
+                     static_cast<GLint>( _source_ebo.elements() ),
                      GL_UNSIGNED_INT,
                      nullptr );
 
@@ -114,8 +136,8 @@ void renderer::render() {
     _target_vao.bind();
 
     glClear ( GL_COLOR_BUFFER_BIT );
-    glDrawElements ( GL_TRIANGLES,
-                     static_cast<GLint>( _ebo.elements() ),
+    glDrawElements ( GL_TRIANGLE_FAN,
+                     static_cast<GLint>( _target_ebo.elements() ),
                      GL_UNSIGNED_INT,
                      nullptr );
 
@@ -151,7 +173,9 @@ void renderer::copy_source ( uint8_t*               data,
 void renderer::flip_target ( bool flip )
 {
     _flip_target = flip;
-    _define_vbo ( _target_vbo, { 1.0f, 1.0f }, _flip_target );
+    _define_vbo ( _target_vbo,
+                  glpp::quad().position_texcoord_lens_distortion (
+                      SHIMMER_DETAIL ) );
 }
 
 void renderer::_define_program ( glpp::program&     program,
@@ -187,51 +211,23 @@ void renderer::_define_program ( glpp::program&     program,
     GLPP_CHECK_ERROR ( "Created Program" );
 }
 
-void renderer::_define_vbo ( glpp::vbo&             vbo,
-                             const common::dims_2f& aspect,
-                             bool                   flip_y ) {
+void renderer::_define_vbo ( glpp::vbo&                vbo,
+                             const std::vector<float>& data ) {
     printf ( "[DEBUG] Creating VBO...\n" );
 
     vbo.bind()
-        .data ( glpp::quad()
-                    .flip_y ( flip_y )
-                    .aspect ( aspect )
-                    .position_texcoord() )
+        .data ( data )
         .unbind();
 
     GLPP_CHECK_ERROR ( "Created VBO" );
 }
 
-// void renderer::_create_source_vbo() {
-//    printf ( "[DEBUG] Creating VBO...\n" );
-
-//    _source_vbo.bind()
-//        .data ( glpp::quad()
-//                    .flip_y ( _flip_target )
-//                    .aspect ( _aspect )
-//                    .position_texcoord() )
-//        .unbind();
-
-//    GLPP_CHECK_ERROR ( "Created VBO" );
-// }
-
-// void renderer::_create_target_vbo() {
-//    printf ( "[DEBUG] Creating target VBO...\n" );
-
-//    _target_vbo.bind()
-//        .data ( glpp::quad()
-//                    .flip_y ( _flip_target )
-//                    .position_texcoord() )
-//        .unbind();
-
-//    GLPP_CHECK_ERROR ( "Created target VBO" );
-// }
-
-void renderer::_define_ebo() {
+void renderer::_define_ebo ( glpp::ebo&                      ebo,
+                             const std::vector<unsigned int> indices ) {
     printf ( "[DEBUG] Creating ebo...\n" );
 
-    _ebo.bind()
-        .data ( glpp::quad::indices )
+    ebo.bind()
+        .data ( indices )
         .unbind();
 
     GLPP_CHECK_ERROR ( "Created EBO" );

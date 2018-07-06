@@ -8,7 +8,11 @@ shim::shim()
       input ( this ),
       video ( this ),
       window ( this )
-{}
+{
+#ifdef DEBUG
+    printf ( "========== DEBUG BUILD ==========\n" );
+#endif // ifdef NDEBUG
+}
 
 shim::~shim()
 {}

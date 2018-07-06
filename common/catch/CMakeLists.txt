@@ -27,6 +27,7 @@ set ( CATCH_TESTS
         file.cpp
         img.cpp
         json.cpp
+        series.cpp
         str.cpp)
 
 
