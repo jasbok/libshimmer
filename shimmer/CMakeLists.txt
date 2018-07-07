@@ -41,10 +41,8 @@ set( HEADERS
         options.h
         pipeline.h
         receiver.h
-        renderer.h
         shader_options.h
         shader_reader.h
-        shimmer.h
         system.h
         video.h
         video_options.h
@@ -76,10 +74,8 @@ set( SOURCES
         src/mouse.cpp
         src/options.cpp
         src/pipeline.cpp
-        src/renderer.cpp
         src/shader_options.cpp
         src/shader_reader.cpp
-        src/shimmer.cpp
         src/system.cpp
         src/video.cpp
         src/video_options.cpp

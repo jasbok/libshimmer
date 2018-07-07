@@ -4,7 +4,6 @@
 #include "glpp/element_array_buffer.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
-#include "glpp/shapes.h"
 #include "glpp/texture_2d.h"
 #include "glpp/vertex_array.h"
 #include "glpp/vertex_buffer.h"

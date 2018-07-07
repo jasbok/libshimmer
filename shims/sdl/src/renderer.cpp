@@ -8,12 +8,11 @@
 
 #include "glpp/debug.h"
 #include "glpp/shader.h"
+#include "glpp/shapes.h"
 #include "glpp/vertex_attrib.h"
 #include "glpp/viewport.h"
 
 #include "shimmer/video.h"
-
-#define SHIMMER_DETAIL 64
 
 void renderer::init() {
     glewExperimental = GL_TRUE;
@@ -40,25 +39,22 @@ renderer::renderer( class shim* shim )
                       2 );
 
     _define_vbo ( _source_vbo,
-                  glpp::quad().aspect ( _aspect )
+                  glpp::shapes::quad()
+                      .dims ( _aspect )
                       .flip_y ( _flip_target )
                       .position_texcoord() );
 
-    //    _define_vbo ( _target_vbo,
-    //                  glpp::quad().flip_y ( _flip_target ).position_texcoord()
-    // );
+    _define_ebo ( _source_ebo, glpp::shapes::quad::triangle_fan_indices );
+
+    glpp::shapes::lens lens;
+    lens.curve_factor ( 0.55f )
+        .curve_detail ( 32 );
 
     _define_vbo ( _target_vbo,
-                  glpp::quad().position_texcoord_lens_distortion (
-                      SHIMMER_DETAIL ) );
-
-    _define_ebo ( _source_ebo, glpp::quad::triangle_fan_indices );
-
-    //    _define_ebo ( _target_ebo, glpp::quad::triangle_fan_indices );
+                  lens.position_texcoord() );
 
     _define_ebo ( _target_ebo,
-                  glpp::quad::position_texcoord_lens_distortion_indices (
-                      SHIMMER_DETAIL ) );
+                  lens.indices() );
 
     _define_vao ( _source_vao,
                   _source_vbo,
@@ -84,7 +80,8 @@ void renderer::source_resolution ( const common::dims_2u& dims ) {
 
     _calculate_aspect();
     _define_vbo ( _source_vbo,
-                  glpp::quad().aspect ( _aspect )
+                  glpp::shapes::quad()
+                      .dims ( _aspect )
                       .flip_y ( _flip_target )
                       .position_texcoord() );
 
@@ -106,7 +103,8 @@ void renderer::target_resolution ( const common::dims_2u& dims )
     _target_resolution = dims;
     _calculate_aspect();
     _define_vbo ( _source_vbo,
-                  glpp::quad().aspect ( _aspect )
+                  glpp::shapes::quad()
+                      .dims ( _aspect )
                       .flip_y ( _flip_target )
                       .position_texcoord() );
 }
@@ -174,8 +172,10 @@ void renderer::flip_target ( bool flip )
 {
     _flip_target = flip;
     _define_vbo ( _target_vbo,
-                  glpp::quad().position_texcoord_lens_distortion (
-                      SHIMMER_DETAIL ) );
+                  glpp::shapes::lens()
+                      .curve_factor ( 0.55f )
+                      .curve_detail ( 32 )
+                      .position_texcoord() );
 }
 
 void renderer::_define_program ( glpp::program&     program,

@@ -7,7 +7,7 @@
 #include "glpp/entity.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
-#include "glpp/quad.h"
+#include "glpp/_quad.h"
 #include "glpp/resource_loader.h"
 #include "glpp/scene.h"
 #include "glpp/texture_2d.h"

@@ -17,6 +17,8 @@ find_package( Freetype )
 #   List all headers, required by some IDEs.
 ###############################################################################
 set( GLPP_HEADERS
+        shapes/lens.h
+        shapes/quad.h
         attribute.h
         buffer.h
         cube.h
@@ -28,7 +30,6 @@ set( GLPP_HEADERS
         mesh.h
         pixels.h
         program.h
-        quad.h
         resource_loader.h
         scene.h
         scene_phase.h
@@ -50,6 +51,8 @@ set( GLPP_HEADERS
 #   List GLPP sources.
 ###############################################################################
 set( GLPP_SOURCES
+        shapes/src/lens.cpp
+        shapes/src/quad.cpp
         src/attribute.cpp
         src/debug.cpp
         src/element_array_buffer.cpp
@@ -61,7 +64,6 @@ set( GLPP_SOURCES
         src/scene.cpp
         src/scene_phase.cpp
         src/shader.cpp
-        src/shapes.cpp
         src/texture.cpp
         src/texture_2d.cpp
         src/texture_unit.cpp
@@ -79,6 +81,7 @@ add_library( glpp SHARED ${GLPP_HEADERS} ${GLPP_SOURCES} )
 
 target_include_directories( glpp PRIVATE
     .
+    ./shapes
     ${ROOT}
     ${ROOT}/external
     ${FREETYPE_INCLUDES}
