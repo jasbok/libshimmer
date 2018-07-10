@@ -4,6 +4,7 @@
 #include "config_variables.h"
 
 #include "common/dims.h"
+#include "common/json.h"
 
 #include <unordered_map>
 #include <vector>
@@ -139,6 +140,97 @@ enum config::logging::level  to_log_level ( const std::string& level );
 enum config::logging::output to_log_output ( const std::string& output );
 enum config::video::filter   to_tex_filter ( const std::string& filter );
 enum config::video::aspect   to_vid_aspect ( const std::string& aspect );
+
+
+void to_json ( nlohmann::json&      json,
+               const struct config& config );
+
+void from_json ( const nlohmann::json& json,
+                 struct config&        config );
+
+void to_json ( nlohmann::json&               json,
+               const struct config::general& general );
+
+void from_json ( const nlohmann::json&   json,
+                 struct config::general& general );
+
+void to_json ( nlohmann::json&             json,
+               const struct config::input& input );
+
+void from_json ( const nlohmann::json& json,
+                 struct config::input& input );
+
+void to_json ( nlohmann::json&               json,
+               const struct config::logging& logging );
+
+void from_json ( const nlohmann::json&   json,
+                 struct config::logging& logging );
+
+void to_json ( nlohmann::json&                    json,
+               const enum config::logging::level& level );
+
+void from_json ( const nlohmann::json&        json,
+                 enum config::logging::level& level );
+
+void to_json ( nlohmann::json&                     json,
+               const enum config::logging::output& output );
+
+void from_json ( const nlohmann::json&         json,
+                 enum config::logging::output& output );
+
+void to_json ( nlohmann::json&             json,
+               const struct config::video& video );
+
+void from_json ( const nlohmann::json& json,
+                 struct config::video& video );
+
+void to_json ( nlohmann::json&                   json,
+               const enum config::video::aspect& aspect );
+
+void from_json ( const nlohmann::json&       json,
+                 enum config::video::aspect& aspect );
+
+void to_json ( nlohmann::json&                   json,
+               const enum config::video::filter& filter );
+
+void from_json ( const nlohmann::json&       json,
+                 enum config::video::filter& filter );
+
+void to_json ( nlohmann::json&                      json,
+               const struct config::video::limiter& limiter );
+
+void from_json ( const nlohmann::json&          json,
+                 struct config::video::limiter& limiter );
+
+void to_json ( nlohmann::json&                     json,
+               const struct config::video::shader& shader );
+
+void from_json ( const nlohmann::json&         json,
+                 struct config::video::shader& shader );
+}
+
+namespace common
+{
+template<typename T>
+void to_json ( nlohmann::json&          json,
+               const common::dims_2<T>& dims ) {
+    json = {
+        { "width",  dims.width  },
+        { "height", dims.height }
+    };
+}
+
+template<typename T>
+void from_json ( const nlohmann::json& json,
+                 common::dims_2<T>&    dims ) {
+    if ( common::json::exists ( json, { "width" } ) ) {
+        dims.width = json.at ( "width" );
+    }
+
+    if ( common::json::exists ( json, { "height" } ) ) {
+        dims.height = json.at ( "height" );
+    }
+}
 }
 
 #endif // ifndef LIBSHIMMER_CONFIGURATION_H

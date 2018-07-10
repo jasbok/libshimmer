@@ -23,6 +23,19 @@ std::string as_string ( const nlohmann::json& json );
 std::string as_string ( const nlohmann::json&           json,
                         const std::vector<std::string>& path );
 
+///**
+// * @brief as_string_vector Gets a vector of strings from the object field.
+// * @param obj The json object.
+// * @param path The path to the field.
+// * @return A vector of strings.
+// * @throws field_absent_exception if the field does not exist.
+// * @throws could_not_parse_exception if the field is not an array.
+// */
+// std::vector<std::string> as_string_vector ( const nlohmann::json&
+//           obj,
+//                                            const std::vector<std::string>&
+// path );
+
 /**
  * @brief as_properties Converts the json object to a map of string properties.
  * @param obj The json object to convert.
@@ -53,6 +66,15 @@ std::string to_json ( const std::string& str );
  * @return The json boolean value.
  */
 std::string to_json ( bool val );
+
+/**
+ * @brief exists Checks if a field exists.
+ * @param obj The object to search.
+ * @param path The path to the field.
+ * @return True if the field exists, false otherwise.
+ */
+bool exists ( const nlohmann::json&           obj,
+              const std::vector<std::string>& path );
 
 
 struct field_absent_exception : public std::runtime_error {

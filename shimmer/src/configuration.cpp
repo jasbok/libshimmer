@@ -460,4 +460,229 @@ config config::create()
 
     return conf;
 }
+
+void to_json ( nlohmann::json& j,
+               const config&   config ) {
+    j = {
+        { "general", config.general },
+        { "input",   config.input   },
+        { "logging", config.logging },
+        { "video",   config.video   },
+    };
+}
+
+void from_json ( const nlohmann::json& j,
+                 config&               config ) {
+    if ( common::json::exists ( j, { "general" } ) ) {
+        config.general = j.at ( "general" );
+    }
+
+    if ( common::json::exists ( j, { "input" } ) ) {
+        config.input = j.at ( "input" );
+    }
+
+    if ( common::json::exists ( j, { "logging" } ) ) {
+        config.logging = j.at ( "logging" );
+    }
+
+    if ( common::json::exists ( j, { "video" } ) ) {
+        config.video = j.at ( "video" );
+    }
+}
+
+void to_json ( nlohmann::json&               j,
+               const struct config::general& g ) {
+    j = {
+        { "config_dirs",  g.config_dirs },
+        { "data_dirs",    g.data_dirs   },
+        { "font_dirs",    g.font_dirs   },
+        { "image_dirs",   g.image_dirs  },
+        { "shaders_dirs", g.shader_dirs },
+    };
+}
+
+void from_json ( const nlohmann::json&   j,
+                 struct config::general& g ) {
+    typedef std::vector<std::string> strings;
+
+    if ( common::json::exists ( j, { "config_dirs" } ) ) {
+        g.config_dirs = j.at ( "config_dirs" ).get<strings>();
+    }
+
+    if ( common::json::exists ( j, { "data_dirs" } ) ) {
+        g.data_dirs = j.at ( "data_dirs" ).get<strings>();
+    }
+
+    if ( common::json::exists ( j, { "font_dirs" } ) ) {
+        g.font_dirs =  j.at ( "font_dirs" ).get<strings>();
+    }
+
+    if ( common::json::exists ( j, { "image_dirs" } ) ) {
+        g.image_dirs = j.at ( "image_dirs" ).get<strings>();
+    }
+
+    if ( common::json::exists ( j, { "shader_dirs" } ) ) {
+        g.shader_dirs = j.at ( "shader_dirs" ).get<strings>();
+    }
+}
+
+void to_json ( nlohmann::json&             j,
+               const struct config::input& i ) {
+    j = {
+        { "grab", i.grab }
+    };
+}
+
+void from_json ( const nlohmann::json& j,
+                 struct config::input& i ) {
+    if ( common::json::exists ( j, { "input" } ) ) {
+        i.grab = j.at ( "input" );
+    }
+}
+
+void to_json ( nlohmann::json&               j,
+               const struct config::logging& l ) {
+    j = {
+        { "level",  l.level  },
+        { "output", l.output },
+        { "file",   l.file   }
+    };
+}
+
+void from_json ( const nlohmann::json&   j,
+                 struct config::logging& l ) {
+    if ( common::json::exists ( j, { "level" } ) ) {
+        l.level = j.at ( "level" );
+    }
+
+    if ( common::json::exists ( j, { "output" } ) ) {
+        l.output = j.at ( "output" );
+    }
+
+    if ( common::json::exists ( j, { "file" } ) ) {
+        l.file = j.at ( "file" );
+    }
+}
+
+void to_json ( nlohmann::json&                    json,
+               const enum config::logging::level& level ) {
+    json = to_string ( level );
+}
+
+void from_json ( const nlohmann::json&        json,
+                 enum config::logging::level& level ) {
+    level = to_log_level ( json.get<std::string>() );
+}
+
+void to_json ( nlohmann::json&                     json,
+               const enum config::logging::output& output ) {
+    json = to_string ( output );
+}
+
+void from_json ( const nlohmann::json&         json,
+                 enum config::logging::output& output ) {
+    output = to_log_output ( json.get<std::string>() );
+}
+
+void to_json ( nlohmann::json&             j,
+               const struct config::video& v ) {
+    j = {
+        { "aspect",        v.aspect        },
+        { "custom_aspect", v.custom_aspect },
+        { "filter",        v.filter        },
+        { "font",          v.font          },
+        { "limiter",       v.limiter       },
+        { "shader",        v.shader        }
+    };
+}
+
+void from_json ( const nlohmann::json& j,
+                 struct config::video& v ) {
+    if ( common::json::exists ( j, { "aspect" } ) ) {
+        v.aspect = j.at ( "aspect" );
+    }
+
+    if ( common::json::exists ( j, { "custom_aspect" } ) ) {
+        v.custom_aspect = j.at ( "custom_aspect" );
+    }
+
+    if ( common::json::exists ( j, { "filter" } ) ) {
+        v.filter = j.at ( "filter" );
+    }
+
+    if ( common::json::exists ( j, { "font" } ) ) {
+        v.font = j.at ( "font" );
+    }
+
+    if ( common::json::exists ( j, { "limiter" } ) ) {
+        v.limiter = j.at ( "limiter" );
+    }
+
+    if ( common::json::exists ( j, { "shader" } ) ) {
+        v.shader = j.at ( "shader" );
+    }
+}
+
+void to_json ( nlohmann::json&                   json,
+               const enum config::video::aspect& aspect ) {
+    json = to_string ( aspect );
+}
+
+void from_json ( const nlohmann::json&       json,
+                 enum config::video::aspect& aspect ) {
+    aspect = to_vid_aspect ( json.get<std::string>() );
+}
+
+void to_json ( nlohmann::json&                   json,
+               const enum config::video::filter& filter ) {
+    json = to_string ( filter );
+}
+
+void from_json ( const nlohmann::json&       json,
+                 enum config::video::filter& filter ) {
+    filter = to_tex_filter ( json.get<std::string>() );
+}
+
+void to_json ( nlohmann::json&                      json,
+               const struct config::video::limiter& limiter ) {
+    json = {
+        { "rate",    limiter.rate    },
+        { "samples", limiter.samples }
+    };
+}
+
+void from_json ( const nlohmann::json&          json,
+                 struct config::video::limiter& limiter ) {
+    if ( common::json::exists ( json, { "rate" } ) ) {
+        limiter.rate = json.at ( "rate" );
+    }
+
+    if ( common::json::exists ( json, { "samples" } ) ) {
+        limiter.rate = json.at ( "samples" );
+    }
+}
+
+void to_json ( nlohmann::json&                     json,
+               const struct config::video::shader& shader ) {
+    json = {
+        { "fragment", shader.fragment },
+        { "scale",    shader.scale    },
+        { "vertex",   shader.vertex   }
+    };
+}
+
+void from_json ( const nlohmann::json&         json,
+                 struct config::video::shader& shader ) {
+    if ( common::json::exists ( json, { "fragment" } ) ) {
+        shader.fragment = json.at ( "fragment" );
+    }
+
+    if ( common::json::exists ( json, { "scale" } ) ) {
+        shader.scale = json.at ( "scale" );
+    }
+
+    if ( common::json::exists ( json, { "vertex" } ) ) {
+        shader.vertex = json.at ( "vertex" );
+    }
+}
 }

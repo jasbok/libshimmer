@@ -131,6 +131,26 @@ std::string as_string ( const nlohmann::json&           obj,
     }
 }
 
+// std::vector<std::string> as_string_vector ( const nlohmann::json&
+//           obj,
+//                                            const std::vector<std::string>&
+// path )
+// {
+//    auto field = _find ( obj, path );
+
+//    if ( field->is_array() ) {
+//        std::vector<std::string> strings;
+
+//        for ( const auto& item : field->items() ) {
+//            strings.push_back ( as_string ( item ) );
+//        }
+
+//        return strings;
+//    }
+
+//    throw could_not_parse_exception ( path, "array" );
+// }
+
 std::unordered_map<std::string, std::string> as_properties (
     const nlohmann::json& obj ) {
     std::unordered_map<std::string, std::string> properties;
@@ -149,6 +169,18 @@ std::unordered_map<std::string, std::string> as_properties (
     }
 
     return properties;
+}
+
+bool exists ( const nlohmann::json&           obj,
+              const std::vector<std::string>& path ) {
+    try {
+        _find ( obj, path );
+
+        return true;
+    }
+    catch ( const std::exception& ) {}
+
+    return false;
 }
 
 field_absent_exception::field_absent_exception(
