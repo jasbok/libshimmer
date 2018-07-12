@@ -12,8 +12,7 @@
 namespace shimmer
 {
 struct config {
-    typedef std::pair<std::string, std::string>          property;
-    typedef std::unordered_map<std::string, std::string> properties;
+    typedef std::pair<std::string, std::string> property;
 
     struct general {
         std::vector<std::string> config_dirs = shimmer::system::config_dirs;
@@ -85,26 +84,29 @@ struct config {
     };
     struct video video;
 
-    config& set_property ( const property& prop );
-
-    config& set_properties ( const properties& props );
-
     struct mapping_exception : public std::runtime_error {
-        mapping_exception( const property&    prop,
-                           const std::string& expected );
-
-        mapping_exception( const property&                 prop,
+        mapping_exception( const std::string&              property,
+                           const std::string&              value,
                            const std::vector<std::string>& expected );
 
         virtual ~mapping_exception() = default;
     };
 
     /**
+     * @brief merge Attempts to merge config a into b.
+     * @param a The source json config object.
+     * @param b The destination json config object.
+     * @return The merged json config object.
+     */
+    static  nlohmann::json merge ( const nlohmann::json& a,
+                                   const nlohmann::json& b );
+
+    /**
      * @brief from_environment Loads all config properties set through
      * environment variables.
      * @return A map of all properties set through the environment.
      */
-    static properties from_environment();
+    static nlohmann::json from_environment();
 
     /**
      * @brief from_file Loads all config properties set through the given config
@@ -112,7 +114,7 @@ struct config {
      * @param path Path to the config file to load.
      * @return A map of all properties set through in the config file.
      */
-    static properties from_file ( const std::string& path );
+    static nlohmann::json from_file ( const std::string& path );
 
     /**
      * @brief create Creates a new config by merging the default config with
@@ -121,14 +123,6 @@ struct config {
      */
     static config create();
 };
-
-std::string to_json ( const struct config::logging& logging );
-std::string to_json ( const struct config::general& general );
-std::string to_json ( const struct config::input& input );
-std::string to_json ( const struct config::video::shader& shader );
-std::string to_json ( const struct config::video::limiter& limiter );
-std::string to_json ( const struct config::video& video );
-std::string to_json ( const struct config& config );
 
 std::string to_string ( const enum config::logging::level& level );
 std::string to_string ( const enum config::logging::output& output );

@@ -76,7 +76,6 @@ std::string to_json ( bool val );
 bool exists ( const nlohmann::json&           obj,
               const std::vector<std::string>& path );
 
-
 struct field_absent_exception : public std::runtime_error {
     field_absent_exception( const std::vector<std::string>& path );
 
