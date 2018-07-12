@@ -81,19 +81,22 @@ void set_property ( T&                    property,
     try {
         property = json.at ( field ).get<T>();
     }
-    catch ( const nlohmann::json::exception& jex ) {
-        if ( jex.id == 403 ) {}
+    catch ( const nlohmann::json::exception& ex ) {
+        if ( ex.id == 403 ) {}
         else {
-            printf ( "[ERROR] Unable to set config property: %s -> %s\n%s\n",
-                     field.c_str(),
-                     json.at ( field ).dump().c_str(),
-                     jex.what() );
+            printf (
+                "[ERROR] Unable to set config property: %s -> %s\nException: %s\n",
+                field.c_str(),
+                json.at ( field ).dump().c_str(),
+                ex.what() );
         }
     }
     catch ( const std::exception& ex ) {
-        printf ( "[ERROR] Unable to set config property: %s\n%s\n",
-                 field.c_str(),
-                 ex.what() );
+        printf (
+            "[ERROR] Unable to set config property: %s -> %s\nException: %s\n",
+            field.c_str(),
+            json.at ( field ).dump().c_str(),
+            ex.what() );
     }
 }
 
@@ -105,7 +108,7 @@ void set_property ( unsigned int&         property,
         auto value = json.at ( field );
 
         if ( value.is_string() ) {
-            value = std::stoi ( value.get<std::string>() );
+            value = std::stof ( value.get<std::string>() );
         }
 
         property = value.get<unsigned int>();
@@ -119,10 +122,12 @@ void set_property ( unsigned int&         property,
                      jex.what() );
         }
     }
-    catch ( const std::exception& ex ) {
-        printf ( "[ERROR] Unable to set config property: %s\n%s\n",
-                 field.c_str(),
-                 ex.what() );
+    catch ( const std::exception& ex  ) {
+        printf (
+            "[ERROR] Unable to set config property: %s -> %s\nExpected an unsigned integer.\nException: %s\n",
+            field.c_str(),
+            json.at ( field ).dump().c_str(),
+            ex.what() );
     }
 }
 
