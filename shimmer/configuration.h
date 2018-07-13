@@ -61,16 +61,16 @@ struct config {
         struct shader shader;
 
         enum class filter {
-            nearest,
-            linear
+            linear,
+            nearest
         };
         enum filter filter = filter::nearest;
 
         enum class aspect {
+            custom,
             original,
             stretch,
-            zoom,
-            custom
+            zoom
         };
         enum aspect aspect = aspect::original;
 
@@ -81,6 +81,21 @@ struct config {
             unsigned int samples = 5;
         };
         struct limiter limiter;
+
+        struct shape {
+            enum class type {
+                lens,
+                rectangle
+            };
+            enum type type = type::rectangle;
+
+            struct lens {
+                unsigned int quality = 32;
+                float        curve   = 0.1f;
+            };
+            struct lens lens;
+        };
+        struct shape shape;
     };
     struct video video;
 
@@ -125,15 +140,30 @@ struct config {
 };
 
 std::string to_string ( const enum config::logging::level& level );
+
 std::string to_string ( const enum config::logging::output& output );
+
 std::string to_string ( const enum config::video::filter& filter );
+
 std::string to_string ( const enum config::video::aspect& aspect );
 
+std::string to_string ( const enum config::video::shape::type& shape );
 
-enum config::logging::level  to_log_level ( const std::string& level );
-enum config::logging::output to_log_output ( const std::string& output );
-enum config::video::filter   to_tex_filter ( const std::string& filter );
-enum config::video::aspect   to_vid_aspect ( const std::string& aspect );
+
+void from_string ( enum config::logging::level& level,
+                   const std::string&           str );
+
+void from_string ( enum config::logging::output& output,
+                   const std::string&            str );
+
+void from_string ( enum config::video::filter& filter,
+                   const std::string&          str );
+
+void from_string ( enum config::video::aspect& aspect,
+                   const std::string&          str );
+
+void from_string ( enum config::video::shape::type& shape,
+                   const std::string&               str );
 
 
 void to_json ( nlohmann::json&      json,
@@ -201,6 +231,24 @@ void to_json ( nlohmann::json&                     json,
 
 void from_json ( const nlohmann::json&         json,
                  struct config::video::shader& shader );
+
+void to_json ( nlohmann::json&                    json,
+               const struct config::video::shape& shape );
+
+void from_json ( const nlohmann::json&        json,
+                 struct config::video::shape& shape );
+
+void to_json ( nlohmann::json&                          json,
+               const struct config::video::shape::lens& lens );
+
+void from_json ( const nlohmann::json&              json,
+                 struct config::video::shape::lens& lens );
+
+void to_json ( nlohmann::json&                        json,
+               const enum config::video::shape::type& type );
+
+void from_json ( const nlohmann::json&            json,
+                 enum config::video::shape::type& type );
 }
 
 namespace common

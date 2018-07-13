@@ -46,15 +46,11 @@ renderer::renderer( class shim* shim )
 
     _define_ebo ( _source_ebo, glpp::shapes::quad::triangle_fan_indices );
 
-    glpp::shapes::lens lens;
-    lens.curve_factor ( 0.55f )
-        .curve_detail ( 32 );
-
     _define_vbo ( _target_vbo,
-                  lens.position_texcoord() );
+                  _shape_position_texcoords() );
 
     _define_ebo ( _target_ebo,
-                  lens.indices() );
+                  _shape_indices() );
 
     _define_vao ( _source_vao,
                   _source_vbo,
@@ -172,10 +168,7 @@ void renderer::flip_target ( bool flip )
 {
     _flip_target = flip;
     _define_vbo ( _target_vbo,
-                  glpp::shapes::lens()
-                      .curve_factor ( 0.55f )
-                      .curve_detail ( 32 )
-                      .position_texcoord() );
+                  _shape_position_texcoords() );
 }
 
 void renderer::_define_program ( glpp::program&     program,
@@ -291,4 +284,46 @@ void renderer::_calculate_aspect()
     _aspect = shimmer::video::aspect_transform ( _source_resolution,
                                                  _target_resolution,
                                                  _shim->config );
+}
+
+std::vector<float> renderer::_shape_position_texcoords()
+{
+    typedef enum shimmer::config::video::shape::type type;
+    auto& shape = _shim->config.video.shape;
+
+    switch ( shape.type ) {
+    case type::lens:
+
+        return glpp::shapes::lens()
+                   .curve_factor ( shape.lens.curve )
+                   .curve_detail ( shape.lens.quality )
+                   .position_texcoord();
+
+    case type::rectangle:
+
+        return glpp::shapes::quad().position_texcoord();
+    }
+
+    throw std::exception();
+}
+
+std::vector<unsigned int> renderer::_shape_indices()
+{
+    typedef enum shimmer::config::video::shape::type type;
+    auto& shape = _shim->config.video.shape;
+
+    switch ( shape.type ) {
+    case type::lens:
+
+        return glpp::shapes::lens()
+                   .curve_factor ( shape.lens.curve )
+                   .curve_detail ( shape.lens.quality )
+                   .indices();
+
+    case type::rectangle:
+
+        return glpp::shapes::quad().triangle_fan_indices;
+    }
+
+    throw std::exception();
 }

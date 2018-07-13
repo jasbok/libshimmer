@@ -95,7 +95,11 @@ private:
                            glpp::texture_2d::filter filter,
                            unsigned int             texture_unit );
 
-    void _calculate_aspect();
+    void                      _calculate_aspect();
+
+    std::vector<float>        _shape_position_texcoords();
+
+    std::vector<unsigned int> _shape_indices();
 };
 
 #endif // ifndef SHIMS_SDL_RENDERER_H

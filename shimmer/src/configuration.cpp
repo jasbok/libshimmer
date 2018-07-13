@@ -131,6 +131,37 @@ void set_property ( unsigned int&         property,
     }
 }
 
+template<>
+void set_property ( float&                property,
+                    const nlohmann::json& json,
+                    const std::string&    field ) {
+    try {
+        auto value = json.at ( field );
+
+        if ( value.is_string() ) {
+            value = std::stof ( value.get<std::string>() );
+        }
+
+        property = value.get<float>();
+    }
+    catch ( const nlohmann::json::exception& jex ) {
+        if ( jex.id == 403 ) {}
+        else {
+            printf ( "[ERROR] Unable to set config property: %s -> %s\n%s\n",
+                     field.c_str(),
+                     json.at ( field ).dump().c_str(),
+                     jex.what() );
+        }
+    }
+    catch ( const std::exception& ex  ) {
+        printf (
+            "[ERROR] Unable to set config property: %s -> %s\nExpected a float.\nException: %s\n",
+            field.c_str(),
+            json.at ( field ).dump().c_str(),
+            ex.what() );
+    }
+}
+
 config::mapping_exception::mapping_exception(
     const std::string&              property,
     const std::string&              value,
@@ -140,6 +171,7 @@ config::mapping_exception::mapping_exception(
           + "'; expected one of the following: ["
           + common::str::join ( expected, ", " ) + "]." )
 {}
+
 
 std::string to_string ( const enum config::logging::level& level )
 {
@@ -199,77 +231,117 @@ std::string to_string ( const enum config::video::aspect& aspect )
     return "original";
 }
 
-enum config::logging::level to_log_level (
-    const std::string& level )
-{
-    if ( level.compare ( "debug" ) == 0 ) return config::logging::level::debug;
+std::string to_string ( const enum config::video::shape::type& shape ) {
+    switch ( shape ) {
+    case config::video::shape::type::lens: return "lens";
 
-    if ( level.compare ( "error" ) == 0 ) return config::logging::level::error;
+    case config::video::shape::type::rectangle: return "rectangle";
+    }
 
-    if ( level.compare ( "fatal" ) == 0 ) return config::logging::level::fatal;
-
-    if ( level.compare ( "info" ) == 0 ) return config::logging::level::info;
-
-    if ( level.compare ( "off" ) == 0 ) return config::logging::level::off;
-
-    if ( level.compare ( "trace" ) == 0 ) return config::logging::level::trace;
-
-    if ( level.compare ( "warning" ) ==
-         0 ) return config::logging::level::warning;
-
-    throw config::mapping_exception ( "config::logging::level", level,
-                                      { "trace",
-                                        "debug",
-                                        "info",
-                                        "warning",
-                                        "error",
-                                        "fatal",
-                                        "off" } );
+    return "rectangle";
 }
 
-enum config::logging::output to_log_output (
-    const std::string& output ) {
-    if ( output.compare ( "console" ) ==
-         0 ) return config::logging::output::console;
-
-    if ( output.compare ( "file" ) == 0 ) return config::logging::output::file;
-
-    throw config::mapping_exception ( "config::logging::output", output,
-                                      { "console",
-                                        "file" } );
+void from_string ( enum config::logging::level& level,
+                   const std::string&           str ) {
+    if ( str.compare ( "debug" ) == 0 ) {
+        level = config::logging::level::debug;
+    }
+    else if ( str.compare ( "error" ) == 0 ) {
+        level = config::logging::level::error;
+    }
+    else if ( str.compare ( "fatal" ) ==  0 ) {
+        level = config::logging::level::fatal;
+    }
+    else if ( str.compare ( "info" ) == 0 ) {
+        level = config::logging::level::info;
+    }
+    else if ( str.compare ( "off" ) == 0 ) {
+        level = config::logging::level::off;
+    }
+    else if ( str.compare ( "trace" ) == 0 ) {
+        level = config::logging::level::trace;
+    }
+    else if ( str.compare ( "warning" ) == 0 ) {
+        level = config::logging::level::warning;
+    }
+    else {
+        throw config::mapping_exception ( "config::logging::level", str,
+                                          { "trace",
+                                            "debug",
+                                            "info",
+                                            "warning",
+                                            "error",
+                                            "fatal",
+                                            "off" } );
+    }
 }
 
-enum config::video::filter to_tex_filter (
-    const std::string& filter ) {
-    if ( filter.compare ( "linear" ) ==
-         0 ) return config::video::filter::linear;
-
-    if ( filter.compare ( "nearest" ) ==
-         0 ) return config::video::filter::nearest;
-
-    throw config::mapping_exception ( "config::video::filter", filter,
-                                      { "linear",
-                                        "nearest" } );
+void from_string ( enum config::logging::output& output,
+                   const std::string&            str ) {
+    if ( str.compare ( "console" ) == 0 ) {
+        output = config::logging::output::console;
+    }
+    else if ( str.compare ( "file" ) == 0 ) {
+        output = config::logging::output::file;
+    }
+    else {
+        throw config::mapping_exception ( "config::logging::output", str,
+                                          { "console",
+                                            "file" } );
+    }
 }
 
-enum config::video::aspect to_vid_aspect (
-    const std::string& aspect ) {
-    if ( aspect.compare ( "custom" ) ==
-         0 ) return config::video::aspect::custom;
+void from_string ( enum config::video::filter& filter,
+                   const std::string&          str ) {
+    if ( str.compare ( "linear" ) == 0 ) {
+        filter = config::video::filter::linear;
+    }
+    else if ( str.compare ( "nearest" ) == 0 ) {
+        filter = config::video::filter::nearest;
+    }
+    else {
+        throw config::mapping_exception ( "config::video::filter", str,
+                                          { "linear",
+                                            "nearest" } );
+    }
+}
 
-    if ( aspect.compare ( "original" ) ==
-         0 ) return config::video::aspect::original;
+void from_string ( enum config::video::aspect& aspect,
+                   const std::string&          str ) {
+    if ( str.compare ( "custom" ) == 0 ) {
+        aspect = config::video::aspect::custom;
+    }
+    else if ( str.compare ( "original" ) == 0 ) {
+        aspect = config::video::aspect::original;
+    }
+    else if ( str.compare ( "stretch" ) == 0 ) {
+        aspect = config::video::aspect::stretch;
+    }
+    else if ( str.compare ( "zoom" ) == 0 ) {
+        aspect = config::video::aspect::zoom;
+    }
+    else {
+        throw config::mapping_exception ( "config::video::aspect", str,
+                                          { "custom",
+                                            "original",
+                                            "stretch",
+                                            "zoom" } );
+    }
+}
 
-    if ( aspect.compare ( "stretch" ) ==
-         0 ) return config::video::aspect::stretch;
-
-    if ( aspect.compare ( "zoom" ) == 0 ) return config::video::aspect::zoom;
-
-    throw config::mapping_exception ( "config::video::aspect", aspect,
-                                      { "custom",
-                                        "original",
-                                        "stretch",
-                                        "zoom" } );
+void from_string ( enum config::video::shape::type& shape,
+                   const std::string&               str ) {
+    if ( str.compare ( "lens" ) == 0 ) {
+        shape = config::video::shape::type::lens;
+    }
+    else if ( str.compare ( "rectangle" ) == 0 ) {
+        shape = config::video::shape::type::rectangle;
+    }
+    else {
+        throw config::mapping_exception ( "config::video::shape::type", str,
+                                          { "lens",
+                                            "rectangle" } );
+    }
 }
 
 void to_json ( nlohmann::json& json,
@@ -345,7 +417,7 @@ void to_json ( nlohmann::json&                    json,
 
 void from_json ( const nlohmann::json&        json,
                  enum config::logging::level& level ) {
-    level = to_log_level ( json.get<std::string>() );
+    from_string ( level, json );
 }
 
 void to_json ( nlohmann::json&                     json,
@@ -355,7 +427,7 @@ void to_json ( nlohmann::json&                     json,
 
 void from_json ( const nlohmann::json&         json,
                  enum config::logging::output& output ) {
-    output = to_log_output ( json.get<std::string>() );
+    from_string ( output, json );
 }
 
 void to_json ( nlohmann::json&             json,
@@ -366,7 +438,8 @@ void to_json ( nlohmann::json&             json,
         { "filter",        video.filter        },
         { "font",          video.font          },
         { "limiter",       video.limiter       },
-        { "shader",        video.shader        }
+        { "shader",        video.shader        },
+        { "shape",         video.shape         }
     };
 }
 
@@ -378,6 +451,7 @@ void from_json ( const nlohmann::json& json,
     set_property ( video.font,          json, "font" );
     set_property ( video.limiter,       json, "limiter" );
     set_property ( video.shader,        json, "shader" );
+    set_property ( video.shape,         json, "shape" );
 }
 
 void to_json ( nlohmann::json&                   json,
@@ -387,7 +461,7 @@ void to_json ( nlohmann::json&                   json,
 
 void from_json ( const nlohmann::json&       json,
                  enum config::video::aspect& aspect ) {
-    aspect = to_vid_aspect ( json.get<std::string>() );
+    from_string ( aspect, json );
 }
 
 void to_json ( nlohmann::json&                   json,
@@ -397,7 +471,7 @@ void to_json ( nlohmann::json&                   json,
 
 void from_json ( const nlohmann::json&       json,
                  enum config::video::filter& filter ) {
-    filter = to_tex_filter ( json.get<std::string>() );
+    from_string ( filter, json );
 }
 
 void to_json ( nlohmann::json&                      json,
@@ -428,5 +502,43 @@ void from_json ( const nlohmann::json&         json,
     set_property ( shader.fragment, json, "fragment" );
     set_property ( shader.scale,    json, "scale" );
     set_property ( shader.vertex,   json, "vertex" );
+}
+
+void to_json ( nlohmann::json&                    json,
+               const struct config::video::shape& shape ) {
+    json = {
+        { "type", shape.type },
+        { "lens", shape.lens }
+    };
+}
+
+void from_json ( const nlohmann::json&        json,
+                 struct config::video::shape& shape ) {
+    set_property ( shape.lens, json, "lens" );
+    set_property ( shape.type, json, "type" );
+}
+
+void to_json ( nlohmann::json&                          json,
+               const struct config::video::shape::lens& lens ) {
+    json = {
+        { "curve",   lens.curve   },
+        { "quality", lens.quality }
+    };
+}
+
+void from_json ( const nlohmann::json&              json,
+                 struct config::video::shape::lens& lens ) {
+    set_property ( lens.curve,   json, "curve" );
+    set_property ( lens.quality, json, "quality" );
+}
+
+void to_json ( nlohmann::json&                        json,
+               const enum config::video::shape::type& type ) {
+    json = to_string ( type );
+}
+
+void from_json ( const nlohmann::json&            json,
+                 enum config::video::shape::type& type ) {
+    from_string ( type, json );
 }
 }
