@@ -1,23 +1,28 @@
 #include "shim.h"
 
-#include "shim.h"
+class shim shim;
 
-std::shared_ptr<class ::shimmer::shimmer> libshimmer = nullptr;
+shim::shim()
+    : config ( shimmer::config::create() ),
+      events ( this ),
+      input ( this ),
+      video ( this ),
+      window ( this )
+{}
 
-struct shim shim;
-
-void init_shimmer() {
-    if ( !libshimmer ) {
-        libshimmer = std::make_shared<class shimmer::shimmer>();
-    }
+void shim::init ( Uint32 flags ) {
+    printf ( "[DEBUG] Initialising SDL2 shim...\n" );
+    _flags = flags;
 }
 
-int SDL_Init ( Uint32 flags ) {
-    init_shimmer();
+void shim::quit() {}
 
-    return sym::SDL_Init ( flags );
+void shim::source_resolution ( const common::dims_2u& dims ) {
+    events.source_resolution ( dims );
+    video.source_resolution ( dims );
 }
 
-void SDL_Quit() {
-    sym::SDL_Quit();
+void shim::target_resolution ( const common::dims_2u& dims ) {
+    events.target_resolution ( dims );
+    video.target_resolution ( dims );
 }

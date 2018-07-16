@@ -13,17 +13,24 @@ set( SDL2_SHIM_INCLUDE_DIR ${SHIMS_ROOT}/sdl2/includes )
 ###############################################################################
 #   Find all header files for SDL2 shim.
 ###############################################################################
-file( GLOB_RECURSE HEADERS ${SDL2_SHIM_INCLUDE_DIR}/*.h )
+set( HEADERS
+        events.h
+        input.h
+        shim.h
+        video.h
+        window.h )
 
 
 ###############################################################################
 #   Set sources.
 ###############################################################################
 set( SOURCES
-        src/event.cpp
-        src/mouse.cpp
+        src/events.cpp
+        src/input.cpp
+        src/sdl2.cpp
         src/shim.cpp
-        src/video.cpp)
+        src/video.cpp
+        src/window.cpp )
 
 
 ###############################################################################
@@ -31,12 +38,14 @@ set( SOURCES
 ###############################################################################
 add_library(shimmer_sdl2 SHARED ${SOURCES} ${HEADERS})
 
-target_include_directories( shimmer_sdl2 PRIVATE .
+target_include_directories( shimmer_sdl2 PRIVATE
+    .
     ${ROOT}
     ${ROOT}/external
     ${SDL2_INCLUDE_DIR} )
 
-target_link_libraries( shimmer_sdl2  )
+target_link_libraries( shimmer_sdl2
+    shimmer )
 
 
 ###############################################################################

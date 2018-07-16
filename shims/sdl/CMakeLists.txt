@@ -12,7 +12,12 @@ set( SDL_SHIM_INCLUDE_DIR ${SHIMS_ROOT}/sdl/includes )
 ###############################################################################
 #   Find all header files for SDL shim.
 ###############################################################################
-file( GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h )
+set( HEADERS
+        events.h
+        input.h
+        shim.h
+        video.h
+        window.h )
 
 
 ###############################################################################
@@ -21,7 +26,6 @@ file( GLOB_RECURSE HEADERS ${SDL_SHIM_INCLUDE_DIR}/*.h )
 set( SOURCES
         src/events.cpp
         src/input.cpp
-        src/renderer.cpp
         src/sdl.cpp
         src/shim.cpp
         src/video.cpp

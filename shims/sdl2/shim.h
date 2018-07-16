@@ -1,26 +1,43 @@
 #ifndef SHIMS_SDL2_SHIM_H
 #define SHIMS_SDL2_SHIM_H
 
-#include "shimmer/shimmer.h"
+#include "events.h"
+#include "input.h"
+#include "video.h"
+#include "window.h"
+
+#include "shimmer/configuration.h"
 
 #include "api/SDL2_sym.h"
 
-#include <memory>
+class shim
+{
+    Uint32 _flags;
 
-extern std::shared_ptr<class ::shimmer::shimmer> libshimmer;
+public:
+    shim();
 
-struct shim {
-    SDL_Window*   window;
-    SDL_Renderer* renderer;
-    SDL_Texture*  target;
+    virtual ~shim() = default;
 
-    shimmer::dims_2u   window_dims;
-    shimmer::coords_2i window_coords;
-    shimmer::coords_2i mouse_coords;
+    shimmer::config config;
+
+    class events events;
+
+    class input input;
+
+    class video video;
+
+    class window window;
+
+    void init ( Uint32 flags );
+
+    void quit();
+
+    void source_resolution ( const common::dims_2u& dims );
+
+    void target_resolution ( const common::dims_2u& dims );
 };
 
-extern struct shim shim;
-
-void init_shimmer();
+extern class shim shim;
 
 #endif // ifndef SHIMS_SDL2_SHIM_H

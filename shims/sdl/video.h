@@ -3,7 +3,7 @@
 
 #include "api/SDL_sym.h"
 
-#include "renderer.h"
+#include "shimmer/renderer.h"
 
 #include "common/dims.h"
 #include "common/limiter.h"
@@ -31,7 +31,7 @@ class video
     common::dims_2u _target_resolution;
 
 
-    std::unique_ptr<renderer> _renderer;
+    std::unique_ptr<shimmer::renderer> _renderer;
 
     common::limiter _limiter;
 
@@ -66,16 +66,19 @@ public:
                    int          numrects,
                    SDL_Rect*    rects );
 
-    void                      swap_buffers();
+    void         swap_buffers();
 
-    SDL_Surface*              _create_surface();
+    SDL_Surface* _create_surface();
 
-    SDL_Surface*              _software_surface ( const common::dims_2u& dims );
+    SDL_Surface* _software_surface (
+        const common::dims_2u& dims );
 
-    SDL_Surface*              _hardware_surface ( const common::dims_2u& dims );
+    SDL_Surface* _hardware_surface (
+        const common::dims_2u& dims );
 
-    std::unique_ptr<renderer> _create_renderer ( const common::dims_2u& source,
-                                                 const common::dims_2u& target );
+    std::unique_ptr<shimmer::renderer> _create_renderer (
+        const common::dims_2u& source,
+        const common::dims_2u& target );
 };
 
 #endif // ifndef SHIMS_SDL_VIDEO_H

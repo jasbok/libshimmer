@@ -1,7 +1,5 @@
 #include "renderer.h"
 
-#include "shim.h"
-
 #include "common/env.h"
 #include "common/file.h"
 #include "common/str.h"
@@ -14,6 +12,8 @@
 
 #include "shimmer/video.h"
 
+namespace shimmer
+{
 void renderer::init() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
@@ -24,13 +24,13 @@ void renderer::init() {
     }
 }
 
-renderer::renderer( class shim* shim )
-    : _shim ( shim ),
+renderer::renderer( struct config::config* conf )
+    : _conf ( conf ),
       _flip_target ( false )
 {
     _define_program ( _source_program,
-                      _shim->config.video.shader.vertex,
-                      _shim->config.video.shader.fragment,
+                      _conf->video.shader.vertex,
+                      _conf->video.shader.fragment,
                       1 );
 
     _define_program ( _target_program,
@@ -62,7 +62,7 @@ renderer::renderer( class shim* shim )
                   _target_ebo,
                   _target_program );
 
-    if ( shim->config.video.filter == shimmer::config::video::filter::linear ) {
+    if ( _conf->video.filter == config::video::filter::linear ) {
         _texture_filter = glpp::texture_2d::filter::linear;
     }
     else {
@@ -72,7 +72,7 @@ renderer::renderer( class shim* shim )
 
 void renderer::source_resolution ( const common::dims_2u& dims ) {
     _source_resolution       = dims;
-    _intermediate_resolution = dims * _shim->config.video.shader.scale;
+    _intermediate_resolution = dims * _conf->video.shader.scale;
 
     _calculate_aspect();
     _define_vbo ( _source_vbo,
@@ -177,7 +177,7 @@ void renderer::_define_program ( glpp::program&     program,
                                  int                texture_unit ) {
     printf ( "[DEBUG] Creating program...\n" );
 
-    const auto& shader_dirs = _shim->config.general.shader_dirs;
+    const auto& shader_dirs = _conf->general.shader_dirs;
 
     auto vs_file = common::file::find ( vertex, shader_dirs );
     auto fs_file = common::file::find ( fragment, shader_dirs  );
@@ -245,9 +245,9 @@ void renderer::_define_vao ( glpp::vao&     vao,
     printf ( "[DEBUG] texcoord location: %i\n", texcoord_location );
 
     auto attribs = glpp::vertex_attrib_builder<float>::sequential ( {
-        { "position", 2, position_location },
-        { "texcoord", 2, texcoord_location }
-    } );
+            { "position", 2, position_location },
+            { "texcoord", 2, texcoord_location }
+        } );
 
     attribs[0].define_pointer().enable_array();
     attribs[1].define_pointer().enable_array();
@@ -281,15 +281,15 @@ void renderer::_define_texture ( glpp::texture_2d&        tex,
 
 void renderer::_calculate_aspect()
 {
-    _aspect = shimmer::video::aspect_transform ( _source_resolution,
-                                                 _target_resolution,
-                                                 _shim->config );
+    _aspect = video::aspect_transform ( _source_resolution,
+                                        _target_resolution,
+                                        *_conf );
 }
 
 std::vector<float> renderer::_shape_position_texcoords()
 {
-    typedef enum shimmer::config::video::shape::type type;
-    auto& shape = _shim->config.video.shape;
+    typedef enum config::video::shape::type type;
+    auto& shape = _conf->video.shape;
 
     switch ( shape.type ) {
     case type::lens:
@@ -309,8 +309,8 @@ std::vector<float> renderer::_shape_position_texcoords()
 
 std::vector<unsigned int> renderer::_shape_indices()
 {
-    typedef enum shimmer::config::video::shape::type type;
-    auto& shape = _shim->config.video.shape;
+    typedef enum config::video::shape::type type;
+    auto& shape = _conf->video.shape;
 
     switch ( shape.type ) {
     case type::lens:
@@ -327,3 +327,4 @@ std::vector<unsigned int> renderer::_shape_indices()
 
     throw std::exception();
 }
+} // namespace shimmer

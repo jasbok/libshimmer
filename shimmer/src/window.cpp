@@ -50,4 +50,4 @@ window& window::title ( const std::string& title ) {
 std::string window::title() const {
     return _title;
 }
-}
+} // namespace shimmer

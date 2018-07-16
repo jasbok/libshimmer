@@ -41,6 +41,7 @@ set( HEADERS
         options.h
         pipeline.h
         receiver.h
+        renderer.h
         shader_options.h
         shader_reader.h
         system.h
@@ -74,6 +75,7 @@ set( SOURCES
         src/mouse.cpp
         src/options.cpp
         src/pipeline.cpp
+        src/renderer.cpp
         src/shader_options.cpp
         src/shader_reader.cpp
         src/system.cpp

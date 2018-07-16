@@ -1,5 +1,7 @@
-#ifndef SHIMS_SDL_RENDERER_H
-#define SHIMS_SDL_RENDERER_H
+#ifndef SHIMMER_RENDERER_H
+#define SHIMMER_RENDERER_H
+
+#include "configuration.h"
 
 #include "glpp/element_array_buffer.h"
 #include "glpp/framebuffer.h"
@@ -8,9 +10,11 @@
 #include "glpp/vertex_array.h"
 #include "glpp/vertex_buffer.h"
 
+namespace shimmer
+{
 class renderer
 {
-    class shim* _shim;
+    struct shimmer::config::config* _conf;
 
     glpp::program _source_program;
 
@@ -51,7 +55,7 @@ class renderer
 public:
     static void init();
 
-    renderer( class shim* shim );
+    renderer( struct shimmer::config::config* conf );
 
     virtual ~renderer() = default;
 
@@ -101,5 +105,6 @@ private:
 
     std::vector<unsigned int> _shape_indices();
 };
+}
 
-#endif // ifndef SHIMS_SDL_RENDERER_H
+#endif // ifndef SHIMMER_RENDERER_H

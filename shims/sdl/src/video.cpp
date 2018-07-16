@@ -2,9 +2,6 @@
 
 #include "shim.h"
 
-#include "shimmer/input.h"
-#include "shimmer/video.h"
-
 #include <GL/glew.h>
 
 video::video( class shim* shim )
@@ -49,7 +46,7 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
         _shim->target_resolution ( requested_resolution );
         _shim->source_resolution ( requested_resolution );
 
-        renderer::init();
+        shimmer::renderer::init();
         _renderer = _create_renderer ( requested_resolution,
                                        requested_resolution );
     }
@@ -128,7 +125,7 @@ void video::refresh ( SDL_Surface* screen,
                       Uint32       w,
                       Uint32       h ) {
     if ( screen == _source ) {
-        // TODO: Optimise
+        // TODO: Optimise to not refresh the whole screen.
         refresh ( screen );
     }
     else {
@@ -140,7 +137,7 @@ void video::refresh ( SDL_Surface* screen,
                       int          numrects,
                       SDL_Rect*    rects ) {
     if ( screen == _source ) {
-        // TODO: Optimise
+        // TODO: Optimise to not refresh the whole screen.
         refresh ( screen );
     }
     else {
@@ -206,11 +203,11 @@ SDL_Surface* video::_hardware_surface ( const common::dims_2u& dims )
         SDL_RESIZABLE | SDL_DOUBLEBUF );
 }
 
-std::unique_ptr<renderer> video::_create_renderer (
+std::unique_ptr<shimmer::renderer> video::_create_renderer (
     const common::dims_2u& source,
     const common::dims_2u& target )
 {
-    auto renderer = std::make_unique<::renderer>( _shim );
+    auto renderer = std::make_unique<shimmer::renderer>( &_shim->config );
 
     if ( _mode == mode::software ) renderer->flip_target ( true );
 

@@ -26,15 +26,17 @@ nlohmann::json config::from_environment()
 
     auto evars = common::env::find_all ( std::regex ( "^SHIMMER_.*" ) );
 
-    for ( auto& evar : evars ) {
-        auto key = evar.first.substr ( 8, evar.first.length() );
-        key = common::str::replace ( key, "_", "/" );
-        key = common::str::lower ( key );
+    if ( !evars.empty() ) {
+        for ( auto& evar : evars ) {
+            auto key = evar.first.substr ( 8, evar.first.length() );
+            key = common::str::replace ( key, "_", "/" );
+            key = common::str::lower ( key );
 
-        conf["/" + key] = evar.second;
+            conf["/" + key] = evar.second;
+        }
+
+        conf = conf.unflatten();
     }
-
-    conf = conf.unflatten();
 
     printf ( "[INFO] Environment config:\n%s\n", conf.dump ( 2 ).c_str() );
 
@@ -541,4 +543,4 @@ void from_json ( const nlohmann::json&            json,
                  enum config::video::shape::type& type ) {
     from_string ( type, json );
 }
-}
+} // namespace shimmer
