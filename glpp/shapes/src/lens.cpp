@@ -66,22 +66,28 @@ std::vector<float> lens::position_texcoord()
     unsigned int segments = _curve_detail * 8;
     double sradians       = 2 * M_PI / static_cast<double>( segments );
 
-    float ax = _flip_x ? -_dims.width : _dims.width;
-    float ay = _flip_y ? -_dims.height : _dims.height;
-
     auto radians = common::series::sequential<float>(
         0.0f,
         static_cast<float>( 2 * M_PI ),
         static_cast<float>( sradians ) );
 
-    auto ellipcoords = common::ellipse::parametric ( ax, ay, radians );
-    auto rectcoords  = common::rectangle::parametric ( ax, ay, radians );
+    auto ellipcoords = common::ellipse::parametric ( _dims.width,
+                                                     _dims.height,
+                                                     radians );
+
+    auto rectcoords = common::rectangle::parametric ( _dims.width,
+                                                      _dims.height,
+                                                      radians );
 
     auto position = common::series::blend ( rectcoords,
                                             ellipcoords,
                                             _curve_factor );
 
-    auto texcoords = common::series::transform ( rectcoords, 0.5f, 0.5f );
+    auto rect_texcoords = common::rectangle::parametric ( 1.0,
+                                                          1.0,
+                                                          radians );
+
+    auto texcoords = common::series::transform ( rect_texcoords, 0.5f, 0.5f );
 
     std::vector<float> values;
 
@@ -93,16 +99,19 @@ std::vector<float> lens::position_texcoord()
     values.push_back ( 0.5f );
     values.push_back ( 0.5f );
 
+    float sx = _flip_x ? -1.0f : 1.0f;
+    float sy = _flip_y ? -1.0f : 1.0f;
+
     for ( unsigned int i = 0; i < segments; i++ ) {
-        values.push_back ( position[i].x );
-        values.push_back ( position[i].y );
+        values.push_back ( sx * position[i].x );
+        values.push_back ( sy * position[i].y );
         values.push_back ( texcoords[i].x );
         values.push_back ( texcoords[i].y );
     }
 
     // Repeat first segment vertex to complete lens.
-    values.push_back ( position[0].x );
-    values.push_back ( position[0].y );
+    values.push_back ( sx * position[0].x );
+    values.push_back ( sy * position[0].y );
     values.push_back ( texcoords[0].x );
     values.push_back ( texcoords[0].y );
 
@@ -122,4 +131,4 @@ std::vector<unsigned int> lens::indices()
 
     return indices;
 }
-}
+} // namespace glpp::shapes

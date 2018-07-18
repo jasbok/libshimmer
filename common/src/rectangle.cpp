@@ -9,25 +9,21 @@ coords_2f parametric ( float w,
                        float t ) {
     static float pi = static_cast<float>( M_PI );
 
-    if ( t > 2 * pi ) {
-        t = std::fmod ( t, 2 * pi );
-    }
+    float d45  = 0.25f * pi;
+    float d135 = 0.75f * pi;
+    float d225 = 1.25f * pi;
+    float d315 = 1.75f * pi;
+    float d360 = 2 * pi;
 
-    float sigma = std::atan ( h / w );
-    float m     = std::tan ( t );
+    float m = std::tan ( t );
 
-    if ( ( -sigma <= t ) && ( t <= sigma ) ) {
-        return { w, m };
-    }
-    else if ( ( sigma - pi <= t )  && ( t <= pi + sigma ) ) {
-        return { -w, m };
-    }
-    else if ( ( 0.5f * pi - sigma < t )  && ( t <= 0.5f * pi + sigma ) ) {
-        return { 1.0f / m, h };
-    }
-    else {
-        return { 1.0f / m, -h };
-    }
+    t = t > d360 ? std::fmod ( t, d360 ) : t;
+
+    if ( ( d315 < t ) || ( t <= d45 ) ) return { w, m* h };
+    else if ( ( d45 < t ) && ( t <= d135 ) ) return { w / m, h };
+    else if ( ( d135 <= t ) && ( t <= d225 ) ) return { -w, m* -h };
+
+    return { -w / m, -h };
 }
 
 std::vector<coords_2f> parametric ( float              w,
@@ -39,29 +35,30 @@ std::vector<coords_2f> parametric ( float              w,
 
     coords.reserve ( params.size() );
 
-    float sigma = std::atan ( h / w );
+    float d45  = 0.25f * pi;
+    float d135 = 0.75f * pi;
+    float d225 = 1.25f * pi;
+    float d315 = 1.75f * pi;
+    float d360 = 2 * pi;
 
     for ( auto t : params ) {
-        if ( t > 2 * pi ) {
-            t = std::fmod ( t, 2 * pi );
-        }
-
         float m = std::tan ( t );
+        t = t > d360 ? std::fmod ( t, d360 ) : t;
 
-        if ( ( 2 * pi - sigma < t ) || ( t <= sigma ) ) {
-            coords.push_back ( { w, m } );
+        if ( ( d315 < t ) || ( t <= d45 ) ) {
+            coords.push_back ( { w, m * h } );
         }
-        else if ( ( pi - sigma <= t )  && ( t <= pi + sigma ) ) {
-            coords.push_back ( { -w, -m } );
+        else if ( ( d45 < t ) && ( t <= d135 ) ) {
+            coords.push_back ( { w / m, h } );
         }
-        else if ( ( 0.5f * pi - sigma < t )  && ( t <= 0.5f * pi + sigma ) ) {
-            coords.push_back ( { 1.0f / m, h } );
+        else if ( ( d135 <= t ) && ( t <= d225 ) ) {
+            coords.push_back ( { -w, m * -h } );
         }
         else {
-            coords.push_back ( { -1.0f / m, -h } );
+            coords.push_back ( { -w / m, -h } );
         }
     }
 
     return coords;
 }
-}
+} // namespace common::rectangle

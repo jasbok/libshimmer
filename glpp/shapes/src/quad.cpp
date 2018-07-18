@@ -83,4 +83,4 @@ std::vector<unsigned int> quad::triangles_indices = {
 std::vector<unsigned int> quad::triangle_fan_indices = {
     0, 1, 2, 3
 };
-}
+} // namespace glpp::shapes

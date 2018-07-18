@@ -40,7 +40,6 @@ renderer::renderer( struct config::config* conf )
 
     _define_vbo ( _source_vbo,
                   glpp::shapes::quad()
-                      .dims ( _aspect )
                       .flip_y ( _flip_target )
                       .position_texcoord() );
 
@@ -77,7 +76,6 @@ void renderer::source_resolution ( const common::dims_2u& dims ) {
     _calculate_aspect();
     _define_vbo ( _source_vbo,
                   glpp::shapes::quad()
-                      .dims ( _aspect )
                       .flip_y ( _flip_target )
                       .position_texcoord() );
 
@@ -98,11 +96,9 @@ void renderer::target_resolution ( const common::dims_2u& dims )
 {
     _target_resolution = dims;
     _calculate_aspect();
-    _define_vbo ( _source_vbo,
-                  glpp::shapes::quad()
-                      .dims ( _aspect )
-                      .flip_y ( _flip_target )
-                      .position_texcoord() );
+
+    _define_vbo ( _target_vbo,
+                  _shape_position_texcoords() );
 }
 
 void renderer::render() {
@@ -167,8 +163,10 @@ void renderer::copy_source ( uint8_t*               data,
 void renderer::flip_target ( bool flip )
 {
     _flip_target = flip;
-    _define_vbo ( _target_vbo,
-                  _shape_position_texcoords() );
+    _define_vbo ( _source_vbo,
+                  glpp::shapes::quad()
+                      .flip_y ( _flip_target )
+                      .position_texcoord() );
 }
 
 void renderer::_define_program ( glpp::program&     program,
@@ -295,13 +293,16 @@ std::vector<float> renderer::_shape_position_texcoords()
     case type::lens:
 
         return glpp::shapes::lens()
+                   .dims ( _aspect )
                    .curve_factor ( shape.lens.curve )
                    .curve_detail ( shape.lens.quality )
                    .position_texcoord();
 
     case type::rectangle:
 
-        return glpp::shapes::quad().position_texcoord();
+        return glpp::shapes::quad()
+                   .dims ( _aspect )
+                   .position_texcoord();
     }
 
     throw std::exception();
