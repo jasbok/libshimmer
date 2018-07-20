@@ -6,7 +6,10 @@
 
 window::window( class shim* shim )
     : _shim ( shim )
-{}
+{
+    _limiter.limit ( shim->config.video.limiter.rate );
+    _limiter.samples ( shim->config.video.limiter.samples );
+}
 
 SDL_Window* window::source_window()
 {
@@ -48,8 +51,10 @@ SDL_Surface* window::surface ( SDL_Window* window )
 int window::update ( SDL_Window* window )
 {
     if ( window == _source_window ) {
-        shim.video.update();
-        sym::SDL_GL_SwapWindow ( window );
+        if ( !_limiter.check() ) {
+            shim.video.update();
+            sym::SDL_GL_SwapWindow ( window );
+        }
 
         return 0;
     }

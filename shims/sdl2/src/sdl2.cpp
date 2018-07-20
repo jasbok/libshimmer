@@ -66,6 +66,10 @@ int SDL_UpdateWindowSurface ( SDL_Window* window ) {
     return shim.window.update ( window );
 }
 
+void SDL_GL_SwapWindow ( SDL_Window* window ) {
+    shim.window.update ( window );
+}
+
 void SDL_RenderPresent ( SDL_Renderer* renderer )
 {
     sym::SDL_RenderPresent ( renderer );

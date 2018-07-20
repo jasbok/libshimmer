@@ -54,9 +54,13 @@ void video::update()
             static_cast<uint8_t*>( _source_surface->pixels ),
             _source_resolution,
             4 );
+        _renderer->render();
     }
-
-    _renderer->render();
+    else {
+        _renderer->reset_fbo();
+        _renderer->render();
+        _renderer->capture_fbo();
+    }
 }
 
 void video::source_resolution ( const common::dims_2u& dims )
@@ -79,7 +83,6 @@ void video::target_resolution ( const common::dims_2u& dims )
 
     if ( _renderer ) {
         _renderer->target_resolution ( _target_resolution );
-        _renderer->setup_viewport();
     }
 }
 

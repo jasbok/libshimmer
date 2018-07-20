@@ -4,6 +4,7 @@
 #include "api/SDL2_sym.h"
 
 #include "common/dims.h"
+#include "common/limiter.h"
 
 #include <string>
 
@@ -16,6 +17,8 @@ class window
     SDL_Window* _source_window;
 
     std::string _title;
+
+    common::limiter _limiter;
 
 public:
     window( class shim* shim );

@@ -10,8 +10,8 @@ video::video( class shim* shim )
       _target ( nullptr ),
       _renderer ( nullptr )
 {
-    _limiter.limit ( 0 );
-    _limiter.samples ( 3 );
+    _limiter.limit ( shim->config.video.limiter.rate );
+    _limiter.samples ( shim->config.video.limiter.samples );
 }
 
 video::~video()
