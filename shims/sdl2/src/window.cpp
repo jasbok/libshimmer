@@ -11,6 +11,8 @@ window::window( class shim* shim )
     _limiter.samples ( shim->config.video.limiter.samples );
 }
 
+window::~window() {}
+
 SDL_Window* window::source_window()
 {
     return _source_window;
@@ -46,6 +48,10 @@ SDL_Surface* window::surface ( SDL_Window* window )
     }
 
     return sym::SDL_GetWindowSurface ( window );
+}
+
+void window::update() {
+    sym::SDL_GL_SwapWindow ( _source_window );
 }
 
 int window::update ( SDL_Window* window )
@@ -88,7 +94,7 @@ void window::resize ( SDL_Window* window,
                       int         w,
                       int         h ) {
     if ( window == _source_window ) {
-        _shim->video.source_resolution ( {
+        _shim->source_resolution ( {
             static_cast<unsigned int>( w ),
             static_cast<unsigned int>( h )
         } );
@@ -96,4 +102,27 @@ void window::resize ( SDL_Window* window,
     else {
         sym::SDL_SetWindowSize ( window, w, h );
     }
+}
+
+void window::size ( SDL_Window* window,
+                    int*        w,
+                    int*        h ) {
+    if ( window == _source_window ) {
+        auto size = _shim->video.source_resolution();
+        *w = static_cast<int>( size.width );
+        *h = static_cast<int>( size.height );
+    }
+    else {
+        sym::SDL_GetWindowSize ( window, w, h );
+    }
+}
+
+void window::source_resolution ( const common::dims_2u& res )
+{
+    _source_resolution = res;
+}
+
+void window::target_resolution ( const common::dims_2u& res )
+{
+    _target_resolution = res;
 }

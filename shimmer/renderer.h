@@ -69,6 +69,8 @@ public:
 
     void reset_fbo();
 
+    void activate_source_texture_unit();
+
     void setup_viewport();
 
     void copy_source ( uint8_t*               data,
@@ -105,6 +107,6 @@ private:
 
     std::vector<unsigned int> _shape_indices();
 };
-}
+} // namespace shimmer
 
 #endif // ifndef SHIMMER_RENDERER_H

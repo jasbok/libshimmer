@@ -106,6 +106,7 @@ void renderer::render() {
     GLPP_CHECK_FRAMEBUFFER ( "PRE RENDER" );
 
     _target_fbo.bind();
+    GLPP_CHECK_ERROR ( "RENDERER: Bound target FBO" );
 
     glpp::viewport ( _intermediate_resolution );
 
@@ -117,8 +118,10 @@ void renderer::render() {
                      static_cast<GLint>( _source_ebo.elements() ),
                      GL_UNSIGNED_INT,
                      nullptr );
+    GLPP_CHECK_ERROR ( "RENDERER: Drew source entity." );
 
     _target_fbo.unbind();
+    GLPP_CHECK_ERROR ( "RENDERER: Unbound target FBO" );
 
     glpp::viewport ( _target_resolution );
 
@@ -130,6 +133,7 @@ void renderer::render() {
                      static_cast<GLint>( _target_ebo.elements() ),
                      GL_UNSIGNED_INT,
                      nullptr );
+    GLPP_CHECK_ERROR ( "RENDERER: Drew target entity." );
 
     _target_program.unbind();
 
@@ -145,6 +149,11 @@ void renderer::capture_fbo() {
 void renderer::reset_fbo() {
     _source_fbo.unbind();
     glpp::viewport ( _target_resolution );
+}
+
+void renderer::activate_source_texture_unit()
+{
+    glpp::texture::active_texture ( 1 );
 }
 
 void renderer::setup_viewport()

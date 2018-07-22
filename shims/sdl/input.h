@@ -5,6 +5,8 @@
 
 #include "common/dims.h"
 
+#include "shimmer/input.h"
+
 class input
 {
     class shim* _shim;
@@ -13,9 +15,9 @@ class input
 
     common::dims_2u _target_resolution;
 
-    common::dims_2f _absolute_transform;
+    struct shimmer::input::transform _absolute_transform;
 
-    common::dims_2f _relative_transform;
+    struct shimmer::input::transform _relative_transform;
 
 public:
     input( class shim* shim );

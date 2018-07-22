@@ -12,42 +12,11 @@ configure_file(${DATA_GLSL_SRC}/default.frag ${DATA_GLSL_DEST}/default.frag COPY
 #   List all headers, required by some IDEs.
 ###############################################################################
 set( HEADERS
-        application.h
-        aspect.h
-        aspect_ratio.h
-        config.h
         configuration.h
         config_variables.h.in
-        connector.h
-        coords.h
-        dims.h
-        display.h
-        environment.h
-        event.h
-        event_collector.h
-        event_connector.h
-        event_exchange.h
-        event_logger.h
-        event_receiver.h
-        exchange.h
-        file_reader.h
-        general_options.h
-        image_reader.h
         input.h
-        json.h
-        logger.h
-        macros.h
-        mouse.h
-        options.h
-        pipeline.h
-        receiver.h
         renderer.h
-        shader_options.h
-        shader_reader.h
-        system.h
-        video.h
-        video_options.h
-        window.h )
+        video.h )
 
 
 ###############################################################################
@@ -56,32 +25,10 @@ set( HEADERS
 set( SOURCES_DIR ${LIB_SHIMMER_ROOT}/sources )
 
 set( SOURCES
-        src/aspect.cpp
-        src/aspect_ratio.cpp
-        src/config.cpp
         src/configuration.cpp
-        src/dims.cpp
-        src/display.cpp
-        src/environment.cpp
-        src/event.cpp
-        src/event_collector.cpp
-        src/event_logger.cpp
-        src/file_reader.cpp
-        src/general_options.cpp
-        src/image_reader.cpp
         src/input.cpp
-        src/json.cpp
-        src/logger.cpp
-        src/mouse.cpp
-        src/options.cpp
-        src/pipeline.cpp
         src/renderer.cpp
-        src/shader_options.cpp
-        src/shader_reader.cpp
-        src/system.cpp
-        src/video.cpp
-        src/video_options.cpp
-        src/window.cpp )
+        src/video.cpp )
 
 
 ###############################################################################

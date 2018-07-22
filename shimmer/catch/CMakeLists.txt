@@ -2,13 +2,6 @@
 #   List sources
 ###############################################################################
 set( CATCH_SOURCES
-        aspect.cpp
-        display.cpp
-        event_collector.cpp
-        event_exchange.cpp
-        mouse.cpp
-        pipeline.cpp
-        window.cpp
         catch.cpp )
 
 

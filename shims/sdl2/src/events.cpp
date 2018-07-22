@@ -26,10 +26,10 @@ void events::target_resolution ( const common::dims_2u& dims )
     _target_resolution = dims;
 }
 
-bool events::_is_valid_resize ( int w, int h )
+bool events::_is_valid_resize ( const common::dims_2u& dims )
 {
-    return ( w > 0 ) && ( h > 0 ) &&
-           ( w <= 1920 ) && ( h <= 1080 );
+    return ( dims.width > 0 ) && ( dims.height > 0 ) &&
+           ( dims.width <= 1920 ) && ( dims.height <= 1080 );
 }
 
 common::dims_2u events::_resize_dims ( SDL_WindowEvent& event )
@@ -42,9 +42,13 @@ void events::_process ( SDL_Event* event )
 {
     if ( event ) {
         switch ( event->type ) {
-        case SDL_MOUSEMOTION:
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+            _process ( event->button );
+            break;
 
-            // _process_mouse ( event );
+        case SDL_MOUSEMOTION:
+            _process ( event->motion );
             break;
 
         case SDL_WINDOWEVENT:
@@ -52,7 +56,8 @@ void events::_process ( SDL_Event* event )
             switch ( event->window.event ) {
             case SDL_WINDOWEVENT_RESIZED:
 
-                // case SDL_WINDOWEVENT_SIZE_CHANGED:
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+
                 // TODO: Check whether we need to handle both resize events.
                 _process ( event->window );
                 event->type = SDL_FIRSTEVENT;
@@ -66,21 +71,27 @@ void events::_process ( SDL_Event* event )
     }
 }
 
-// void events::_process_mouse ( SDL_Event* event )
-// {
-//    _shim->input.mouse_motion_absolute ( event->motion.x,
-//                                         event->motion.y );
-//    _shim->input.mouse_motion_relative ( event->motion.xrel,
-//                                         event->motion.yrel );
-// }
+void events::_process ( SDL_MouseMotionEvent& event )
+{
+    _shim->input.mouse_motion_absolute ( event.x,
+                                         event.y );
+    _shim->input.mouse_motion_relative ( event.xrel,
+                                         event.yrel );
+}
+
+void events::_process ( SDL_MouseButtonEvent& event )
+{
+    _shim->input.mouse_motion_absolute ( event.x,
+                                         event.y );
+}
 
 void events::_process ( SDL_WindowEvent& event )
 {
-    int width  = event.data1;
-    int height = event.data2;
+    auto resize_dims = _resize_dims ( event );
 
-    if ( _is_valid_resize ( width, height ) ) {
-        _shim->target_resolution ( _resize_dims ( event ) );
+    if ( ( resize_dims != _target_resolution ) &&
+         _is_valid_resize ( resize_dims ) ) {
+        _shim->target_resolution ( resize_dims );
     }
 
     // Do not propagate resize event to application

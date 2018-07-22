@@ -2,7 +2,6 @@
 
 #include "shim.h"
 
-#include "shimmer/input.h"
 #include "shimmer/video.h"
 
 input::input( class shim* shim )

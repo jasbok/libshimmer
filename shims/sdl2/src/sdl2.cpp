@@ -18,14 +18,9 @@ int SDL_PollEvent ( SDL_Event* event )
     return shim.events.poll ( event );
 }
 
-int SDL_PeepEvents (
-    SDL_Event*      events,
-    int             numevents,
-    SDL_eventaction action,
-    Uint32          minType,
-    Uint32          maxType )
-{
-    return sym::SDL_PeepEvents ( events, numevents, action, minType, maxType );
+Uint32 SDL_GetMouseState ( int* x,
+                           int* y ) {
+    return shim.input.mouse_state ( x, y );
 }
 
 SDL_Window* SDL_CreateWindow ( const char* title,
@@ -36,26 +31,6 @@ SDL_Window* SDL_CreateWindow ( const char* title,
                                Uint32      flags )
 {
     return shim.window.setup ( title, x, y, w, h, flags );
-}
-
-SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
-                                   int         index,
-                                   Uint32      flags )
-{
-    return sym::SDL_CreateRenderer ( window, index, flags );
-}
-
-int SDL_CreateWindowAndRenderer ( int            width,
-                                  int            height,
-                                  Uint32         window_flags,
-                                  SDL_Window**   window,
-                                  SDL_Renderer** renderer )
-{
-    return sym::SDL_CreateWindowAndRenderer ( width,
-                                              height,
-                                              window_flags,
-                                              window,
-                                              renderer );
 }
 
 SDL_Surface* SDL_GetWindowSurface ( SDL_Window* window ) {
@@ -70,9 +45,16 @@ void SDL_GL_SwapWindow ( SDL_Window* window ) {
     shim.window.update ( window );
 }
 
+SDL_Renderer* SDL_CreateRenderer ( SDL_Window* window,
+                                   int         index,
+                                   Uint32      flags )
+{
+    return shim.video.renderer ( window, index, flags );
+}
+
 void SDL_RenderPresent ( SDL_Renderer* renderer )
 {
-    sym::SDL_RenderPresent ( renderer );
+    shim.video.update ( renderer );
 }
 
 void SDL_SetWindowTitle ( SDL_Window* window,
@@ -80,27 +62,24 @@ void SDL_SetWindowTitle ( SDL_Window* window,
     shim.window.title ( window, title );
 }
 
-int SDL_SetWindowDisplayMode ( SDL_Window*            window,
-                               const SDL_DisplayMode* mode ) {
-    return sym::SDL_SetWindowDisplayMode ( window, mode );
-}
-
-void SDL_DestroyWindow ( SDL_Window* window ) {
-    sym::SDL_DestroyWindow ( window );
-}
-
 void SDL_DestroyRenderer ( SDL_Renderer* renderer ) {
-    sym::SDL_DestroyRenderer ( renderer );
+    shim.video.destroy ( renderer );
 }
 
 void SDL_GetWindowSize ( SDL_Window* window,
                          int*        w,
                          int*        h ) {
-    sym::SDL_GetWindowSize ( window, w, h );
+    shim.window.size ( window, w, h );
 }
 
 void SDL_SetWindowSize ( SDL_Window* window,
                          int         w,
                          int         h ) {
     shim.window.resize ( window, w, h );
+}
+
+void SDL_RenderGetLogicalSize ( SDL_Renderer* renderer,
+                                int*          w,
+                                int*          h ) {
+    shim.video.size ( renderer, w, h );
 }

@@ -14,6 +14,7 @@ set( CMAKE_CXX_EXTENSIONS ON )
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -DDEBUG" )
 set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3" )
 
+
 ###############################################################################
 #   Set Cmake modules path.
 ###############################################################################

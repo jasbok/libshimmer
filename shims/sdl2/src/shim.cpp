@@ -19,10 +19,14 @@ void shim::quit() {}
 
 void shim::source_resolution ( const common::dims_2u& dims ) {
     events.source_resolution ( dims );
+    input.source_resolution ( dims );
     video.source_resolution ( dims );
+    window.source_resolution ( dims );
 }
 
 void shim::target_resolution ( const common::dims_2u& dims ) {
     events.target_resolution ( dims );
+    input.target_resolution ( dims );
     video.target_resolution ( dims );
+    window.target_resolution ( dims );
 }

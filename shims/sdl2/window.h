@@ -20,10 +20,13 @@ class window
 
     common::limiter _limiter;
 
+    common::dims_2u _source_resolution;
+    common::dims_2u _target_resolution;
+
 public:
     window( class shim* shim );
 
-    virtual ~window() = default;
+    virtual ~window();
 
     SDL_Window* source_window();
 
@@ -36,6 +39,8 @@ public:
 
     SDL_Surface* surface ( SDL_Window* window );
 
+    void         update();
+
     int          update ( SDL_Window* window );
 
     SDL_Window*  setup ( const char* title,
@@ -45,9 +50,18 @@ public:
                          int         h,
                          Uint32      flags );
 
+
     void resize ( SDL_Window* window,
                   int         w,
                   int         h );
+
+    void size ( SDL_Window* window,
+                int*        w,
+                int*        h );
+
+    void source_resolution ( const common::dims_2u& res );
+
+    void target_resolution ( const common::dims_2u& res );
 };
 
 #endif // ifndef SHIMS_SDL2_WINDOW_H
