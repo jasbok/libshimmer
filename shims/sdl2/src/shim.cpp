@@ -1,5 +1,9 @@
 #include "shim.h"
 
+#include "common/logger.h"
+
+const auto& logger = common::logger::get ( "shimmer::sdl2::shim" );
+
 class shim shim;
 
 shim::shim()
@@ -8,10 +12,14 @@ shim::shim()
       input ( this ),
       video ( this ),
       window ( this )
-{}
+{
+#ifdef DEBUG
+    logger.warn ( "This is a debug build." );
+#endif // ifdef DEBUG
+}
 
 void shim::init ( Uint32 flags ) {
-    printf ( "[DEBUG] Initialising SDL2 shim...\n" );
+    logger.info ( "Initialising SDL2 shim..." );
     _flags = flags;
 }
 

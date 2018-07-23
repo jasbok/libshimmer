@@ -91,6 +91,7 @@ target_include_directories( glpp PRIVATE
     ${FREETYPE_INCLUDE_DIRS} )
 
 target_link_libraries( glpp PRIVATE
+    common
     ${CMAKE_THREAD_LIBS_INIT}
     ${FREETYPE_LIBRARIES}
     ${GLEW_LIBRARIES}

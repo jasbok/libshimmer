@@ -89,4 +89,4 @@ std::string lower ( const std::string& str ) {
 
     return lower;
 }
-}
+} // namespace common::str

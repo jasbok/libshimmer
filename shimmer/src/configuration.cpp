@@ -8,6 +8,9 @@
 
 namespace shimmer
 {
+const common::logger& config::logger =
+    common::logger::get ( "shimmer::config" );
+
 nlohmann::json config::merge ( const nlohmann::json& a,
                                const nlohmann::json& b )
 {
@@ -38,7 +41,7 @@ nlohmann::json config::from_environment()
         conf = conf.unflatten();
     }
 
-    printf ( "[INFO] Environment config:\n%s\n", conf.dump ( 2 ).c_str() );
+    logger.debug ( "Environment config: {}", conf.dump ( 2 ) );
 
     return conf;
 }
@@ -47,9 +50,7 @@ nlohmann::json config::from_file ( const std::string& path )
 {
     auto conf = nlohmann::json ( common::file::read_all ( path ) );
 
-    printf ( "[INFO] File config (%s):\n%s\n",
-             path.c_str(),
-             conf.dump ( 2 ).c_str() );
+    logger.debug ( "File config ({}): {}", path, conf.dump ( 2 ) );
 
     return nlohmann::json ( conf );
 }
@@ -66,12 +67,12 @@ config config::create()
             conf = merge ( from_file ( config_file ), conf );
         }
         catch ( const std::exception& ex ) {
-            printf ( "[WARN] Failed to load config file: %s\n", ex.what() );
+            logger.warn ( "Failed to load config file:\n{}", ex.what() );
         }
     }
 
-    printf ( "[INFO] Shimmer configuration:\n%s\n",
-             nlohmann::json ( conf ).dump ( 2 ).c_str() );
+    logger.debug ( "Shimmer configuration: {}",
+                   nlohmann::json ( conf ).dump ( 2 ) );
 
     return conf;
 }
@@ -86,18 +87,18 @@ void set_property ( T&                    property,
     catch ( const nlohmann::json::exception& ex ) {
         if ( ex.id == 403 ) {}
         else {
-            printf (
-                "[ERROR] Unable to set config property: %s -> %s\nException: %s\n",
-                field.c_str(),
-                json.at ( field ).dump().c_str(),
+            config::logger.warn (
+                "Unable to set config property: {} -> {}\nException: {}",
+                field,
+                json.at ( field ).dump(),
                 ex.what() );
         }
     }
     catch ( const std::exception& ex ) {
-        printf (
-            "[ERROR] Unable to set config property: %s -> %s\nException: %s\n",
-            field.c_str(),
-            json.at ( field ).dump().c_str(),
+        config::logger.warn (
+            "Unable to set config property: {} -> {}\nException: {}",
+            field,
+            json.at ( field ).dump(),
             ex.what() );
     }
 }
@@ -118,17 +119,17 @@ void set_property ( unsigned int&         property,
     catch ( const nlohmann::json::exception& jex ) {
         if ( jex.id == 403 ) {}
         else {
-            printf ( "[ERROR] Unable to set config property: %s -> %s\n%s\n",
-                     field.c_str(),
-                     json.at ( field ).dump().c_str(),
-                     jex.what() );
+            config::logger.warn ( "Unable to set config property: {} -> {}\n{}",
+                                  field,
+                                  json.at ( field ).dump(),
+                                  jex.what() );
         }
     }
     catch ( const std::exception& ex  ) {
-        printf (
-            "[ERROR] Unable to set config property: %s -> %s\nExpected an unsigned integer.\nException: %s\n",
-            field.c_str(),
-            json.at ( field ).dump().c_str(),
+        config::logger.warn (
+            "Unable to set config property: {} -> {}\nExpected an unsigned integer.\nException: {}",
+            field,
+            json.at ( field ).dump(),
             ex.what() );
     }
 }
@@ -149,17 +150,17 @@ void set_property ( float&                property,
     catch ( const nlohmann::json::exception& jex ) {
         if ( jex.id == 403 ) {}
         else {
-            printf ( "[ERROR] Unable to set config property: %s -> %s\n%s\n",
-                     field.c_str(),
-                     json.at ( field ).dump().c_str(),
-                     jex.what() );
+            config::logger.warn ( "Unable to set config property: {} -> {}\n{}",
+                                  field,
+                                  json.at ( field ).dump(),
+                                  jex.what() );
         }
     }
     catch ( const std::exception& ex  ) {
-        printf (
-            "[ERROR] Unable to set config property: %s -> %s\nExpected a float.\nException: %s\n",
-            field.c_str(),
-            json.at ( field ).dump().c_str(),
+        config::logger.warn (
+            "Unable to set config property: {} -> {}\nExpected a float.\nException: {}",
+            field,
+            json.at ( field ).dump(),
             ex.what() );
     }
 }
@@ -349,10 +350,10 @@ void from_string ( enum config::video::shape::type& shape,
 void to_json ( nlohmann::json& json,
                const config&   config ) {
     json = {
-        { "general", config.general },
-        { "input",   config.input   },
-        { "logging", config.logging },
-        { "video",   config.video   },
+        { "general", config.general   },
+        { "input",   config.input     },
+        { "logging", config.logging   },
+        { "video",   config.video     },
     };
 }
 
@@ -367,11 +368,11 @@ void from_json ( const nlohmann::json& json,
 void to_json ( nlohmann::json&               json,
                const struct config::general& general ) {
     json = {
-        { "config_dirs",  general.config_dirs },
-        { "data_dirs",    general.data_dirs   },
-        { "font_dirs",    general.font_dirs   },
-        { "image_dirs",   general.image_dirs  },
-        { "shaders_dirs", general.shader_dirs },
+        { "config_dirs",  general.config_dirs    },
+        { "data_dirs",    general.data_dirs      },
+        { "font_dirs",    general.font_dirs      },
+        { "image_dirs",   general.image_dirs     },
+        { "shaders_dirs", general.shader_dirs    },
     };
 }
 
@@ -399,9 +400,9 @@ void from_json ( const nlohmann::json& json,
 void to_json ( nlohmann::json&               json,
                const struct config::logging& logging ) {
     json = {
-        { "level",  logging.level  },
-        { "output", logging.output },
-        { "file",   logging.file   }
+        { "level",  logging.level    },
+        { "output", logging.output   },
+        { "file",   logging.file     }
     };
 }
 
@@ -435,13 +436,13 @@ void from_json ( const nlohmann::json&         json,
 void to_json ( nlohmann::json&             json,
                const struct config::video& video ) {
     json = {
-        { "aspect",        video.aspect        },
-        { "custom_aspect", video.custom_aspect },
-        { "filter",        video.filter        },
-        { "font",          video.font          },
-        { "limiter",       video.limiter       },
-        { "shader",        video.shader        },
-        { "shape",         video.shape         }
+        { "aspect",        video.aspect                 },
+        { "custom_aspect", video.custom_aspect          },
+        { "filter",        video.filter                 },
+        { "font",          video.font                   },
+        { "limiter",       video.limiter                },
+        { "shader",        video.shader                 },
+        { "shape",         video.shape                  }
     };
 }
 
@@ -479,8 +480,8 @@ void from_json ( const nlohmann::json&       json,
 void to_json ( nlohmann::json&                      json,
                const struct config::video::limiter& limiter ) {
     json = {
-        { "rate",    limiter.rate    },
-        { "samples", limiter.samples }
+        { "rate",    limiter.rate       },
+        { "samples", limiter.samples    }
     };
 }
 
@@ -493,9 +494,9 @@ void from_json ( const nlohmann::json&          json,
 void to_json ( nlohmann::json&                     json,
                const struct config::video::shader& shader ) {
     json = {
-        { "fragment", shader.fragment },
-        { "scale",    shader.scale    },
-        { "vertex",   shader.vertex   }
+        { "fragment", shader.fragment    },
+        { "scale",    shader.scale       },
+        { "vertex",   shader.vertex      }
     };
 }
 
@@ -523,8 +524,8 @@ void from_json ( const nlohmann::json&        json,
 void to_json ( nlohmann::json&                          json,
                const struct config::video::shape::lens& lens ) {
     json = {
-        { "curve",   lens.curve   },
-        { "quality", lens.quality }
+        { "curve",   lens.curve     },
+        { "quality", lens.quality   }
     };
 }
 

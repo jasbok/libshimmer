@@ -1,6 +1,10 @@
 #include "debug.h"
 #include "framebuffer.h"
 
+#include "common/logger.h"
+
+const static common::logger& logger = common::logger::get ( "glpp::debug" );
+
 std::string glpp::gl_error_to_string ( GLenum err ) {
     switch ( err ) {
     case GL_NO_ERROR: return
@@ -51,11 +55,15 @@ bool glpp::gl_get_errors ( const std::string& file,
     GLenum err;
 
     while ( ( err = glGetError() ) != GL_NO_ERROR ) {
+        auto error = glpp::gl_error_to_string ( err );
+
+        logger.error ( "[{}:{}] OpenGL error at '{}':\n{}",
+                       file,
+                       line,
+                       label,
+                       error );
+
         found_errors = true;
-        std::cerr << "[" << label << "] " << file
-                  << ":" << line
-                  << " => " << glpp::gl_error_to_string ( err )
-                  << std::endl;
     }
 
     return found_errors;
@@ -119,10 +127,13 @@ bool glpp::gl_check_framebuffer ( const std::string& file,
     auto status = glpp::framebuffer::check_status();
 
     if ( status != GL_FRAMEBUFFER_COMPLETE ) {
-        std::cerr << "[" << label << "] " << file
-                  << ":" << line
-                  << " => " << glpp::gl_framebuffer_status_to_string ( status )
-                  << std::endl;
+        auto error = glpp::gl_framebuffer_status_to_string ( status );
+
+        logger.error ( "[{}:{}] OpenGL framebuffer error at '{}':\n{}",
+                       file,
+                       line,
+                       label,
+                       error );
 
         return true;
     }

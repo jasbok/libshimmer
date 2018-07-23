@@ -5,13 +5,18 @@
 
 #include "common/dims.h"
 #include "common/json.h"
+#include "common/logger.h"
 
 #include <unordered_map>
 #include <vector>
 
 namespace shimmer
 {
-struct config {
+class config
+{
+public:
+    static const common::logger& logger;
+
     typedef std::pair<std::string, std::string> property;
 
     struct general {
@@ -249,7 +254,7 @@ void to_json ( nlohmann::json&                        json,
 
 void from_json ( const nlohmann::json&            json,
                  enum config::video::shape::type& type );
-}
+} // namespace shimmer
 
 namespace common
 {
@@ -273,6 +278,6 @@ void from_json ( const nlohmann::json& json,
         dims.height = json.at ( "height" );
     }
 }
-}
+} // namespace common
 
 #endif // ifndef LIBSHIMMER_CONFIGURATION_H

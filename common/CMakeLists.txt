@@ -19,6 +19,7 @@ set( COMMON_HEADERS
         fonts.h
         file.h
         freetype.h
+        logger.h
         img.h
         json.h
         limiter.h
@@ -33,6 +34,8 @@ set( COMMON_HEADERS
 #   List common sources.
 ###############################################################################
 set( COMMON_SOURCES
+        ${ROOT}/external/fmt/format.cc
+        ${ROOT}/external/fmt/printf.cc
         src/atlas.cpp
         src/camera.cpp
         src/ellipse.cpp
@@ -40,6 +43,7 @@ set( COMMON_SOURCES
         src/file.cpp
         src/fonts.cpp
         src/freetype.cpp
+        src/logger.cpp
         src/img.cpp
         src/json.cpp
         src/limiter.cpp

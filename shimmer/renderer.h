@@ -3,6 +3,8 @@
 
 #include "configuration.h"
 
+#include "common/logger.h"
+
 #include "glpp/element_array_buffer.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
@@ -53,6 +55,8 @@ class renderer
     bool _flip_target;
 
 public:
+    static const common::logger& logger;
+
     static void init();
 
     renderer( struct shimmer::config::config* conf );

@@ -72,6 +72,6 @@ std::string upper ( const std::string& str );
  * @return The new lowercase string.
  */
 std::string lower ( const std::string& str );
-}
+} // namespace common::str
 
 #endif // ifndef COMMON_STRING_H

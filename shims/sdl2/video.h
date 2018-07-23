@@ -37,6 +37,8 @@ class video
     std::unique_ptr<shimmer::renderer> _renderer;
 
 public:
+    static const common::logger& logger;
+
     video( class shim* shim );
 
     virtual ~video();

@@ -3,11 +3,11 @@
 #include "common/file.h"
 #include "common/fonts.h"
 
+#include "glpp/_quad.h"
 #include "glpp/cube.h"
 #include "glpp/entity.h"
 #include "glpp/framebuffer.h"
 #include "glpp/program.h"
-#include "glpp/_quad.h"
 #include "glpp/resource_loader.h"
 #include "glpp/scene.h"
 #include "glpp/texture_2d.h"
@@ -252,10 +252,6 @@ std::shared_ptr<glpp::framebuffer> create_framebuffer (
 }
 
 int main ( int argc, char** argv ) {
-#ifdef DEBUG
-    printf ( "======= Debug Build Active =======\n" );
-#endif // ifdef DEBUG
-
     init_opengl();
 
     glpp::resource_loader loader ( { "data/glsl" } );

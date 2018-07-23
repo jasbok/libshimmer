@@ -2,6 +2,9 @@
 
 #include "shim.h"
 
+const common::logger& video::logger = common::logger::get (
+    "shimmer::sdl2::video" );
+
 video::video( class shim* shim )
     : _shim ( shim ),
       _source_surface ( nullptr ),
@@ -35,11 +38,11 @@ void video::setup ( int    w,
         _flags             = flags;
 
         if ( _flags & SDL_WINDOW_OPENGL ) {
-            printf ( "[Debug] Using OpenGL mode...\n" );
+            logger.info ( "Using OpenGL mode..." );
             _mode = mode::opengl;
         }
         else {
-            printf ( "[Debug] Using software mode...\n" );
+            logger.info ( "Using software mode..." );
             _mode = mode::software;
         }
 
@@ -51,13 +54,13 @@ void video::setup ( int    w,
 SDL_Renderer* video::renderer ( SDL_Window* window, int index, Uint32 flags )
 {
     if ( _use_software_sdl_renderer ) {
-        printf ( "[INFO] Creating software SDL Renderer.\n" );
+        logger.info ( "Creating software SDL Renderer." );
 
         _sdl_renderer = sym::SDL_CreateSoftwareRenderer ( source_surface() );
         _mode         = video::mode::software;
     }
     else if ( !_sdl_renderer ) {
-        printf ( "[INFO] Creating OpenGL SDL Renderer.\n" );
+        logger.info ( "Creating OpenGL SDL Renderer." );
 
         _sdl_renderer = sym::SDL_CreateRenderer ( window, index, flags );
 
@@ -112,8 +115,7 @@ common::dims_2u video::source_resolution() {
 void video::source_resolution ( const common::dims_2u& dims )
 {
     if ( _source_resolution != dims ) {
-        printf ( "[DEBUG] Setting source resolution: %s\n",
-                 dims.to_json().c_str() );
+        logger.debug ( "Setting source resolution: {}", dims.to_json() );
         _source_resolution = dims;
         _source_surface    = _software_surface ( _source_resolution );
 
@@ -130,8 +132,7 @@ void video::source_resolution ( const common::dims_2u& dims )
 void video::target_resolution ( const common::dims_2u& dims )
 {
     if ( _target_resolution != dims ) {
-        printf ( "[DEBUG] Setting target resolution: %s\n",
-                 dims.to_json().c_str() );
+        logger.debug ( "Setting target resolution: {}", dims.to_json() );
 
         _target_resolution = dims;
 
@@ -164,28 +165,28 @@ void video::_setup_opengl_context()
     _gl_context = sym::SDL_GL_GetCurrentContext();
 
     if ( _mode == mode::software ) {
-        printf ( "[INFO] Assuming application is using software mode.\n" );
+        logger.info ( "Assuming application is using software mode." );
 
         _gl_context =
             sym::SDL_GL_CreateContext ( _shim->window.source_window() );
 
         if ( _gl_context == nullptr ) {
-            printf ( "[Error] Unable to create OpenGL context: %s",
-                     SDL_GetError() );
+            logger.error ( "Unable to create OpenGL context: {}",
+                           SDL_GetError() );
         }
     }
     else if ( ( ( _mode == mode::opengl ) || ( _mode == mode::renderer ) )
               && ( _gl_context == nullptr ) ) {
-        printf ( "[WARNING] Failed to get current OpenGL context: %s\n",
-                 SDL_GetError() );
-        printf ( "[INFO] Assuming application is using software mode.\n" );
+        logger.warn ( "Failed to get current OpenGL context: {}",
+                      SDL_GetError() );
+        logger.info ( "Assuming application is using software mode." );
 
-        _gl_context =
-            sym::SDL_GL_CreateContext ( _shim->window.source_window() );
+        _gl_context = sym::SDL_GL_CreateContext (
+            _shim->window.source_window() );
 
         if ( _gl_context == nullptr ) {
-            printf ( "[Error] Unable to create OpenGL context: %s",
-                     SDL_GetError() );
+            logger.error ( "Unable to create OpenGL context: {}",
+                           SDL_GetError() );
         }
 
         _mode = mode::software;
@@ -199,10 +200,9 @@ void video::_setup_opengl_context()
         sym::SDL_GL_GetAttribute ( SDL_GL_CONTEXT_MINOR_VERSION,
                                    &minor_version );
 
-        printf (
-            "[INFO] Application is using the following GL version: %i.%i\n",
-            major_version,
-            minor_version );
+        logger.info ( "Application is using the following GL version: {}.{}",
+                      major_version,
+                      minor_version );
     }
 }
 
@@ -216,13 +216,10 @@ void video::_setup_renderer()
     _renderer->source_resolution ( _source_resolution );
     _renderer->target_resolution ( _target_resolution );
 
-    printf ( "==========> Setting up renderer...\n" );
-
     if ( _mode == mode::software ) {
         _renderer->flip_target ( true );
     }
     else if ( _mode == mode::renderer ) {
-        printf ( "==========> Setup renderer with SDL renderer...\n" );
         _renderer->flip_target ( true );
     }
 }

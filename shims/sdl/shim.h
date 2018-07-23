@@ -8,6 +8,8 @@
 
 #include "api/SDL_sym.h"
 
+#include "common/logger.h"
+
 #include "shimmer/configuration.h"
 
 #include <memory>
@@ -22,6 +24,8 @@ class shim
     Uint32 _flags;
 
 public:
+    const static common::logger logger;
+
     shim();
 
     virtual ~shim();

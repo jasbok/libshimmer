@@ -1,5 +1,8 @@
 #include "shim.h"
 
+const common::logger shim::logger =
+    common::logger::get ( "shimmer::sdl::shim" );
+
 class shim shim;
 
 shim::shim()
@@ -10,8 +13,8 @@ shim::shim()
       window ( this )
 {
 #ifdef DEBUG
-    printf ( "========== DEBUG BUILD ==========\n" );
-#endif // ifdef NDEBUG
+    logger.info ( "This is a debug build." );
+#endif // ifdef DEBUG
 }
 
 shim::~shim()

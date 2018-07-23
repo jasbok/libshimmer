@@ -3,10 +3,11 @@
 
 #include "api/SDL_sym.h"
 
-#include "shimmer/renderer.h"
-
 #include "common/dims.h"
 #include "common/limiter.h"
+#include "common/logger.h"
+
+#include "shimmer/renderer.h"
 
 class video
 {
@@ -36,6 +37,8 @@ class video
     common::limiter _limiter;
 
 public:
+    const static common::logger logger;
+
     video( class shim* shim );
 
     virtual ~video();

@@ -14,13 +14,19 @@
 
 namespace shimmer
 {
+const common::logger& renderer::logger =
+    common::logger::get ( "shimmer::renderer" );
+
 void renderer::init() {
     glewExperimental = GL_TRUE;
     GLenum glew_err = glewInit();
 
     if ( glew_err ) {
-        printf ( "Error) Unable to initialise GLEW: %s\n",
-                 glewGetErrorString ( glew_err ) );
+        logger.fatal ( "Unable to initialise GLEW: {}",
+                       glewGetErrorString ( glew_err ) );
+    }
+    else {
+        logger.info ( "Successfully initialised GLEW." );
     }
 }
 
@@ -182,7 +188,7 @@ void renderer::_define_program ( glpp::program&     program,
                                  const std::string& vertex,
                                  const std::string& fragment,
                                  int                texture_unit ) {
-    printf ( "[DEBUG] Creating program...\n" );
+    logger.debug ( "Creating program..." );
 
     const auto& shader_dirs = _conf->general.shader_dirs;
 
@@ -213,7 +219,7 @@ void renderer::_define_program ( glpp::program&     program,
 
 void renderer::_define_vbo ( glpp::vbo&                vbo,
                              const std::vector<float>& data ) {
-    printf ( "[DEBUG] Creating VBO...\n" );
+    logger.debug ( "Creating VBO..." );
 
     vbo.bind()
         .data ( data )
@@ -224,7 +230,7 @@ void renderer::_define_vbo ( glpp::vbo&                vbo,
 
 void renderer::_define_ebo ( glpp::ebo&                      ebo,
                              const std::vector<unsigned int> indices ) {
-    printf ( "[DEBUG] Creating ebo...\n" );
+    logger.debug ( "Creating ebo..." );
 
     ebo.bind()
         .data ( indices )
@@ -238,7 +244,7 @@ void renderer::_define_vao ( glpp::vao&     vao,
                              glpp::ebo&     ebo,
                              glpp::program& program )
 {
-    printf ( "[DEBUG] Defining VAO...\n" );
+    logger.debug ( "Defining VAO..." );
 
     vao.bind();
     vbo.bind();
@@ -248,8 +254,8 @@ void renderer::_define_vao ( glpp::vao&     vao,
     auto position_location = program.attribute_location ( "position" );
     auto texcoord_location = program.attribute_location ( "texcoord" );
 
-    printf ( "[DEBUG] position location: %i\n", position_location );
-    printf ( "[DEBUG] texcoord location: %i\n", texcoord_location );
+    logger.debug ( "position location: {}", position_location );
+    logger.debug ( "texcoord location: {}", texcoord_location );
 
     auto attribs = glpp::vertex_attrib_builder<float>::sequential ( {
             { "position", 2, position_location },
@@ -271,8 +277,8 @@ void renderer::_define_texture ( glpp::texture_2d&        tex,
                                  const common::dims_2u&   dims,
                                  glpp::texture_2d::filter filter,
                                  unsigned int             texture_unit ) {
-    printf ( "[DEBUG] Creating texture...\n" );
-    printf ( "[DEBUG] Texture size: %s\n", dims.to_json().c_str() );
+    logger.debug ( "Creating texture..." );
+    logger.debug ( "Texture size: {}", dims.to_json() );
 
     glpp::texture::active_texture ( texture_unit );
     tex.bind();

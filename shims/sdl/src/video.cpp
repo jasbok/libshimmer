@@ -4,6 +4,9 @@
 
 #include <GL/glew.h>
 
+const common::logger video::logger =
+    common::logger::get ( "shimmer::sdl::video" );
+
 video::video( class shim* shim )
     : _shim ( shim ),
       _source ( nullptr ),
@@ -21,7 +24,7 @@ video::~video()
 
 SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
     if ( ( w == 0 ) || ( h == 0 ) ) {
-        printf ( "[WARNING] Unsupported resolution: %ix%i\n", w, h );
+        logger.warn ( "Unsupported resolution: {}x{}", w, h );
 
         return nullptr;
     }
@@ -34,11 +37,11 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
 
 
     if ( flags & SDL_OPENGL ) {
-        printf ( "[DEBUG] Software requested OpenGL renderer.\n" );
+        logger.debug ( "Software requested OpenGL renderer." );
         _mode = mode::opengl;
     }
     else {
-        printf ( "[DEBUG] Software requested software renderer.\n" );
+        logger.debug ( "Software requested software renderer." );
         _mode = mode::software;
     }
 
@@ -59,8 +62,7 @@ SDL_Surface* video::setup ( int w, int h, int bpp, Uint32 flags ) {
 
 void video::source_resolution ( const common::dims_2u& dims )
 {
-    printf ( "[DEBUG] Setting source resolution: %s\n",
-             dims.to_json().c_str() );
+    logger.debug ( "Setting source resolution: {}", dims.to_json() );
     _source_resolution = dims;
     _source            = _software_surface ( _source_resolution );
 
@@ -71,8 +73,7 @@ void video::source_resolution ( const common::dims_2u& dims )
 
 void video::target_resolution ( const common::dims_2u& dims )
 {
-    printf ( "[DEBUG] Setting target resolution: %s\n",
-             dims.to_json().c_str() );
+    logger.debug ( "Setting target resolution: {}", dims.to_json() );
     _target_resolution = dims;
     _target            = _hardware_surface ( _target_resolution );
 
